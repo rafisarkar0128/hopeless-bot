@@ -1,0 +1,31 @@
+{
+    "name": "hopeless-bot",
+    "version": "0.0.3",
+    "description": "A discord bot for a private server.",
+    "main": "index.js",
+    "scripts": {
+        "test": "node index.js",
+        "dev": "nodemon index.js",
+        "start": "node index.js"
+    },
+    "keywords": [
+        "bot",
+        "discord",
+        "discord-bot",
+        "javascript"
+    ],
+    "author": "theassassin0128",
+    "license": "MIT",
+    "devDependencies": {
+        "discord.js": "^14.15.3"
+    },
+    "dependencies": {
+        "ascii-table": "^0.0.9",
+        "axios": "^1.7.3",
+        "chalk": "^4.1.2",
+        "discord-arts": "^0.6.1",
+        "dotenv": "^16.4.5",
+        "glob": "^11.0.0",
+        "moment": "^2.30.1"
+    }
+}
