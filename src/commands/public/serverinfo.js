@@ -13,7 +13,7 @@ module.exports = {
         .setName("serverinfo")
         .setDescription("Replies with server information.")
         .setDMPermission(false),
-    category: "util",
+    category: "public",
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -41,7 +41,10 @@ module.exports = {
                     name: "📅 Created On",
                     value: `${moment(interaction.guild.createdAt).format(
                         "dddd, MMMM Do YYYY, h:mm:ss A"
-                    )}\n - ${moment(interaction.guild.createdAt, "YYYYMMDD").fromNow()}`,
+                    )}\n - ${moment(
+                        interaction.guild.createdAt,
+                        "YYYYMMDD"
+                    ).fromNow()}`,
                 },
                 {
                     name: "👑 Owned by",
