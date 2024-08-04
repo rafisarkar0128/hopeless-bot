@@ -1,5 +1,5 @@
-[![CodeQL](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/THE-ASSASSIN0128/Hopeless-Bot/actions/workflows/codeql.yml)
-[![Dependency Review](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/THE-ASSASSIN0128/Hopeless-Bot/actions/workflows/dependency-review.yml)
+[![CodeQL](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml/badge.svg)](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml)
+[![Dependency Review](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml)
 
 # HOPELESS BOT
 
