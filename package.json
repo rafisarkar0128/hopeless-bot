@@ -1,6 +1,6 @@
 {
     "name": "hopeless-bot",
-    "version": "0.0.5",
+    "version": "0.0.5-1",
     "description": "A discord bot for a private server.",
     "main": "index.js",
     "scripts": {

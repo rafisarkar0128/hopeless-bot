@@ -7,38 +7,55 @@ function log(content, type = "log") {
     const date = `${moment().format("DD-MM-YYYY hh:mm:ss")}`;
 
     switch (type) {
-        case "log": {
-            return console.log(
-                `[${chalk.gray(date)}]: [${chalk.blue(type.toUpperCase())}] ${content}`
-            );
-        }
-        case "warn": {
-            return console.log(
-                `[${chalk.gray(date)}]: [${chalk.yellow(
+        case "log":
+            {
+                console.log(
+                    `[${chalk.gray(date)}]: [${chalk.blue(
+                        type.toUpperCase()
+                    )}] ${content}`
+                );
+            }
+            break;
+        case "warn":
+            {
+                console.warn(
+                    `[${chalk.gray(date)}]: [${chalk.yellow(
+                        type.toUpperCase()
+                    )}] ${chalk.yellow(content)}`
+                );
+            }
+            break;
+        case "error":
+            {
+                console.log(
+                    `[${chalk.gray(date)}]: [${chalk.red(type.toUpperCase())}]`
+                );
+                console.error(content);
+            }
+            break;
+        case "debug":
+            {
+                console.log(
+                    `[${chalk.gray(date)}]: [${chalk.green(
+                        type.toUpperCase()
+                    )}] ${content}`
+                );
+            }
+            break;
+        case "command":
+            {
+                console.log(
+                    `[${chalk.gray(date)}]: [${chalk.white(
+                        type.toUpperCase()
+                    )}] ${content}`
+                );
+            }
+            break;
+        case "event": {
+            console.log(
+                `[${chalk.gray(date)}]: [${chalk.white(
                     type.toUpperCase()
                 )}] ${content}`
-            );
-        }
-        case "error": {
-            return console.log(
-                `[${chalk.gray(date)}]: [${chalk.red(type.toUpperCase())}] ${chalk.red(
-                    content
-                )}`
-            );
-        }
-        case "debug": {
-            return console.log(
-                `[${chalk.gray(date)}]: [${chalk.green(type.toUpperCase())}] ${content}`
-            );
-        }
-        case "command": {
-            return console.log(
-                `[${chalk.gray(date)}]: [${chalk.white(type.toUpperCase())}] ${content}`
-            );
-        }
-        case "event": {
-            return console.log(
-                `[${chalk.gray(date)}]: [${chalk.white(type.toUpperCase())}] ${content}`
             );
         }
         default:
