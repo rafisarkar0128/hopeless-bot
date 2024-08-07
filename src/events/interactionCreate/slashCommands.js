@@ -30,12 +30,36 @@ module.exports = {
                 );
             }
 
-            return command.execute(client, interaction);
+            if (command.userPermissions?.length) {
+                for (const permission of command.userPermissions) {
+                    if (!interaction.member.permissions.has[permission]) {
+                        return interaction.reply({
+                            content: `You need \`${permission}\` permission to use this command.`,
+                            ephemeral: true,
+                        });
+                    }
+                }
+            }
+            if (command.botPermissions?.length) {
+                for (const permission of command.botPermissions) {
+                    if (
+                        !interaction.guild.members.me.permissions.has[
+                            permission
+                        ]
+                    ) {
+                        return interaction.reply({
+                            content: `I need \`${permission}\` permission to execute this command.`,
+                            ephemeral: true,
+                        });
+                    }
+                }
+            }
+
+            await command.execute(client, interaction);
         } catch (error) {
             if (interaction.deferred || interaction.replied) {
                 interaction.editReply({
                     content: `An error occured while executing the command.`,
-                    ephemeral: true,
                 });
             } else {
                 interaction.reply({

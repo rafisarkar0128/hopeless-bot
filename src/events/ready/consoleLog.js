@@ -23,6 +23,6 @@ module.exports = {
         table.addRow("Members", await client.getMemberCount(client));
 
         console.log(table.toString());
-        client.log(`logged in as ${client.user.tag.toLowerCase()}`, "log");
+        client.log("✅ bot is online", "log");
     },
 };

@@ -21,6 +21,7 @@ async function loadEvents(client, dir) {
             table.addRow(file.split("\\").pop(), "✅");
         } catch (error) {
             table.addRow(file.split("\\").pop(), `❌ | ${file}`);
+            throw error;
         }
     }
 

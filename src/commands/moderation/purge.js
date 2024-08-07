@@ -28,6 +28,8 @@ module.exports = {
                 .setRequired(false)
         ),
     category: "moderation",
+    botPermissions: ["ManageMessages"],
+    userPermissions: ["ManageMessages"],
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

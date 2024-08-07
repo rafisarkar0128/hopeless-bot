@@ -36,6 +36,8 @@ module.exports = {
                 .setRequired(false)
         ),
     category: "development",
+    botPermissions: ["ManageGuild"],
+    userPermissions: ["ManageGuild"],
     /**
      *
      * @param {Client} client

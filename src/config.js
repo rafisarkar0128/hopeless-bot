@@ -3,7 +3,7 @@ module.exports = {
     // important stuff
     config: {
         token: process.env["DISCORD_TOKEN"] || undefined,
-        mongourl: process.env["MONGO_URL"] || undefined,
+        mongouri: process.env["MONGO_URI"] || undefined,
         serverId: process.env["SERVER_ID"] || undefined,
         botId: process.env["CLIENT_ID"] || undefined,
         ownerId: process.env["OWNER_ID"] || undefined,
