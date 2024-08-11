@@ -1,19 +1,21 @@
 // variables
 const {
     EmbedBuilder,
-    SlashCommandBuilder,
     Client,
     ChatInputCommandInteraction,
+    SlashCommandBuilder,
 } = require("discord.js");
 const moment = require("moment");
 
 // exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("serverinfo")
-        .setDescription("Replies with server information.")
-        .setDMPermission(false),
+        .setName("server")
+        .setDescription("📖 View the server information."),
     category: "public",
+    usage: "/info member",
+    userPermissions: [],
+    botPermissions: [],
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

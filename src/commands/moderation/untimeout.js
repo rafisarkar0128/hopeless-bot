@@ -1,4 +1,3 @@
-// variables
 const {
     SlashCommandBuilder,
     PermissionFlagsBits,
@@ -6,9 +5,7 @@ const {
     ChatInputCommandInteraction,
     EmbedBuilder,
 } = require("discord.js");
-const ms = require("ms");
 
-// exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("untimeout")
@@ -28,6 +25,7 @@ module.exports = {
                 .setRequired(false)
         ),
     category: "moderation",
+    usage: "/untimeout",
     botPermissions: ["ModerateMembers"],
     userPermissions: ["ModerateMembers"],
     /**

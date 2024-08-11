@@ -1,6 +1,4 @@
-// event handler function
 async function loadEvents(client, dir) {
-    // variables
     const ascii = require("ascii-table");
     const table = new ascii("EVENTS")
         .setBorder("│", "─", " ", " ")
@@ -20,14 +18,19 @@ async function loadEvents(client, dir) {
 
             table.addRow(file.split("\\").pop(), "✅");
         } catch (error) {
-            table.addRow(file.split("\\").pop(), `❌ | ${file}`);
-            throw error;
+            table
+                .setHeading("FILES", "STATUS", "PATH", "ERROR")
+                .addRow(
+                    file.split("\\").pop(),
+                    "❌",
+                    file.split("\\").slice(7).join("\\"),
+                    `${error}`
+                );
         }
     }
 
     console.log(table.toString());
-    return client.log("loaded events", "log");
+    return client.log("✅ loaded events", "log");
 }
 
-// exporting the function
 module.exports = { loadEvents };

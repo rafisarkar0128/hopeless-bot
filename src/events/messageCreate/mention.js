@@ -1,7 +1,5 @@
-// variables
 const { Client, Message, EmbedBuilder } = require("discord.js");
 
-// exporting the code
 module.exports = {
     name: "messageCreate",
     once: false,
@@ -14,33 +12,25 @@ module.exports = {
      */
     execute: async (client, message) => {
         const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
-
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: client.user.tag,
-                iconURL: client.user.displayAvatarURL(),
+                name: message.author.username,
+                iconURL: message.author.displayAvatarURL(),
             })
             .setTitle("Did you just mention my me?")
             .setDescription(
-                [
-                    `Hello <@${message.author.id}>!`,
-                    `I am <@${client.user.id}>, a bot developed by **theassassin0128** for the purpose of manage and maintain this server. For more information or any kind of help regarding the bot by use **\`/help\`** command.`,
-                ].join("\n")
+                `I am ${client.user.username}, a bot developed by **theassassin0128** to manage this server. For more information or help use **\`/help\`**.`
             )
-            .setColor(client.colors.powderBlue)
             .setThumbnail(client.user.displayAvatarURL())
+            .setColor(client.colors.main)
             .setFooter({
-                text: message.author.username,
-                iconURL: message.author.displayAvatarURL(),
-            })
-            .setTimestamp();
+                text: `Powered by ${client.user.username}`,
+            });
 
         if (message.author.bot) return;
-
-        if (message.content.match(prefixMention)) {
-            return message.reply({
-                embeds: [embed],
-            });
-        } else return;
+        if (!message.content.match(prefixMention)) return;
+        return message.reply({
+            embeds: [embed],
+        });
     },
 };

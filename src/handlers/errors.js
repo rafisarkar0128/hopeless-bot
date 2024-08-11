@@ -1,6 +1,5 @@
-// a function to make sure the bot remains active.
 async function loadErrors() {
-    const { log } = require("../functions/log.js");
+    const log = require("../functions/log.js");
     const chalk = require("chalk");
 
     process.on("beforeExit", (code) => {

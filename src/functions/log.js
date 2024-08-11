@@ -1,9 +1,7 @@
-// variables
 const chalk = require("chalk");
 const moment = require("moment");
 
-// function for logging
-function log(content, type = "log") {
+module.exports = (content, type = "log") => {
     const date = `${moment().format("DD-MM-YYYY hh:mm:ss")}`;
 
     switch (type) {
@@ -63,7 +61,4 @@ function log(content, type = "log") {
                 "Logger type must be either warn, debug, log, ready, command or error."
             );
     }
-}
-
-// exporting the function
-module.exports = { log };
+};

@@ -1,6 +1,6 @@
 {
     "name": "hopeless-bot",
-    "version": "0.0.6",
+    "version": "1.0.0",
     "description": "A discord bot for a private server.",
     "main": "index.js",
     "scripts": {
@@ -33,5 +33,13 @@
         "moment": "^2.30.1",
         "mongoose": "^8.5.2",
         "ms": "^2.1.3"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/theassassin0128/Hopeless-Bot.git"
+    },
+    "bugs": {
+        "url": "https://github.com/theassassin0128/Hopeless-Bot/issues"
+    },
+    "homepage": "https://github.com/theassassin0128/Hopeless-Bot#readme"
 }

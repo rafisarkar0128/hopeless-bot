@@ -1,5 +1,4 @@
-// function to get total amount of users
-async function getMemberCount(client) {
+module.exports = async (client) => {
     var memberCount = 0;
 
     client.guilds.cache.forEach((guild) => {
@@ -7,7 +6,4 @@ async function getMemberCount(client) {
     });
 
     return memberCount;
-}
-
-// exporting the function
-module.exports = { getMemberCount };
+};

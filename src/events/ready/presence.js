@@ -26,18 +26,21 @@ module.exports = {
                 name: "/help.",
                 type: ActivityType.Listening,
             },
+            {
+                name: "Bhoot FM",
+                type: ActivityType.Listening,
+                state: "Bhoot FM - the night comes alive with gramenphone.",
+            },
         ];
-        client.user.setStatus("online");
+
+        client.user.setStatus("idle");
 
         let i = 0;
 
-        setInterval(
-            () => {
-                client.user.setActivity(activities[i]);
-                i++;
-                if (i >= activities.length) i = 0;
-            },
-            10 * 60 * 1000
-        );
+        setInterval(() => {
+            client.user.setPresence(activities[i]);
+            i++;
+            if (i >= activities.length) i = 0;
+        }, 10 * 60 * 1000);
     },
 };

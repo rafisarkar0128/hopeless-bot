@@ -1,4 +1,3 @@
-// veriables
 const {
     SlashCommandBuilder,
     EmbedBuilder,
@@ -6,13 +5,15 @@ const {
     ChatInputCommandInteraction,
 } = require("discord.js");
 
-// exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("roles")
-        .setDescription("Get server role list.")
+        .setDescription("Get the role list of a server.")
         .setDMPermission(false),
     category: "public",
+    usage: "/roles",
+    userPermissions: [],
+    botPermissions: [],
     /**
      *
      * @param {ChatInputCommandInteraction} interaction

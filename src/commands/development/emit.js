@@ -1,4 +1,3 @@
-// variables
 const {
     SlashCommandBuilder,
     PermissionFlagsBits,
@@ -6,7 +5,6 @@ const {
     ChatInputCommandInteraction,
 } = require("discord.js");
 
-// exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("emit")
@@ -36,42 +34,49 @@ module.exports = {
                 .setRequired(false)
         ),
     category: "development",
+    usage: "/emit",
     botPermissions: ["ManageGuild"],
     userPermissions: ["ManageGuild"],
+    devOnly: true,
     /**
      *
      * @param {Client} client
      * @param {ChatInputCommandInteraction} interaction
      */
     execute: async (client, interaction) => {
-        const member =
-            interaction.options.getMember("member") || interaction.member;
-        const string = interaction.options.getString("event");
+        try {
+            const member =
+                interaction.options.getMember("member") || interaction.member;
+            const string = interaction.options.getString("event");
 
-        switch (string) {
-            case "add":
-                {
-                    client.emit("guildMemberAdd", member);
+            switch (string) {
+                case "add":
+                    {
+                        client.emit("guildMemberAdd", member);
 
-                    interaction.reply({
-                        content: "Emitted Guild Member Add event successfully.",
-                        ephemeral: true,
-                    });
-                }
-                break;
-            case "remove":
-                {
-                    client.emit("guildMemberRemove", member);
+                        interaction.reply({
+                            content:
+                                "Emitted Guild Member Add event successfully.",
+                            ephemeral: true,
+                        });
+                    }
+                    break;
+                case "remove":
+                    {
+                        client.emit("guildMemberRemove", member);
 
-                    interaction.reply({
-                        content:
-                            "Emitted Guild Member Remove event successfully.",
-                        ephemeral: true,
-                    });
-                }
-                break;
-            default:
-                break;
+                        interaction.reply({
+                            content:
+                                "Emitted Guild Member Remove event successfully.",
+                            ephemeral: true,
+                        });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            throw error;
         }
     },
 };

@@ -1,14 +1,12 @@
-// exporting some configs
 module.exports = {
-    // important stuff
     config: {
-        token: process.env["DISCORD_TOKEN"] || undefined,
-        mongouri: process.env["MONGO_URI"] || undefined,
-        serverId: process.env["SERVER_ID"] || undefined,
-        botId: process.env["CLIENT_ID"] || undefined,
-        ownerId: process.env["OWNER_ID"] || undefined,
+        token: process.env["DISCORD_TOKEN"],
+        mongouri: process.env["MONGO_URI"],
+        serverId: process.env["SERVER_ID"],
+        botId: process.env["CLIENT_ID"],
+        ownerId: process.env["OWNER_ID"],
+        devs: process.env["DEVELOPER_ID"],
     },
-    // colors for embeds
     colors: {
         main: "#d0cab1",
         error: "FF0000",
@@ -18,12 +16,10 @@ module.exports = {
         powderBlue: "#b0e0e6",
         azure: "#007FFF",
     },
-    // emojis for music commands
     emojis: {
         play: "▶️",
         stop: "⏹️",
         queue: "📄",
-        success: "☑️",
         repeat: "🔁",
         error: "❌",
         success: "✅",

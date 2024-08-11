@@ -1,8 +1,6 @@
-// variables
 const { Client } = require("discord.js");
 const mongoose = require("mongoose");
 
-// exporting the modules
 module.exports = {
     name: "ready",
     once: true,

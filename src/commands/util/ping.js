@@ -1,4 +1,3 @@
-// variables
 const {
     SlashCommandBuilder,
     Client,
@@ -6,13 +5,15 @@ const {
     EmbedBuilder,
 } = require("discord.js");
 
-// exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("🏓Replies with an embed containing information.")
         .setDMPermission(true),
     category: "util",
+    usage: "/ping",
+    userPermissions: [],
+    botPermissions: [],
     /**
      *
      * @param {Client} client
@@ -20,7 +21,7 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         try {
-            await interaction.deferReply();
+            await interaction.deferReply({});
 
             const days = Math.floor(client.uptime / 86400000);
             const hours = Math.floor(client.uptime / 3600000) % 24;
@@ -36,8 +37,8 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setAuthor({
-                    name: client.user.username,
-                    iconURL: client.user.displayAvatarURL(),
+                    name: interaction.user.username,
+                    iconURL: interaction.user.displayAvatarURL(),
                 })
                 .setTitle("MY RUNTIME STATS")
                 .setColor(
@@ -51,30 +52,27 @@ module.exports = {
                 .addFields([
                     {
                         name: `📡 WS Ping`,
-                        value: `>>> \`\`\`yml\n${
+                        value: `\`\`\`yml\n${
                             wsPing <= 200 ? "🟢" : wsPing <= 400 ? "🟡" : "🔴"
                         } ${wsPing}ms\`\`\``,
                         inline: true,
                     },
                     {
                         name: `🛰 API Ping`,
-                        value: `>>> \`\`\`yml\n${
+                        value: `\`\`\`yml\n${
                             apiPing <= 200 ? "🟢" : apiPing <= 400 ? "🟡" : "🔴"
                         } ${apiPing}ms\`\`\``,
                         inline: true,
                     },
                     {
                         name: `⏲ Uptime`,
-                        value: `>>> \`\`\`m\n${days} Days : ${hours} Hrs : ${minutes} Mins : ${seconds} Secs\`\`\``,
+                        value: `\`\`\`m\n${days} Days : ${hours} Hrs : ${minutes} Mins : ${seconds} Secs\`\`\``,
                         inline: false,
                     },
                 ])
                 .setFooter({
-                    text: interaction.user.username,
-                    iconURL: interaction.user.displayAvatarURL(),
-                })
-                .setTimestamp();
-
+                    text: `Powered by ${client.user.username}`,
+                });
             return interaction.editReply({
                 embeds: [embed],
             });

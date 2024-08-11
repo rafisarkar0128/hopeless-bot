@@ -1,23 +1,26 @@
-// variables
 const {
     EmbedBuilder,
-    SlashCommandBuilder,
     Client,
     ChatInputCommandInteraction,
+    SlashCommandBuilder,
 } = require("discord.js");
 const moment = require("moment");
-const { category } = require("../moderation/purge");
 
-// exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("roleinfo")
-        .setDescription("View any role's information")
+        .setDescription("📖 View any role's information.")
         .setDMPermission(false)
         .addRoleOption((options) =>
-            options.setName("role").setDescription("The role").setRequired(true)
+            options
+                .setName("role")
+                .setDescription("Select a role.")
+                .setRequired(true)
         ),
     category: "public",
+    usage: "/info role",
+    userPermissions: [],
+    botPermissions: [],
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
@@ -28,10 +31,6 @@ module.exports = {
             interaction.options.getRole("role").id
         );
         const embed = new EmbedBuilder()
-            .setAuthor({
-                name: client.user.tag,
-                iconURL: client.user.displayAvatarURL(),
-            })
             .setTitle("Role Information")
             .setColor(role.hexColor)
             .setThumbnail(role.icon ? role.iconURL() : null)
@@ -48,9 +47,9 @@ module.exports = {
                 },
                 {
                     name: "Created On",
-                    value: `\`\`\`\n${moment(role.createdAt).format(
+                    value: `\`\`\`yml\n${moment(role.createdAt).format(
                         "dddd, MMMM Do YYYY, h:mm:ss A"
-                    )}\n - ${moment(
+                    )}\n- ${moment(
                         role.createdAt,
                         "YYYYMMDD"
                     ).fromNow()}\`\`\``,
@@ -69,25 +68,30 @@ module.exports = {
                 },
                 {
                     name: "Color Code",
-                    value: `\`\`\`yml\n${role.hexColor}\`\`\``,
+                    value: `\`\`\`css\n${role.hexColor}\`\`\``,
                     inline: true,
                 },
                 {
-                    name: "EXTRA",
-                    value: [
-                        `\`\`\`yml`,
-                        `Mentionable : ${role.mentionable}`,
-                        `Separated   : ${role.hoist}`,
-                        `Integration : ${role.managed}`,
-                        `\`\`\``,
-                    ].join("\n"),
+                    name: "Mentionable",
+                    value: `\`\`\`yml\n${
+                        role.mentionable ? "Yes" : "No"
+                    }\n\`\`\``,
+                    inline: true,
+                },
+                {
+                    name: "Hoisted",
+                    value: `\`\`\`yml\n${role.hoist ? "Yes" : "No"}\n\`\`\``,
+                    inline: true,
+                },
+                {
+                    name: "Bot Role",
+                    value: `\`\`\`yml\n${role.managed ? "Yes" : "No"}\n\`\`\``,
+                    inline: true,
                 }
             )
             .setFooter({
-                text: interaction.user.username,
-                iconURL: interaction.user.displayAvatarURL(),
-            })
-            .setTimestamp();
+                text: `Powered by ${client.user.username}`,
+            });
 
         return interaction.reply({
             embeds: [embed],

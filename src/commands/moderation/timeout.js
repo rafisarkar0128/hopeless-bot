@@ -1,4 +1,3 @@
-// variables
 const {
     SlashCommandBuilder,
     PermissionFlagsBits,
@@ -8,7 +7,6 @@ const {
 } = require("discord.js");
 const ms = require("ms");
 
-// exporting the module
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("timeout")
@@ -34,6 +32,7 @@ module.exports = {
                 .setRequired(false)
         ),
     category: "moderation",
+    usage: "/timeout",
     botPermissions: ["ModerateMembers"],
     userPermissions: ["ModerateMembers"],
     /**

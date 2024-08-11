@@ -1,7 +1,5 @@
-// variables
 const { Client } = require("discord.js");
 
-// exporting the code
 module.exports = {
     name: "ready",
     once: true,
