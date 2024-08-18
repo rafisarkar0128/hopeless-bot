@@ -9,11 +9,14 @@
 
 -   [x] **Basic Bot**
 -   [ ] **Moderation Bot**
+-   [ ] **Music Bot**
 -   [ ] **Chat Bot**
 -   [ ] **Web based Dashboard**
 -   [ ] **Website**
 
 ## Features
+
+1. Includes an advance command and Event Handler.
 
 ## Get Started
 
@@ -25,9 +28,8 @@
     - Disable "Public Bot" unless you want your bot to be visible to everyone.
     - Enable "Server Members Intent", "Presence Intent" and "Message Content Intent" under "Privileged Gateway Intents".
 1. Go to the Oauth2 tab, copy your "Client ID", and fill in `CLIENT_ID`.
-1. Copy your discord account id and fill in `OWNER_ID`.
-1. Copy your discord server id and fill in `SERVER_ID` test server.
-1. Copy your and others discord id and fill in `DEVELOPER_ID` for devs.
+1. Fill in `OWNER_ID`as your discord userId, `SERVER_ID` as test server.
+1. Fill in `DEVELOPER_ID` for devs.
 1. Install dependencies and run the bot.
     ```
     npm install
@@ -35,24 +37,33 @@
     ```
 1. Now go to Install tab
     - In Installation Contexts select `Guild Install` & scroll down to Default Install Settings.
-    - In Guild Install for `SCOPES` select `applications.commands` & `bot`, for `PERMISSIONS` select `Administrator` permission.
-    - Now above in `Install Link` select discord provided link and copy the link below.
+    - For `SCOPES` select `applications.commands` & `bot`, for `PERMISSIONS` select `Administrator` permission.
+    - Above in `Install Link` select discord provided link and copy the link.
     - Use the copied link to invite the bot to your server.
-1. Start using the bot. Use `/ping` or `/botinfo` command.
+1. Start using the bot. Use `/ping` or `/botinfo` command for test.
 
 ## Customization
 
-[`src/config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config.js) is a config module dedicated for bots config and other stuff. Change the values there according to your need.
+[`src/config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config.js) is a config module dedicated for bot config and other stuff. Change the values according to your need.
 
-> **Note** : use hex color code for the colors. (example: #FF0000 or "RED")
+> **Note** : use hex color code for the colors. (example: #FF0000)
 
 ## TOOLS
 
 1. [`tools/clearCommands.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/tools/clearCommands.js) is a tool which can clear application commands both global and guild based ones.
-    ```sh
-    node tools/clearCommands.js # This will clear every slash command of the bot.
+
+    ```bash
+    # you can run the module like this ⬇️. This will clear every slash command of the bot.
+    node tools/clearCommands.js
     ```
-    It can also be used as a function as it's already been exported `module.exports = { clearCommands };`.
+
+    It can also be used as a function as it can be called like this ⬇️
+
+    ```js
+    const { clearCommands } = require("./tools/clearCommands.js");
+
+    clearCommands();
+    ```
 
 ## Commands
 

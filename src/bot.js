@@ -38,13 +38,15 @@ client.colors = colors;
 client.emojis = emojis;
 client.log = require("./functions/log.js");
 
+const { loadCommands } = require("./handlers/commands.js");
 const { loadEvents } = require("./handlers/events.js");
 const { loadErrors } = require("./handlers/errors");
 
 async function startBot() {
     try {
         await loadErrors();
-        await loadEvents(client);
+        await loadEvents(client, "events");
+        await loadCommands(client, "commands");
         client.login(config.token);
     } catch (error) {
         throw error;

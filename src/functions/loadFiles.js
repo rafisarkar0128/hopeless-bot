@@ -8,7 +8,7 @@ function deleteCashedFile(file) {
     }
 }
 
-module.exports = async (dir) => {
+async function loadFiles(dir) {
     try {
         const files = await glob(
             path.join(process.cwd(), "src", dir, `**/*.js`).replace(/\\/g, "/")
@@ -19,4 +19,6 @@ module.exports = async (dir) => {
     } catch (error) {
         throw error;
     }
-};
+}
+
+module.exports = { loadFiles };

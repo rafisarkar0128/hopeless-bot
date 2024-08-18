@@ -11,8 +11,8 @@ module.exports = {
         .setName("roleinfo")
         .setDescription("📖 View any role's information.")
         .setDMPermission(false)
-        .addRoleOption((options) =>
-            options
+        .addRoleOption((option) =>
+            option
                 .setName("role")
                 .setDescription("Select a role.")
                 .setRequired(true)

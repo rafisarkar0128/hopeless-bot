@@ -1,27 +1,28 @@
-async function loadEvents(client) {
+async function loadEvents(client, dir) {
     try {
-        const loadFiles = require("../functions/loadFiles.js");
+        const ascii = require("ascii-table");
+        const table = new ascii("COMMANDS")
+            .setBorder("│", "─", " ", " ")
+            .setHeading("files", "status");
+
+        const { loadFiles } = require("../functions/loadFiles.js");
+        const files = await loadFiles(dir);
 
         await client.events.clear();
 
-        (await loadFiles("events")).forEach((file) => {
-            try {
-                const eventObject = require(file);
-                const execute = (...args) =>
-                    eventObject.execute(client, ...args);
-                const target = eventObject.rest ? client.rest : client;
+        for (const file of files) {
+            const eventObject = require(file);
+            const execute = (...args) => eventObject.execute(client, ...args);
+            const target = eventObject.rest ? client.rest : client;
 
-                client.events.set(eventObject.name, execute);
-                target[eventObject.once ? "once" : "on"](
-                    eventObject.name,
-                    execute
-                );
-            } catch (error) {
-                throw error;
-            }
-        });
+            client.events.set(eventObject.name, execute);
+            target[eventObject.once ? "once" : "on"](eventObject.name, execute);
 
-        client.log("✅ loaded events.", "event");
+            table.addRow(file.split("\\").pop(), "✅");
+        }
+
+        console.log(table.toString());
+        return client.log("✅ loaded events.", "event");
     } catch (error) {
         throw error;
     }

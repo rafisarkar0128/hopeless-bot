@@ -15,13 +15,13 @@ module.exports = {
         .addUserOption((option) =>
             option
                 .setName("member")
-                .setDescription("The member to timeout.")
+                .setDescription("The member to untimeout.")
                 .setRequired(true)
         )
         .addStringOption((option) =>
             option
                 .setName("reason")
-                .setDescription("Reason for the the timeout.")
+                .setDescription("Reason for the the untimeout.")
                 .setRequired(false)
         ),
     category: "moderation",
