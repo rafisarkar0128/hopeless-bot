@@ -36,20 +36,15 @@ const { config, colors, emojis } = require("./config.js");
 client.config = config;
 client.colors = colors;
 client.emojis = emojis;
-
 client.log = require("./functions/log.js");
-client.loadFiles = require("./functions/loadFiles.js");
-client.getMemberCount = require("./functions/getMemberCount.js");
 
-const { loadCommands } = require("./handlers/commands.js");
 const { loadEvents } = require("./handlers/events.js");
 const { loadErrors } = require("./handlers/errors");
 
 async function startBot() {
     try {
         await loadErrors();
-        await loadEvents(client, "src/events");
-        await loadCommands(client, "src/commands");
+        await loadEvents(client);
         client.login(config.token);
     } catch (error) {
         throw error;

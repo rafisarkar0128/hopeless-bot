@@ -43,22 +43,33 @@ module.exports = (content, type = "log") => {
         case "command":
             {
                 console.log(
-                    `[${chalk.gray(date)}]: [${chalk.white(
+                    `[${chalk.gray(date)}]: [${chalk.blueBright(
                         type.toUpperCase()
-                    )}] ${content}`
+                    )}] ${chalk.blueBright(content)}`
                 );
             }
             break;
-        case "event": {
-            console.log(
-                `[${chalk.gray(date)}]: [${chalk.white(
-                    type.toUpperCase()
-                )}] ${content}`
-            );
-        }
+        case "event":
+            {
+                console.log(
+                    `[${chalk.gray(date)}]: [${chalk.yellowBright(
+                        type.toUpperCase()
+                    )}] ${chalk.yellowBright(content)}`
+                );
+            }
+            break;
+        case "ready":
+            {
+                console.log(
+                    `[${chalk.gray(date)}]: [${chalk.greenBright(
+                        type.toUpperCase()
+                    )}] ${chalk.greenBright(content)}`
+                );
+            }
+            break;
         default:
             throw new TypeError(
-                "Logger type must be either warn, debug, log, ready, command or error."
+                "Logger type must be either log, warn, error, debug, command, event or ready."
             );
     }
 };

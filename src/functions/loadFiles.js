@@ -8,10 +8,10 @@ function deleteCashedFile(file) {
     }
 }
 
-module.exports = async (dirName) => {
+module.exports = async (dir) => {
     try {
         const files = await glob(
-            path.join(process.cwd(), dirName, "**/*.js").replace(/\\/g, "/")
+            path.join(process.cwd(), "src", dir, `**/*.js`).replace(/\\/g, "/")
         );
         const jsFiles = files.filter((file) => path.extname(file) === ".js");
         await Promise.all(jsFiles.map(deleteCashedFile));

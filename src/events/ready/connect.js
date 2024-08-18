@@ -11,8 +11,8 @@ module.exports = {
      */
     execute: async (client) => {
         try {
-            await mongoose.connect(client.config.mongouri);
-            client.log("✅ database connected.", "log");
+            mongoose.connect(client.config.mongouri);
+            client.log("✅ database connected.", "ready");
         } catch (error) {
             throw error;
         }

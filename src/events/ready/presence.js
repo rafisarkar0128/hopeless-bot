@@ -19,7 +19,7 @@ module.exports = {
                 type: ActivityType.Watching,
             },
             {
-                name: `With ${await client.getMemberCount(client)} Users.`,
+                name: `With ${await getMemberCount(client)} Users.`,
                 type: ActivityType.Playing,
             },
             {
@@ -44,3 +44,13 @@ module.exports = {
         }, 10 * 60 * 1000);
     },
 };
+
+async function getMemberCount(client) {
+    let memberCount = 0;
+
+    (await client.guilds.cache).forEach((guild) => {
+        memberCount += guild.memberCount;
+    });
+
+    return memberCount;
+}
