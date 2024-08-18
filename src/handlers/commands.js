@@ -7,7 +7,7 @@ async function loadCommands(client, dir) {
             .setBorder("│", "─", " ", " ")
             .setHeading("files", "status");
 
-        const loadFiles = require("../functions/loadFiles.js");
+        const { loadFiles } = require("../functions/loadFiles.js");
         const files = await loadFiles(dir);
 
         let applicationCommands = [];
@@ -18,6 +18,8 @@ async function loadCommands(client, dir) {
 
         for (const file of files) {
             const commandObject = require(file);
+
+            if (commandObject.toggleOff) return;
 
             if (commandObject.subCommand) {
                 client.subCommands.set(commandObject.name, commandObject);
