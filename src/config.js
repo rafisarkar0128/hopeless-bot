@@ -1,9 +1,16 @@
 module.exports = {
     config: {
-        token: process.env["DISCORD_TOKEN"],
-        mongouri: process.env["MONGO_URI"],
+        bot: {
+            token: process.env["DISCORD_TOKEN"],
+            id: process.env["DISCORD_CLIENT_ID"],
+            secret: process.env["DISCORD_CLIENT_SECRET"],
+        },
+        mal: {
+            id: process.env["MAL_CLIENT_ID"],
+            secret: process.env["MAL_CLIENT_SECRET"],
+        },
+        mongoUri: process.env["MONGO_URI"],
         serverId: process.env["SERVER_ID"],
-        botId: process.env["CLIENT_ID"],
         ownerId: process.env["OWNER_ID"],
         devs: process.env["DEVELOPER_ID"],
     },

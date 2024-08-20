@@ -1,7 +1,9 @@
 async function loadCommands(client, dir) {
     try {
         const { REST, Routes } = require("discord.js");
-        const rest = new REST({ version: 10 }).setToken(client.config.token);
+        const rest = new REST({ version: 10 }).setToken(
+            client.config.bot.token
+        );
         const ascii = require("ascii-table");
         const table = new ascii("COMMANDS")
             .setBorder("│", "─", " ", " ")
@@ -37,7 +39,7 @@ async function loadCommands(client, dir) {
         if (applicationGuildCommands.length) {
             rest.put(
                 Routes.applicationGuildCommands(
-                    client.config.botId,
+                    client.config.bot.id,
                     client.config.serverId
                 ),
                 {
@@ -46,7 +48,7 @@ async function loadCommands(client, dir) {
             );
         }
 
-        rest.put(Routes.applicationCommands(client.config.botId), {
+        rest.put(Routes.applicationCommands(client.config.bot.id), {
             body: applicationCommands,
         });
 

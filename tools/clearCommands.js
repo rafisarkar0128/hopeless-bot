@@ -1,22 +1,15 @@
-require("dotenv").config();
-const { REST, Routes } = require("discord.js");
-const rest = new REST().setToken(process.env["DISCORD_TOKEN"]);
+async function clearCommands(token, clientId, serverId) {
+    const { REST, Routes } = require("discord.js");
+    const rest = new REST().setToken(token);
 
-let applicationCommands = [];
-let applicationGuildCommands = [];
+    let applicationCommands = [];
+    let applicationGuildCommands = [];
 
-async function clearCommands() {
-    await rest.put(
-        Routes.applicationGuildCommands(
-            process.env["CLIENT_ID"],
-            process.env["SERVER_ID"]
-        ),
-        {
-            body: applicationGuildCommands,
-        }
-    );
+    await rest.put(Routes.applicationGuildCommands(clientId, serverId), {
+        body: applicationGuildCommands,
+    });
 
-    await rest.put(Routes.applicationCommands(process.env["CLIENT_ID"]), {
+    await rest.put(Routes.applicationCommands(clientId), {
         body: applicationCommands,
     });
 
@@ -25,4 +18,9 @@ async function clearCommands() {
 
 module.exports = { clearCommands };
 
-clearCommands().catch((error) => console.error(error));
+require("dotenv").config();
+clearCommands(
+    process.env["DISCORD_TOKEN"],
+    process.env["DISCORD_CLIENT_ID"],
+    process.env["SERVER_ID"]
+).catch((error) => console.error(error));

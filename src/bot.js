@@ -47,7 +47,7 @@ async function startBot() {
         await loadErrors();
         await loadEvents(client, "events");
         await loadCommands(client, "commands");
-        client.login(config.token);
+        client.login(config.bot.token);
     } catch (error) {
         throw error;
     }
