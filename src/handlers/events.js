@@ -5,8 +5,8 @@ async function loadEvents(client, dir) {
             .setBorder("│", "─", " ", " ")
             .setHeading("files", "status");
 
-        const { loadFiles } = require("../functions/loadFiles.js");
-        const files = await loadFiles(dir);
+        const { loadJSFiles } = require("../utils/file.util.js");
+        const files = await loadJSFiles(dir);
 
         await client.events.clear();
 
@@ -18,7 +18,7 @@ async function loadEvents(client, dir) {
             client.events.set(eventObject.name, execute);
             target[eventObject.once ? "once" : "on"](eventObject.name, execute);
 
-            table.addRow(file.split("\\").pop(), "✅");
+            table.addRow(file.replace(/\\/g, "/").split("/").pop(), "✅");
         }
 
         console.log(table.toString());

@@ -108,14 +108,18 @@ module.exports = {
                 )
         ),
     category: "moderation",
-    usage: "/purge [SubCommand]",
+    usage: "/purge [Sub Command]",
     botPermissions: ["ManageMessages"],
     userPermissions: ["ManageMessages"],
-    cooldown: 10,
+    cooldown: 20,
     /**
      *
      * @param {ChatInputCommandInteraction} interaction
      * @param {Client} client
      */
-    execute: async (client, interaction) => {},
+    execute: async (client, interaction) => {
+        interaction.deferReply({
+            ephemeral: true,
+        });
+    },
 };

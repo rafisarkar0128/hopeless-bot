@@ -8,15 +8,17 @@
 ## Road Map
 
 -   [x] **Basic Bot**
+-   [x] **Advance Bot**
 -   [ ] **Moderation Bot**
 -   [ ] **Music Bot**
--   [ ] **Chat Bot**
 -   [ ] **Web based Dashboard**
 -   [ ] **Website**
 
 ## Features
 
 1. Includes an advance command and Event Handler.
+1. Includes advance commands
+1. Includes error logging system.
 
 ## Get Started
 

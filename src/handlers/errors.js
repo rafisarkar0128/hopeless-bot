@@ -1,5 +1,6 @@
-async function loadErrors() {
-    const log = require("../functions/log.js");
+async function loadErrors(client) {
+    const { sendErrors } = require("../utils/error.util.js");
+    const { log } = require("../utils/log.js");
     const chalk = require("chalk");
 
     process.on("beforeExit", (code) => {
@@ -9,6 +10,7 @@ async function loadErrors() {
             )
         );
         log(code, "error");
+        sendErrors(client, code);
         console.log(
             chalk.yellow(
                 "[AntiCrash] | [BeforeExit_Logs] | [End] : ==============="
@@ -23,6 +25,7 @@ async function loadErrors() {
             )
         );
         log(error, "error");
+        sendErrors(client, error);
         console.log(
             chalk.yellow("[AntiCrash] | [Exit_Logs] | [End] : ===============")
         );
@@ -35,6 +38,7 @@ async function loadErrors() {
             )
         );
         log(reason, "error");
+        sendErrors(client, reason);
         console.log(
             chalk.yellow(
                 "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ==============="
@@ -49,6 +53,7 @@ async function loadErrors() {
             )
         );
         log(promise, "error");
+        sendErrors(client, promise);
         console.log(
             chalk.yellow(
                 "[AntiCrash] | [RejectionHandled_Logs] | [End] : ==============="
@@ -63,6 +68,7 @@ async function loadErrors() {
             )
         );
         log(error, "error");
+        sendErrors(client, error, origin);
         console.log(
             chalk.yellow(
                 "[AntiCrash] | [UncaughtException_Logs] | [End] : ==============="
@@ -77,6 +83,7 @@ async function loadErrors() {
             )
         );
         log(warning, "warn");
+        sendErrors(client, warning);
         console.log(
             chalk.yellow(
                 "[AntiCrash] | [Warning_Logs] | [End] : ==============="

@@ -1,4 +1,5 @@
 const { ChatInputCommandInteraction, Client } = require("discord.js");
+const { onCoolDown } = require("../../utils/cooldown.util.js");
 
 module.exports = {
     name: "interactionCreate",
@@ -14,14 +15,7 @@ module.exports = {
         if (!interaction.isChatInputCommand()) return;
 
         try {
-            var command = await client.commands.get(interaction.commandName);
-
-            var subCommand = interaction.options.getSubcommand(false);
-            if (subCommand) {
-                command = await client.subCommands.get(
-                    interaction.commandName + "." + subCommand
-                );
-            }
+            const command = await client.commands.get(interaction.commandName);
 
             if (!command) {
                 return interaction.reply({
@@ -37,20 +31,18 @@ module.exports = {
                 });
             }
 
+            const cooldown = await onCoolDown(client, interaction, command);
+            if (cooldown && !client.config.devs.includes(interaction.user.id)) {
+                return interaction.reply({
+                    content: `Chill! Command in on cooldown.\n\`\`\`m\nWait for ${cooldown} seconds\n\`\`\``,
+                    ephemeral: true,
+                });
+            }
+
             if (command.devOnly) {
                 if (!client.config.devs.includes(interaction.user.id)) {
                     return interaction.reply({
-                        content: "Only developers can use this command.",
-                        ephemeral: true,
-                    });
-                }
-            }
-
-            if (command.testOnly) {
-                if (!interaction.guild.id == client.config.serverId) {
-                    return interaction.reply({
-                        content:
-                            "This command can only be used in the test server.",
+                        content: `**Only Devs are allowed to use this command.**`,
                         ephemeral: true,
                     });
                 }
@@ -84,15 +76,27 @@ module.exports = {
                 }
             }
 
-            return command.execute(client, interaction);
+            await command.execute(client, interaction);
+
+            if (interaction.options.getSubcommand(false)) {
+                var subCommand = await client.subCommands.get(
+                    interaction.commandName +
+                        "." +
+                        interaction.options.getSubcommand()
+                );
+                if (!subCommand) return;
+                return subCommand.execute(client, interaction);
+            }
         } catch (error) {
-            if (interaction.replied) {
-                interaction.editReply({
-                    content: `An error occured while executing the command.`,
+            const reply = await interaction.fetchReply();
+            if (reply) {
+                interaction.followUp({
+                    content: `**An error occured while executing the command.**`,
+                    ephemeral: true,
                 });
             } else {
                 interaction.reply({
-                    content: `An error occured while executing the command.`,
+                    content: `**An error occured while executing the command.**`,
                     ephemeral: true,
                 });
             }

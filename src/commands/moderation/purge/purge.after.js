@@ -5,9 +5,6 @@ module.exports = {
     subCommand: true,
     category: "moderation",
     usage: "/purge after [message]",
-    botPermissions: ["ManageMessages"],
-    userPermissions: ["ManageMessages"],
-    cooldown: 10,
     /**
      *
      * @param {Client} client
@@ -26,7 +23,7 @@ module.exports = {
                 if (message.interaction?.id == interaction.id) return;
                 if (
                     fetchedMessage &&
-                    message.createdTimestamp >= fetchedMessage.createdTimestamp
+                    message.createdTimestamp > fetchedMessage.createdTimestamp
                 )
                     return messagesToDelete.push(message);
             });
@@ -36,7 +33,7 @@ module.exports = {
                 true
             );
 
-            interaction.reply({
+            interaction.followUp({
                 content: `\`\`\`m\n${deletedMessages.size} ${
                     deletedMessages.size <= 1 ? "message has" : "messages have"
                 } been deleted.\n\`\`\``,

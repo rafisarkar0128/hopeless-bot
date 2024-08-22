@@ -30,21 +30,23 @@ const client = new Client({
 client.commands = new Collection();
 client.events = new Collection();
 client.subCommands = new Collection();
+client.cooldowns = new Collection();
 
 const { config, colors, emojis } = require("./config.js");
+const { log } = require("./utils/log.js");
 
 client.config = config;
 client.colors = colors;
 client.emojis = emojis;
-client.log = require("./functions/log.js");
+client.log = log;
 
 const { loadCommands } = require("./handlers/commands.js");
 const { loadEvents } = require("./handlers/events.js");
-const { loadErrors } = require("./handlers/errors");
+const { loadErrors } = require("./handlers/errors.js");
 
 async function startBot() {
     try {
-        await loadErrors();
+        await loadErrors(client);
         await loadEvents(client, "events");
         await loadCommands(client, "commands");
         client.login(config.bot.token);

@@ -76,16 +76,18 @@ module.exports = {
                 });
             }
 
-            await member.timeout(10, reason);
+            await member.timeout(10000, reason);
+            let content;
 
             if (reason) {
-                return interaction.reply({
-                    content: `**✅ @${member.user.username} has been untimed out for ${reason}**`,
-                });
-            } else
-                return interaction.reply({
-                    content: `**✅ @${member.user.username} has been untimed out!**`,
-                });
+                content = `**✅ @${member.user.username} has been untimed out for ${reason}**`;
+            } else {
+                content = `**✅ @${member.user.username} has been untimed out!**`;
+            }
+
+            return interaction.reply({
+                content: content,
+            });
         } catch (error) {
             throw error;
         }

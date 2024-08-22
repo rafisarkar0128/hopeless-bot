@@ -5,9 +5,6 @@ module.exports = {
     subCommand: true,
     category: "moderation",
     usage: "/purge files [count]",
-    botPermissions: ["ManageMessages"],
-    userPermissions: ["ManageMessages"],
-    cooldown: 10,
     /**
      *
      * @param {Client} client
@@ -32,7 +29,7 @@ module.exports = {
                 true
             );
 
-            interaction.reply({
+            interaction.followUp({
                 content: `\`\`\`m\n${deletedMessages.size} ${
                     deletedMessages.size <= 1 ? "message has" : "messages have"
                 } been deleted.\n\`\`\``,
