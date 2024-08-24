@@ -4,6 +4,7 @@ const {
     EmbedBuilder,
 } = require("discord.js");
 const { onCoolDown } = require("../../utils/cooldown.utils.js");
+const { sendErrors } = require("../../utils/error.utils.js");
 
 module.exports = {
     name: "interactionCreate",
@@ -100,19 +101,21 @@ module.exports = {
                 await interaction.deleteReply();
             }
 
-            interaction.channel
-                .send({
-                    content: `${interaction.user}`,
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor(client.colors.standBy)
-                            .setTitle(
-                                `<:error_logo:1276700084293079161> An error has occured! Try again later!`
-                            ),
-                    ],
-                })
-                .then((message) => setTimeout(() => message.delete(), 9000));
+            const message = await interaction.channel.send({
+                content: `${interaction.user}`,
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(client.colors.standBy)
+                        .setTitle(
+                            `<:error_logo:1276700084293079161> An error has occured! Try again later!`
+                        ),
+                ],
+            });
+            setTimeout(() => {
+                message.delete();
+            }, 9000);
 
+            await sendErrors(client, interaction, error);
             throw error;
         }
     },

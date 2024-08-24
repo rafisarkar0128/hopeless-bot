@@ -38,17 +38,17 @@ module.exports = {
                 .addFields(
                     {
                         name: "Name",
-                        value: `\`\`\`js\n${role.name}\`\`\``,
+                        value: `\`\`\`\n${role.name}\`\`\``,
                         inline: true,
                     },
                     {
                         name: "ID",
-                        value: `\`\`\`yml\n${role.id}\`\`\``,
+                        value: `\`\`\`m\n${role.id}\`\`\``,
                         inline: true,
                     },
                     {
                         name: "Created On",
-                        value: `\`\`\`yml\n${DateTime.fromMillis(
+                        value: `\`\`\`m\n${DateTime.fromMillis(
                             role.createdTimestamp
                         ).toFormat(
                             "cccc, MMMM dd yyyy, h:mm:ss a"
@@ -59,40 +59,36 @@ module.exports = {
                     },
                     {
                         name: `Members`,
-                        value: `\`\`\`yml\n${role.members.size}\`\`\``,
+                        value: `\`\`\`m\n${role.members.size}\`\`\``,
                         inline: true,
                     },
                     {
                         name: `Position (from top)`,
-                        value: `\`\`\`yml\n${
+                        value: `\`\`\`m\n${
                             interaction.guild.roles.cache.size - role.position
                         }\`\`\``,
                         inline: true,
                     },
                     {
                         name: "Color Code",
-                        value: `\`\`\`css\n${role.hexColor}\`\`\``,
+                        value: `\`\`\`\n${role.hexColor}\`\`\``,
                         inline: true,
                     },
                     {
                         name: "Mentionable",
-                        value: `\`\`\`yml\n${
+                        value: `\`\`\`\n${
                             role.mentionable ? "Yes" : "No"
                         }\n\`\`\``,
                         inline: true,
                     },
                     {
                         name: "Hoisted",
-                        value: `\`\`\`yml\n${
-                            role.hoist ? "Yes" : "No"
-                        }\n\`\`\``,
+                        value: `\`\`\`\n${role.hoist ? "Yes" : "No"}\n\`\`\``,
                         inline: true,
                     },
                     {
                         name: "Bot Role",
-                        value: `\`\`\`yml\n${
-                            role.managed ? "Yes" : "No"
-                        }\n\`\`\``,
+                        value: `\`\`\`\n${role.managed ? "Yes" : "No"}\n\`\`\``,
                         inline: true,
                     }
                 )

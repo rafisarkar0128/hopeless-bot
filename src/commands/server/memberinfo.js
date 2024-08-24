@@ -63,13 +63,13 @@ module.exports = {
 
             const joinTime = `${DateTime.fromMillis(
                 member.joinedTimestamp
-            ).toFormat("dd/LL/yyyy HH:mm")} (${DateTime.fromMillis(
+            ).toFormat("dd/LL/yyyy h:mm:ss")} (${DateTime.fromMillis(
                 member.joinedTimestamp
             ).toRelativeCalendar()})`;
 
             const creationTime = `${DateTime.fromMillis(
                 member.user.createdTimestamp
-            ).toFormat("dd/LL/yyyy HH:mm")} (${DateTime.fromMillis(
+            ).toFormat("dd/LL/yyyy h:mm:ss")} (${DateTime.fromMillis(
                 member.user.createdTimestamp
             ).toRelativeCalendar()})`;
 

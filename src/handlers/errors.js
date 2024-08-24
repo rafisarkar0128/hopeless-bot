@@ -1,5 +1,4 @@
 async function loadErrors(client) {
-    const { sendErrors } = require("../utils/error.utils.js");
     const { log } = require("../utils/log.utils.js");
 
     process.on("beforeExit", (code) => {
@@ -7,7 +6,6 @@ async function loadErrors(client) {
             "[AntiCrash] | [BeforeExit_Logs] | [Start] : ===============".yellow
         );
         log(code, "error");
-        sendErrors(client, code);
         console.log(
             "[AntiCrash] | [BeforeExit_Logs] | [End] : ===============".yellow
         );
@@ -18,7 +16,6 @@ async function loadErrors(client) {
             "[AntiCrash] | [Exit_Logs] | [Start]  : ===============".yellow
         );
         log(error, "error");
-        sendErrors(client, error);
         console.log(
             "[AntiCrash] | [Exit_Logs] | [End] : ===============".yellow
         );
@@ -30,10 +27,10 @@ async function loadErrors(client) {
                 .yellow
         );
         log(reason, "error");
-        sendErrors(client, reason);
-
-        "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ==============="
-            .yellow;
+        console.log(
+            "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ==============="
+                .yellow
+        );
     });
 
     process.on("rejectionHandled", (promise) => {
@@ -42,7 +39,6 @@ async function loadErrors(client) {
                 .yellow
         );
         log(promise, "error");
-        sendErrors(client, promise);
         console.log(
             "[AntiCrash] | [RejectionHandled_Logs] | [End] : ==============="
                 .yellow
@@ -55,7 +51,6 @@ async function loadErrors(client) {
                 .yellow
         );
         log(error, "error");
-        sendErrors(client, error);
         console.log(
             "[AntiCrash] | [UncaughtException_Logs] | [End] : ==============="
                 .yellow
@@ -67,7 +62,6 @@ async function loadErrors(client) {
             "[AntiCrash] | [Warning_Logs] | [Start] : ===============".yellow
         );
         log(warning, "warn");
-        sendErrors(client, warning);
         console.log(
             "[AntiCrash] | [Warning_Logs] | [End] : ===============".yellow
         );
