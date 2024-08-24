@@ -73,7 +73,7 @@ async function loadCommands(client, dir) {
 
         setTimeout(() => {
             console.log(table.toString());
-        }, 5e3);
+        }, 1e4);
     } catch (error) {
         throw error;
     }

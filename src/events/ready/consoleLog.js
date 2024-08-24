@@ -15,7 +15,7 @@ module.exports = {
     execute: async (client) => {
         client.log(`✅ logged in as ${client.user.tag}.`, "ready");
         table
-            .addRow(`Bot Username`, client.user.tag)
+            .addRow(`Bot Tag`, client.user.tag)
             .addRow(`Guild(s)`, `${client.guilds.cache.size} Server(s)`)
             .addRow(
                 `Member(s)`,

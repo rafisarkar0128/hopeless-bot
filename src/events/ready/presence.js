@@ -28,11 +28,6 @@ module.exports = {
                 name: "/help.",
                 type: ActivityType.Listening,
             },
-            {
-                name: "Bhoot FM",
-                type: ActivityType.Listening,
-                state: "Bhoot FM - the night comes alive with gramenphone.",
-            },
         ];
 
         client.user.setStatus("idle");
@@ -43,6 +38,6 @@ module.exports = {
             client.user.setPresence(activities[i]);
             i++;
             if (i >= activities.length) i = 0;
-        }, 120e3);
+        }, 6e4);
     },
 };

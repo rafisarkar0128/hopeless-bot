@@ -7,7 +7,7 @@ function log(content, type = "log") {
         " | ".magenta +
         `${date.toFormat("dd/LL/yyyy")}`.red +
         " | ".magenta +
-        `${date.toFormat("h:mm:ss a")}`.blue +
+        `${date.toFormat("HH:mm:ss")}`.blue +
         " | ".magenta;
 
     switch (type) {
