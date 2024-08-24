@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("colors");
 const {
     Client,
     GatewayIntentBits,
@@ -33,12 +34,14 @@ client.subCommands = new Collection();
 client.cooldowns = new Collection();
 
 const { config, colors, emojis } = require("./config.js");
-const { log } = require("./utils/log.js");
+const { log, mainLogBox } = require("./utils/log.utils.js");
+const pkg = require("../package.json");
 
 client.config = config;
 client.colors = colors;
 client.emojis = emojis;
 client.log = log;
+client.pkg = pkg;
 
 const { loadCommands } = require("./handlers/commands.js");
 const { loadEvents } = require("./handlers/events.js");
@@ -47,6 +50,7 @@ const { loadErrors } = require("./handlers/errors.js");
 async function startBot() {
     try {
         await loadErrors(client);
+        await mainLogBox(pkg);
         await loadEvents(client, "events");
         await loadCommands(client, "commands");
         client.login(config.bot.token);

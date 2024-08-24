@@ -5,24 +5,37 @@ async function loadEvents(client, dir) {
             .setBorder("│", "─", " ", " ")
             .setHeading("files", "status");
 
-        const { loadJSFiles } = require("../utils/file.util.js");
+        const { loadJSFiles } = require("../utils/file.utils.js");
         const files = await loadJSFiles(dir);
 
         await client.events.clear();
 
+        let i = 0;
         for (const file of files) {
-            const eventObject = require(file);
-            const execute = (...args) => eventObject.execute(client, ...args);
-            const target = eventObject.rest ? client.rest : client;
+            try {
+                const eventObject = require(file);
+                const execute = (...args) =>
+                    eventObject.execute(client, ...args);
+                const target = eventObject.rest ? client.rest : client;
 
-            client.events.set(eventObject.name, execute);
-            target[eventObject.once ? "once" : "on"](eventObject.name, execute);
+                client.events.set(eventObject.name, execute);
+                target[eventObject.once ? "once" : "on"](
+                    eventObject.name,
+                    execute
+                );
 
-            table.addRow(file.replace(/\\/g, "/").split("/").pop(), "✅");
+                table.addRow(file.replace(/\\/g, "/").split("/").pop(), "✅");
+                i++;
+            } catch (error) {
+                table.addRow(file.replace(/\\/g, "/").split("/").pop(), "❌");
+            }
         }
 
-        console.log(table.toString());
-        return client.log("✅ loaded events.", "event");
+        client.log(`✅ loaded ${i} events.`, "event");
+
+        setTimeout(() => {
+            console.log(table.toString());
+        }, 5e3);
     } catch (error) {
         throw error;
     }

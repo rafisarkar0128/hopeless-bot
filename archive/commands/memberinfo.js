@@ -1,11 +1,41 @@
-/**
- * This file is dedicated to some old code that was used partly on a command or a function for a command or
- * they might have been a part of some greater code base for a larger command.
- *
- * I am kidding these code are mostly by product of some command or function.
- */
+// Part of memberinfo | userinfo command.
 
-// Part of a code from a command. Part of memberinfo | userinfo command.
+const response = await axios.get(
+    `https://discord-arts.asure.dev/v1/user/${member.id}`,
+    {
+        headers: {
+            "x-darts-version": "0.6.1",
+        },
+    }
+);
+//console.log(response.data);
+
+const User = await axios.get(`https://discord.com/api/v10/users/${member.id}`, {
+    headers: {
+        Authorization: `Bot ${client.token}`,
+    },
+});
+console.log(User.data);
+console.log(member.user.flags.toArray());
+
+const Discord_Employee = 1;
+const Partnered_Server_Owner = 2;
+const HypeSquad_Events = 4;
+const Bug_Hunter_Level_1 = 8;
+const House_Bravery = 64;
+const House_Brilliance = 128;
+const House_Balance = 256;
+const Early_Supporter = 512;
+const Bug_Hunter_Level_2 = 16384;
+const Early_Verified_Bot_Developer = 131072;
+
+const flags = User.data.flags;
+
+if ((flags & Discord_Employee) == Discord_Employee) {
+    var badge_Discord_Employee = "true";
+} else {
+    var badge_Discord_Employee = "false";
+}
 
 const avatarButton = new ButtonBuilder()
     .setLabel("avatar")

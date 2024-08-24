@@ -41,7 +41,7 @@ module.exports = {
                     "Get info about the error messages logging system."
                 )
         ),
-    category: "system",
+    category: "util",
     usage: "/error [Sub Command]",
     userPermissions: [],
     botPermissions: [],

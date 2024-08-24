@@ -1,12 +1,3 @@
-async function getRandomBanner(Path = `${process.cwd()}/assets/banners`) {
-    const path = require("path");
-    const { glob } = require("glob");
-    const banners = await glob(
-        path.join(Path, "**/*.{png,jpg,jpeg,gif}").replace(/\\/g, "/")
-    );
-    return banners[Math.floor(Math.random() * banners?.length)];
-}
-
 function addSuffix(number) {
     if (number % 100 >= 11 && number % 100 <= 13) return number + "th";
     switch (number % 10) {
@@ -37,17 +28,22 @@ function addBadges(badgeNames) {
         VerifiedDeveloper: "<:discordbotdev:1272302089434828891>",
         BotHTTPInteractions: "<:supportscommands:1275412776936017931>",
         VerifiedBot:
-            "<:verifiedbot1:1275477687108108358><:verifiedbot2:1275477702362533991>",
+            "<:verifiedapp1:1276544639779737694><:verifiedapp2:1276544658868142133><:verifiedapp3:1276544675393835168>",
+
+        //"<:verifiedbot1:1275477687108108358><:verifiedbot2:1275477702362533991>" return verified bot logo,
     };
     return badgeNames.map((badgeName) => badgeMap[badgeName] || "❔").join("");
 }
 
-function getJoinedPosition(data, id) {
-    return (
+async function getJoinedPosition(interaction, id) {
+    let guildMembers = await interaction.guild.members.fetch();
+    let position =
         Array.from(
-            data.sort((a, b) => a.joinedTimestamp - b.joinedTimestamp).keys()
-        ).indexOf(id) + 1
-    );
+            guildMembers
+                .sort((a, b) => a.joinedTimestamp - b.joinedTimestamp)
+                .keys()
+        ).indexOf(id) + 1;
+    return position;
 }
 
-module.exports = { getRandomBanner, addSuffix, addBadges, getJoinedPosition };
+module.exports = { addSuffix, addBadges, getJoinedPosition };

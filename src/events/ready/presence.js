@@ -19,7 +19,9 @@ module.exports = {
                 type: ActivityType.Watching,
             },
             {
-                name: `With ${await getMemberCount(client)} Users.`,
+                name: `With ${client.guilds.cache
+                    .reduce((a, b) => a + b.memberCount, 0)
+                    .toLocaleString()} Users.`,
                 type: ActivityType.Playing,
             },
             {
@@ -41,16 +43,6 @@ module.exports = {
             client.user.setPresence(activities[i]);
             i++;
             if (i >= activities.length) i = 0;
-        }, 10 * 60 * 1000);
+        }, 120e3);
     },
 };
-
-async function getMemberCount(client) {
-    let memberCount = 0;
-
-    (await client.guilds.cache).forEach((guild) => {
-        memberCount += guild.memberCount;
-    });
-
-    return memberCount;
-}

@@ -1,5 +1,9 @@
-const { ChatInputCommandInteraction, Client } = require("discord.js");
-const { onCoolDown } = require("../../utils/cooldown.util.js");
+const {
+    ChatInputCommandInteraction,
+    Client,
+    EmbedBuilder,
+} = require("discord.js");
+const { onCoolDown } = require("../../utils/cooldown.utils.js");
 
 module.exports = {
     name: "interactionCreate",
@@ -88,18 +92,26 @@ module.exports = {
                 return subCommand.execute(client, interaction);
             }
         } catch (error) {
-            const reply = await interaction.fetchReply();
-            if (reply) {
-                interaction.followUp({
-                    content: `**An error occured while executing the command.**`,
-                    ephemeral: true,
-                });
-            } else {
-                interaction.reply({
-                    content: `**An error occured while executing the command.**`,
-                    ephemeral: true,
-                });
+            if (
+                interaction.replied ||
+                interaction.deferred ||
+                !interaction.isRepliable()
+            ) {
+                await interaction.deleteReply();
             }
+
+            interaction.channel
+                .send({
+                    content: `${interaction.user}`,
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor(client.colors.standBy)
+                            .setTitle(
+                                `<:error_logo:1276700084293079161> An error has occured! Try again later!`
+                            ),
+                    ],
+                })
+                .then((message) => setTimeout(() => message.delete(), 9000));
 
             throw error;
         }

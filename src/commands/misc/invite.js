@@ -14,7 +14,7 @@ module.exports = {
         .setName("invite")
         .setDescription("returns a link button with bots invite url.")
         .setDMPermission(true),
-    category: "util",
+    category: "misc",
     usage: "/invite",
     userPermissions: [],
     botPermissions: [],

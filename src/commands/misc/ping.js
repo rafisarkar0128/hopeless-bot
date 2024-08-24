@@ -10,7 +10,7 @@ module.exports = {
         .setName("ping")
         .setDescription("🏓Replies with an embed containing information.")
         .setDMPermission(true),
-    category: "util",
+    category: "misc",
     usage: "/ping",
     userPermissions: [],
     botPermissions: [],
@@ -20,6 +20,8 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     execute: async (client, interaction) => {
+        const apiPing = ((interaction.createdAt - Date.now()) / 2).toFixed(0);
+        const wsPing = (client.ws.ping / 2).toFixed(0);
         try {
             await interaction.deferReply({});
 
@@ -28,11 +30,6 @@ module.exports = {
             const minutes = Math.floor(client.uptime / 60000) % 60;
             const seconds = Math.floor(client.uptime / 1000) % 60;
 
-            const reply = await interaction.fetchReply();
-
-            const wsPing = client.ws.ping;
-            const apiPing =
-                reply.createdTimestamp - interaction.createdTimestamp;
             const totalPing = wsPing + apiPing;
 
             const embed = new EmbedBuilder()
@@ -43,10 +40,10 @@ module.exports = {
                 .setTitle("MY RUNTIME STATS")
                 .setColor(
                     totalPing <= 400
-                        ? client.colors.androidGreen
+                        ? client.colors.good
                         : totalPing <= 800
-                        ? "Yellow"
-                        : client.colors.americanRose
+                        ? client.colors.standBy
+                        : client.colors.wrong
                 )
                 .setThumbnail(client.user.displayAvatarURL())
                 .addFields([

@@ -106,6 +106,21 @@ module.exports = {
                         .setMinValue(1)
                         .setRequired(true)
                 )
+        )
+        .addSubcommand((option) =>
+            option
+                .setName("commands")
+                .setDescription("Delete messages which are Slash Commands.")
+                .addIntegerOption((option) =>
+                    option
+                        .setName("count")
+                        .setDescription(
+                            "Number of messages to delete. Limit 100."
+                        )
+                        .setMaxValue(100)
+                        .setMinValue(1)
+                        .setRequired(true)
+                )
         ),
     category: "moderation",
     usage: "/purge [Sub Command]",
