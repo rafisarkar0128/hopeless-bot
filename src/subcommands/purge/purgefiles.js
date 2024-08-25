@@ -1,8 +1,7 @@
 const { Client, ChatInputCommandInteraction } = require("discord.js");
 
 module.exports = {
-    name: "purge.files",
-    subCommand: true,
+    name: "purgefiles",
     category: "moderation",
     usage: "/purge files [count]",
     /**
@@ -12,6 +11,10 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         try {
+            await interaction.deferReply({
+                ephemeral: true,
+            });
+
             const count = interaction.options.getInteger("count");
             const fetchedMessages = await interaction.channel.messages.fetch();
             const messagesToDelete = [];

@@ -1,16 +1,13 @@
-async function loadCommands(client, dir) {
+async function loadCommands(client) {
     try {
         const { REST, Routes, Collection } = require("discord.js");
         const rest = new REST({ version: 10 }).setToken(
             client.config.bot.token
         );
-        const ascii = require("ascii-table");
-        const table = new ascii("COMMANDS")
-            .setBorder("│", "─", " ", " ")
-            .setHeading("files", "status");
 
         const { loadJSFiles } = require("../utils/file.utils.js");
-        const files = await loadJSFiles(dir);
+        const commandFiles = await loadJSFiles("commands");
+        const subCommandFiles = await loadJSFiles("subcommands");
 
         let applicationCommands = [];
         let applicationGuildCommands = [];
@@ -19,38 +16,33 @@ async function loadCommands(client, dir) {
         await client.subCommands.clear();
 
         let i = 0;
-        for (const file of files) {
-            try {
-                const commandObject = require(file);
+        let g = 0;
 
-                if (commandObject.toggleOff) continue;
+        for (const file of commandFiles) {
+            const commandObject = require(file);
 
-                if (commandObject.cooldown) {
-                    client.cooldowns.set(
-                        commandObject.data?.name,
-                        new Collection()
-                    );
-                }
-
-                if (commandObject.subCommand) {
-                    client.subCommands.set(commandObject.name, commandObject);
-                } else {
-                    client.commands.set(commandObject.data.name, commandObject);
-                }
-
-                if (commandObject.data) {
-                    if (commandObject.testOnly) {
-                        applicationGuildCommands.push(commandObject.data);
-                    } else {
-                        applicationCommands.push(commandObject.data);
-                    }
-                    i++;
-                }
-                table.addRow(file.replace(/\\/g, "/").split("/").pop(), "✅");
-            } catch (error) {
-                table.addRow(file.replace(/\\/g, "/").split("/").pop(), "❌");
-                console.error(error);
+            if (commandObject.toggleOff) continue;
+            if (commandObject.cooldown) {
+                client.cooldowns.set(
+                    commandObject.data?.name,
+                    new Collection()
+                );
             }
+            if (commandObject.testOnly) {
+                applicationGuildCommands.push(commandObject.data);
+            } else {
+                applicationCommands.push(commandObject.data);
+            }
+
+            client.commands.set(commandObject.data.name, commandObject);
+            i++;
+        }
+
+        for (const file of subCommandFiles) {
+            const subCommandObject = require(file);
+            if (subCommandObject.toggleOff) continue;
+            client.subCommands.set(subCommandObject.name, subCommandFiles);
+            g++;
         }
 
         if (applicationGuildCommands.length) {
@@ -69,11 +61,7 @@ async function loadCommands(client, dir) {
             body: applicationCommands,
         });
 
-        client.log(`✅ loaded ${i} commands.`, "command");
-
-        setTimeout(() => {
-            console.log(table.toString());
-        }, 1e4);
+        client.log(`loaded ${i} commands and ${g} sub commands.`, "command");
     } catch (error) {
         throw error;
     }

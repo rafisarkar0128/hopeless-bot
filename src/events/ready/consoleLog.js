@@ -13,7 +13,7 @@ module.exports = {
      * @param {Client} client
      */
     execute: async (client) => {
-        client.log(`✅ logged in as ${client.user.tag}.`, "ready");
+        client.log(`logged in as ${client.user.tag}.`, "ready");
         table
             .addRow(`Bot Tag`, client.user.tag)
             .addRow(`Guild(s)`, `${client.guilds.cache.size} Server(s)`)

@@ -1,9 +1,8 @@
 const { Client, ChatInputCommandInteraction } = require("discord.js");
-const errorlog = require("../../../schemas/errorlog.js");
+const errorlog = require("../../schemas/errorlog.js");
 
 module.exports = {
     name: "errorlog.toggle",
-    subCommand: true,
     category: "util",
     usage: "/errorlog toggle",
     /**

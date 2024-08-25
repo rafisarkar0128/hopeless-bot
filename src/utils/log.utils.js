@@ -1,10 +1,8 @@
 const { DateTime } = require("luxon");
+const date = DateTime.now();
 
 function log(content, type = "log") {
-    const date = DateTime.now();
     const logString =
-        `${date.toFormat("cccc")}`.green +
-        " | ".magenta +
         `${date.toFormat("dd/LL/yyyy")}`.red +
         " | ".magenta +
         `${date.toFormat("HH:mm:ss")}`.blue +
@@ -13,18 +11,27 @@ function log(content, type = "log") {
     switch (type) {
         case "log":
             {
-                console.log(logString + `${content}`.gray);
+                console.log(
+                    logString +
+                        "log    ".gray +
+                        " | ".magenta +
+                        `${content}`.gray
+                );
             }
             break;
         case "warn":
             {
-                console.log(logString + `${content}`.yellow);
+                console.log(
+                    logString + "warn   " + " | ".magenta + `${content}`.yellow
+                );
             }
             break;
         case "error":
             {
                 console.log(
                     logString +
+                        "error  ".red +
+                        " | ".magenta +
                         `${content.name}: ${content.message}`.red +
                         `\n${content.stack}`
                 );
@@ -32,22 +39,42 @@ function log(content, type = "log") {
             break;
         case "debug":
             {
-                console.log(logString + `${content}`.green);
+                console.log(
+                    logString +
+                        "debug  ".green +
+                        " | ".magenta +
+                        `${content}`.green
+                );
             }
             break;
         case "command":
             {
-                console.log(logString + `${content}`.blue);
+                console.log(
+                    logString +
+                        "command".blue +
+                        " | ".magenta +
+                        `${content}`.blue
+                );
             }
             break;
         case "event":
             {
-                console.log(logString + `${content}`.yellow);
+                console.log(
+                    logString +
+                        "event  ".yellow +
+                        " | ".magenta +
+                        `${content}`.yellow
+                );
             }
             break;
         case "ready":
             {
-                console.log(logString + `${content}`.cyan);
+                console.log(
+                    logString +
+                        "ready  ".cyan +
+                        " | ".magenta +
+                        `${content}`.cyan
+                );
             }
             break;
         default:

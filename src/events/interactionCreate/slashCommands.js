@@ -86,10 +86,14 @@ module.exports = {
             if (interaction.options.getSubcommand(false)) {
                 var subCommand = await client.subCommands.get(
                     interaction.commandName +
-                        "." +
                         interaction.options.getSubcommand()
                 );
-                if (!subCommand) return;
+                if (!subCommand) {
+                    return interaction.reply({
+                        content: "The Sub Command isn't available right now.",
+                        ephemeral: true,
+                    });
+                }
                 return subCommand.execute(client, interaction);
             }
         } catch (error) {

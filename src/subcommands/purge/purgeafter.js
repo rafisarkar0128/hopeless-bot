@@ -1,8 +1,7 @@
 const { Client, ChatInputCommandInteraction } = require("discord.js");
 
 module.exports = {
-    name: "purge.after",
-    subCommand: true,
+    name: "purgeafter",
     category: "moderation",
     usage: "/purge after [message]",
     /**
@@ -12,6 +11,10 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         try {
+            await interaction.deferReply({
+                ephemeral: true,
+            });
+
             const messageLink = interaction.options.getString("message");
             const fetchedMessages = await interaction.channel.messages.fetch();
             const fetchedMessage = fetchedMessages.get(

@@ -1,10 +1,9 @@
 const { Client, ChatInputCommandInteraction } = require("discord.js");
 
 module.exports = {
-    name: "purge.user",
-    subCommand: true,
+    name: "purgeany",
     category: "moderation",
-    usage: "/purge user [user] [count]",
+    usage: "/purge any [count]",
     /**
      *
      * @param {Client} client
@@ -12,7 +11,10 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         try {
-            const user = interaction.options.getMember("user");
+            await interaction.deferReply({
+                ephemeral: true,
+            });
+
             const count = interaction.options.getInteger("count");
             const fetchedMessages = await interaction.channel.messages.fetch();
             const messagesToDelete = [];
@@ -21,8 +23,7 @@ module.exports = {
             fetchedMessages.filter(async (message) => {
                 if (count <= i) return;
                 if (message.interaction?.id == interaction.id) return;
-                if (message.author.id == user.id)
-                    return messagesToDelete.push(message) && i++;
+                return messagesToDelete.push(message) && i++;
             });
 
             const deletedMessages = await interaction.channel.bulkDelete(

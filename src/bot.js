@@ -51,8 +51,8 @@ async function startBot() {
     try {
         await loadErrors(client);
         await mainLogBox(pkg);
-        await loadEvents(client, "events");
-        await loadCommands(client, "commands");
+        await loadEvents(client);
+        await loadCommands(client);
         client.login(config.bot.token);
     } catch (error) {
         throw error;

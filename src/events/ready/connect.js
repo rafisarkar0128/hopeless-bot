@@ -12,7 +12,7 @@ module.exports = {
     execute: async (client) => {
         try {
             await mongoose.connect(client.config.mongoUri);
-            client.log("✅ database connected.", "ready");
+            client.log("database connected.", "ready");
         } catch (error) {
             throw error;
         }
