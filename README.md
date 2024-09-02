@@ -1,74 +1,110 @@
-[![CodeQL](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml/badge.svg)](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml)
-[![Dependency Review](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml)
-[![pages-build-deployment](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/pages/pages-build-deployment)
+<center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
-# HOPELESS BOT
+<center>
 
-**Hopeless Bot** is a multipurpose discord Bot. Specially made for _Moderation_ & _Server-Management_. It was made with [discord.js](https://github.com/discordjs/discord.js) a powerful [**Node.js**](https://nodejs.org/en/) module that allows you to easily interact with the [Discord API](https://discord.com/developers/docs/intro).
+[![Version][version-shield]](version-url)
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![Support Server][support-shield]][support-server]
+[![MIT License][license-shield]][license-url]
+[![CodeQL][codeql]][codeql-url]
+[![CodeQL][dependency-review]][dependency-review-url]
 
-## Road Map
+</center>
+
+<!-- PROJECT LOGO -->
+<div style="background: palegoldenrod;height: 250px;border: none;border-radius: 2em;margin: 15px;font-family: cursive;">
+<img src="https://cdn.discordapp.com/avatars/1272259032098275358/d8837049ef1c007784c53de792af6052.png?size=4096" style="width: 200px;height: 200px;float: left;margin: 25px;border-radius: 2em;"/>
+<h1 style="color: slategray;font-size: 40;font-weight: bolder;text-align: center;">Hopeless Bot</h1>
+<p style="color:black;font-size: 18px;margin-right: 10px;">
+    <b>Hopeless Bot</b> is a multipurpose discord Bot. Specially
+    made for <u>Moderation</u> & <u>Server-Management</u>. It was
+    made with <a href=" https://github.com/discordjs/discord.js">discord.js</a>
+    a powerful <a href="https://nodejs.org"><b>Node.JS</b></a> module that
+    allows you to easily interact with the <a href="https://discord.com/developers/docs/intro">Discord API</a>.
+    <br>
+    <br>
+    <a href="https://discord.com/oauth2/authorize?client_id=1272259032098275358" class="link" id="invite">
+        ✉️ Invite Hopeless Bot
+    </a> • <a href="https://discord.gg/E6H9VvBdTk" class="link" id="server">
+        🆘 Support Server
+    </a> • <a href="https://github.com/theassassin0128/Hopeless-Bot/issues" class="link" id="issues">
+        📝 Bug & Request Feature
+    </a>
+</p>
+</div>
+    
+## 📊 Road Map
 
 -   [x] **Basic Bot**
 -   [x] **Advance Bot**
+-   [ ] **Documentation**
 -   [ ] **Moderation Bot**
 -   [ ] **Music Bot**
 -   [ ] **Web based Dashboard**
 -   [ ] **Website**
 
-## Features
+## 💡 Features
 
 1. Includes an advance command and Event Handler.
-1. Includes advance commands
 1. Includes error logging system.
+1. Includes a validator.
 
-## Get Started
+## ❗Prerequisites❗
 
-1. Copy `.env.example` to `.env` and fill in the values as detailed below.
-1. Create a [MongoDB](https://www.mongodb.com/) database and fill in `MONGO_URL`.
-1. Create a Discord application at https://discord.com/developers/applications.
-1. Go to the Bot tab.
-    - Click "Reset Token" and fill in `DISCORD_TOKEN`.
-    - Disable "Public Bot" unless you want your bot to be visible to everyone.
-    - Enable "Server Members Intent", "Presence Intent" and "Message Content Intent" under "Privileged Gateway Intents".
-1. Go to the Oauth2 tab, copy your "Client ID", and fill in `CLIENT_ID`.
-1. Fill in `OWNER_ID`as your discord userId, `SERVER_ID` as test server.
-1. Fill in `DEVELOPER_ID` for devs.
-1. Install dependencies and run the bot.
-    ```
-    npm install
-    npm start
-    ```
-1. Now go to Install tab
-    - In Installation Contexts select `Guild Install` & scroll down to Default Install Settings.
-    - For `SCOPES` select `applications.commands` & `bot`, for `PERMISSIONS` select `Administrator` permission.
-    - Above in `Install Link` select discord provided link and copy the link.
-    - Use the copied link to invite the bot to your server.
-1. Start using the bot. Use `/ping` or `/botinfo` command for test.
+Before starting with the **SETUP**, you need to have the following:
+
+-   [![Node.JS](https://img.shields.io/badge/Node.js_V18%2B-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
+-   [![Discord.JS](https://img.shields.io/badge/Discord.JS_V14%2B-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
+-   [![Lavalink](https://img.shields.io/badge/Lavalink_V4%2B-fa6f18?style=for-the-badge)](https://github.com/lavalink-devs/lavalink)
+
+### Optional
+
+-   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community) (For MongoDB database)
+-   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/) (For PostgreSQL database)
+-   [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (For Docker Installation)
+-   [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/) (For Docker Installation)
+
+## 📝 Setup
+
+### 📝 Normal Setup
+
+-   **Step 1:** Open `.env.example`
+-   **Step 2:** Put the required values and rename it to `.env`
+-   **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
+-   **Step 5:** Finally run `npm start` in your terminal
+
+### 📝 Setup with Docker
+
+-   **Step 1:** Open `env.example`
+-   **Step 2:** Put the required values and rename it to `.env`
+-   **Step 3:** Run `docker-compose build`
+-   **Step 4:** Finally run `docker-compose up`
+
+### 📝 Replit Guide
+
+**Will be updated soon**
+
+### NOTE:
+
+-   By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
+-   Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
+
+### **Need help with setup?**
+
+Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help in the `#support` channel!
 
 ## Customization
 
-[`src/config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config.js) is a config module dedicated for bot config and other stuff. Change the values according to your need.
+[`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
 
-> **Note** : use hex color code for the colors. (example: #FF0000)
-
-## TOOLS
-
-1. [`tools/clearCommands.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/tools/clearCommands.js) is a tool which can clear application commands both global and guild based ones.
-
-    ```bash
-    # you can run the module like this ⬇️. This will clear every slash command of the bot.
-    node tools/clearCommands.js
-    ```
-
-    It can also be used as a function as it can be called like this ⬇️
-
-    ```js
-    const { clearCommands } = require("./tools/clearCommands.js");
-
-    clearCommands();
-    ```
+> **Note** : use hex color code for the colors. Also there is a [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/colors.json) file which has more than 100 HTML Hex Color Codes.
 
 ## Commands
+
+Written below are some public & utility commands of the bot.
 
 | Name       | description                                              |
 | ---------- | -------------------------------------------------------- |
@@ -79,4 +115,47 @@
 | serverinfo | Same as roleinfo view information about a discord server |
 | userinfo   | Same as serverinfo view information of a discord user    |
 
-Written above are some public & utility commands of the bot.
+## 🔗 Useful Links
+
+-   [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
+-   [![Discord.js](https://img.shields.io/badge/Discord.js-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
+-   [![Lavalink](https://img.shields.io/badge/Lavalink-fa6f18?style=for-the-badge&logo=discord&logoColor=white)](https://github.com/lavalink-devs/Lavalink)
+-   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
+-   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/)
+-   [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+-   [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+
+## 📜 Contributing
+
+Thank you for your interest in contributing to Hopeless-Bot! Here are some guidelines to follow when contributing:
+
+1. Fork the repository and create a new branch for your feature or bug fix.
+2. Write clean and concise code that follows the established coding style.
+3. Create detailed and thorough documentation for any new features or changes.
+4. Write and run tests for your code.
+5. Submit a pull request with your changes.
+   Your contribution will be reviewed, and any necessary feedback or changes will be discussed with you. We appreciate your help in making Lavamusic better!
+
+## 🔐 License
+
+Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/license/theassassin0128/Hopeless-Bot?style=social) for more information.
+
+[version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
+[contributors-url]: https://github.com/theassassin0128/Hopeless-Bot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
+[forks-url]: https://github.com/theassassin0128/Hopeless-Bot/network/members
+[stars-shield]: https://img.shields.io/github/stars/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
+[stars-url]: https://github.com/theassassin0128/Hopeless-Bot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
+[issues-url]: https://github.com/theassassin0128/Hopeless-Bot/issues
+[license-shield]: https://img.shields.io/github/license/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
+[license-url]: https://github.com/theassassin0128/Hopeless-Bot/blob/master/LICENSE
+[support-server]: https://discord.gg/E6H9VvBdTk
+[support-shield]: https://img.shields.io/discord/1054284394791178291.svg?style=for-the-badge&logo=discord&colorB=7289DA
+[codeql]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/codeql.yml?style=for-the-badge&label=CodeQL
+[codeql-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml
+[dependency-review]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/dependency-review.yml?style=for-the-badge&label=Dependency%20Review
+[dependency-review-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml
+[deploy-jekyll]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/jekyll-gh-pages.yml?style=for-the-badge&label=Deploy%20Jekyll%20with%20GitHub%20Pages
+[deploy-jekyll-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/jekyll-gh-pages.yml

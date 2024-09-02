@@ -1,86 +1,86 @@
 body {
-    background: sandybrown;
-    font-family: cursive;
+  background: sandybrown;
+  font-family: cursive;
 }
 
 div#top {
-    text-align: center;
+  text-align: center;
 }
 
 h1#title {
-    color: slateblue;
-    font-weight: bolder;
-    font-size: 40;
+  color: slateblue;
+  font-weight: bolder;
+  font-size: 40;
 }
 
 div#bot {
-    background: palegoldenrod;
-    height: 250px;
-    border: none;
-    border-radius: 2em;
-    margin: 15px;
+  background: palegoldenrod;
+  height: 250px;
+  border: none;
+  border-radius: 2em;
+  margin: 15px;
 }
 
 img#bot {
-    width: 200px;
-    height: 200px;
-    float: left;
-    margin: 25px;
-    border-radius: 2em;
+  width: 200px;
+  height: 200px;
+  float: left;
+  margin: 25px;
+  border-radius: 2em;
 }
 
 h1#bot {
-    color: slategray;
-    font-size: 40;
-    font-weight: bolder;
-    text-align: left;
+  color: slategray;
+  font-size: 40;
+  font-weight: bolder;
+  text-align: left;
 }
 
 p#bot_bio {
-    font-size: 18px;
-    margin-right: 10px;
+  font-size: 18px;
+  margin-right: 10px;
 }
 
 a {
-    color: royalblue;
+  color: royalblue;
 }
 
 a.link {
-    font-size: 18px;
-    margin-left: 10px;
-    margin-right: 10px;
-    pointer-events: fill;
-    background-color: coral;
-    border-radius: 0.5em;
-    padding: 0.2em;
+  font-size: 18px;
+  margin-left: 10px;
+  margin-right: 10px;
+  pointer-events: fill;
+  background-color: coral;
+  border-radius: 0.5em;
+  padding: 0.2em;
 }
 
 div#user {
-    background: peachpuff;
-    height: 250px;
-    border: none;
-    border-radius: 2em;
-    margin: 15px;
+  background: peachpuff;
+  height: 250px;
+  border: none;
+  border-radius: 2em;
+  margin: 15px;
 }
 
 img#user {
-    width: 200px;
-    height: 200px;
-    float: left;
-    margin: 25px;
-    border-radius: 2em;
+  width: 200px;
+  height: 200px;
+  float: left;
+  margin: 25px;
+  border-radius: 2em;
 }
 
 h1#username {
-    color: #ef2426;
-    font-size: 34px;
-    padding-top: 20px;
+  color: #ef2426;
+  font-size: 34px;
+  padding-top: 20px;
 }
 
 div#social_links {
-    text-align: center;
+  text-align: center;
 }
 
 a#social_links {
-    text-align: center;
+  text-align: center;
 }
