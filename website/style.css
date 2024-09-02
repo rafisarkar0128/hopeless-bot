@@ -33,7 +33,7 @@ h1#bot {
     color: slategray;
     font-size: 40;
     font-weight: bolder;
-    text-align: center;
+    text-align: left;
 }
 
 p#bot_bio {
@@ -78,5 +78,9 @@ h1#username {
 }
 
 div#social_links {
+    text-align: center;
+}
+
+a#social_links {
     text-align: center;
 }
