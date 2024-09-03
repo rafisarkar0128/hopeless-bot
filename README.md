@@ -10,26 +10,14 @@
 [![CodeQL][codeql]][codeql-url]
 [![CodeQL][dependency-review]][dependency-review-url]
 
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <a href="https://github.com/theassassin0128/Hopeless-Bot">
-    <img src="https://cdn.discordapp.com/avatars/1272259032098275358/d8837049ef1c007784c53de792af6052.png?size=4096" alt="hopeless-bot" width="200" height="200">
-  </a>
-  <h1 align="center">Hopeless Bot</h1>
-  <p align="center"><b>Hopeless Bot</b> is a multipurpose discord Bot. Specially made for <u>Moderation</u> <u>Server-Management</u>. It was made with <a href=" https://github.com/discordjs/discord.js">discord.js</a> a powerful <a href="https://nodejs.org"><b>Node.JS</b></a> module that allows you to easily interact with the <a href="https://discord.com/developers/docs/intro">Discord API</a>.
-    <br>
-    <br>
-    <a href="https://discord.com/oauth2/authorize?client_id=1272259032098275358" class="link" id="invite">
-        ✉️ Invite Hopeless Bot
-    </a> • <a href="https://discord.gg/E6H9VvBdTk" class="link" id="server">
-        🆘 Support Server
-    </a> • <a href="https://github.com/theassassin0128/Hopeless-Bot/issues" class="link" id="issues">
-        📝 Bug & Request Feature
-    </a>
-  </p>
-</p>
-    
+## Introduction
+
+<center> <a href="https://discord.com/oauth2/authorize?client_id=1272259032098275358"><img src="./public/assets/profile.png"> </a> </center>
+
+**Hopeless Bot** is a multipurpose discord Bot. Specially made for **Moderation** & **Server-Management**. It was made with [discord.js](https://github.com/discordjs/discord.js) a powerful **[Node.JS](https://nodejs.org)** module that allows you to easily interact with the _[Discord API](https://discord.com/developers/docs/intro)_.
+
+[✉️ Invite Hopeless Bot](https://discord.com/oauth2/authorize?client_id=1272259032098275358) • [🆘 Support Server](https://discord.gg/E6H9VvBdTk) • [📝 Bug & Request Feature](https://github.com/theassassin0128/Hopeless-Bot/issues)
+
 ## 📊 Road Map
 
 -   [x] **Basic Bot**
@@ -151,5 +139,3 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 [codeql-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml
 [dependency-review]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/dependency-review.yml?style=for-the-badge&label=Dependency%20Review
 [dependency-review-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml
-[deploy-jekyll]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/jekyll-gh-pages.yml?style=for-the-badge&label=Deploy%20Jekyll%20with%20GitHub%20Pages
-[deploy-jekyll-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/jekyll-gh-pages.yml
