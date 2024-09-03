@@ -2,7 +2,7 @@ const { logger } = require("../utils/log.js");
 const Logger = new logger();
 const path = require("path");
 
-const config = require("../config.js");
+const config = require("./config.js");
 const port = config.website.port;
 
 const express = require("express");
