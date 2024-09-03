@@ -30,17 +30,15 @@ const client = new Client({
 
 client.commands = new Collection();
 client.events = new Collection();
-client.subCommands = new Collection();
 client.cooldowns = new Collection();
 
-const { config, colors, emojis } = require("./config.js");
-const { log, mainLogBox } = require("./utils/log.utils.js");
-const pkg = require("../package.json");
+const { log, mainLogBox, logBox } = require("./utils/log.utils.js");
+const pkg = require(`${process.cwd()}/package.json`);
 
-client.config = config;
-client.colors = colors;
-client.emojis = emojis;
+client.config = require(`${process.cwd()}/config.js`);
+client.colors = require(`${process.cwd()}/colors.json`);
 client.log = log;
+client.logBox = logBox;
 client.pkg = pkg;
 
 const { loadCommands } = require("./handlers/commands.js");
@@ -53,7 +51,7 @@ async function startBot() {
         await mainLogBox(pkg);
         await loadEvents(client);
         await loadCommands(client);
-        client.login(config.bot.token);
+        client.login(client.config.bot.token);
     } catch (error) {
         throw error;
     }

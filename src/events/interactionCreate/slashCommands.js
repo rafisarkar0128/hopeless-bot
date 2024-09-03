@@ -4,7 +4,6 @@ const {
     EmbedBuilder,
 } = require("discord.js");
 const { onCoolDown } = require("../../utils/cooldown.utils.js");
-const { sendErrors } = require("../../utils/error.utils.js");
 
 module.exports = {
     name: "interactionCreate",
@@ -20,7 +19,9 @@ module.exports = {
         if (!interaction.isChatInputCommand()) return;
 
         try {
-            const command = await client.commands.get(interaction.commandName);
+            const command = await client.slashCommands.get(
+                interaction.commandName
+            );
 
             if (!command) {
                 return interaction.reply({
@@ -109,7 +110,7 @@ module.exports = {
                 content: `${interaction.user}`,
                 embeds: [
                     new EmbedBuilder()
-                        .setColor(client.colors.standBy)
+                        .setColor(client.colors.StandBy)
                         .setTitle(
                             `<:error_logo:1276700084293079161> An error has occured! Try again later!`
                         ),
@@ -119,7 +120,7 @@ module.exports = {
                 message.delete();
             }, 9000);
 
-            await sendErrors(client, interaction, error);
+            await client.sendErrors(client, interaction, error);
             throw error;
         }
     },

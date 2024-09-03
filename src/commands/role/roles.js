@@ -20,41 +20,37 @@ module.exports = {
      * @param {Client} client
      */
     execute: async (client, interaction) => {
-        try {
-            await interaction.deferReply();
+        await interaction.deferReply();
 
-            const roles = interaction.guild.roles.cache
-                .sort((a, b) => b.position - a.position)
-                .map((r) => `<@&${r.id}>`);
-            const embed = new EmbedBuilder().setColor(client.colors.good);
-            const roleEmbeds = [];
+        const roles = interaction.guild.roles.cache
+            .sort((a, b) => b.position - a.position)
+            .map((r) => `<@&${r.id}>`);
+        const embed = new EmbedBuilder().setColor(client.colors.good);
+        const roleEmbeds = [];
 
-            if (roles.slice(0, 50)?.length) {
-                embed.setDescription(`${roles.slice(0, 50).join("\n")}`);
-                roleEmbeds.push(embed.toJSON());
-            }
-            if (roles.slice(50, 100).length) {
-                embed.setDescription(`${roles.slice(50, 100).join("\n")}`);
-                roleEmbeds.push(embed.toJSON());
-            }
-            if (roles.slice(100, 150).length) {
-                embed.setDescription(`${roles.slice(100, 150).join("\n")}`);
-                roleEmbeds.push(embed.toJSON());
-            }
-            if (roles.slice(150, 200).length) {
-                embed.setDescription(`${roles.slice(150, 200).join("\n")}`);
-                roleEmbeds.push(embed.toJSON());
-            }
-            if (roles.slice(200, 250).length) {
-                embed.setDescription(`${roles.slice(200, 250).join("\n")}`);
-                roleEmbeds.push(embed.toJSON());
-            }
-
-            return interaction.followUp({
-                embeds: roleEmbeds.length ? roleEmbeds : [],
-            });
-        } catch (error) {
-            throw error;
+        if (roles.slice(0, 50)?.length) {
+            embed.setDescription(`${roles.slice(0, 50).join("\n")}`);
+            roleEmbeds.push(embed.toJSON());
         }
+        if (roles.slice(50, 100).length) {
+            embed.setDescription(`${roles.slice(50, 100).join("\n")}`);
+            roleEmbeds.push(embed.toJSON());
+        }
+        if (roles.slice(100, 150).length) {
+            embed.setDescription(`${roles.slice(100, 150).join("\n")}`);
+            roleEmbeds.push(embed.toJSON());
+        }
+        if (roles.slice(150, 200).length) {
+            embed.setDescription(`${roles.slice(150, 200).join("\n")}`);
+            roleEmbeds.push(embed.toJSON());
+        }
+        if (roles.slice(200, 250).length) {
+            embed.setDescription(`${roles.slice(200, 250).join("\n")}`);
+            roleEmbeds.push(embed.toJSON());
+        }
+
+        return interaction.followUp({
+            embeds: roleEmbeds.length ? roleEmbeds : [],
+        });
     },
 };

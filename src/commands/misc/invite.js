@@ -24,24 +24,20 @@ module.exports = {
      * @param {Client} client
      */
     execute: async (client, interaction) => {
-        try {
-            const inviteLink = client.generateInvite({
-                permissions: BigInt(1539745246838),
-                scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
-            });
-            const button = new ButtonBuilder()
-                .setLabel("Invite Link")
-                .setStyle(ButtonStyle.Link)
-                .setURL(inviteLink)
-                .setEmoji(resolvePartialEmoji("✉️"));
+        const inviteLink = client.generateInvite({
+            permissions: BigInt(630567770521207),
+            scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
+        });
+        const button = new ButtonBuilder()
+            .setLabel("Invite Link")
+            .setStyle(ButtonStyle.Link)
+            .setURL(inviteLink)
+            .setEmoji(resolvePartialEmoji("✉️"));
 
-            return interaction.reply({
-                content: "Invite me by clicking the button.",
-                ephemeral: false,
-                components: [new ActionRowBuilder().addComponents(button)],
-            });
-        } catch (error) {
-            throw error;
-        }
+        return interaction.reply({
+            content: "Invite me by clicking the button.",
+            ephemeral: false,
+            components: [new ActionRowBuilder().addComponents(button)],
+        });
     },
 };

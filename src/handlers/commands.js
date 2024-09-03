@@ -1,67 +1,50 @@
+const colors = require("colors");
+const { REST, Routes, Collection } = require("discord.js");
+const { loadJSFiles } = require("../utils/file.utils.js");
+
 async function loadCommands(client) {
     try {
-        const { REST, Routes, Collection } = require("discord.js");
         const rest = new REST({ version: 10 }).setToken(
             client.config.bot.token
         );
-
-        const { loadJSFiles } = require("../utils/file.utils.js");
-        const commandFiles = await loadJSFiles("commands");
-        const subCommandFiles = await loadJSFiles("subcommands");
-
-        let applicationCommands = [];
-        let applicationGuildCommands = [];
-
-        await client.commands.clear();
-        await client.subCommands.clear();
+        const files = await loadJSFiles("commands");
+        const applicationCommands = [];
 
         let i = 0;
-        let g = 0;
+        for (const file of files) {
+            const object = require(file);
 
-        for (const file of commandFiles) {
-            const commandObject = require(file);
-
-            if (commandObject.toggleOff) continue;
-            if (commandObject.cooldown) {
-                client.cooldowns.set(
-                    commandObject.data?.name,
-                    new Collection()
-                );
+            if (object.toggleOff) continue;
+            if (object.cooldown) {
+                client.cooldowns.set(object.data?.name, new Collection());
             }
-            if (commandObject.testOnly) {
-                applicationGuildCommands.push(commandObject.data);
+            if (object.testOnly) {
+                applicationGuildCommands.push(object.data);
             } else {
-                applicationCommands.push(commandObject.data);
+                applicationCommands.push(object.data);
             }
 
-            client.commands.set(commandObject.data.name, commandObject);
+            client.slashCommands.set(object.data.name, object);
             i++;
         }
 
-        for (const file of subCommandFiles) {
-            const subCommandObject = require(file);
-            if (subCommandObject.toggleOff) continue;
-            client.subCommands.set(subCommandObject.name, subCommandFiles);
-            g++;
+        /*if (applicationGuildCommands.length) {
+      rest.put(
+        Routes.applicationGuildCommands(
+          client.config.bot.id,
+          client.config.serverId
+        ),
+        {
+          body: applicationGuildCommands,
         }
-
-        if (applicationGuildCommands.length) {
-            rest.put(
-                Routes.applicationGuildCommands(
-                    client.config.bot.id,
-                    client.config.serverId
-                ),
-                {
-                    body: applicationGuildCommands,
-                }
-            );
-        }
+      );
+    }*/
 
         rest.put(Routes.applicationCommands(client.config.bot.id), {
             body: applicationCommands,
         });
 
-        client.log(`loaded ${i} commands and ${g} sub commands.`, "command");
+        client.debug(colors.blue(` | loaded ${i} commands.`));
     } catch (error) {
         throw error;
     }

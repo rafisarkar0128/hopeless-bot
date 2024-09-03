@@ -32,11 +32,6 @@ module.exports = {
             const Bannerurl = Guild.bannerURL();
             const Emojis = Guild.emojis.cache;
             const Stickers = Guild.stickers.cache;
-
-            Members.forEach((member) => {
-                console.log(member.user.presence);
-            });
-
             const embed = new EmbedBuilder()
                 .setTitle("📝 Server Information")
                 .setColor(client.colors.standBy)
@@ -74,9 +69,7 @@ module.exports = {
                     },
                     {
                         name: `Server Categories and Channels [${Channels.size}]`,
-                        value: `\`\`\`\n${await getChannelCountString(
-                            Channels
-                        )}\n\`\`\``,
+                        value: `\`\`\`\n${await getChannelCountString(Channels)}\n\`\`\``,
                         inline: false,
                     },
                     {
@@ -100,9 +93,7 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: `Server Emojis and Stickers [${
-                            Emojis.size + Stickers.size
-                        }]`,
+                        name: `Server Emojis and Stickers [${Emojis.size + Stickers.size}]`,
                         value: `\`\`\`\nNormal: ${
                             Emojis.filter((e) => e.animated === false).size
                         } | Animated: ${

@@ -1,6 +1,7 @@
 const { Client, version } = require("discord.js");
-var AsciiTable = require("ascii-table");
-var table = new AsciiTable();
+const colors = require("colors");
+const AsciiTable = require("ascii-table");
+const table = new AsciiTable();
 table.setBorder("│", "─", " ", " ");
 table.setTitle(`Bot is online!`);
 
@@ -13,7 +14,7 @@ module.exports = {
      * @param {Client} client
      */
     execute: async (client) => {
-        client.log(`logged in as ${client.user.tag}.`, "ready");
+        client.debug(colors.green(` | logged in as ${client.user.username}.`));
         table
             .addRow(`Bot Tag`, client.user.tag)
             .addRow(`Guild(s)`, `${client.guilds.cache.size} Server(s)`)
@@ -37,6 +38,6 @@ module.exports = {
 
         setTimeout(() => {
             console.log(table.toString());
-        }, 5e3);
+        }, 3e3);
     },
 };
