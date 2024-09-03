@@ -11,16 +11,17 @@ const {
 const { glob } = require("glob");
 const path = require("path");
 const colors = require("colors");
+const AntiCrash = require("../helpers/AntiCrash.js");
+const { DateTime } = require("luxon");
 const { Logger } = require("../helpers/Logger.js");
-const { table } = require("table");
+const { table, createStream } = require("table");
+const { initializeMongoose, schemas } = require("../database/connect.js");
 //const { recursiveReadDirSync } = require("../helpers/Utils");
 //const { validateCommand, validateContext } = require("../helpers/Validator");
 //const CommandCategory = require("./CommandCategory");
 //const lavaclient = require("../handlers/lavaclient");
 //const giveawaysHandler = require("../handlers/giveaway");
 //const { DiscordTogether } = require("discord-together");
-const AntiCrash = require("../helpers/AntiCrash.js");
-const { initializeMongoose, schemas } = require("../database/connect.js");
 
 //const escapeMarkdown = require("discord.js").Util.escapeMarkdown;
 //const prettyMilliseconds = require("pretty-ms");
@@ -35,9 +36,6 @@ const { initializeMongoose, schemas } = require("../database/connect.js");
 //const filters = require("erela.js-filters");
 //const { default: EpicPlayer } = require("./EpicPlayer");
 
-const { mainLogBox } = require("../utils/log.utils.js");
-const pkg = require(`${process.cwd()}/package.json`);
-
 class DiscordBot extends Client {
     /**
      *
@@ -46,7 +44,6 @@ class DiscordBot extends Client {
     constructor(options) {
         super(options);
 
-        this.wait = require("timers/promises").setTimeout;
         this.logger = new Logger();
         this.config = require(`${process.cwd()}/config.js`);
         this.colors = require(`${process.cwd()}/colors.json`);
@@ -95,35 +92,53 @@ class DiscordBot extends Client {
     }
 
     /**
-     * @property {String} string
+     * @param {String} string
      */
     log(string) {
         this.logger.log(string);
     }
 
     /**
-     * @property {String} string
+     * @param {String} string
      */
     warn(string) {
         this.logger.warn(string);
     }
 
     /**
-     * @property {String} string
+     * @param {String} string
      */
     error(string) {
         this.logger.error(string);
     }
 
     /**
-     * @property {String} string
+     * @param {String} string
      */
     debug(string) {
-        Logger.debug(string);
+        this.logger.debug(string);
     }
 
     /**
-     *@property {String} dir
+     *
+     * @param {Array} Array
+     */
+    table(Array) {}
+
+    /**
+     *
+     * @param {String} string
+     * @param {Object} options
+     * @returns
+     */
+    async logBox(string, options) {
+        const boxen = await import("boxen");
+        if (!typeof string === "string" || !typeof options === "object") return;
+        console.log(boxen.default(string, options));
+    }
+
+    /**
+     *@param {String} dir
      */
     async loadJSFiles(dir) {
         function deleteCashedFile(file) {
@@ -133,24 +148,15 @@ class DiscordBot extends Client {
             }
         }
 
-        try {
-            const files = await glob(
-                path.join(dir, `**/*.js`).replace(/\\/g, "/")
-            );
-            const jsFiles = files.filter(
-                (file) => path.extname(file) === ".js"
-            );
-            await Promise.all(jsFiles.map(deleteCashedFile));
-            return jsFiles;
-        } catch (error) {
-            throw error;
-        }
+        const files = await glob(path.join(dir, `**/*.js`).replace(/\\/g, "/"));
+        const jsFiles = files.filter((file) => path.extname(file) === ".js");
+        await Promise.all(jsFiles.map(deleteCashedFile));
+        return jsFiles;
     }
 
     async loadEvents() {
         const files = await this.loadJSFiles(`${process.cwd()}/src/events`);
         this.events.clear();
-        let array = [];
 
         let i = 0;
         for (const file of files) {
@@ -161,19 +167,17 @@ class DiscordBot extends Client {
             this.events.set(eventObject.name, execute);
             target[eventObject.once ? "once" : "on"](eventObject.name, execute);
 
-            array.push([file.replace(/\\/g, "/").split("/").pop(), "✅"]);
             i++;
         }
 
-        this.debug(colors.yellow(` | loaded ${i} events.`, "event"));
-        //this.table(array);
+        this.log(colors.yellow(` | loaded ${i} events.`));
     }
 
     async loadCommands() {
-        const { log } = require("../helpers/Logger.js");
         const rest = new REST({ version: 10 }).setToken(this.config.bot.token);
         const files = await this.loadJSFiles(`${process.cwd()}/src/commands`);
         const applicationCommands = [];
+        this.slashCommands.clear();
 
         let i = 0;
         for (const file of files) {
@@ -187,67 +191,50 @@ class DiscordBot extends Client {
             applicationCommands.push(object.data);
             this.slashCommands.set(object.data.name, object);
             i++;
-
-            // /if ()
-
-            rest.put(Routes.applicationCommands(this.config.bot.id), {
-                body: applicationCommands,
-            });
-
-            this.debug(colors.blue(` | loaded ${i} commands.`));
         }
+
+        rest.put(Routes.applicationCommands(this.config.bot.id), {
+            body: applicationCommands,
+        });
+        this.log(colors.blue(` | loaded ${i} commands.`));
     }
 
     async build() {
         if (this.config.antiCrash) AntiCrash(this);
 
-        await mainLogBox(pkg);
-        await this.loadEvents();
-        await this.loadCommands();
-        initializeMongoose(this);
-
-        //thus.login(this.config.bot.token);
-    }
-
-    /**
-     *
-     * @param {Client} client
-     * @param {Error} error
-     */
-    async sendErrors(client, error) {
-        const errorlog = require("../database/schemas/ErrorLog.js");
-        if (!errorlog) return;
-
-        const doc = await errorlog.findOne({ enabled: "true" });
-        if (!doc) return;
-
-        const guild = await client.guilds.fetch(doc.guild);
-        if (!guild) return;
-
-        const channel = await guild.channels.fetch(doc.channel);
-        if (!channel) return;
-
-        return channel.send({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor(client.colors.wrong)
-                    .setTitle(` Error Messages Logging System`)
-                    .setDescription(
-                        `<:error_logo:1276700084293079161>  _An error has occured_.\n\n**Error Code:** \`${error.name}\`\n**Error Message:** \`${error.message}\`\n**Stack:** \`\`\`yml\n${error.stack}\`\`\``
-                    )
-                    .setFooter({
-                        text: `Memory: ${(
-                            process.memoryUsage().heapUsed /
-                            1024 /
-                            1024
-                        ).toFixed(2)} MB | CPU: ${(
-                            process.cpuUsage().system /
-                            1024 /
-                            1024
-                        ).toFixed(2)}% | Ping: ${client.ws.ping}ms`,
-                    }),
-            ],
-        });
+        try {
+            console.clear();
+            await this.logBox(
+                [
+                    `Welcome to ${colors.blue(
+                        this.pkg.name.toUpperCase()
+                    )} project on github`,
+                    `Right now running on Node.Js ${colors.green(
+                        process.version
+                    )}`,
+                    `Currently bot's version ${colors.yellow(
+                        this.pkg.version
+                    )}`,
+                    `Coded by ${colors.cyan.italic(this.pkg.author.name)}`,
+                ].join("\n"),
+                {
+                    borderColor: "#00BFFF",
+                    stringAlignment: "center",
+                    padding: {
+                        left: 10,
+                        right: 10,
+                        top: 1,
+                        bottom: 1,
+                    },
+                }
+            );
+            await this.loadEvents();
+            await this.loadCommands();
+            initializeMongoose(this);
+            this.login(this.config.bot.token);
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**

@@ -63,6 +63,7 @@ module.exports = {
     },
 
     // PLUGINS
+    antiCrash: true,
     auto_moderation: {
         enabled: true,
     },
