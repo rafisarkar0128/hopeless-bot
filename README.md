@@ -1,6 +1,4 @@
-<center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
-
-<center>
+<center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
 [![Version][version-shield]](version-url)
 [![Contributors][contributors-shield]][contributors-url]
@@ -12,18 +10,14 @@
 [![CodeQL][codeql]][codeql-url]
 [![CodeQL][dependency-review]][dependency-review-url]
 
-</center>
-
 <!-- PROJECT LOGO -->
-<div style="background: palegoldenrod;height: 250px;border: none;border-radius: 2em;margin: 15px;font-family: cursive;">
-<img src="https://cdn.discordapp.com/avatars/1272259032098275358/d8837049ef1c007784c53de792af6052.png?size=4096" style="width: 200px;height: 200px;float: left;margin: 25px;border-radius: 2em;"/>
-<h1 style="color: slategray;font-size: 40;font-weight: bolder;text-align: center;">Hopeless Bot</h1>
-<p style="color:black;font-size: 18px;margin-right: 10px;">
-    <b>Hopeless Bot</b> is a multipurpose discord Bot. Specially
-    made for <u>Moderation</u> & <u>Server-Management</u>. It was
-    made with <a href=" https://github.com/discordjs/discord.js">discord.js</a>
-    a powerful <a href="https://nodejs.org"><b>Node.JS</b></a> module that
-    allows you to easily interact with the <a href="https://discord.com/developers/docs/intro">Discord API</a>.
+<br />
+<p align="center">
+  <a href="https://github.com/theassassin0128/Hopeless-Bot">
+    <img src="https://cdn.discordapp.com/avatars/1272259032098275358/d8837049ef1c007784c53de792af6052.png?size=4096" alt="hopeless-bot" width="200" height="200">
+  </a>
+  <h1 align="center">Hopeless Bot</h1>
+  <p align="center"><b>Hopeless Bot</b> is a multipurpose discord Bot. Specially made for <u>Moderation</u> <u>Server-Management</u>. It was made with <a href=" https://github.com/discordjs/discord.js">discord.js</a> a powerful <a href="https://nodejs.org"><b>Node.JS</b></a> module that allows you to easily interact with the <a href="https://discord.com/developers/docs/intro">Discord API</a>.
     <br>
     <br>
     <a href="https://discord.com/oauth2/authorize?client_id=1272259032098275358" class="link" id="invite">
@@ -33,8 +27,8 @@
     </a> • <a href="https://github.com/theassassin0128/Hopeless-Bot/issues" class="link" id="issues">
         📝 Bug & Request Feature
     </a>
+  </p>
 </p>
-</div>
     
 ## 📊 Road Map
 
