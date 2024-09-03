@@ -5,6 +5,8 @@ const {
     ActionRowBuilder,
     ButtonBuilder,
     ApplicationCommandType,
+    REST,
+    Routes,
 } = require("discord.js");
 const { glob } = require("glob");
 const path = require("path");
@@ -17,8 +19,6 @@ const { table } = require("table");
 //const lavaclient = require("../handlers/lavaclient");
 //const giveawaysHandler = require("../handlers/giveaway");
 //const { DiscordTogether } = require("discord-together");
-const { loadCommands } = require("../handlers/commands.js");
-const { loadJSFiles } = require("../utils/file.utils.js");
 const AntiCrash = require("../helpers/AntiCrash.js");
 const { initializeMongoose, schemas } = require("../database/connect.js");
 
@@ -95,40 +95,35 @@ class DiscordBot extends Client {
     }
 
     /**
-     *
-     * @param {String} string
+     * @property {String} string
      */
     log(string) {
         this.logger.log(string);
     }
 
     /**
-     *
-     * @param {String} string
+     * @property {String} string
      */
     warn(string) {
         this.logger.warn(string);
     }
 
     /**
-     *
-     * @param {String} string
+     * @property {String} string
      */
     error(string) {
         this.logger.error(string);
     }
 
     /**
-     *
-     * @param {String} string
+     * @property {String} string
      */
     debug(string) {
-        this.logger.debug(string);
+        Logger.debug(string);
     }
 
     /**
-     *
-     *@param {String} dir
+     *@property {String} dir
      */
     async loadJSFiles(dir) {
         function deleteCashedFile(file) {
@@ -154,25 +149,53 @@ class DiscordBot extends Client {
 
     async loadEvents() {
         const files = await this.loadJSFiles(`${process.cwd()}/src/events`);
-
         this.events.clear();
         let array = [];
 
         let i = 0;
         for (const file of files) {
             const eventObject = require(file);
-            const execute = (...args) => eventObject.execute(client, ...args);
-            const target = eventObject.rest ? client.rest : client;
+            const execute = (...args) => eventObject.execute(this, ...args);
+            const target = eventObject.rest ? this.rest : this;
 
-            client.events.set(eventObject.name, execute);
+            this.events.set(eventObject.name, execute);
             target[eventObject.once ? "once" : "on"](eventObject.name, execute);
 
             array.push([file.replace(/\\/g, "/").split("/").pop(), "✅"]);
             i++;
         }
 
-        client.debug(colors.yellow(` | loaded ${i} events.`, "event"));
-        client.table(array);
+        this.debug(colors.yellow(` | loaded ${i} events.`, "event"));
+        //this.table(array);
+    }
+
+    async loadCommands() {
+        const { log } = require("../helpers/Logger.js");
+        const rest = new REST({ version: 10 }).setToken(this.config.bot.token);
+        const files = await this.loadJSFiles(`${process.cwd()}/src/commands`);
+        const applicationCommands = [];
+
+        let i = 0;
+        for (const file of files) {
+            const object = require(file);
+
+            if (object.enabled) continue;
+            if (object.cooldown) {
+                this.cooldowns.set(object.data?.name, new Collection());
+            }
+
+            applicationCommands.push(object.data);
+            this.slashCommands.set(object.data.name, object);
+            i++;
+
+            // /if ()
+
+            rest.put(Routes.applicationCommands(this.config.bot.id), {
+                body: applicationCommands,
+            });
+
+            this.debug(colors.blue(` | loaded ${i} commands.`));
+        }
     }
 
     async build() {
@@ -180,7 +203,7 @@ class DiscordBot extends Client {
 
         await mainLogBox(pkg);
         await this.loadEvents();
-        await loadCommands(this);
+        await this.loadCommands();
         initializeMongoose(this);
 
         //thus.login(this.config.bot.token);
@@ -281,23 +304,6 @@ class DiscordBot extends Client {
 }
 
 module.exports = class BotClient extends Client {
-    /**
-     * Load all events from the specified directory
-     * @param {string} directory directory containing the event files
-     */
-    loadEvents(directory) {
-        this.logger.log(`Loading events...`);
-        let success = 0;
-        let failed = 0;
-        const clientEvents = [];
-
-        this.logger.log(
-            `Loaded ${
-                success + failed
-            } events. Success (${success}) Failed (${failed})`
-        );
-    }
-
     /**
      * Find command matching the invoke
      * @param {string} invoke

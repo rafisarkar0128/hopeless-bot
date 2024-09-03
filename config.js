@@ -2,40 +2,36 @@ const colors = require("./colors.json");
 
 module.exports = {
     bot: {
+        defaultPrefix: "h!",
         ownerId: process.env["OWNER_ID"],
         id: process.env["BOT_ID"],
         token: process.env["BOT_TOKEN"],
         secret: process.env["BOT_SECRET"],
-        sharding: {
-            enabled: false,
-            manager: "auto",
-        },
         presence: {
             status: "idle",
-            activity: [
+            activities: [
                 {
                     name: "Slash Commands",
                     type: "LISTEINING",
                 },
             ],
         },
+        testServerId: process.env["SERVER_ID"],
+        devs: process.env["DEVELOPER_IDS"],
     },
-    serverId: process.env["SERVER_ID"],
     database: {
         mongodb: {
             url: process.env["MONGO_URI"],
         },
     },
-    devs: process.env["DEVELOPER_IDS"],
-    legacyCommands: {
-        enable: true,
-        defaultPrefix: "h!",
-    },
-    interactions: {
-        slash: true,
-        context: true,
-        modal: false,
-        global: false,
+    commands: {
+        messageCommands: true,
+        slashCommands: true,
+        contextMenuCommands: false,
+        modalSubmit: false,
+        availability: {
+            global: false,
+        },
     },
     emojis: {
         resume: "▶️",
@@ -67,9 +63,6 @@ module.exports = {
     },
 
     // PLUGINS
-    antiCrash: true,
-    keepAlive: true,
-
     auto_moderation: {
         enabled: true,
     },

@@ -10,9 +10,9 @@ class Logger {
         this.logger = winston.createLogger({
             transports: [
                 new winston.transports.File({
-                    filename: `${process.cwd()}/logs/${DateTime.now().toFormat(
-                        "yyyy-LL-dd.log"
-                    )}`,
+                    filename: `${process.cwd()}/logs/${
+                        DateTime.now().toFormat("yyyy-LL-dd") + ".log"
+                    }`,
                 }),
             ],
         });
@@ -22,7 +22,7 @@ class Logger {
      *
      * @param {String} string
      */
-    log(string) {
+    static log(string) {
         this.logger.log({
             level: "info",
             message: "info: " + string,
@@ -34,7 +34,7 @@ class Logger {
      *
      * @param {String} string
      */
-    warn(string) {
+    static warn(string) {
         this.logger.log({
             level: "warn",
             message: "warn: " + string,
@@ -46,7 +46,7 @@ class Logger {
      *
      * @param {String} string
      */
-    error(string) {
+    static error(string) {
         this.logger.log({
             level: "error",
             message: "error: " + string,
@@ -59,7 +59,7 @@ class Logger {
      *
      * @param {String} string
      */
-    debug(string) {
+    static debug(string) {
         console.log(DateTimeString + string);
     }
 }

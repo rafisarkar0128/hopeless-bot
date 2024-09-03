@@ -5,7 +5,7 @@ const {
     ChannelType,
     EmbedBuilder,
 } = require("discord.js");
-const errorlog = require("../../schemas/errorlog.js");
+const errorlog = require("../../database/schemas/ErrorLog.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
