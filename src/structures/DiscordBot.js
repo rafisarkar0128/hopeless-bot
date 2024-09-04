@@ -203,7 +203,7 @@ class DiscordBot extends Client {
         if (this.config.antiCrash) AntiCrash(this);
 
         try {
-            //console.clear();
+            console.clear();
             await this.logBox(
                 [
                     `Welcome to ${colors.blue(

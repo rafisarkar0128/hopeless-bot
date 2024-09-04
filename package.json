@@ -8,7 +8,8 @@
     },
     "scripts": {
         "dev": "nodemon index.js",
-        "start": "node index.js"
+        "start": "node index.js",
+        "remove": "node scripts/clearCommands.js"
     },
     "keywords": [
         "bot",
@@ -41,6 +42,7 @@
         "luxon": "^3.5.0",
         "mongoose": "^8.5.2",
         "ms": "^2.1.3",
+        "readline": "^1.3.0",
         "table": "^6.8.2",
         "winston": "^3.14.2"
     },
