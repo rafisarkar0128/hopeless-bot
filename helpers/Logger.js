@@ -1,4 +1,5 @@
 const { EmbedBuilder, WebhookClient } = require("discord.js");
+const path = require("path");
 const config = require(`${process.cwd()}/config`);
 const { Wrong } = require(`${process.cwd()}/colors.json`);
 const colors = require("colors");
@@ -9,13 +10,18 @@ const DateTimeString = colors.gray(
 );
 
 class Logger {
-    constructor() {
+    /**
+     *
+     * @param {String} dir - Log files directory path. Must be a string.
+     */
+    constructor(dir) {
         this.logger = winston.createLogger({
             transports: [
                 new winston.transports.File({
-                    filename: `${process.cwd()}/logs/${
-                        DateTime.now().toFormat("yyyy-LL-dd") + ".log"
-                    }`,
+                    filename: path.join(
+                        dir || `${process.cwd()}/logs`,
+                        `${DateTime.now().toFormat("yyyy-LL-dd")}.log`
+                    ),
                 }),
             ],
         });

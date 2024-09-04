@@ -11,7 +11,11 @@ module.exports = {
      * @returns
      */
     execute: async (client, message) => {
+        if (message.author.bot) return;
+
         const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+        if (!message.content.match(prefixMention)) return;
+
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: message.author.username,
@@ -27,8 +31,6 @@ module.exports = {
                 text: `Powered by ${client.user.username}`,
             });
 
-        if (message.author.bot) return;
-        if (!message.content.match(prefixMention)) return;
         return message.reply({
             embeds: [embed],
         });

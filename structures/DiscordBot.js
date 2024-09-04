@@ -11,7 +11,7 @@ const {
 const { glob } = require("glob");
 const path = require("path");
 const colors = require("colors");
-const AntiCrash = require("../helpers/AntiCrash.js");
+const { AntiCrash } = require("../helpers/AntiCrash.js");
 const { DateTime } = require("luxon");
 const { Logger } = require("../helpers/Logger.js");
 const { table, createStream } = require("table");
@@ -44,7 +44,7 @@ class DiscordBot extends Client {
     constructor(options) {
         super(options);
 
-        this.logger = new Logger();
+        this.logger = new Logger(`${process.cwd()}/logs`);
         this.config = require(`${process.cwd()}/config.js`);
         this.colors = require(`${process.cwd()}/colors.json`);
         this.pkg = require(`${process.cwd()}/package.json`);
@@ -203,7 +203,7 @@ class DiscordBot extends Client {
         if (this.config.antiCrash) AntiCrash(this);
 
         try {
-            console.clear();
+            //console.clear();
             await this.logBox(
                 [
                     `Welcome to ${colors.blue(

@@ -1,7 +1,7 @@
 const colors = require("colors");
 
-module.exports = (client) => {
-    /*process.on("beforeExit", async (code) => {
+function AntiCrash(client) {
+    process.on("beforeExit", async (code) => {
         console.log(
             colors.yellow(
                 "[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="
@@ -25,9 +25,9 @@ module.exports = (client) => {
         console.log(
             colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ===============")
         );
-    });*/
+    });
 
-    process.on("unhandledRejection", async (reason, asyncpromise) => {
+    process.on("unhandledRejection", async (reason, promise) => {
         console.log(
             colors.yellow(
                 "[AntiCrash] | [UnhandledRejection_Logs] | [start] : ==============="
@@ -82,4 +82,6 @@ module.exports = (client) => {
             )
         );
     });
-};
+}
+
+module.exports = { AntiCrash };

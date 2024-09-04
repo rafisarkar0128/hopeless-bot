@@ -2,8 +2,6 @@ const colors = require("./colors.json");
 
 module.exports = {
     bot: {
-        defaultPrefix: "h!",
-        ownerId: process.env["OWNER_ID"],
         id: process.env["BOT_ID"],
         token: process.env["BOT_TOKEN"],
         secret: process.env["BOT_SECRET"],
@@ -16,22 +14,18 @@ module.exports = {
                 },
             ],
         },
-        testServerId: process.env["SERVER_ID"],
-        devs: process.env["DEVELOPER_IDS"],
     },
-    database: {
-        mongodb: {
-            url: process.env["MONGO_URI"],
-        },
-    },
+    defaultPrefix: "h!",
+    ownerId: process.env["OWNER_ID"],
+    testServerId: process.env["SERVER_ID"],
+    devs: process.env["DEVELOPER_IDS"],
+    mongodbUri: process.env["MONGO_URI"],
     commands: {
         messageCommands: true,
         slashCommands: true,
         contextMenuCommands: false,
         modalSubmit: false,
-        availability: {
-            global: false,
-        },
+        globalCommands: false,
     },
     emojis: {
         resume: "▶️",

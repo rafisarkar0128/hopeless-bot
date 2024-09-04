@@ -120,7 +120,7 @@ module.exports = {
                 message.delete();
             }, 9000);
 
-            await client.sendErrors(client, interaction, error);
+            // /await client.sendErrors(client, interaction, error);
             throw error;
         }
     },
