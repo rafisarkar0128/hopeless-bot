@@ -17,7 +17,7 @@ module.exports = {
     },
     defaultPrefix: "h!",
     ownerId: process.env["OWNER_ID"],
-    testServerId: process.env["SERVER_ID"],
+    serverId: process.env["SERVER_ID"],
     devs: process.env["DEVELOPER_IDS"],
     mongodbUri: process.env["MONGO_URI"],
     commands: {

@@ -9,7 +9,8 @@
     "scripts": {
         "dev": "nodemon index.js",
         "start": "node index.js",
-        "remove": "node scripts/clearCommands.js"
+        "clearGlobal": "node scripts/clearGlobalCommands.js",
+        "clearGuild": "node scripts/clearGuildCommands.js"
     },
     "keywords": [
         "bot",

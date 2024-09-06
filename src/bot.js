@@ -1,31 +1,31 @@
 require("dotenv").config();
 require("colors");
 const {
-    Client,
-    GatewayIntentBits,
-    Partials,
-    Collection,
+  Client,
+  GatewayIntentBits,
+  Partials,
+  Collection,
 } = require("discord.js");
 
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildVoiceStates,
-    ],
-    partials: [
-        Partials.GuildMember,
-        Partials.Message,
-        Partials.User,
-        Partials.Channel,
-        Partials.ThreadMember,
-    ],
-    allowedMentions: {
-        repliedUser: false,
-    },
-    failIfNotExists: true,
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildVoiceStates,
+  ],
+  partials: [
+    Partials.GuildMember,
+    Partials.Message,
+    Partials.User,
+    Partials.Channel,
+    Partials.ThreadMember,
+  ],
+  allowedMentions: {
+    repliedUser: false,
+  },
+  failIfNotExists: true,
 });
 
 client.commands = new Collection();
@@ -46,15 +46,15 @@ const { loadEvents } = require("./handlers/events.js");
 const { loadErrors } = require("./handlers/errors.js");
 
 async function startBot() {
-    try {
-        await loadErrors(client);
-        await mainLogBox(pkg);
-        await loadEvents(client);
-        await loadCommands(client);
-        client.login(client.config.bot.token);
-    } catch (error) {
-        throw error;
-    }
+  try {
+    await loadErrors(client);
+    await mainLogBox(pkg);
+    await loadEvents(client);
+    await loadCommands(client);
+    client.login(client.config.bot.token);
+  } catch (error) {
+    throw error;
+  }
 }
 
 module.exports = { startBot };

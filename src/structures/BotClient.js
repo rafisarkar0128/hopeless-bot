@@ -66,7 +66,8 @@ module.exports = class BotClient extends Client {
     if (this.config.MUSIC.ENABLED) this.musicManager = lavaclient(this);
 
     // Giveaways
-    if (this.config.GIVEAWAYS.ENABLED) this.giveawaysManager = giveawaysHandler(this);
+    if (this.config.GIVEAWAYS.ENABLED)
+      this.giveawaysManager = giveawaysHandler(this);
 
     // Logger
     this.logger = Logger;
@@ -116,7 +117,11 @@ module.exports = class BotClient extends Client {
       })
     );
 
-    this.logger.log(`Loaded ${success + failed} events. Success (${success}) Failed (${failed})`);
+    this.logger.log(
+      `Loaded ${
+        success + failed
+      } events. Success (${success}) Failed (${failed})`
+    );
   }
 
   /**
@@ -136,7 +141,9 @@ module.exports = class BotClient extends Client {
   loadCommand(cmd) {
     // Check if category is disabled
     if (cmd.category && CommandCategory[cmd.category]?.enabled === false) {
-      this.logger.debug(`Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`);
+      this.logger.debug(
+        `Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`
+      );
       return;
     }
     // Prefix Command
@@ -147,7 +154,8 @@ module.exports = class BotClient extends Client {
       }
       if (Array.isArray(cmd.command.aliases)) {
         cmd.command.aliases.forEach((alias) => {
-          if (this.commandIndex.has(alias)) throw new Error(`Alias ${alias} already registered`);
+          if (this.commandIndex.has(alias))
+            throw new Error(`Alias ${alias} already registered`);
           this.commandIndex.set(alias.toLowerCase(), index);
         });
       }
@@ -159,7 +167,8 @@ module.exports = class BotClient extends Client {
 
     // Slash Command
     if (cmd.slashCommand?.enabled) {
-      if (this.slashCommands.has(cmd.name)) throw new Error(`Slash Command ${cmd.name} already registered`);
+      if (this.slashCommands.has(cmd.name))
+        throw new Error(`Slash Command ${cmd.name} already registered`);
       this.slashCommands.set(cmd.name, cmd);
     } else {
       this.logger.debug(`Skipping slash command ${cmd.name}. Disabled!`);
@@ -186,7 +195,8 @@ module.exports = class BotClient extends Client {
 
     this.logger.success(`Loaded ${this.commands.length} commands`);
     this.logger.success(`Loaded ${this.slashCommands.size} slash commands`);
-    if (this.slashCommands.size > 100) throw new Error("A maximum of 100 slash commands can be enabled");
+    if (this.slashCommands.size > 100)
+      throw new Error("A maximum of 100 slash commands can be enabled");
   }
 
   /**
@@ -201,19 +211,27 @@ module.exports = class BotClient extends Client {
         const ctx = require(file);
         if (typeof ctx !== "object") continue;
         validateContext(ctx);
-        if (!ctx.enabled) return this.logger.debug(`Skipping context ${ctx.name}. Disabled!`);
-        if (this.contextMenus.has(ctx.name)) throw new Error(`Context already exists with that name`);
+        if (!ctx.enabled)
+          return this.logger.debug(`Skipping context ${ctx.name}. Disabled!`);
+        if (this.contextMenus.has(ctx.name))
+          throw new Error(`Context already exists with that name`);
         this.contextMenus.set(ctx.name, ctx);
       } catch (ex) {
         this.logger.error(`Failed to load ${file} Reason: ${ex.message}`);
       }
     }
 
-    const userContexts = this.contextMenus.filter((ctx) => ctx.type === "USER").size;
-    const messageContexts = this.contextMenus.filter((ctx) => ctx.type === "MESSAGE").size;
+    const userContexts = this.contextMenus.filter(
+      (ctx) => ctx.type === "USER"
+    ).size;
+    const messageContexts = this.contextMenus.filter(
+      (ctx) => ctx.type === "MESSAGE"
+    ).size;
 
-    if (userContexts > 3) throw new Error("A maximum of 3 USER contexts can be enabled");
-    if (messageContexts > 3) throw new Error("A maximum of 3 MESSAGE contexts can be enabled");
+    if (userContexts > 3)
+      throw new Error("A maximum of 3 USER contexts can be enabled");
+    if (messageContexts > 3)
+      throw new Error("A maximum of 3 MESSAGE contexts can be enabled");
 
     this.logger.success(`Loaded ${userContexts} USER contexts`);
     this.logger.success(`Loaded ${messageContexts} MESSAGE contexts`);
@@ -257,7 +275,10 @@ module.exports = class BotClient extends Client {
     else if (guildId && typeof guildId === "string") {
       const guild = this.guilds.cache.get(guildId);
       if (!guild) {
-        this.logger.error(`Failed to register interactions in guild ${guildId}`, new Error("No matching guild"));
+        this.logger.error(
+          `Failed to register interactions in guild ${guildId}`,
+          new Error("No matching guild")
+        );
         return;
       }
       await guild.commands.set(toRegister);
@@ -265,7 +286,9 @@ module.exports = class BotClient extends Client {
 
     // Throw an error
     else {
-      throw new Error("Did you provide a valid guildId to register interactions");
+      throw new Error(
+        "Did you provide a valid guildId to register interactions"
+      );
     }
 
     this.logger.success("Successfully registered interactions");
@@ -283,7 +306,9 @@ module.exports = class BotClient extends Client {
     const patternMatch = search.match(/(\d{17,20})/);
     if (patternMatch) {
       const id = patternMatch[1];
-      const fetched = await this.users.fetch(id, { cache: true }).catch(() => {}); // check if mentions contains the ID
+      const fetched = await this.users
+        .fetch(id, { cache: true })
+        .catch(() => {}); // check if mentions contains the ID
       if (fetched) {
         users.push(fetched);
         return users;
