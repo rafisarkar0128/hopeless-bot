@@ -9,7 +9,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("ping")
     .setDescription("🏓Replies with an embed containing information.")
-    .setContexts(true),
+    .setDMPermission(true),
   category: "misc",
   usage: "/ping",
   userPermissions: [],
@@ -37,8 +37,8 @@ module.exports = {
         totalPing <= 400
           ? client.colors.Good
           : totalPing <= 800
-            ? client.colors.StandBy
-            : client.colors.Wrong,
+          ? client.colors.StandBy
+          : client.colors.Wrong
       )
       .setThumbnail(client.user.displayAvatarURL())
       .addFields([

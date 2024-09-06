@@ -8,11 +8,11 @@ function deleteCashedFile(file) {
   }
 }
 
-async function loadJSFiles(dir) {
+async function loadFiles(dir) {
   const files = await glob(path.join(dir, `**/*.js`).replace(/\\/g, "/"));
   const jsFiles = files.filter((file) => path.extname(file) === ".js");
   await Promise.all(jsFiles.map(deleteCashedFile));
   return jsFiles;
 }
 
-module.exports = {};
+module.exports = { loadFiles };

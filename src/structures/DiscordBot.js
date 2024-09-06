@@ -8,8 +8,8 @@ const {
   REST,
   Routes,
 } = require("discord.js");
-
 const colors = require("colors");
+const { loadFiles } = require("../utils/loadFiles.js");
 const { AntiCrash } = require("../helpers/AntiCrash.js");
 const { DateTime } = require("luxon");
 const { Logger } = require("../helpers/Logger.js");
@@ -28,8 +28,6 @@ class DiscordBot extends Client {
     this.colors = require(`${process.cwd()}/colors.json`);
     this.pkg = require(`${process.cwd()}/package.json`);
 
-    /**@type {Collection<string, function>} */
-    this.events = new Collection();
     this.cooldowns = new Collection();
 
     /**@type {Collection<string, import("./SlashCommand")} */
@@ -115,10 +113,8 @@ class DiscordBot extends Client {
   /**
    *@param {String} dir
    */
-
-  async loadEvents() {
-    const files = await this.loadJSFiles(`${process.cwd()}/src/events`);
-    this.events.clear();
+  async loadEvents(dir) {
+    const files = await loadFiles(dir);
 
     let i = 0;
     for (const file of files) {
@@ -126,9 +122,7 @@ class DiscordBot extends Client {
       const execute = (...args) => eventObject.execute(this, ...args);
       const target = eventObject.rest ? this.rest : this;
 
-      this.events.set(eventObject.name, execute);
       target[eventObject.once ? "once" : "on"](eventObject.name, execute);
-
       i++;
     }
 
@@ -137,7 +131,7 @@ class DiscordBot extends Client {
 
   async loadCommands() {
     const rest = new REST({ version: 10 }).setToken(this.config.bot.token);
-    const files = await this.loadJSFiles(`${process.cwd()}/src/commands`);
+    const files = await loadFiles(`${process.cwd()}/src/commands`);
     const applicationCommands = [];
     this.slashCommands.clear();
 
@@ -173,26 +167,26 @@ class DiscordBot extends Client {
         [
           `Welcome to ${colors.blue(
             this.pkg.name.toUpperCase()
-          )} project on github`,
-          `Right now running on Node.Js ${colors.green(process.version)}`,
-          `Currently bot's version ${colors.yellow(this.pkg.version)}`,
-          `Coded by ${colors.cyan.italic(this.pkg.author.name)}`,
+          )} github project`,
+          `Running on Node.Js ${colors.green(process.version)}`,
+          `Bot's version ${colors.yellow(this.pkg.version)}`,
+          `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
         ].join("\n"),
         {
           borderColor: "#00BFFF",
           stringAlignment: "center",
           padding: {
-            left: 10,
-            right: 10,
+            left: 8,
+            right: 8,
             top: 1,
             bottom: 1,
           },
         }
       );
-      await this.loadEvents();
+      this.login(this.config.bot.token);
+      await this.loadEvents(`${process.cwd()}/src/events`);
       await this.loadCommands();
       initializeMongoose(this);
-      this.login(this.config.bot.token);
     } catch (error) {
       throw error;
     }
@@ -248,3 +242,5 @@ class DiscordBot extends Client {
     );
   }
 }
+
+module.exports = { DiscordBot };

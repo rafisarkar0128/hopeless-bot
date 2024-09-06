@@ -6,7 +6,6 @@ module.exports = {
     try {
       await mongoose.connect(process.env.MONGO_URI);
       client.log(colors.magenta(" | mongodb connection established."));
-      return mongoose.connection;
     } catch (error) {
       throw error;
     }

@@ -76,20 +76,7 @@ module.exports = {
         }
       }
 
-      await command.execute(client, interaction);
-
-      if (interaction.options.getSubcommand(false)) {
-        var subCommand = await client.subCommands.get(
-          interaction.commandName + interaction.options.getSubcommand(),
-        );
-        if (!subCommand) {
-          return interaction.reply({
-            content: "The Sub Command isn't available right now.",
-            ephemeral: true,
-          });
-        }
-        return subCommand.execute(client, interaction);
-      }
+      return command.execute(client, interaction);
     } catch (error) {
       if (
         interaction.replied ||
@@ -105,7 +92,7 @@ module.exports = {
           new EmbedBuilder()
             .setColor(client.colors.StandBy)
             .setTitle(
-              `<:error_logo:1276700084293079161> An error has occured! Try again later!`,
+              `<:error_logo:1276700084293079161> An error has occured! Try again later!`
             ),
         ],
       });
