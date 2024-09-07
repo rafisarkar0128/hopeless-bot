@@ -92,7 +92,7 @@ module.exports = {
           new EmbedBuilder()
             .setColor(client.colors.StandBy)
             .setTitle(
-              `<:error_logo:1276700084293079161> An error has occured! Try again later!`
+              `<:error_logo:1276700084293079161> An error has occured! Try again later!`,
             ),
         ],
       });

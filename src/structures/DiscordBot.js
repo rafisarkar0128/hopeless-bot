@@ -153,7 +153,7 @@ class DiscordBot extends Client {
       Routes.applicationGuildCommands(this.config.bot.id, this.config.serverId),
       {
         body: applicationCommands,
-      }
+      },
     );
     this.log(colors.blue(` | loaded ${i} commands.`));
   }
@@ -166,7 +166,7 @@ class DiscordBot extends Client {
       await this.logBox(
         [
           `Welcome to ${colors.blue(
-            this.pkg.name.toUpperCase()
+            this.pkg.name.toUpperCase(),
           )} github project`,
           `Running on Node.Js ${colors.green(process.version)}`,
           `Bot's version ${colors.yellow(this.pkg.version)}`,
@@ -181,7 +181,7 @@ class DiscordBot extends Client {
             top: 1,
             bottom: 1,
           },
-        }
+        },
       );
       this.login(this.config.bot.token);
       await this.loadEvents(`${process.cwd()}/src/events`);
@@ -234,11 +234,11 @@ class DiscordBot extends Client {
           player.trackRepeat
             ? "SUCCESS"
             : player.queueRepeat
-            ? "SUCCESS"
-            : "DANGER"
+              ? "SUCCESS"
+              : "DANGER",
         )
         .setCustomId(`controller:${guild}:Loop`)
-        .setEmoji(player.trackRepeat ? "🔂" : player.queueRepeat ? "🔁" : "🔁")
+        .setEmoji(player.trackRepeat ? "🔂" : player.queueRepeat ? "🔁" : "🔁"),
     );
   }
 }

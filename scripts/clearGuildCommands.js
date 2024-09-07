@@ -55,7 +55,7 @@ async function deleteCommands() {
   const guild = Guild?.data;
 
   process.stdout.write(
-    colors.cyan(`\n🔎 Fetching guild commands from ${guild.name}.`)
+    colors.cyan(`\n🔎 Fetching guild commands from ${guild.name}.`),
   );
 
   await wait(2500);
@@ -65,18 +65,18 @@ async function deleteCommands() {
       headers: {
         Authorization: `Bot ${token}`,
       },
-    }
+    },
   );
 
   if (commands.data.length === 0) {
     clearAndLog(
-      colors.red(`❗ Couldn't fing any guild command in ${guild.name}.`)
+      colors.red(`❗ Couldn't fing any guild command in ${guild.name}.`),
     );
   } else {
     clearAndWrite(
       colors.cyan(
-        `✅ Found ${commands.data?.length} guild commands in ${guild.name}.`
-      )
+        `✅ Found ${commands.data?.length} guild commands in ${guild.name}.`,
+      ),
     );
     await wait(2500);
     clearAndLog(colors.yellow("🧹 Started to delete guild commands.\n"));
@@ -91,7 +91,7 @@ async function deleteCommands() {
           headers: {
             Authorization: `Bot ${token}`,
           },
-        }
+        },
       );
 
       if (response.status === 204) {
@@ -103,7 +103,7 @@ async function deleteCommands() {
     }
 
     console.log(
-      colors.green(`\n✅ Deleted ${i} guild commands in ${guild.name}.`)
+      colors.green(`\n✅ Deleted ${i} guild commands in ${guild.name}.`),
     );
   }
 }

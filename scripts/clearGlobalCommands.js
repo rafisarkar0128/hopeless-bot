@@ -47,7 +47,7 @@ function clearAndLog(message) {
 
 async function deleteCommands() {
   process.stdout.write(
-    colors.cyan("\n🔎 Fetching global commands form discord.")
+    colors.cyan("\n🔎 Fetching global commands form discord."),
   );
 
   await wait(2500);
@@ -57,14 +57,14 @@ async function deleteCommands() {
       headers: {
         Authorization: `Bot ${token}`,
       },
-    }
+    },
   );
 
   if (commands.data.length === 0) {
     clearAndLog(colors.red("❗ Couldn't fing any global command."));
   } else {
     clearAndWrite(
-      colors.cyan(`✅ Found ${commands.data?.length} global commands.`)
+      colors.cyan(`✅ Found ${commands.data?.length} global commands.`),
     );
     await wait(2500);
     clearAndLog(colors.yellow("🧹 Started to delete global commands.\n"));
@@ -79,7 +79,7 @@ async function deleteCommands() {
           headers: {
             Authorization: `Bot ${token}`,
           },
-        }
+        },
       );
 
       if (response.status === 204) {

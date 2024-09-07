@@ -37,8 +37,8 @@ module.exports = {
         totalPing <= 400
           ? client.colors.Good
           : totalPing <= 800
-          ? client.colors.StandBy
-          : client.colors.Wrong
+            ? client.colors.StandBy
+            : client.colors.Wrong,
       )
       .setThumbnail(client.user.displayAvatarURL())
       .addFields([

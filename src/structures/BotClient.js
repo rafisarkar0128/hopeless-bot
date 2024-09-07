@@ -114,13 +114,13 @@ module.exports = class BotClient extends Client {
         },
         singleLine: true,
         columns: [{ width: 25 }, { width: 5, alignment: "center" }],
-      })
+      }),
     );
 
     this.logger.log(
       `Loaded ${
         success + failed
-      } events. Success (${success}) Failed (${failed})`
+      } events. Success (${success}) Failed (${failed})`,
     );
   }
 
@@ -142,7 +142,7 @@ module.exports = class BotClient extends Client {
     // Check if category is disabled
     if (cmd.category && CommandCategory[cmd.category]?.enabled === false) {
       this.logger.debug(
-        `Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`
+        `Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`,
       );
       return;
     }
@@ -222,10 +222,10 @@ module.exports = class BotClient extends Client {
     }
 
     const userContexts = this.contextMenus.filter(
-      (ctx) => ctx.type === "USER"
+      (ctx) => ctx.type === "USER",
     ).size;
     const messageContexts = this.contextMenus.filter(
-      (ctx) => ctx.type === "MESSAGE"
+      (ctx) => ctx.type === "MESSAGE",
     ).size;
 
     if (userContexts > 3)
@@ -277,7 +277,7 @@ module.exports = class BotClient extends Client {
       if (!guild) {
         this.logger.error(
           `Failed to register interactions in guild ${guildId}`,
-          new Error("No matching guild")
+          new Error("No matching guild"),
         );
         return;
       }
@@ -287,7 +287,7 @@ module.exports = class BotClient extends Client {
     // Throw an error
     else {
       throw new Error(
-        "Did you provide a valid guildId to register interactions"
+        "Did you provide a valid guildId to register interactions",
       );
     }
 
@@ -327,7 +327,7 @@ module.exports = class BotClient extends Client {
           (x) =>
             x.username === search ||
             x.username.toLowerCase().includes(search.toLowerCase()) ||
-            x.tag.toLowerCase().includes(search.toLowerCase())
+            x.tag.toLowerCase().includes(search.toLowerCase()),
         )
         .forEach((user) => users.push(user));
     }
