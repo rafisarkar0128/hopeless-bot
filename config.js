@@ -1,10 +1,9 @@
-const colors = require("./colors.json");
-
 module.exports = {
   bot: {
-    id: process.env["BOT_ID"],
-    token: process.env["BOT_TOKEN"],
-    secret: process.env["BOT_SECRET"],
+    defaultPrefix: process.env.DEAFULT_PREFIX,
+    id: process.env.BOT_ID,
+    token: process.env.BOT_TOKEN,
+    secret: process.env.BOT_SECRET,
     presence: {
       status: "idle",
       activities: [
@@ -14,12 +13,12 @@ module.exports = {
         },
       ],
     },
+    invite: process.env.ALLOWED_INVITE,
   },
-  defaultPrefix: "h!",
-  ownerId: process.env["OWNER_ID"],
-  serverId: process.env["SERVER_ID"],
-  devs: process.env["DEVELOPER_IDS"],
-  mongodbUri: process.env["MONGO_URI"],
+  ownerId: process.env.OWNER_ID,
+  serverId: process.env.SERVER_ID,
+  devs: process.env.DEVELOPER_IDS,
+  mongodbUri: process.env.MONGO_URI,
   commands: {
     messageCommands: true,
     slashCommands: true,
@@ -27,6 +26,7 @@ module.exports = {
     modalSubmit: false,
     globalCommands: false,
   },
+  colors: require("./colors.json"),
   emojis: {
     resume: "▶️",
     pause: "⏸️",
@@ -47,7 +47,7 @@ module.exports = {
   links: {
     suportServer: "https://discord.gg/E6H9VvBdTk",
   },
-  imagesLinks: {
+  imageLinks: {
     glitch:
       "https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png",
   },
@@ -62,14 +62,12 @@ module.exports = {
   auto_moderation: {
     enabled: true,
   },
-
   dashboard: {
     enabled: true,
     base_url: "https://discord-js-bot.crazyyopppp.repl.co",
     failure_url: "https://discord-js-bot.crazyyopppp.repl.co",
     port: "3000",
   },
-
   economy: {
     enabled: true,
     currency: "💵",
@@ -77,7 +75,6 @@ module.exports = {
     min_beg_amount: 100,
     max_beg_amount: 2500,
   },
-
   music: {
     enabled: true,
     idle_time: 180000,
@@ -96,21 +93,14 @@ module.exports = {
       },
     ],
   },
-
   giveaways: {
-    enabled: true,
+    enabled: false,
     reaction: "🎁",
   },
-
   image: {
     enabled: true,
     base_api: "https://strangeapi.fun/api",
   },
-
-  invite: {
-    enabled: true,
-  },
-
   moderation: {
     enabled: true,
     EMBED_COLORS: {
@@ -125,7 +115,7 @@ module.exports = {
       DEAFEN: "#102027",
       UNDEAFEN: "#4B636E",
       DISCONNECT: "RANDOM",
-      MOVE: colors.Magenta,
+      //MOVE: colors.Magenta,
     },
   },
 

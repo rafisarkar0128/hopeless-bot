@@ -9,8 +9,9 @@ const {
   Routes,
 } = require("discord.js");
 const colors = require("colors");
-const { loadFiles } = require("../utils/loadFiles.js");
-const { AntiCrash } = require("../helpers/AntiCrash.js");
+const { loadFiles } = require("../loaders/loadFiles.js");
+const { loadEvents } = require("../loaders/loadEvents.js");
+//const { AntiCrash } = require("../helpers/AntiCrash.js");
 const { DateTime } = require("luxon");
 const { Logger } = require("../helpers/Logger.js");
 const { initializeMongoose } = require("../database/connect.js");
@@ -28,6 +29,7 @@ class DiscordBot extends Client {
     this.colors = require(`${process.cwd()}/colors.json`);
     this.pkg = require(`${process.cwd()}/package.json`);
 
+    this.events = new Collection();
     this.cooldowns = new Collection();
 
     /**@type {Collection<string, import("./SlashCommand")} */
@@ -106,27 +108,17 @@ class DiscordBot extends Client {
    */
   async logBox(string, options) {
     const boxen = await import("boxen");
-    if (!typeof string === "string" || !typeof options === "object") return;
-    console.log(boxen.default(string, options));
-  }
-
-  /**
-   *@param {String} dir
-   */
-  async loadEvents(dir) {
-    const files = await loadFiles(dir);
-
-    let i = 0;
-    for (const file of files) {
-      const eventObject = require(file);
-      const execute = (...args) => eventObject.execute(this, ...args);
-      const target = eventObject.rest ? this.rest : this;
-
-      target[eventObject.once ? "once" : "on"](eventObject.name, execute);
-      i++;
+    if (!typeof string === "string") {
+      return new TypeError(
+        `Needed a string value for option string but got ${typeof string}`
+      );
     }
-
-    this.log(colors.yellow(` | loaded ${i} events.`));
+    if (!typeof options === "object") {
+      return new TypeError(
+        `Needed a object for options but got ${typeof options}`
+      );
+    }
+    return console.log(boxen.default(string, options));
   }
 
   async loadCommands() {
@@ -153,20 +145,21 @@ class DiscordBot extends Client {
       Routes.applicationGuildCommands(this.config.bot.id, this.config.serverId),
       {
         body: applicationCommands,
-      },
+      }
     );
     this.log(colors.blue(` | loaded ${i} commands.`));
   }
 
   async build() {
-    if (this.config.antiCrash) AntiCrash(this);
+    if (this.config.antiCrash)
+      require("../helpers/AntiCrash.js")(this, process);
 
     try {
       console.clear();
       await this.logBox(
         [
           `Welcome to ${colors.blue(
-            this.pkg.name.toUpperCase(),
+            this.pkg.name.toUpperCase()
           )} github project`,
           `Running on Node.Js ${colors.green(process.version)}`,
           `Bot's version ${colors.yellow(this.pkg.version)}`,
@@ -181,10 +174,10 @@ class DiscordBot extends Client {
             top: 1,
             bottom: 1,
           },
-        },
+        }
       );
       this.login(this.config.bot.token);
-      await this.loadEvents(`${process.cwd()}/src/events`);
+      await loadEvents(this, `${process.cwd()}/src/events`);
       await this.loadCommands();
       initializeMongoose(this);
     } catch (error) {
@@ -234,11 +227,11 @@ class DiscordBot extends Client {
           player.trackRepeat
             ? "SUCCESS"
             : player.queueRepeat
-              ? "SUCCESS"
-              : "DANGER",
+            ? "SUCCESS"
+            : "DANGER"
         )
         .setCustomId(`controller:${guild}:Loop`)
-        .setEmoji(player.trackRepeat ? "🔂" : player.queueRepeat ? "🔁" : "🔁"),
+        .setEmoji(player.trackRepeat ? "🔂" : player.queueRepeat ? "🔁" : "🔁")
     );
   }
 }

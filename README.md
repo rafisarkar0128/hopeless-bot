@@ -9,6 +9,7 @@
 [![MIT License][license-shield]][license-url]
 [![CodeQL][codeql]][codeql-url]
 [![CodeQL][dependency-review]][dependency-review-url]
+[![CodeFactor][code-factor]][code-factor-url]
 
 ## Introduction
 
@@ -139,3 +140,5 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 [codeql-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml
 [dependency-review]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/dependency-review.yml?style=for-the-badge&label=Dependency%20Review
 [dependency-review-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml
+[code-factor]: https://img.shields.io/codefactor/grade/github/theassassin0128/Hopeless-Bot?style=for-the-badge&logo=codefactor&logoColor=%23F44A6A
+[code-factor-url]: https://www.codefactor.io/repository/github/theassassin0128/hopeless-bot/overview/main

@@ -6,7 +6,7 @@ const colors = require("colors");
 const winston = require("winston");
 const { DateTime } = require("luxon");
 const DateTimeString = colors.gray(
-  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]"),
+  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]")
 );
 
 class Logger {
@@ -20,7 +20,7 @@ class Logger {
         new winston.transports.File({
           filename: path.join(
             dir || `${process.cwd()}/logs`,
-            `${DateTime.now().toFormat("yyyy-LL-dd")}.log`,
+            `${DateTime.now().toFormat("yyyy-LL-dd")}.log`
           ),
         }),
       ],
@@ -107,11 +107,11 @@ async function sendError(error) {
         value: `\`\`\`sh\n${
           errStack.length > 4096 ? errStack.substr(0, 4000) + "..." : errStack
         }\n\`\`\``,
-      },
+      }
     )
     .setFooter({
       text: `Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
-        2,
+        2
       )} MB | CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
     });
 
