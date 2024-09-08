@@ -9,6 +9,7 @@
 [![MIT License][license-shield]][license-url]
 [![CodeQL][codeql]][codeql-url]
 [![CodeQL][dependency-review]][dependency-review-url]
+[![CodeFactor][code-factor]][code-factor-url]
 
 ## Introduction
 
@@ -20,13 +21,13 @@
 
 ## 📊 Road Map
 
--   [x] **Basic Bot**
--   [x] **Advance Bot**
--   [ ] **Documentation**
--   [ ] **Moderation Bot**
--   [ ] **Music Bot**
--   [ ] **Web based Dashboard**
--   [ ] **Website**
+- [x] **Basic Bot**
+- [x] **Advance Bot**
+- [ ] **Documentation**
+- [ ] **Moderation Bot**
+- [ ] **Music Bot**
+- [ ] **Web based Dashboard**
+- [ ] **Website**
 
 ## 💡 Features
 
@@ -38,32 +39,34 @@
 
 Before starting with the **SETUP**, you need to have the following:
 
--   [![Node.JS](https://img.shields.io/badge/Node.js_V18%2B-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
--   [![Discord.JS](https://img.shields.io/badge/Discord.JS_V14%2B-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
--   [![Lavalink](https://img.shields.io/badge/Lavalink_V4%2B-fa6f18?style=for-the-badge)](https://github.com/lavalink-devs/lavalink)
+- [![Node.JS](https://img.shields.io/badge/Node.js_V18%2B-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
+- [![Discord.JS](https://img.shields.io/badge/Discord.JS_V14%2B-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
+- [![Lavalink](https://img.shields.io/badge/Lavalink_V4%2B-fa6f18?style=for-the-badge)](https://github.com/lavalink-devs/lavalink)
 
 ### Optional
 
--   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community) (For MongoDB database)
--   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/) (For PostgreSQL database)
--   [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (For Docker Installation)
--   [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/) (For Docker Installation)
+- [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community) (For MongoDB database)
+- [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/) (For PostgreSQL database)
+- [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (For Docker Installation)
+- [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/) (For Docker Installation)
 
 ## 📝 Setup
 
+> **Warning** : The code on main brance has some issues which haven't been fixied yet. And the issues will be ressolve when the [`@V2-main`](https://github.com/theassassin0128/Hopeless-Bot/tree/%40V2-Main) brance has been finalized and merged with the main brance. So wait for now 😁.
+
 ### 📝 Normal Setup
 
--   **Step 1:** Open `.env.example`
--   **Step 2:** Put the required values and rename it to `.env`
--   **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
--   **Step 5:** Finally run `npm start` in your terminal
+- **Step 1:** Open `.env.example`
+- **Step 2:** Put the required values and rename it to `.env`
+- **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
+- **Step 5:** Finally run `npm start` in your terminal
 
 ### 📝 Setup with Docker
 
--   **Step 1:** Open `env.example`
--   **Step 2:** Put the required values and rename it to `.env`
--   **Step 3:** Run `docker-compose build`
--   **Step 4:** Finally run `docker-compose up`
+- **Step 1:** Open `env.example`
+- **Step 2:** Put the required values and rename it to `.env`
+- **Step 3:** Run `docker-compose build`
+- **Step 4:** Finally run `docker-compose up`
 
 ### 📝 Replit Guide
 
@@ -71,8 +74,8 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### NOTE:
 
--   By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
--   Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
+- By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
+- Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
 
 ### **Need help with setup?**
 
@@ -99,13 +102,13 @@ Written below are some public & utility commands of the bot.
 
 ## 🔗 Useful Links
 
--   [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
--   [![Discord.js](https://img.shields.io/badge/Discord.js-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
--   [![Lavalink](https://img.shields.io/badge/Lavalink-fa6f18?style=for-the-badge&logo=discord&logoColor=white)](https://github.com/lavalink-devs/Lavalink)
--   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
--   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/)
--   [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
--   [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+- [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
+- [![Discord.js](https://img.shields.io/badge/Discord.js-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
+- [![Lavalink](https://img.shields.io/badge/Lavalink-fa6f18?style=for-the-badge&logo=discord&logoColor=white)](https://github.com/lavalink-devs/Lavalink)
+- [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
+- [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/)
+- [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+- [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
 
 ## 📜 Contributing
 
@@ -139,3 +142,5 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 [codeql-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml
 [dependency-review]: https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/dependency-review.yml?style=for-the-badge&label=Dependency%20Review
 [dependency-review-url]: https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml
+[code-factor]: https://img.shields.io/codefactor/grade/github/theassassin0128/Hopeless-Bot?style=for-the-badge&logo=codefactor&logoColor=%23F44A6A
+[code-factor-url]: https://www.codefactor.io/repository/github/theassassin0128/hopeless-bot/overview/main
