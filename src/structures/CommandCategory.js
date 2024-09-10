@@ -1,4 +1,4 @@
-const config = require("@root/config");
+const config = require("../..config.js");
 
 module.exports = {
   ADMIN: {

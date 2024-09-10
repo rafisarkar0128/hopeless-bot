@@ -9,7 +9,8 @@ table.removeBorder().setAlign(1, AsciiTable.RIGHT).setJustify(true);
  *@param {String} dir - path of events directory
  */
 module.exports = async (client, dir) => {
-  client.log(colors.yellow(" | started to load events."));
+  client.logger.log(colors.yellow(" | started to load events."));
+
   const files = await loadFiles(dir);
   client.events.clear();
 
@@ -41,5 +42,6 @@ module.exports = async (client, dir) => {
       bottom: 1,
     },
   });
-  client.log(colors.blue(` | loaded ${i} events.`));
+
+  client.logger.log(colors.blue(` | loaded ${i} events.`));
 };

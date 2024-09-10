@@ -10,7 +10,8 @@ table.removeBorder().setAlign(1, AsciiTable.RIGHT).setJustify(true);
  *@param {String} dir - path of events directory
  */
 module.exports = async (client, dir) => {
-  client.log(colors.yellow(" | started to load commands."));
+  client.logger.log(colors.yellow(" | started to load commands."));
+
   const files = await loadFiles(dir);
   const applicationCommands = [];
 
@@ -59,5 +60,6 @@ module.exports = async (client, dir) => {
       body: applicationCommands,
     }
   );
-  client.log(colors.blue(` | loaded ${i} commands.`));
+
+  client.logger.log(colors.blue(` | loaded ${i} commands.`));
 };

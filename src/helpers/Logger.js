@@ -11,8 +11,7 @@ const DateTimeString = colors.gray(
 
 class Logger {
   /**
-   *
-   * @param {String} dir - Log files directory path. Must be a string.
+   * @param {String} dir - Log files directory path. Must be a text.
    */
   constructor(dir) {
     this.logger = winston.createLogger({
@@ -29,48 +28,36 @@ class Logger {
 
   /**
    *
-   * @param {String} string
+   * @param {String} text
    */
-  log(string) {
-    console.log(DateTimeString + string);
+  log(text) {
+    return console.log(DateTimeString + text);
   }
 
   /**
    *
-   * @param {String} string
+   * @param {String} text
    */
-  warn(string) {
+  warn(text) {
     this.logger.log({
       level: "warn",
-      message: "warn: " + string,
+      message: "warn: " + text,
     });
-    console.log(DateTimeString + colors.yellow(" | " + string));
+    return console.log(DateTimeString + colors.yellow(" | " + text));
   }
 
   /**
    *
-   * @param {String} string
+   * @param {String} text
    */
-  async error(string) {
+  async error(text) {
     this.logger.log({
       level: "error",
-      message: "error: " + string,
+      message: "error: " + text,
     });
-    let error = string.stack ? string.stack : string;
-    //await sendError(string);
-    console.log(DateTimeString + colors.red(" | " + error));
-  }
-
-  /**
-   *
-   * @param {String} string
-   */
-  debug(string) {
-    this.logger.log({
-      level: "info",
-      message: "info: " + string,
-    });
-    console.log(DateTimeString + colors.gray(" | " + string));
+    let error = text.stack ? text.stack : text;
+    //await sendError(text);
+    return console.log(DateTimeString + colors.red(" | " + error));
   }
 }
 

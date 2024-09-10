@@ -10,6 +10,6 @@ module.exports = {
    * @param {Client} client
    */
   execute: async (client) => {
-    client.log(colors.green(` | logged in as ${client.user.tag}.`));
+    client.logger.log(colors.green(` | logged in as ${client.user.tag}.`));
   },
 };

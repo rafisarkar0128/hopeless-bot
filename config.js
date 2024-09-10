@@ -26,7 +26,6 @@ module.exports = {
     modalSubmit: false,
     globalCommands: false,
   },
-  colors: require("./colors.json"),
   emojis: {
     resume: "▶️",
     pause: "⏸️",
