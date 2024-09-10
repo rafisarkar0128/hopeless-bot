@@ -1,24 +1,18 @@
 const {
   Client,
   Collection,
-  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
-  ApplicationCommandType,
   REST,
   Routes,
 } = require("discord.js");
 const colors = require("colors");
-const { loadFiles } = require("../loaders/loadFiles.js");
-const { loadEvents } = require("../loaders/loadEvents.js");
-//const { AntiCrash } = require("../helpers/AntiCrash.js");
-const { DateTime } = require("luxon");
+const { AntiCrash } = require("../helpers/AntiCrash.js");
 const { Logger } = require("../helpers/Logger.js");
 const { initializeMongoose } = require("../database/connect.js");
 
 class DiscordBot extends Client {
   /**
-   *
    * @param {import("discord.js").ClientOptions} options
    */
   constructor(options) {
@@ -26,133 +20,84 @@ class DiscordBot extends Client {
 
     this.logger = new Logger(`${process.cwd()}/logs`);
     this.config = require(`${process.cwd()}/config.js`);
-    this.colors = require(`${process.cwd()}/colors.json`);
     this.pkg = require(`${process.cwd()}/package.json`);
 
+    /**
+     * @type {Collection<string, Promise<void>>} - Collection for events
+     */
     this.events = new Collection();
+
+    /**
+     * @type {Collection<string, Collection} - Collection for command cooldowns
+     */
     this.cooldowns = new Collection();
 
-    /**@type {Collection<string, import("./SlashCommand")} */
+    /**
+     * @type {import('./Command.js')} - Collection for prefix commands
+     */
+    this.commands = new Collection();
+
+    /**
+     * @type {Collection<string, import("./SlashCommand")>} - Collection for slash commands
+     */
     this.slashCommands = new Collection();
-    this.contextCommands = new Collection();
+
+    /**
+     * @type {Collection<string, import('./BaseContext')>} - Collection for context menus
+     */
+    this.contextMenus = new Collection();
+
+    /**
+     * @type {Collection<string, Object>} - Collection for command allias other stuff
+     */
+    this.commandIndex = new Collection();
 
     /**
      * @type {Collection<string, import('@structures/Command')>}
      */
-    this.slashCommands = new Collection(); // store slash commands
+    //this.slashCommands = new Collection(); // store slash commands
 
-    /**
-     * @type {Collection<string, import('@structures/BaseContext')>}
-     */
-    this.contextMenus = new Collection(); // store contextMenus
-
-    /**
-     * @type {import('@structures/Command')[]}
-     */
-    this.commands = []; // store actual command
-    this.commandIndex = new Collection(); // store (alias, arrayIndex) pair
-
-    //this.deletedMessages = new WeakSet();
-    //this.getLavalink = getLavalink;
-    //this.getChannel = getChannel;
-    //this.ms = prettyMilliseconds;
-    //this.commandsRan = 0;
-    //this.songsPlayed = 0;
-
-    //this.counterUpdateQueue = []; // store guildId's that needs counter update
-
-    //if (this.config.music.enabled) this.musicManager = lavaclient(this);
-
-    //if (this.config.giveaway.enabled) {
-    //  this.giveawaysManager = giveawaysHandler(this);
-    //}
-
-    //this.discordTogether = new DiscordTogether(this);
-
-    this.build();
+    this.loadEvents = require("../loaders/loadEvents.js");
+    this.loadCommands = require("../loaders/loadCommands.js");
   }
 
   /**
-   * @param {String} string
+   * @param {String} text - To log text on the console
    */
-  log(string) {
-    this.logger.log(string);
+  log(text) {
+    this.logger.log(text);
   }
 
   /**
-   * @param {String} string
+   * @param {String} text - To log warnings on the console
    */
-  warn(string) {
-    this.logger.warn(string);
+  warn(text) {
+    this.logger.warn(text);
   }
 
   /**
-   * @param {String} string
+   * @param {String} text - To log errors on the console
    */
-  error(string) {
-    this.logger.error(string);
+  error(text) {
+    this.logger.error(text);
   }
 
   /**
-   * @param {String} string
+   * @param {String} text - The text to display
+   * @param {import("boxen").Options} options - Options for styling
    */
-  debug(string) {
-    this.logger.debug(string);
-  }
-
-  /**
-   *
-   * @param {String} string
-   * @param {Object} options
-   * @returns
-   */
-  async logBox(string, options) {
-    const boxen = await import("boxen");
-    if (!typeof string === "string") {
+  async logBox(text, options) {
+    const boxen = (await import("boxen")).default;
+    if (!typeof text === "string") {
       return new TypeError(
-        `Needed a string value for option string but got ${typeof string}`
+        `Needed a text value for option text but got ${typeof text}`
       );
     }
-    if (!typeof options === "object") {
-      return new TypeError(
-        `Needed a object for options but got ${typeof options}`
-      );
-    }
-    return console.log(boxen.default(string, options));
-  }
-
-  async loadCommands() {
-    const rest = new REST({ version: 10 }).setToken(this.config.bot.token);
-    const files = await loadFiles(`${process.cwd()}/src/commands`);
-    const applicationCommands = [];
-    this.slashCommands.clear();
-
-    let i = 0;
-    for (const file of files) {
-      const object = require(file);
-
-      if (object.enabled) continue;
-      if (object.cooldown) {
-        this.cooldowns.set(object.data?.name, new Collection());
-      }
-
-      applicationCommands.push(object.data);
-      this.slashCommands.set(object.data.name, object);
-      i++;
-    }
-
-    rest.put(
-      Routes.applicationGuildCommands(this.config.bot.id, this.config.serverId),
-      {
-        body: applicationCommands,
-      }
-    );
-    this.log(colors.blue(` | loaded ${i} commands.`));
+    return console.log(boxen(text, options));
   }
 
   async build() {
-    if (this.config.antiCrash)
-      require("../helpers/AntiCrash.js")(this, process);
+    if (this.config.antiCrash) AntiCrash(this);
 
     try {
       console.clear();
@@ -162,12 +107,12 @@ class DiscordBot extends Client {
             this.pkg.name.toUpperCase()
           )} github project`,
           `Running on Node.Js ${colors.green(process.version)}`,
-          `Bot's version ${colors.yellow(this.pkg.version)}`,
+          `Version ${colors.yellow(this.pkg.version)}`,
           `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
         ].join("\n"),
         {
           borderColor: "#00BFFF",
-          stringAlignment: "center",
+          textAlignment: "center",
           padding: {
             left: 8,
             right: 8,
@@ -177,8 +122,8 @@ class DiscordBot extends Client {
         }
       );
       this.login(this.config.bot.token);
-      await loadEvents(this, `${process.cwd()}/src/events`);
-      await this.loadCommands();
+      await this.loadEvents(this, `${process.cwd()}/src/events`);
+      await this.loadCommands(this, `${process.cwd()}/src/commands`);
       initializeMongoose(this);
     } catch (error) {
       throw error;

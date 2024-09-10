@@ -7,12 +7,12 @@ function deleteCashedFile(file) {
     delete require.cache[filePath];
   }
 }
-
-async function loadFiles(dir) {
+/**
+ * @param {String} dir - Path to the files directory
+ */
+module.exports = async (dir) => {
   const files = await glob(path.join(dir, `**/*.js`).replace(/\\/g, "/"));
   const jsFiles = files.filter((file) => path.extname(file) === ".js");
   await Promise.all(jsFiles.map(deleteCashedFile));
   return jsFiles;
-}
-
-module.exports = { loadFiles };
+};

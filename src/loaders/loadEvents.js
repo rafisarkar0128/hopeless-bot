@@ -1,30 +1,45 @@
 const colors = require("colors");
-const AsciiTable = require("ascii-table/ascii-table");
-const { loadFiles } = require("./loadFiles.js");
+const AsciiTable = require("ascii-table");
+const loadFiles = require("./loadFiles.js");
 const table = new AsciiTable();
-table.setHeading("files", "status").setBorder(" ", " ", " ", " ");
+table.removeBorder().setAlign(1, AsciiTable.RIGHT).setJustify(true);
+
 /**
+ *@param {import("../structures/DiscordBot.js").DiscordBot} client - base client
  *@param {String} dir - path of events directory
  */
-async function loadEvents(client, dir) {
+module.exports = async (client, dir) => {
+  client.log(colors.yellow(" | started to load events."));
   const files = await loadFiles(dir);
   client.events.clear();
 
   let i = 0;
   for (const file of files) {
-    const event = require(file);
-    const execute = (...args) => event.execute(client, ...args);
-    const target = event.rest ? client.rest : client;
+    try {
+      const event = require(file);
+      const execute = (...args) => event.execute(client, ...args);
+      const target = event.rest ? client.rest : client;
 
-    client.events.set(event.name, execute);
-    target[event.once ? "once" : "on"](event.name, execute);
+      client.events.set(event.name, execute);
+      target[event.once ? "once" : "on"](event.name, execute);
 
-    table.addRow(file.replace(/\\/g, "/").split("/").pop(), "✅");
-    i++;
+      table.addRow(file.replace(/\\/g, "/").split("/").pop(), "✅");
+      i++;
+    } catch (error) {
+      table.addRow(file.replace(/\\/g, "/").split("/").pop(), "❌");
+      client.error(error);
+    }
   }
 
-  await client.logBox(table.toString(), {});
-  client.log(colors.yellow(` | loaded ${i} events.`));
-}
-
-module.exports = { loadEvents };
+  await client.logBox(table.toString(), {
+    borderColor: "#00BFFF",
+    stringAlignment: "center",
+    padding: {
+      left: 5,
+      right: 5,
+      top: 1,
+      bottom: 1,
+    },
+  });
+  client.log(colors.blue(` | loaded ${i} events.`));
+};

@@ -38,4 +38,6 @@ const client = new DiscordBot({
   restTimeOffset: 0,
 });
 
+client.build();
+
 module.exports = client;

@@ -57,7 +57,7 @@ class Logger {
       message: "error: " + string,
     });
     let error = string.stack ? string.stack : string;
-    await sendError(string);
+    //await sendError(string);
     console.log(DateTimeString + colors.red(" | " + error));
   }
 

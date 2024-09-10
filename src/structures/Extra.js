@@ -19,6 +19,19 @@ const filters = require("erela.js-filters");
 const { default: EpicPlayer } = require("./EpicPlayer");
 
 module.exports = class BotClient extends Client {
+  //this.deletedMessages = new WeakSet();
+  //this.getLavalink = getLavalink;
+  //this.getChannel = getChannel;
+  //this.ms = prettyMilliseconds;
+  //this.commandsRan = 0;
+  //this.songsPlayed = 0;
+  //this.counterUpdateQueue = []; // store guildId's that needs counter update
+  //if (this.config.music.enabled) this.musicManager = lavaclient(this);
+  //if (this.config.giveaway.enabled) {
+  //  this.giveawaysManager = giveawaysHandler(this);
+  //}
+  //this.discordTogether = new DiscordTogether(this);
+
   /**
    * Find command matching the invoke
    * @param {string} invoke
@@ -37,7 +50,7 @@ module.exports = class BotClient extends Client {
     // Check if category is disabled
     if (cmd.category && CommandCategory[cmd.category]?.enabled === false) {
       this.logger.debug(
-        `Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`,
+        `Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`
       );
       return;
     }
@@ -117,10 +130,10 @@ module.exports = class BotClient extends Client {
     }
 
     const userContexts = this.contextMenus.filter(
-      (ctx) => ctx.type === "USER",
+      (ctx) => ctx.type === "USER"
     ).size;
     const messageContexts = this.contextMenus.filter(
-      (ctx) => ctx.type === "MESSAGE",
+      (ctx) => ctx.type === "MESSAGE"
     ).size;
 
     if (userContexts > 3)
@@ -172,7 +185,7 @@ module.exports = class BotClient extends Client {
       if (!guild) {
         this.logger.error(
           `Failed to register interactions in guild ${guildId}`,
-          new Error("No matching guild"),
+          new Error("No matching guild")
         );
         return;
       }
@@ -182,7 +195,7 @@ module.exports = class BotClient extends Client {
     // Throw an error
     else {
       throw new Error(
-        "Did you provide a valid guildId to register interactions",
+        "Did you provide a valid guildId to register interactions"
       );
     }
 
@@ -222,7 +235,7 @@ module.exports = class BotClient extends Client {
           (x) =>
             x.username === search ||
             x.username.toLowerCase().includes(search.toLowerCase()) ||
-            x.tag.toLowerCase().includes(search.toLowerCase()),
+            x.tag.toLowerCase().includes(search.toLowerCase())
         )
         .forEach((user) => users.push(user));
     }
@@ -305,9 +318,9 @@ class DiscordMusicBot extends Client {
       nodes: this.config.nodes,
       retryDelay: this.config.retryDelay,
       retryAmount: this.config.retryAmount,
-      clientName: `DiscordMusic/v${
-        require("../package.json").version
-      } (Bot: ${this.config.clientId})`,
+      clientName: `DiscordMusic/v${require("../package.json").version} (Bot: ${
+        this.config.clientId
+      })`,
       send: (id, payload) => {
         let guild = client.guilds.cache.get(id);
         if (guild) {
@@ -317,33 +330,33 @@ class DiscordMusicBot extends Client {
     })
       .on("nodeConnect", (node) =>
         this.log(
-          `Node: ${node.options.identifier} | Lavalink node is connected.`,
-        ),
+          `Node: ${node.options.identifier} | Lavalink node is connected.`
+        )
       )
       .on("nodeReconnect", (node) =>
         this.warn(
-          `Node: ${node.options.identifier} | Lavalink node is reconnecting.`,
-        ),
+          `Node: ${node.options.identifier} | Lavalink node is reconnecting.`
+        )
       )
       .on("nodeDestroy", (node) =>
         this.warn(
-          `Node: ${node.options.identifier} | Lavalink node is destroyed.`,
-        ),
+          `Node: ${node.options.identifier} | Lavalink node is destroyed.`
+        )
       )
       .on("nodeDisconnect", (node) =>
         this.warn(
-          `Node: ${node.options.identifier} | Lavalink node is disconnected.`,
-        ),
+          `Node: ${node.options.identifier} | Lavalink node is disconnected.`
+        )
       )
       .on("nodeError", (node, err) => {
         this.warn(
-          `Node: ${node.options.identifier} | Lavalink node has an error: ${err.message}.`,
+          `Node: ${node.options.identifier} | Lavalink node has an error: ${err.message}.`
         );
       })
       // on track error warn and create embed
       .on("trackError", (player, err) => {
         this.warn(
-          `Player: ${player.options.guild} | Track had an error: ${err.message}.`,
+          `Player: ${player.options.guild} | Track had an error: ${err.message}.`
         );
         //console.log(err);
         let song = player.queue.current;
@@ -423,7 +436,7 @@ class DiscordMusicBot extends Client {
             client.guilds.cache.get(player.options.guild)
               ? client.guilds.cache.get(player.options.guild).name
               : "a guild"
-          }`,
+          }`
         );
       })
       .on("playerDestroy", (player) => {
@@ -434,15 +447,15 @@ class DiscordMusicBot extends Client {
             client.guilds.cache.get(player.options.guild)
               ? client.guilds.cache.get(player.options.guild).name
               : "a guild"
-          }`,
+          }`
         );
         player.setNowplayingMessage(client, null);
       })
       // on LOAD_FAILED send error message
       .on("loadFailed", (node, type, error) =>
         this.warn(
-          `Node: ${node.options.identifier} | Failed to load ${type}: ${error.message}`,
-        ),
+          `Node: ${node.options.identifier} | Failed to load ${type}: ${error.message}`
+        )
       )
       // on TRACK_START send message
       .on(
@@ -457,7 +470,7 @@ class DiscordMusicBot extends Client {
           this.warn(
             `Player: ${
               player.options.guild
-            } | Track has been started playing [${colors.blue(track.title)}]`,
+            } | Track has been started playing [${colors.blue(track.title)}]`
           );
           var title = escapeMarkdown(track.title);
           var title = title.replace(/\]/g, "");
@@ -482,11 +495,11 @@ class DiscordMusicBot extends Client {
                       colonNotation: true,
                     })}\``,
                 inline: true,
-              },
+              }
             );
           try {
             trackStartedEmbed.setThumbnail(
-              track.displayThumbnail("maxresdefault"),
+              track.displayThumbnail("maxresdefault")
             );
           } catch (err) {
             trackStartedEmbed.setThumbnail(track.thumbnail);
@@ -501,7 +514,7 @@ class DiscordMusicBot extends Client {
             })
             .catch(this.warn);
           player.setNowplayingMessage(client, nowPlaying);
-        },
+        }
       )
 
       .on(
@@ -514,7 +527,7 @@ class DiscordMusicBot extends Client {
           } else {
             player.destroy();
           }
-        },
+        }
       )
 
       .on(
@@ -544,7 +557,7 @@ class DiscordMusicBot extends Client {
                       iconURL: client.config.iconURL,
                     })
                     .setDescription(
-                      `Could not load track.\n**ERR:** ${res.exception.message}`,
+                      `Could not load track.\n**ERR:** ${res.exception.message}`
                     ),
                 ],
               });
@@ -579,7 +592,7 @@ class DiscordMusicBot extends Client {
                         iconURL: client.config.iconURL,
                       })
                       .setDescription(
-                        `The player has been disconnected due to inactivity.`,
+                        `The player has been disconnected due to inactivity.`
                       );
                     let Disconnected = await client.channels.cache
                       .get(player.textChannel)
@@ -590,7 +603,7 @@ class DiscordMusicBot extends Client {
                     player.destroy();
                   } else if (player.playing) {
                     client.warn(
-                      `Player: ${player.options.guild} | Still playing`,
+                      `Player: ${player.options.guild} | Still playing`
                     );
                   }
                 }, client.config.disconnectTime);
@@ -598,11 +611,11 @@ class DiscordMusicBot extends Client {
                 client.warn(
                   `Player: ${
                     player.options.guild
-                  } | Queue has ended [${colors.blue("24/7 ENABLED")}]`,
+                  } | Queue has ended [${colors.blue("24/7 ENABLED")}]`
                 );
               } else {
                 client.warn(
-                  `Something unexpected happened with player ${player.options.guild}`,
+                  `Something unexpected happened with player ${player.options.guild}`
                 );
               }
               player.setNowplayingMessage(client, null);
@@ -610,7 +623,7 @@ class DiscordMusicBot extends Client {
               client.error(err);
             }
           }
-        },
+        }
       );
   }
 

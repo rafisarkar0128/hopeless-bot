@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon index.js",
+    "trace": "node --trace-warnings index.js",
     "start": "node index.js",
     "clearGlobal": "node scripts/clearGlobalCommands.js",
     "clearGuild": "node scripts/clearGuildCommands.js"
