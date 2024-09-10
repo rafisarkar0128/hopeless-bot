@@ -52,8 +52,6 @@ Before starting with the **SETUP**, you need to have the following:
 
 ## 📝 Setup
 
-> **Warning** : The code on main brance has some issues which haven't been fixied yet. And the issues will be ressolve when the [`@V2-main`](https://github.com/theassassin0128/Hopeless-Bot/tree/%40V2-Main) brance has been finalized and merged with the main brance. So wait for now 😁.
-
 ### 📝 Normal Setup
 
 - **Step 1:** Open `.env.example`
