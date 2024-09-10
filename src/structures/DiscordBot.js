@@ -5,6 +5,9 @@ const {
   ButtonBuilder,
 } = require("discord.js");
 const { Logger } = require("../helpers/Logger.js");
+const colors = require("colors");
+const pkg = require("../../package.json");
+
 class DiscordBot extends Client {
   /**
    * @param {import("discord.js").ClientOptions} options
@@ -59,14 +62,28 @@ class DiscordBot extends Client {
    * @param {String} text - The text to display
    * @param {import("boxen").Options} options - Options for styling
    */
-  async logBox(text, options) {
+  async logBox() {
     const boxen = (await import("boxen")).default;
-    if (!typeof text === "string") {
-      return new TypeError(
-        `Needed a text value for option text but got ${typeof text}`
-      );
-    }
-    return console.log(boxen(text, options));
+    return console.log(
+      boxen(
+        [
+          `Welcome to ${colors.blue(pkg.name.toUpperCase())} github project`,
+          `Running on Node.Js ${colors.green(process.version)}`,
+          `Version ${colors.yellow(pkg.version)}`,
+          `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
+        ].join("\n"),
+        {
+          borderColor: "#00BFFF",
+          textAlignment: "center",
+          padding: {
+            left: 10,
+            right: 10,
+            top: 1,
+            bottom: 1,
+          },
+        }
+      )
+    );
   }
 
   /**

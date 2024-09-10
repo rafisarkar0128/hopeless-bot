@@ -6,7 +6,7 @@ const colors = require("colors");
 const winston = require("winston");
 const { DateTime } = require("luxon");
 const DateTimeString = colors.gray(
-  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]")
+  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss] ")
 );
 
 class Logger {
@@ -31,7 +31,7 @@ class Logger {
    * @param {String} text
    */
   log(text) {
-    return console.log(DateTimeString + text);
+    return console.log(DateTimeString + colors.bold.bgBlue(" INFO ") + text);
   }
 
   /**
@@ -43,7 +43,11 @@ class Logger {
       level: "warn",
       message: "warn: " + text,
     });
-    return console.log(DateTimeString + colors.yellow(" | " + text));
+    return console.log(
+      DateTimeString +
+        colors.bold.bgYellow(" WARN ") +
+        colors.yellow(" | " + text)
+    );
   }
 
   /**
@@ -57,7 +61,9 @@ class Logger {
     });
     let error = text.stack ? text.stack : text;
     //await sendError(text);
-    return console.log(DateTimeString + colors.red(" | " + error));
+    return console.log(
+      DateTimeString + colors.bold.bgBlue(" ERROR ") + colors.red(" | " + error)
+    );
   }
 }
 

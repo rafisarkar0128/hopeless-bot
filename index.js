@@ -48,30 +48,13 @@ client.logger.log("test");
 
 async function startBot() {
   console.clear();
+  await client.logBox();
 
   try {
-    await client.logBox(
-      [
-        `Welcome to ${colors.blue(pkg.name.toUpperCase())} github project`,
-        `Running on Node.Js ${colors.green(process.version)}`,
-        `Version ${colors.yellow(pkg.version)}`,
-        `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
-      ].join("\n"),
-      {
-        borderColor: "#00BFFF",
-        textAlignment: "center",
-        padding: {
-          left: 8,
-          right: 8,
-          top: 1,
-          bottom: 1,
-        },
-      }
-    );
-    client.login(client.config.bot.token);
     await client.loadEvents(client, `${process.cwd()}/src/events`);
     await client.loadCommands(client, `${process.cwd()}/src/commands`);
-    initializeMongoose(client);
+    await initializeMongoose(client);
+    client.login(client.config.bot.token);
   } catch (error) {
     throw error;
   }
