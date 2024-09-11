@@ -54,10 +54,6 @@ module.exports = {
     const member = await interaction.guild.members.fetch(client.user.id);
 
     const embed = new EmbedBuilder()
-      .setAuthor({
-        name: interaction.user.displayName,
-        iconURL: interaction.user.displayAvatarURL(),
-      })
       .setColor(
         client.colors.array[
           Math.floor(Math.random() * client.colors.array.length)
