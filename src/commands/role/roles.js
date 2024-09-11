@@ -25,7 +25,11 @@ module.exports = {
     const roles = interaction.guild.roles.cache
       .sort((a, b) => b.position - a.position)
       .map((r) => `<@&${r.id}>`);
-    const embed = new EmbedBuilder().setColor(client.colors.good);
+    const embed = new EmbedBuilder().setColor(
+      client.colors.array[
+        Math.floor(Math.random() * client.colors.array.length)
+      ]
+    );
     const roleEmbeds = [];
 
     if (roles.slice(0, 50)?.length) {

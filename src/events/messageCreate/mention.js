@@ -1,4 +1,4 @@
-const { Client, Message, EmbedBuilder } = require("discord.js");
+const { Message, EmbedBuilder } = require("discord.js");
 
 module.exports = {
   name: "messageCreate",
@@ -6,7 +6,7 @@ module.exports = {
   rest: false,
   /**
    *
-   * @param {Client} client
+   * @param {import("../../structures/DiscordBot.js").DiscordBot} client
    * @param {Message} message
    * @returns
    */
@@ -23,10 +23,14 @@ module.exports = {
       })
       .setTitle("Did you just mention my me?")
       .setDescription(
-        `I am ${client.user.username}, a bot developed by **theassassin0128** to manage this server. For more information or help use **\`/help\`**.`,
+        `I am ${client.user.username}, a bot developed by **theassassin0128** to manage this server. For more information or help use **\`/help\`**.`
       )
       .setThumbnail(client.user.displayAvatarURL())
-      .setColor(client.colors.main)
+      .setColor(
+        client.colors.array[
+          Math.floor(Math.random() * client.colors.array.length)
+        ]
+      )
       .setFooter({
         text: `Powered by ${client.user.username}`,
       });

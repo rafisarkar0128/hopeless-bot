@@ -58,14 +58,16 @@ module.exports = {
         name: interaction.user.displayName,
         iconURL: interaction.user.displayAvatarURL(),
       })
-      .setColor(member.displayHexColor || client.colors.americanRose)
+      .setColor(
+        client.colors.array[
+          Math.floor(Math.random() * client.colors.array.length)
+        ]
+      )
       .setTitle(`${client.user.tag}'s Information`)
       .setDescription(
-        [
-          `**Tag:** ${client.user.tag}`,
-          `**Version:** ${pkg.version}`,
-          `**Website:** Coming soon.`,
-        ].join("\n"),
+        [`**Tag:** ${client.user.tag}`, `**Version:** ${pkg.version}`].join(
+          "\n"
+        )
       )
       .setThumbnail(client.user.avatarURL())
       .setImage("attachment://profile.png")
@@ -102,7 +104,7 @@ module.exports = {
           name: "SOURCE CODE",
           value: `Repository is available on github`,
           inline: true,
-        },
+        }
       )
       .setFooter({
         text: `Powered by ${client.user.username}`,
@@ -122,7 +124,7 @@ module.exports = {
       .setLabel("Invite Me")
       .setStyle(ButtonStyle.Link)
       .setURL(
-        "https://discord.com/oauth2/authorize?client_id=1272259032098275358",
+        "https://discord.com/oauth2/authorize?client_id=1272259032098275358"
       );
 
     const websiteButton = new ButtonBuilder()

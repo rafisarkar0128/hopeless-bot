@@ -27,18 +27,16 @@ module.exports = {
     const minutes = Math.floor(client.uptime / 60000) % 60;
     const seconds = Math.floor(client.uptime / 1000) % 60;
 
-    const wsPing = Date.now() - interaction.createdAt;
+    const wsPing = Date.now() - interaction.createdTimestamp;
     const apiPing = client.ws.ping;
     const totalPing = wsPing + apiPing;
 
     const embed = new EmbedBuilder()
       .setTitle("MY RUNTIME STATS")
       .setColor(
-        totalPing <= 400
-          ? client.colors.Good
-          : totalPing <= 800
-            ? client.colors.StandBy
-            : client.colors.Wrong,
+        client.colors.array[
+          Math.floor(Math.random() * client.colors.array.length)
+        ]
       )
       .setThumbnail(client.user.displayAvatarURL())
       .addFields([
@@ -65,6 +63,7 @@ module.exports = {
       .setFooter({
         text: `Powered by ${client.user.username}`,
       });
+
     return interaction.followUp({
       embeds: [embed],
     });

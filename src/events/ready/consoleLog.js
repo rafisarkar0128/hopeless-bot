@@ -11,7 +11,7 @@ module.exports = {
    */
   execute: async (client) => {
     const boxen = (await import("boxen")).default;
-    client.logger.log(colors.green(` | logged in as ${client.user.tag}.`));
+    client.logger.log(colors.green(`logged in as ${client.user.tag}.`));
     const table = new AsciiTable();
     table.removeBorder().setTitle(`Bot is online!`);
 

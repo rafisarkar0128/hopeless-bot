@@ -1,12 +1,11 @@
 const { EmbedBuilder, WebhookClient } = require("discord.js");
-const path = require("path");
 const config = require(`${process.cwd()}/config`);
 const { Wrong } = require(`${process.cwd()}/colors.json`);
 const colors = require("colors");
 const winston = require("winston");
 const { DateTime } = require("luxon");
 const DateTimeString = colors.gray(
-  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss] ")
+  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]")
 );
 
 class Logger {
@@ -17,25 +16,24 @@ class Logger {
     this.logger = winston.createLogger({
       transports: [
         new winston.transports.File({
-          filename: path.join(
-            dir || `${process.cwd()}/logs`,
-            `${DateTime.now().toFormat("yyyy-LL-dd")}.log`
-          ),
+          filename: `${process.cwd()}/logs/${DateTime.now().toFormat(
+            "yyyy-LL-dd"
+          )}.log`,
         }),
       ],
     });
   }
 
   /**
-   *
    * @param {String} text
    */
   log(text) {
-    return console.log(DateTimeString + colors.bold.bgBlue(" INFO ") + text);
+    return console.log(
+      `${DateTimeString} ${colors.bold.bgBlue(" INFO ")} ${text}`
+    );
   }
 
   /**
-   *
    * @param {String} text
    */
   warn(text) {
@@ -44,14 +42,13 @@ class Logger {
       message: "warn: " + text,
     });
     return console.log(
-      DateTimeString +
-        colors.bold.bgYellow(" WARN ") +
-        colors.yellow(" | " + text)
+      `${DateTimeString} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(
+        `${text}`
+      )}`
     );
   }
 
   /**
-   *
    * @param {String} text
    */
   async error(text) {
@@ -62,13 +59,14 @@ class Logger {
     let error = text.stack ? text.stack : text;
     //await sendError(text);
     return console.log(
-      DateTimeString + colors.bold.bgBlue(" ERROR ") + colors.red(" | " + error)
+      `${DateTimeString} ${colors.bold.bgRed(" ERROR ")} ${colors.red(
+        `${error}`
+      )}`
     );
   }
 }
 
 /**
- *
  * @param {Client} client
  * @param {Error} error
  */
@@ -87,12 +85,12 @@ async function sendError(error) {
     .setFields(
       {
         name: "Error Code",
-        value: `\`\`\`\n${error?.name || "Error"}\n\`\`\``,
+        value: `\`\`\`\n${error?.name | "Error"}\n\`\`\``,
         inline: true,
       },
       {
         name: "Error Message",
-        value: `\`\`\`\n${error?.message || "NA"}\n\`\`\``,
+        value: `\`\`\`\n${error?.message | "NA"}\n\`\`\``,
         inline: true,
       },
       {
@@ -105,7 +103,7 @@ async function sendError(error) {
     .setFooter({
       text: `Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
         2
-      )} MB | CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
+      )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
     });
 
   webhookLogger.send({ embeds: [errorEmbed] }).catch((err) => {

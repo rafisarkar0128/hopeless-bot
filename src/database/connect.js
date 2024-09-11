@@ -5,7 +5,7 @@ module.exports = {
   async initializeMongoose(client) {
     try {
       await mongoose.connect(process.env.MONGO_URI);
-      client.logger.log(colors.cyan(" | mongodb connection established."));
+      client.logger.log(colors.cyan("mongodb connection established."));
     } catch (error) {
       throw error;
     }

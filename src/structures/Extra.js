@@ -33,6 +33,56 @@ module.exports = class BotClient extends Client {
   //this.discordTogether = new DiscordTogether(this);
 
   /**
+   *
+   * @param {import("discord.js").TextChannel} textChannel
+   * @param {import("discord.js").VoiceChannel} voiceChannel
+   */
+  createPlayer(textChannel, voiceChannel) {
+    return this.manager.create({
+      guild: textChannel.guild.id,
+      voiceChannel: voiceChannel.id,
+      textChannel: textChannel.id,
+      selfDeafen: this.config.serverDeafen,
+      volume: this.config.defaultVolume,
+    });
+  }
+
+  createController(guild, player) {
+    return new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setStyle("DANGER")
+        .setCustomId(`controller:${guild}:Stop`)
+        .setEmoji("⏹️"),
+
+      new ButtonBuilder()
+        .setStyle("PRIMARY")
+        .setCustomId(`controller:${guild}:Replay`)
+        .setEmoji("⏮️"),
+
+      new ButtonBuilder()
+        .setStyle(player.playing ? "PRIMARY" : "DANGER")
+        .setCustomId(`controller:${guild}:PlayAndPause`)
+        .setEmoji(player.playing ? "⏸️" : "▶️"),
+
+      new ButtonBuilder()
+        .setStyle("PRIMARY")
+        .setCustomId(`controller:${guild}:Next`)
+        .setEmoji("⏭️"),
+
+      new ButtonBuilder()
+        .setStyle(
+          player.trackRepeat
+            ? "SUCCESS"
+            : player.queueRepeat
+            ? "SUCCESS"
+            : "DANGER"
+        )
+        .setCustomId(`controller:${guild}:Loop`)
+        .setEmoji(player.trackRepeat ? "🔂" : player.queueRepeat ? "🔁" : "🔁")
+    );
+  }
+
+  /**
    * Find command matching the invoke
    * @param {string} invoke
    * @returns {import('@structures/Command')|undefined}

@@ -17,7 +17,12 @@ module.exports = async (client, dir) => {
       const target = event.rest ? client.rest : client;
 
       client.events.set(event.name, execute);
-      target[event.once ? "once" : "on"](event.name, execute);
+
+      try {
+        target[event.once ? "once" : "on"](event.name, execute);
+      } catch (error) {
+        throw error;
+      }
 
       i++;
     } catch (error) {
@@ -25,5 +30,5 @@ module.exports = async (client, dir) => {
     }
   }
 
-  client.logger.log(colors.yellow(` | loaded ${i} events.`));
+  client.logger.log(colors.yellow(`loaded ${i} events.`));
 };

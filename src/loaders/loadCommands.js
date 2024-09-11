@@ -43,5 +43,5 @@ module.exports = async (client, dir) => {
     }
   );
 
-  client.logger.log(colors.blue(` | loaded ${i} commands.`));
+  client.logger.log(colors.blue(`loaded ${i} commands.`));
 };

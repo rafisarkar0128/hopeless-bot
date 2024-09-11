@@ -1,5 +1,5 @@
 const colors = require("colors");
-const { Logger } = require("./Logger.js");
+const { Logger } = require("../structures/Logger.js");
 const logger = new Logger();
 
 module.exports = () => {
