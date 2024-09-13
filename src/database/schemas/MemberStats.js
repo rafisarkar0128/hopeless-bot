@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { CACHE_SIZE } = require("@root/config.js");
+const { CACHE_SIZE } = require("../../config.js");
 const FixedSizeMap = require("fixedsize-map");
 
 const cache = new FixedSizeMap(CACHE_SIZE.MEMBERS);
@@ -34,7 +34,7 @@ const Schema = new mongoose.Schema(
       createdAt: "created_at",
       updatedAt: "updated_at",
     },
-  },
+  }
 );
 
 const Model = mongoose.model("member-stats", Schema);

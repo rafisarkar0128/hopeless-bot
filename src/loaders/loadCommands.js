@@ -1,14 +1,13 @@
 const { Collection, REST, Routes } = require("discord.js");
 const colors = require("colors");
-const loadFiles = require("./loadFiles.js");
 
 /**
  *@param {import("../structures/DiscordBot.js").DiscordBot} client - base client
- *@param {String} dir - path of events directory
+ *@param {String} dir - path of commands directory
  */
 module.exports = async (client, dir) => {
   const rest = new REST({ version: 10 }).setToken(client.config.bot.token);
-  const files = await loadFiles(dir);
+  const files = await client.loadFiles(dir);
   const applicationCommands = [];
 
   client.commands.clear();

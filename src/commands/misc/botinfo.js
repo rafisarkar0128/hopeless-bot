@@ -43,9 +43,9 @@ module.exports = {
     const apiPing = reply.createdTimestamp - interaction.createdTimestamp;
 
     const profileBuffer = await profileImage(client.user.id, {
-      usernameColor: client.colors.powderBlue,
+      usernameColor: client.colors.PowderBlue,
       presenceStatus: client.user.presence.status,
-      borderColor: client.colors.powderBlue,
+      borderColor: client.colors.PowderBlue,
     });
     const imageAttachment = new AttachmentBuilder(profileBuffer, {
       name: "profile.png",
@@ -90,9 +90,8 @@ module.exports = {
         {
           name: "LANGUAGE & LIBRARY",
           value: [
-            `**Name :** [nodejs](https://nodejs.org/en/)`,
-            `**Library :** [discord.js](https://discord.js.org/#/)`,
-            `**Version :** ${version}`,
+            `**Name :** [nodejs](https://nodejs.org/en/) (${process.version})`,
+            `**Library :** [discord.js](https://discord.js.org/#/) (${version})`,
           ].join("\n"),
           inline: true,
         },

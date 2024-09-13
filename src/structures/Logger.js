@@ -1,63 +1,40 @@
 const { EmbedBuilder, WebhookClient } = require("discord.js");
-const config = require(`${process.cwd()}/config`);
-const { Wrong } = require(`${process.cwd()}/colors.json`);
+const { Wrong } = require(`../colors.json`);
 const colors = require("colors");
-const winston = require("winston");
 const { DateTime } = require("luxon");
 const DateTimeString = colors.gray(
   DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]")
 );
 
 class Logger {
-  /**
-   * @param {String} dir - Log files directory path. Must be a text.
-   */
-  constructor(dir) {
-    this.logger = winston.createLogger({
-      transports: [
-        new winston.transports.File({
-          filename: `${process.cwd()}/logs/${DateTime.now().toFormat(
-            "yyyy-LL-dd"
-          )}.log`,
-        }),
-      ],
-    });
-  }
+  constructor() {}
 
   /**
-   * @param {String} text
+   * @param {String} content
    */
-  log(text) {
+  log(content) {
     return console.log(
-      `${DateTimeString} ${colors.bold.bgBlue(" INFO ")} ${text}`
+      `${DateTimeString} ${colors.bold.bgBlue(" INFO ")} ${content}`
     );
   }
 
   /**
-   * @param {String} text
+   * @param {String} content
    */
-  warn(text) {
-    this.logger.log({
-      level: "warn",
-      message: "warn: " + text,
-    });
+  warn(content) {
     return console.log(
       `${DateTimeString} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(
-        `${text}`
+        `${content}`
       )}`
     );
   }
 
   /**
-   * @param {String} text
+   * @param {String} content
    */
-  async error(text) {
-    this.logger.log({
-      level: "error",
-      message: "error: " + text,
-    });
-    let error = text.stack ? text.stack : text;
-    //await sendError(text);
+  async error(content) {
+    let error = content.stack ? content.stack : content;
+    await sendError(content);
     return console.log(
       `${DateTimeString} ${colors.bold.bgRed(" ERROR ")} ${colors.red(
         `${error}`

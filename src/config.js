@@ -1,24 +1,15 @@
 module.exports = {
   bot: {
-    defaultPrefix: process.env.DEAFULT_PREFIX,
-    id: process.env.BOT_ID,
-    token: process.env.BOT_TOKEN,
-    secret: process.env.BOT_SECRET,
-    presence: {
-      status: "idle",
-      activities: [
-        {
-          name: "Slash Commands",
-          type: "LISTEINING",
-        },
-      ],
-    },
-    invite: process.env.ALLOWED_INVITE,
+    defaultPrefix: process.env.DEAFULT_PREFIX, // bot's prefix
+    id: process.env.BOT_ID, // bot's id
+    token: process.env.BOT_TOKEN, // bot's token
+    secret: process.env.BOT_SECRET, // bot's secret
+    invite: process.env.ALLOWED_INVITE, // invite permission
   },
-  ownerId: process.env.OWNER_ID,
-  serverId: process.env.SERVER_ID,
-  devs: process.env.DEVELOPER_IDS,
-  mongodbUri: process.env.MONGO_URI,
+  ownerId: process.env.OWNER_ID, // bot's owner id
+  serverId: process.env.SERVER_ID, // bot's test server id
+  devs: process.env.DEVELOPER_IDS, // bot developers id
+  mongodbUri: process.env.MONGO_URI, // mongodb database connection string
   commands: {
     messageCommands: true,
     slashCommands: true,
@@ -57,7 +48,12 @@ module.exports = {
   },
 
   // PLUGINS
-  antiCrash: true,
+  antiCrash: {
+    enable: true,
+  },
+  logger: {
+    enable: false,
+  },
   auto_moderation: {
     enabled: true,
   },
