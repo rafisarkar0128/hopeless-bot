@@ -11,7 +11,7 @@ module.exports = {
   rest: false,
   /**
    *
-   * @param {Client} client
+   * @param {import("../../structures/DiscordBot.js").DiscordBot} client
    * @param {ChatInputCommandInteraction} interaction
    * @returns
    */
@@ -19,7 +19,7 @@ module.exports = {
     if (!interaction.isChatInputCommand()) return;
 
     try {
-      const command = await client.slashCommands.get(interaction.commandName);
+      const command = await client.commands.get(interaction.commandName);
 
       if (!command) {
         return interaction.reply({
@@ -92,7 +92,7 @@ module.exports = {
           new EmbedBuilder()
             .setColor(client.colors.StandBy)
             .setTitle(
-              `<:error_logo:1276700084293079161> An error has occured! Try again later!`,
+              `<:error_logo:1276700084293079161> An error has occured! Try again later!`
             ),
         ],
       });

@@ -1,9 +1,4 @@
-const {
-  Client,
-  Collection,
-  ActionRowBuilder,
-  ButtonBuilder,
-} = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const { Logger } = require("./Logger.js");
 const colors = require("colors");
 const { glob } = require("glob");
@@ -22,42 +17,53 @@ class DiscordBot extends Client {
     this.colors = require(`../colors.json`);
 
     /**
-     * @type {Collection<string, Collection} - Collection for command cooldowns
-     */
-    this.cooldowns = new Collection();
-
-    /**
-     * @type {import('../../collected/Command.js')} - Collection for prefix commands
+     * @type {Collection<string, import("./CommandStructure.js")>}
      */
     this.commands = new Collection();
 
     /**
-     * @type {Collection<string, import("../../collected/SlashCommand.js")>} - Collection for slash commands
+     * @type {Collection<string, Collection}
      */
-    this.slashCommands = new Collection();
+    this.cooldowns = new Collection();
 
     /**
-     * @type {Collection<string, import('../Collected/BaseContext.js')>} - Collection for context menus
+     * @type {Collection<string, import('../Collected/BaseContext.js')>}
      */
     this.contextMenus = new Collection();
-
-    /**
-     * @type {Collection<string, Object>} - Collection for command allias other stuff
-     */
-    this.commandIndex = new Collection();
-
-    //**
-    // * @type {Collection<string, import('@structures/Command')>}
-    // */
-    //this.slashCommands = new Collection(); // store slash commands
-
-    this.loadCommands = require("../loaders/loadCommands.js");
   }
 
   /**
-   * @param {String} dir - Path to the files directory
+   * @param {string} content
    */
-  async loadFiles(dir) {
+  info(content) {
+    this.logger.log(content);
+  }
+
+  /**
+   * @param {string} content
+   */
+  warn(content) {
+    this.logger.warn(content);
+  }
+
+  /**
+   * @param {string} content
+   */
+  error(content) {
+    this.logger.error(content);
+  }
+
+  /**
+   * @param {string} content
+   */
+  debug(content) {
+    this.logger.debug(content);
+  }
+
+  /**
+   * @param {string} dirname - Name of a file directory
+   */
+  async loadFiles(dirname) {
     const deleteCashedFile = (file) => {
       const filePath = path.resolve(file);
       if (require.cache[filePath]) {
@@ -65,17 +71,19 @@ class DiscordBot extends Client {
       }
     };
 
-    const files = await glob(path.join(dir, `**/*.js`).replace(/\\/g, "/"));
+    const files = await glob(
+      path.join(__dirname, "..", dirname, `**/*.js`).replace(/\\/g, "/")
+    );
     const jsFiles = files.filter((file) => path.extname(file) === ".js");
     await Promise.all(jsFiles.map(deleteCashedFile));
     return jsFiles;
   }
 
   /**
-   *@param {String} dir - path of events directory
+   *@param {string} dirname - Name to event files directory
    */
-  async loadEvents(dir) {
-    const files = await this.loadFiles(`${process.cwd()}/src/events`);
+  async loadEvents(dirname) {
+    const files = await this.loadFiles(dirname);
 
     let i = 0;
     for (const file of files) {
@@ -88,39 +96,20 @@ class DiscordBot extends Client {
 
         i++;
       } catch (error) {
-        this.logger.error(error);
+        throw error;
       }
     }
 
-    this.logger.log(colors.yellow(`loaded ${i} events.`));
+    this.info(colors.yellow(`loaded ${i} events.`));
   }
 
   /**
-   * @param {String} text - The text to display
+   * @param {String} content - The text to display
    * @param {import("boxen").Options} options - Options for styling
    */
-  async logBox() {
+  async logBox(content, options) {
     const boxen = (await import("boxen")).default;
-    return console.log(
-      boxen(
-        [
-          `Welcome to ${colors.blue(pkg.name.toUpperCase())} github project`,
-          `Running on Node.Js ${colors.green(process.version)}`,
-          `Version ${colors.yellow(pkg.version)}`,
-          `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
-        ].join("\n"),
-        {
-          borderColor: "#00BFFF",
-          textAlignment: "center",
-          padding: {
-            left: 10,
-            right: 10,
-            top: 1,
-            bottom: 1,
-          },
-        }
-      )
-    );
+    return console.log(boxen(content, options));
   }
 }
 

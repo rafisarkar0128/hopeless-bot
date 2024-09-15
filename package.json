@@ -1,12 +1,13 @@
 {
   "name": "hopeless-bot",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A discord bot made for a private server.",
   "main": "src/index.js",
   "engines": {
     "node": "20 || >=22"
   },
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon .",
     "trace": "node --trace-warnings .",
     "start": "node .",

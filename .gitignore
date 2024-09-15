@@ -1,7 +1,7 @@
 # To ignore packages
 node_modules
 
-# Auto created on npm install
+# Auto created & updated on npm install
 package-lock.json
 
 # All secrets are stored here

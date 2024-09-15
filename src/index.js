@@ -1,7 +1,6 @@
 require("dotenv").config();
-const AntiCrash = require("./helpers/AntiCrash.js");
 const config = require("./config.js");
-if (config.antiCrash.enable) AntiCrash();
+if (config.antiCrash.enable) require("./helpers/AntiCrash.js");
 
 const { GatewayIntentBits, Partials } = require("discord.js");
 const { DiscordBot } = require("./structures/DiscordBot.js");
@@ -47,13 +46,29 @@ const client = new DiscordBot({
 
 async function startBot() {
   console.clear();
-  await client.logBox();
+  await client.logBox(
+    [
+      `Welcome to ${colors.blue(pkg.name.toUpperCase())} github project`,
+      `Running on Node.Js ${colors.green(process.version)}`,
+      `Version ${colors.yellow(pkg.version)}`,
+      `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
+    ].join("\n"),
+    {
+      borderColor: "#00BFFF",
+      textAlignment: "center",
+      padding: {
+        left: 10,
+        right: 10,
+        top: 1,
+        bottom: 1,
+      },
+    }
+  );
 
   try {
-    await client.loadEvents();
-    await client.loadCommands(client, `${process.cwd()}/src/commands`);
-    await initializeMongoose(client);
-    client.login(client.config.bot.token);
+    await client.loadEvents("events");
+    await client.login(client.config.bot.token);
+    initializeMongoose(client);
   } catch (error) {
     throw error;
   }

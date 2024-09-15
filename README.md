@@ -33,7 +33,7 @@
 
 1. Includes an advance command and Event Handler.
 1. Includes error logging system.
-1. Includes a validator.
+1. Includes a validator. (Still in development)
 
 ## ❗Prerequisites❗
 
@@ -42,10 +42,10 @@ Before starting with the **SETUP**, you need to have the following:
 - [![Node.JS](https://img.shields.io/badge/Node.js_V18%2B-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
 - [![Discord.JS](https://img.shields.io/badge/Discord.JS_V14%2B-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
 - [![Lavalink](https://img.shields.io/badge/Lavalink_V4%2B-fa6f18?style=for-the-badge)](https://github.com/lavalink-devs/lavalink)
+- [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
 
 ### Optional
 
-- [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community) (For MongoDB database)
 - [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/) (For PostgreSQL database)
 - [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (For Docker Installation)
 - [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/) (For Docker Installation)
@@ -54,12 +54,14 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### 📝 Normal Setup
 
-- **Step 1:** Open `.env.example`
-- **Step 2:** Put the required values and rename it to `.env`
+- **Step 1:** Open `.env.example` copy eveything to a new file named `.env`
+- **Step 2:** Put the required values in `.env`
 - **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
 - **Step 5:** Finally run `npm start` in your terminal
 
 ### 📝 Setup with Docker
+
+**Note:** Currently Missing docker config files
 
 - **Step 1:** Open `env.example`
 - **Step 2:** Put the required values and rename it to `.env`
@@ -70,7 +72,7 @@ Before starting with the **SETUP**, you need to have the following:
 
 **Will be updated soon**
 
-### NOTE:
+### NOTE: This might get updated anytime.
 
 - By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
 - Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
@@ -81,22 +83,21 @@ Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help in the
 
 ## Customization
 
-[`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
+[`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
 
-> **Note** : use hex color code for the colors. Also there is a [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/colors.json) file which has more than 100 HTML Hex Color Codes.
+> **Caution** : use hex color code for the colors. Use the colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) which has more than 100 HTML Hex Color Codes.
 
 ## Commands
 
-Written below are some public & utility commands of the bot.
+Written below are some public commands of the bot.
 
-| Name       | description                                              |
-| ---------- | -------------------------------------------------------- |
-| botinfo    | View bot's stats in an embed message                     |
-| invite     | Get a link button with embeded invite-link.              |
-| roleinfo   | Similar to botinfo view information of a server role     |
-| roles      | Get an embed message with full list of roles (UpTo 150)  |
-| serverinfo | Same as roleinfo view information about a discord server |
-| userinfo   | Same as serverinfo view information of a discord user    |
+| Name       | description                             |
+| ---------- | --------------------------------------- |
+| botinfo    | View bot's status & runtime status      |
+| invite     | Get a button with embeded invite-link.  |
+| ping       | View bot's ping, response & uptime      |
+| serverinfo | View information about a discord server |
+| userinfo   | View information of a discord user      |
 
 ## 🔗 Useful Links
 
@@ -122,6 +123,13 @@ Thank you for your interest in contributing to Hopeless-Bot! Here are some guide
 ## 🔐 License
 
 Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/license/theassassin0128/Hopeless-Bot?style=social) for more information.
+
+## 🫡 Credit
+
+- [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bot.
+- [@discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) Took inspiration and tried to improve this project.
+- [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got impressed by the use of colors on terminal.
+- [@lavamusic](https://github.com/appujet/lavamusic) The readme.md looks quite good. See the Similarity.
 
 [version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge

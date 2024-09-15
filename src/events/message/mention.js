@@ -5,7 +5,6 @@ module.exports = {
   once: false,
   rest: false,
   /**
-   *
    * @param {import("../../structures/DiscordBot.js").DiscordBot} client
    * @param {Message} message
    * @returns

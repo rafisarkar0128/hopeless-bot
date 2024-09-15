@@ -5,6 +5,7 @@ module.exports = {
     token: process.env.BOT_TOKEN, // bot's token
     secret: process.env.BOT_SECRET, // bot's secret
     invite: process.env.ALLOWED_INVITE, // invite permission
+    footer: `© Corwin 2021 - ${new Date().getFullYear()}`, // Footer text for embeds
   },
   ownerId: process.env.OWNER_ID, // bot's owner id
   serverId: process.env.SERVER_ID, // bot's test server id

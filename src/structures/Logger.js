@@ -2,9 +2,7 @@ const { EmbedBuilder, WebhookClient } = require("discord.js");
 const { Wrong } = require(`../colors.json`);
 const colors = require("colors");
 const { DateTime } = require("luxon");
-const DateTimeString = colors.gray(
-  DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]")
-);
+const dt = colors.gray(DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]"));
 
 class Logger {
   constructor() {}
@@ -13,9 +11,7 @@ class Logger {
    * @param {String} content
    */
   log(content) {
-    return console.log(
-      `${DateTimeString} ${colors.bold.bgBlue(" INFO ")} ${content}`
-    );
+    return console.log(`${dt} ${colors.bold.bgBlue(" INFO ")} ${content}`);
   }
 
   /**
@@ -23,9 +19,7 @@ class Logger {
    */
   warn(content) {
     return console.log(
-      `${DateTimeString} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(
-        `${content}`
-      )}`
+      `${dt} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(`${content}`)}`
     );
   }
 
@@ -36,10 +30,15 @@ class Logger {
     let error = content.stack ? content.stack : content;
     await sendError(content);
     return console.log(
-      `${DateTimeString} ${colors.bold.bgRed(" ERROR ")} ${colors.red(
-        `${error}`
-      )}`
+      `${dt} ${colors.bold.bgRed(" ERROR ")} ${colors.red(`${error}`)}`
     );
+  }
+
+  /**
+   * @param {String} content
+   */
+  debug(content) {
+    return console.log(`${dt} ${colors.bgGreen(" DEBUG ")} ${content}`);
   }
 }
 
@@ -49,43 +48,35 @@ class Logger {
  */
 async function sendError(error) {
   if (!error) return;
+  try {
+    const webhookLogger = process.env.ERROR_WEBHOOK_URL
+      ? new WebhookClient({ url: process.env.ERROR_WEBHOOK_URL })
+      : undefined;
 
-  const webhookLogger = process.env.ERROR_WEBHOOK_URL
-    ? new WebhookClient({ url: process.env.ERROR_WEBHOOK_URL })
-    : undefined;
+    const errorStack = error.stack ? error.stack : error;
+    const embed = new EmbedBuilder()
+      .setColor(Wrong)
+      .setTitle(`**An Error Occoured**`)
+      .setDescription(
+        `\`\`\`js\n${
+          errorStack.length > 4000
+            ? errorStack.substring(length, 4000) + "..."
+            : errorStack
+        }\n\`\`\``
+      )
+      .setFooter({
+        text: `Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
+          2
+        )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
+      })
+      .setTimestamp();
 
-  const errStack = error.stack ? error.stack : error;
-
-  const errorEmbed = new EmbedBuilder()
-    .setColor(Wrong)
-    .setTitle(`**An Error Occoured**`)
-    .setFields(
-      {
-        name: "Error Code",
-        value: `\`\`\`\n${error?.name | "Error"}\n\`\`\``,
-        inline: true,
-      },
-      {
-        name: "Error Message",
-        value: `\`\`\`\n${error?.message | "NA"}\n\`\`\``,
-        inline: true,
-      },
-      {
-        name: "Error Stack",
-        value: `\`\`\`sh\n${
-          errStack.length > 4096 ? errStack.substr(0, 4000) + "..." : errStack
-        }\n\`\`\``,
-      }
-    )
-    .setFooter({
-      text: `Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
-        2
-      )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
+    return webhookLogger.send({
+      embeds: [embed],
     });
-
-  webhookLogger.send({ embeds: [errorEmbed] }).catch((err) => {
+  } catch (err) {
     throw err;
-  });
+  }
 }
 
 module.exports = { Logger };

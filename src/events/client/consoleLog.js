@@ -10,8 +10,6 @@ module.exports = {
    * @param {import("../../structures/DiscordBot.js").DiscordBot} client
    */
   execute: async (client) => {
-    const boxen = (await import("boxen")).default;
-    client.logger.log(colors.green(`logged in as ${client.user.tag}.`));
     const table = new AsciiTable();
     table.removeBorder().setTitle(`Bot is online!`);
 
@@ -36,17 +34,16 @@ module.exports = {
         ).toFixed(2)} MB`
       );
 
-    return console.log(
-      boxen(table.toString(), {
-        borderColor: client.colors.DeepSkyBlue,
-        textAlignment: "center",
-        padding: {
-          left: 7,
-          right: 7,
-          top: 1,
-          bottom: 1,
-        },
-      })
-    );
+    await client.logBox(table.toString(), {
+      borderColor: client.colors.DeepSkyBlue,
+      textAlignment: "center",
+      padding: {
+        left: 7,
+        right: 7,
+        top: 1,
+        bottom: 1,
+      },
+    });
+    return client.info(colors.green(`logged in as ${client.user.tag}.`));
   },
 };
