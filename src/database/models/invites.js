@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     Guild: String,
@@ -6,6 +6,6 @@ const Schema = new mongoose.Schema({
     Invites: Number,
     Total: Number,
     Left: Number,
-})
+});
 
-module.exports = mongoose.model('invites', Schema)
+module.exports = mongoose.model("invites", Schema);

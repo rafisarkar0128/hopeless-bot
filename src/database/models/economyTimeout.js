@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     Guild: String,
@@ -15,6 +15,6 @@ const Schema = new mongoose.Schema({
     Hunt: String,
     Yearly: String,
     Present: String,
-})
+});
 
-module.exports = mongoose.model('economytimeout', Schema)
+module.exports = mongoose.model("economytimeout", Schema);

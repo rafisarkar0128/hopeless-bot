@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     Guild: String,
@@ -11,6 +11,6 @@ const Schema = new mongoose.Schema({
     AntiLinks: { type: Boolean, default: false },
     Prefix: String,
     Color: String,
-})
+});
 
-module.exports = mongoose.model('functions', Schema)
+module.exports = mongoose.model("functions", Schema);

@@ -1,17 +1,17 @@
-const { version } = require('discord.js')
-const colors = require('colors')
-const AsciiTable = require('ascii-table')
+const { version } = require("discord.js");
+const colors = require("colors");
+const AsciiTable = require("ascii-table");
 
 module.exports = {
-    name: 'ready',
+    name: "ready",
     once: true,
     rest: false,
     /**
      * @param {import("../../structures/DiscordBot.js").DiscordBot} client
      */
     execute: async (client) => {
-        const table = new AsciiTable()
-        table.removeBorder().setTitle(`Bot is online!`)
+        const table = new AsciiTable();
+        table.removeBorder().setTitle(`Bot is online!`);
 
         table
             .addRow(`Bot Tag`, client.user.tag)
@@ -27,23 +27,24 @@ module.exports = {
             .addRow(`Node.JS Version`, `${process.version}`)
             .addRow(
                 `Memory`,
-                `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(
-                    process.memoryUsage().rss /
-                    1024 /
-                    1024
-                ).toFixed(2)} MB`
-            )
+                `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
+                    2
+                )} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(
+                    2
+                )} MB`
+            );
 
         await client.logBox(table.toString(), {
             borderColor: client.colors.DeepSkyBlue,
-            textAlignment: 'center',
+            textAlignment: "center",
             padding: {
                 left: 7,
                 right: 7,
                 top: 1,
                 bottom: 1,
             },
-        })
-        return client.info(colors.green(`logged in as ${client.user.tag}.`))
+        });
+
+        return client.info(colors.green(`logged in as ${client.user.tag}.`));
     },
-}
+};

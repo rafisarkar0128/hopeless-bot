@@ -1,4 +1,4 @@
-const { ChannelType } = require('discord.js')
+const { ChannelType } = require("discord.js");
 
 async function getChannelCountString(Channels) {
     const ChannelString = `Categories: ${
@@ -17,9 +17,9 @@ async function getChannelCountString(Channels) {
         Channels.filter((c) => c.type === ChannelType.GuildMedia).size
     } | Directory: ${
         Channels.filter((c) => c.type === ChannelType.GuildDirectory).size
-    }`
+    }`;
 
-    return ChannelString
+    return ChannelString;
 }
 
-module.exports = { getChannelCountString }
+module.exports = { getChannelCountString };

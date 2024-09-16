@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     messageId: String,
@@ -52,6 +52,6 @@ const Schema = new mongoose.Schema({
         users: { type: [String], default: undefined },
         roles: { type: [String], default: undefined },
     },
-})
+});
 
-module.exports = mongoose.model('giveaways', Schema)
+module.exports = mongoose.model("giveaways", Schema);

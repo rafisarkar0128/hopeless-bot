@@ -1,8 +1,8 @@
-const { EmbedBuilder, WebhookClient } = require('discord.js')
-const { Wrong } = require(`../colors.json`)
-const colors = require('colors')
-const { DateTime } = require('luxon')
-const dt = colors.gray(DateTime.now().toFormat('[dd/LL/yyyy - HH:mm:ss]'))
+const { EmbedBuilder, WebhookClient } = require("discord.js");
+const { Wrong } = require(`../colors.json`);
+const colors = require("colors");
+const { DateTime } = require("luxon");
+const dt = colors.gray(DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]"));
 
 class Logger {
     constructor() {}
@@ -11,7 +11,7 @@ class Logger {
      * @param {String} content
      */
     log(content) {
-        return console.log(`${dt} ${colors.bold.bgBlue(' INFO ')} ${content}`)
+        return console.log(`${dt} ${colors.bold.bgBlue(" INFO ")} ${content}`);
     }
 
     /**
@@ -19,26 +19,26 @@ class Logger {
      */
     warn(content) {
         return console.log(
-            `${dt} ${colors.bold.bgYellow(' WARN ')} ${colors.yellow(`${content}`)}`
-        )
+            `${dt} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(`${content}`)}`
+        );
     }
 
     /**
      * @param {String} content
      */
     async error(content) {
-        let error = content.stack ? content.stack : content
-        await sendError(content)
+        let error = content.stack ? content.stack : content;
+        await sendError(content);
         return console.log(
-            `${dt} ${colors.bold.bgRed(' ERROR ')} ${colors.red(`${error}`)}`
-        )
+            `${dt} ${colors.bold.bgRed(" ERROR ")} ${colors.red(`${error}`)}`
+        );
     }
 
     /**
      * @param {String} content
      */
     debug(content) {
-        return console.log(`${dt} ${colors.bgGreen(' DEBUG ')} ${content}`)
+        return console.log(`${dt} ${colors.bgGreen(" DEBUG ")} ${content}`);
     }
 }
 
@@ -47,20 +47,20 @@ class Logger {
  * @param {Error} error
  */
 async function sendError(error) {
-    if (!error) return
+    if (!error) return;
     try {
         const webhookLogger = process.env.ERROR_WEBHOOK_URL
             ? new WebhookClient({ url: process.env.ERROR_WEBHOOK_URL })
-            : undefined
+            : undefined;
 
-        const errorStack = error.stack ? error.stack : error
+        const errorStack = error.stack ? error.stack : error;
         const embed = new EmbedBuilder()
             .setColor(Wrong)
             .setTitle(`**An Error Occoured**`)
             .setDescription(
                 `\`\`\`js\n${
                     errorStack.length > 4000
-                        ? errorStack.substring(length, 4000) + '...'
+                        ? errorStack.substring(length, 4000) + "..."
                         : errorStack
                 }\n\`\`\``
             )
@@ -73,14 +73,14 @@ async function sendError(error) {
                     2
                 )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
             })
-            .setTimestamp()
+            .setTimestamp();
 
         return webhookLogger.send({
             embeds: [embed],
-        })
+        });
     } catch (err) {
-        throw err
+        throw err;
     }
 }
 
-module.exports = { Logger }
+module.exports = { Logger };

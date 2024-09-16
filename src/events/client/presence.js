@@ -1,7 +1,7 @@
-const { ActivityType } = require('discord.js')
+const { ActivityType } = require("discord.js");
 
 module.exports = {
-    name: 'ready',
+    name: "ready",
     once: true,
     rest: false,
     /**
@@ -11,7 +11,7 @@ module.exports = {
     execute: async (client) => {
         const activities = [
             {
-                name: 'Slash Commands',
+                name: "Slash Commands",
                 type: ActivityType.Listening,
             },
             {
@@ -25,18 +25,18 @@ module.exports = {
                 type: ActivityType.Playing,
             },
             {
-                name: '/help.',
+                name: "/help.",
                 type: ActivityType.Listening,
             },
-        ]
+        ];
 
-        client.user.setStatus('idle')
+        client.user.setStatus("idle");
 
-        let i = 0
+        let i = 0;
         setInterval(() => {
-            client.user.setActivity(activities[i])
-            i++
-            if (i >= activities.length) i = 0
-        }, 60e3)
+            client.user.setActivity(activities[i]);
+            i++;
+            if (i >= activities.length) i = 0;
+        }, 60e3);
     },
-}
+};

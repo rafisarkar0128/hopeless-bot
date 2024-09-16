@@ -3,17 +3,17 @@ const {
     Client,
     ChatInputCommandInteraction,
     SlashCommandBuilder,
-} = require('discord.js')
-const { getChannelCountString } = require('../../utils/server.utils.js')
-const { DateTime } = require('luxon')
+} = require("discord.js");
+const { getChannelCountString } = require("../../utils/server.utils.js");
+const { DateTime } = require("luxon");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('serverinfo')
-        .setDescription('📖 View the server information.')
+        .setName("serverinfo")
+        .setDescription("📖 View the server information.")
         .setDMPermission(false),
-    category: 'server',
-    usage: '/info member',
+    category: "server",
+    usage: "/info member",
     userPermissions: [],
     botPermissions: [],
     /**
@@ -23,17 +23,17 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         try {
-            const Guild = await interaction.guild.fetch()
-            const Owner = await Guild.fetchOwner()
-            const Members = await Guild.members.fetch()
-            const Roles = Guild.roles.cache
-            const Channels = Guild.channels.cache
-            const Iconurl = Guild.iconURL()
-            const Bannerurl = Guild.bannerURL()
-            const Emojis = Guild.emojis.cache
-            const Stickers = Guild.stickers.cache
+            const Guild = await interaction.guild.fetch();
+            const Owner = await Guild.fetchOwner();
+            const Members = await Guild.members.fetch();
+            const Roles = Guild.roles.cache;
+            const Channels = Guild.channels.cache;
+            const Iconurl = Guild.iconURL();
+            const Bannerurl = Guild.bannerURL();
+            const Emojis = Guild.emojis.cache;
+            const Stickers = Guild.stickers.cache;
             const embed = new EmbedBuilder()
-                .setTitle('📝 Server Information')
+                .setTitle("📝 Server Information")
                 .setColor(
                     client.colors.array[
                         Math.floor(Math.random() * client.colors.array.length)
@@ -43,12 +43,12 @@ module.exports = {
                 .setImage(Bannerurl)
                 .addFields(
                     {
-                        name: 'Server Name',
+                        name: "Server Name",
                         value: `\`\`\`\n${Guild.name}\n\`\`\``,
                         inline: true,
                     },
                     {
-                        name: 'Server ID',
+                        name: "Server ID",
                         value: `\`\`\`\n${Guild.id}\n\`\`\``,
                         inline: true,
                     },
@@ -62,12 +62,12 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: 'Server Owner',
+                        name: "Server Owner",
                         value: `<@${Owner.user.id}>`,
                         inline: true,
                     },
                     {
-                        name: 'Owner ID',
+                        name: "Owner ID",
                         value: `\`\`\`\n${Owner.id}\n\`\`\``,
                         inline: true,
                     },
@@ -77,23 +77,23 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: 'Server Boosts',
+                        name: "Server Boosts",
                         value: `\`\`\`\n${Guild.premiumSubscriptionCount} Boosts\n\`\`\``,
                         inline: true,
                     },
                     {
-                        name: 'Server Boost Level',
+                        name: "Server Boost Level",
                         value: `\`\`\`\nlevel: ${Guild.premiumTier}\n\`\`\``,
                         inline: true,
                     },
                     {
                         name: `Server Roles [${Roles.size}] (Shows up to 20)`,
                         value: `${Roles.sort((a, b) => {
-                            b.position - a.position
+                            b.position - a.position;
                         })
                             .map((r) => r)
                             .slice(0, 20)
-                            .join(' ')}`,
+                            .join(" ")}`,
                         inline: false,
                     },
                     {
@@ -106,11 +106,11 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: 'Server created on (DD/MM/YYYY)',
+                        name: "Server created on (DD/MM/YYYY)",
                         value: `\`\`\`\n${DateTime.fromMillis(
                             Guild.createdTimestamp
                         ).toFormat(
-                            'dd/LL/yy, h:mm:ss a'
+                            "dd/LL/yy, h:mm:ss a"
                         )} (${DateTime.fromMillis(
                             Guild.createdTimestamp
                         ).toRelativeCalendar()})\n\`\`\``,
@@ -119,13 +119,13 @@ module.exports = {
                 )
                 .setFooter({
                     text: `Powered by ${client.user.username}`,
-                })
+                });
 
             return interaction.reply({
                 embeds: [embed],
-            })
+            });
         } catch (error) {
-            throw error
+            throw error;
         }
     },
-}
+};

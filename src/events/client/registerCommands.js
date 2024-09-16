@@ -1,9 +1,9 @@
-const { Collection, Routes } = require('discord.js')
-const colors = require('colors')
-const AsciiTable = require('ascii-table')
+const { Collection, Routes } = require("discord.js");
+const colors = require("colors");
+const AsciiTable = require("ascii-table");
 
 module.exports = {
-    name: 'ready',
+    name: "ready",
     once: true,
     rest: false,
     /**
@@ -11,7 +11,7 @@ module.exports = {
      */
     execute: async (client) => {
         try {
-            const files = await client.loadFiles('commands')
+            const files = await client.loadFiles("commands");
 
             //const localCommands = [];
             //for (const file of files) {
@@ -19,22 +19,22 @@ module.exports = {
             //  localCommands.push(localCommand.data.toJSON());
             //}
 
-            const applicationCommands = []
-            client.commands.clear()
+            const applicationCommands = [];
+            client.commands.clear();
 
             let i = 0,
-                p = 0
+                p = 0;
             for (const file of files) {
-                const command = require(file)
+                const command = require(file);
 
-                if (command.enabled === false) continue
+                if (command.enabled === false) continue;
                 if (command.cooldown) {
-                    client.cooldowns.set(command.data?.name, new Collection())
+                    client.cooldowns.set(command.data?.name, new Collection());
                 }
 
-                applicationCommands.push(command.data)
-                client.commands.set(command.data.name, command)
-                i++
+                applicationCommands.push(command.data);
+                client.commands.set(command.data.name, command);
+                i++;
             }
 
             client.rest
@@ -48,16 +48,16 @@ module.exports = {
                     }
                 )
                 .catch((error) => {
-                    throw error
-                })
+                    throw error;
+                });
 
-            client.info(colors.blue(`loaded ${i} commands.`))
+            client.info(colors.blue(`loaded ${i} commands.`));
 
             //for (let localCommand of localCommands) {
             //  client.debug(`${localCommand.name}`);
             //}
         } catch (error) {
-            throw error
+            throw error;
         }
     },
-}
+};

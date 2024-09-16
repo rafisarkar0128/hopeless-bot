@@ -36,12 +36,12 @@
 module.exports = {
     data: {},
     aliases: [],
-    usage: '',
+    usage: "",
     minArgsCount: 0,
     subcommands: [],
 
     cooldown: 0,
-    category: 'NONE',
+    category: "NONE",
     premium: false,
 
     botPermissions: [],
@@ -52,4 +52,4 @@ module.exports = {
 
     run: (client, message, args, ...optional) => {},
     execute: (client, interaction, data, ...optonal) => {},
-}
+};

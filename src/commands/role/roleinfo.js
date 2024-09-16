@@ -3,22 +3,22 @@ const {
     Client,
     ChatInputCommandInteraction,
     SlashCommandBuilder,
-} = require('discord.js')
-const date = new Date()
+} = require("discord.js");
+const date = new Date();
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('roleinfo')
+        .setName("roleinfo")
         .setDescription("📖 View any role's information.")
         .setDMPermission(false)
         .addRoleOption((option) =>
             option
-                .setName('role')
-                .setDescription('Select a role.')
+                .setName("role")
+                .setDescription("Select a role.")
                 .setRequired(true)
         ),
-    category: 'role',
-    usage: '/info role',
+    category: "role",
+    usage: "/info role",
     userPermissions: [],
     botPermissions: [],
     /**
@@ -28,20 +28,20 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         const role = (await interaction.guild.roles.fetch()).get(
-            interaction.options.getRole('role').id
-        )
+            interaction.options.getRole("role").id
+        );
         const embed = new EmbedBuilder()
-            .setTitle('ROLE INFORMATION')
+            .setTitle("ROLE INFORMATION")
             .setColor(role.hexColor)
             .setThumbnail(role.icon ? role.iconURL() : null)
             .addFields(
                 {
-                    name: 'Name',
+                    name: "Name",
                     value: `\`\`\`\n${role.name}\`\`\``,
                     inline: true,
                 },
                 {
-                    name: 'ID',
+                    name: "ID",
                     value: `\`\`\`\n${role.id}\`\`\``,
                     inline: true,
                 },
@@ -53,36 +53,36 @@ module.exports = {
                     inline: true,
                 },
                 {
-                    name: 'Color Code',
+                    name: "Color Code",
                     value: `\`\`\`\n${role.hexColor}\`\`\``,
                     inline: true,
                 },
                 {
-                    name: 'Mentionable',
-                    value: `\`\`\`\n${role.mentionable ? 'Yes' : 'No'}\n\`\`\``,
+                    name: "Mentionable",
+                    value: `\`\`\`\n${role.mentionable ? "Yes" : "No"}\n\`\`\``,
                     inline: true,
                 },
                 {
-                    name: 'Hoisted',
-                    value: `\`\`\`\n${role.hoist ? 'Yes' : 'No'}\n\`\`\``,
+                    name: "Hoisted",
+                    value: `\`\`\`\n${role.hoist ? "Yes" : "No"}\n\`\`\``,
                     inline: true,
                 },
                 {
-                    name: 'Bot Role',
-                    value: `\`\`\`\n${role.managed ? 'Yes' : 'No'}\n\`\`\``,
+                    name: "Bot Role",
+                    value: `\`\`\`\n${role.managed ? "Yes" : "No"}\n\`\`\``,
                     inline: true,
                 },
                 {
-                    name: 'Created On',
-                    value: `\`\`\`\n${moment(role.createdTimestamp).format('')})\`\`\``,
+                    name: "Created On",
+                    value: `\`\`\`\n${moment(role.createdTimestamp).format("")})\`\`\``,
                 }
             )
             .setFooter({
                 text: `Powered by ${client.user.username}`,
-            })
+            });
 
         return interaction.reply({
             embeds: [embed],
-        })
+        });
     },
-}
+};

@@ -7,15 +7,15 @@ const {
     Client,
     ChatInputCommandInteraction,
     OAuth2Scopes,
-} = require('discord.js')
+} = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('invite')
-        .setDescription('returns a link button with bots invite url.')
+        .setName("invite")
+        .setDescription("returns a link button with bots invite url.")
         .setDMPermission(true),
-    category: 'misc',
-    usage: '/invite',
+    category: "misc",
+    usage: "/invite",
     userPermissions: [],
     botPermissions: [],
     /**
@@ -27,17 +27,17 @@ module.exports = {
         const inviteLink = client.generateInvite({
             permissions: BigInt(630567770521207),
             scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
-        })
+        });
         const button = new ButtonBuilder()
-            .setLabel('Invite Link')
+            .setLabel("Invite Link")
             .setStyle(ButtonStyle.Link)
             .setURL(inviteLink)
-            .setEmoji(resolvePartialEmoji('✉️'))
+            .setEmoji(resolvePartialEmoji("✉️"));
 
         return interaction.reply({
-            content: 'Invite me by clicking the button.',
+            content: "Invite me by clicking the button.",
             ephemeral: false,
             components: [new ActionRowBuilder().addComponents(button)],
-        })
+        });
     },
-}
+};

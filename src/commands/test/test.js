@@ -1,17 +1,17 @@
-const { ChatInputCommandInteraction } = require('discord.js')
+const { ChatInputCommandInteraction } = require("discord.js");
 const {
     SlashCommandBuilder,
     InteractionContextType,
     PermissionFlagsBits,
-} = require('discord.js')
+} = require("discord.js");
 
 /**
  * @type {import("../../structures/CommandStructure.js")}
  */
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('test')
-        .setDescription('testing Stuff')
+        .setName("test")
+        .setDescription("testing Stuff")
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .setNSFW(false)
         .setContexts(
@@ -19,17 +19,17 @@ module.exports = {
             InteractionContextType.Guild,
             InteractionContextType.PrivateChannel
         ),
-    aliases: ['te', 'est', 'tt'],
-    usage: 'h!test | /test',
+    aliases: ["te", "est", "tt"],
+    usage: "h!test | /test",
     minArgsCount: 0,
     subcommands: [],
 
     cooldown: 0,
-    category: 'TEST',
+    category: "TEST",
     premium: false,
 
     botPermissions: [],
-    userPermissions: ['Administrator'],
+    userPermissions: ["Administrator"],
 
     enabled: true,
     server: true,
@@ -48,6 +48,6 @@ module.exports = {
     execute: (client, interaction, data, ...optonal) => {
         interaction.reply({
             content: `Current commands collection size: ${client.commands.size}`,
-        })
+        });
     },
-}
+};
