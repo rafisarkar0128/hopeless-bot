@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const Schema = new mongoose.Schema({
-  Guild: String,
-  Name: String,
-  Url: String,
-});
+    Guild: String,
+    Name: String,
+    Url: String,
+})
 
-module.exports = mongoose.model("radios", Schema);
+module.exports = mongoose.model('radios', Schema)

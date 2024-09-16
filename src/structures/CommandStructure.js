@@ -34,22 +34,22 @@
  * @type {CommandStructure}
  */
 module.exports = {
-  data: {},
-  aliases: [],
-  usage: "",
-  minArgsCount: 0,
-  subcommands: [],
+    data: {},
+    aliases: [],
+    usage: '',
+    minArgsCount: 0,
+    subcommands: [],
 
-  cooldown: 0,
-  category: "NONE",
-  premium: false,
+    cooldown: 0,
+    category: 'NONE',
+    premium: false,
 
-  botPermissions: [],
-  userPermissions: [],
+    botPermissions: [],
+    userPermissions: [],
 
-  enabled: true,
-  server: true,
+    enabled: true,
+    server: true,
 
-  run: (client, message, args, ...optional) => {},
-  execute: (client, interaction, data, ...optonal) => {},
-};
+    run: (client, message, args, ...optional) => {},
+    execute: (client, interaction, data, ...optonal) => {},
+}

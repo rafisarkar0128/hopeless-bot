@@ -21,13 +21,13 @@
 
 ## 📊 Road Map
 
-- [x] **Basic Bot**
-- [x] **Advance Bot**
-- [ ] **Documentation**
-- [ ] **Moderation Bot**
-- [ ] **Music Bot**
-- [ ] **Web based Dashboard**
-- [ ] **Website**
+-   [x] **Basic Bot**
+-   [x] **Advance Bot**
+-   [ ] **Documentation**
+-   [ ] **Moderation Bot**
+-   [ ] **Music Bot**
+-   [ ] **Web based Dashboard**
+-   [ ] **Website**
 
 ## 💡 Features
 
@@ -39,34 +39,34 @@
 
 Before starting with the **SETUP**, you need to have the following:
 
-- [![Node.JS](https://img.shields.io/badge/Node.js_V18%2B-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
-- [![Discord.JS](https://img.shields.io/badge/Discord.JS_V14%2B-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
-- [![Lavalink](https://img.shields.io/badge/Lavalink_V4%2B-fa6f18?style=for-the-badge)](https://github.com/lavalink-devs/lavalink)
-- [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
+-   [![Node.JS](https://img.shields.io/badge/Node.js_V18%2B-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
+-   [![Discord.JS](https://img.shields.io/badge/Discord.JS_V14%2B-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
+-   [![Lavalink](https://img.shields.io/badge/Lavalink_V4%2B-fa6f18?style=for-the-badge)](https://github.com/lavalink-devs/lavalink)
+-   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
 
 ### Optional
 
-- [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/) (For PostgreSQL database)
-- [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (For Docker Installation)
-- [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/) (For Docker Installation)
+-   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/) (For PostgreSQL database)
+-   [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) (For Docker Installation)
+-   [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/) (For Docker Installation)
 
 ## 📝 Setup
 
 ### 📝 Normal Setup
 
-- **Step 1:** Open `.env.example` copy eveything to a new file named `.env`
-- **Step 2:** Put the required values in `.env`
-- **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
-- **Step 5:** Finally run `npm start` in your terminal
+-   **Step 1:** Open `.env.example` copy eveything to a new file named `.env`
+-   **Step 2:** Put the required values in `.env`
+-   **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
+-   **Step 5:** Finally run `npm start` in your terminal
 
 ### 📝 Setup with Docker
 
 **Note:** Currently Missing docker config files
 
-- **Step 1:** Open `env.example`
-- **Step 2:** Put the required values and rename it to `.env`
-- **Step 3:** Run `docker-compose build`
-- **Step 4:** Finally run `docker-compose up`
+-   **Step 1:** Open `env.example`
+-   **Step 2:** Put the required values and rename it to `.env`
+-   **Step 3:** Run `docker-compose build`
+-   **Step 4:** Finally run `docker-compose up`
 
 ### 📝 Replit Guide
 
@@ -74,8 +74,8 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### NOTE: This might get updated anytime.
 
-- By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
-- Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
+-   By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
+-   Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
 
 ### **Need help with setup?**
 
@@ -101,13 +101,13 @@ Written below are some public commands of the bot.
 
 ## 🔗 Useful Links
 
-- [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
-- [![Discord.js](https://img.shields.io/badge/Discord.js-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
-- [![Lavalink](https://img.shields.io/badge/Lavalink-fa6f18?style=for-the-badge&logo=discord&logoColor=white)](https://github.com/lavalink-devs/Lavalink)
-- [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
-- [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/)
-- [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-- [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+-   [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en/download/)
+-   [![Discord.js](https://img.shields.io/badge/Discord.js-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.js.org/#/)
+-   [![Lavalink](https://img.shields.io/badge/Lavalink-fa6f18?style=for-the-badge&logo=discord&logoColor=white)](https://github.com/lavalink-devs/Lavalink)
+-   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/try/download/community)
+-   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/download/)
+-   [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+-   [![Docker-Compose](https://img.shields.io/badge/Docker--Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
 
 ## 📜 Contributing
 
@@ -126,10 +126,10 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 
 ## 🫡 Credit
 
-- [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bot.
-- [@discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) Took inspiration and tried to improve this project.
-- [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got impressed by the use of colors on terminal.
-- [@lavamusic](https://github.com/appujet/lavamusic) The readme.md looks quite good. See the Similarity.
+-   [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bot.
+-   [@discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) Took inspiration and tried to improve this project.
+-   [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got impressed by the use of colors on terminal.
+-   [@lavamusic](https://github.com/appujet/lavamusic) The readme.md looks quite good. See the Similarity.
 
 [version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
