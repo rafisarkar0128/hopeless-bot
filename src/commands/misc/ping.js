@@ -1,35 +1,39 @@
-const {
-    SlashCommandBuilder,
-    Client,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
+/**
+ * @type {import("../../structures/CommandStructure.js")}
+ */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("🏓Replies with an embed containing information.")
-        .setDMPermission(true),
-    category: "misc",
-    usage: "/ping",
-    userPermissions: [],
-    botPermissions: [],
-    /**
-     *
-     * @param {Client} client
-     * @param {ChatInputCommandInteraction} interaction
-     */
-    execute: async (client, interaction) => {
-        await interaction.deferReply({});
+        .setDescription("🏓Replies with an embed containing information."),
+
+    options: {
+        aliases: [],
+        minArgsCount: 0,
+        subcommands: [],
+    },
+    usage: "/ping | {prefix}ping",
+    cooldown: 0,
+    category: "INFORMATION",
+    premium: false,
+    botPermissions: ["SendMessages"],
+    userPermissions: ["SendMessages"],
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
+        const reply = await interaction.deferReply({
+            fetchReply: true,
+        });
 
         const days = Math.floor(client.uptime / 86400000);
         const hours = Math.floor(client.uptime / 3600000) % 24;
         const minutes = Math.floor(client.uptime / 60000) % 60;
         const seconds = Math.floor(client.uptime / 1000) % 60;
 
-        const wsPing = Date.now() - interaction.createdTimestamp;
-        const apiPing = client.ws.ping;
-        const totalPing = wsPing + apiPing;
+        const clientPing =
+            reply.createdTimestamp - interaction.createdTimestamp;
+        const wsPing = client.ws.ping;
+        const totalPing = wsPing + clientPing;
 
         const embed = new EmbedBuilder()
             .setTitle("MY RUNTIME STATS")
@@ -48,10 +52,14 @@ module.exports = {
                     inline: true,
                 },
                 {
-                    name: `🛰 API Ping`,
+                    name: `🛰 BOT Ping`,
                     value: `\`\`\`yml\n${
-                        apiPing <= 200 ? "🟢" : apiPing <= 400 ? "🟡" : "🔴"
-                    } ${apiPing}ms\`\`\``,
+                        clientPing <= 200
+                            ? "🟢"
+                            : clientPing <= 400
+                            ? "🟡"
+                            : "🔴"
+                    } ${clientPing}ms\`\`\``,
                     inline: true,
                 },
                 {
@@ -61,7 +69,7 @@ module.exports = {
                 },
             ])
             .setFooter({
-                text: `Powered by ${client.user.username}`,
+                text: client.config.bot.footer,
             });
 
         return interaction.followUp({

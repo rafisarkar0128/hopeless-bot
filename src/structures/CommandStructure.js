@@ -45,6 +45,6 @@ module.exports = {
     premium: false,
     botPermissions: [],
     userPermissions: [],
-    run: (client, message, args, data) => {},
-    execute: (client, interaction, data) => {},
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {},
 };
