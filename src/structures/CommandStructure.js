@@ -1,4 +1,11 @@
 /**
+ * @typedef {Object} Options
+ * @property {string[]} [aliases]
+ * @property {number} [minArgsCount=0]
+ * @property {SubCommand} [subcommands=[]]
+ */
+
+/**
  * @typedef {Object} SubCommand
  * @property {string} trigger
  * @property {string} description
@@ -11,23 +18,15 @@
 /**
  * @typedef {Object} CommandStructure
  * @property {import("discord.js").SlashCommandBuilder} data
- * @property {string[]} [aliases]
+ * @property {Options} options
  * @property {string} [usage=""]
- * @property {number} [minArgsCount=0]
- *
  * @property {number} cooldown
  * @property {CommandCategory} category
  * @property {boolean} premium
- *
  * @property {import('discord.js').PermissionResolvable[]} [botPermissions]
  * @property {import('discord.js').PermissionResolvable[]} [userPermissions]
- * @property {Validation[]} [validations]
- *
- * @property {boolean} enabled
- * @property {boolean} server
- *
- * @property {function(import('discord.js').Message, string[], object)} run
- * @property {function(import('discord.js').ChatInputCommandInteraction, object)} execute
+ * @property {function(import("./DiscordBot.js").DiscordBot, import('discord.js').Message, string[], object)} run
+ * @property {function(import("./DiscordBot.js").DiscordBot, import('discord.js').ChatInputCommandInteraction, object)} execute
  */
 
 /**
@@ -35,21 +34,17 @@
  */
 module.exports = {
     data: {},
-    aliases: [],
+    options: {
+        aliases: [],
+        minArgsCount: 0,
+        subcommands: [],
+    },
     usage: "",
-    minArgsCount: 0,
-    subcommands: [],
-
     cooldown: 0,
     category: "NONE",
     premium: false,
-
     botPermissions: [],
     userPermissions: [],
-
-    enabled: true,
-    server: true,
-
-    run: (client, message, args, ...optional) => {},
-    execute: (client, interaction, data, ...optonal) => {},
+    run: (client, message, args, data) => {},
+    execute: (client, interaction, data) => {},
 };

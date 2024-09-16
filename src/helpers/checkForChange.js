@@ -1,9 +1,9 @@
+module.exports = () => {};
+
 const Discord = require("discord.js");
-module.exports = async (
-    client,
-    commands,
-    options = { debug: false, guildId: null },
-) => {
+const options = { debug: false, guildId: null };
+
+const f = async (client, commands, options = options) => {
     const log = (message) => options.debug && console.log(message);
 
     const ready = client.readyAt

@@ -19,7 +19,9 @@ class Logger {
      */
     warn(content) {
         return console.log(
-            `${dt} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(`${content}`)}`,
+            `${dt} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(
+                `${content}`,
+            )}`,
         );
     }
 
@@ -38,7 +40,9 @@ class Logger {
      * @param {String} content
      */
     debug(content) {
-        return console.log(`${dt} ${colors.bgGreen(" DEBUG ")} ${content}`);
+        return console.log(
+            `${dt} ${colors.bgGreen(" DEBUG ")} ${colors.green(content)}`,
+        );
     }
 }
 
@@ -69,9 +73,11 @@ async function sendError(error) {
                     process.memoryUsage().heapUsed /
                     1024 /
                     1024
-                ).toFixed(
-                    2,
-                )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
+                ).toFixed(2)} MB CPU: ${(
+                    process.cpuUsage().system /
+                    1024 /
+                    1024
+                ).toFixed(2)}%`,
             })
             .setTimestamp();
 

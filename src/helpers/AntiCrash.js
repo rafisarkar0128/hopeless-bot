@@ -9,7 +9,7 @@ module.exports = () => {
     //      "[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="
     //    )
     //  );
-    //  logger.log(code);
+    //  logger.error(code);
     //  console.log(
     //    colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ===============")
     //  );

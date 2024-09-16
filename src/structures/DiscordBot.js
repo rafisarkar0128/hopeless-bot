@@ -3,7 +3,6 @@ const { Logger } = require("./Logger.js");
 const colors = require("colors");
 const { glob } = require("glob");
 const path = require("path");
-const pkg = require("../../package.json");
 
 class DiscordBot extends Client {
     /**
@@ -15,6 +14,7 @@ class DiscordBot extends Client {
         this.logger = new Logger();
         this.config = require(`../config.js`);
         this.colors = require(`../colors.json`);
+        this.events = new Collection();
 
         /**
          * @type {Collection<string, import("./CommandStructure.js")>}
@@ -84,32 +84,41 @@ class DiscordBot extends Client {
      */
     async loadEvents(dirname) {
         const files = await this.loadFiles(dirname);
-
-        let i = 0;
+        this.events.clear();
         for (const file of files) {
             try {
                 const event = require(file);
                 const execute = (...args) => event.execute(this, ...args);
                 const target = event.rest ? this.rest : this;
 
+                this.events.set(
+                    file.replace(/\\/g, "/").split("/").pop(),
+                    event,
+                );
                 target[event.once ? "once" : "on"](event.name, execute);
-
-                i++;
             } catch (error) {
                 throw error;
             }
         }
-
-        this.info(colors.yellow(`loaded ${i} events.`));
+        return this.info(colors.yellow(`loaded ${this.events.size} events`));
     }
 
     /**
-     * @param {String} content - The text to display
+     * @param {String} content - The text to display (must be a string)
      * @param {import("boxen").Options} options - Options for styling
      */
     async logBox(content, options) {
         const boxen = (await import("boxen")).default;
         return console.log(boxen(content, options));
+    }
+
+    /**
+     * @returns A random color from colors.json
+     */
+    randomColor() {
+        return this.colors.array[
+            Math.floor(Math.random() * this.colors.array.length)
+        ];
     }
 }
 

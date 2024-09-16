@@ -2,10 +2,13 @@ const mongoose = require("mongoose");
 const colors = require("colors");
 
 module.exports = {
+    /**
+     * @param {import("../structures/DiscordBot.js").DiscordBot} client
+     */
     async initializeMongoose(client) {
         try {
-            await mongoose.connect(process.env.MONGO_URI);
-            client.info(colors.cyan("mongodb connection established."));
+            await mongoose.connect(client.config.mongodbUri);
+            client.info(colors.cyan("mongodb connection established"));
         } catch (error) {
             throw error;
         }

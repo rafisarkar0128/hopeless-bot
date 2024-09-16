@@ -1,4 +1,10 @@
-const { Message, EmbedBuilder } = require("discord.js");
+const {
+    Message,
+    EmbedBuilder,
+    ButtonBuilder,
+    ActionRowBuilder,
+    ButtonStyle,
+} = require("discord.js");
 
 module.exports = {
     name: "messageCreate",
@@ -20,22 +26,47 @@ module.exports = {
                 name: message.author.username,
                 iconURL: message.author.displayAvatarURL(),
             })
-            .setTitle("Did you just mention my me?")
+            .setTitle("Did you just mention me?")
             .setDescription(
-                `I am ${client.user.username}, a bot developed by **theassassin0128** to manage this server. For more information or help use **\`/help\`**.`,
+                `I am ${client.user.username}, a bot developed by **<@${client.config.ownerId}>** to manage this server. For help use **\`/help\`**. For more information visit my website.`,
             )
             .setThumbnail(client.user.displayAvatarURL())
-            .setColor(
-                client.colors.array[
-                    Math.floor(Math.random() * client.colors.array.length)
-                ],
-            )
+            .setColor(client.randomColor())
             .setFooter({
-                text: `Powered by ${client.user.username}`,
+                text: client.config.bot.footer,
             });
+
+        const githubButton = new ButtonBuilder()
+            .setLabel("GitHub")
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://github.com/theassassin0128/Hopeless-Bot#readme");
+
+        const discordButton = new ButtonBuilder()
+            .setLabel("Support")
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://discord.gg/E6H9VvBdTk");
+
+        const inviteButton = new ButtonBuilder()
+            .setLabel("Invite Me")
+            .setStyle(ButtonStyle.Link)
+            .setURL(
+                "https://discord.com/oauth2/authorize?client_id=1272259032098275358",
+            );
+
+        const websiteButton = new ButtonBuilder()
+            .setLabel("Website")
+            .setStyle(ButtonStyle.Link)
+            .setURL("https://theassassin0128.github.io/Hopeless-Bot");
+
+        const actionRow = new ActionRowBuilder()
+            .addComponents(githubButton)
+            .addComponents(discordButton)
+            .addComponents(inviteButton)
+            .addComponents(websiteButton);
 
         return message.reply({
             embeds: [embed],
+            components: [actionRow],
         });
     },
 };

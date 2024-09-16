@@ -6,7 +6,6 @@ const { GatewayIntentBits, Partials } = require("discord.js");
 const { DiscordBot } = require("./structures/DiscordBot.js");
 const colors = require("colors");
 const pkg = require("../package.json");
-const { initializeMongoose } = require("./database/connect.js");
 
 const client = new DiscordBot({
     intents: [
@@ -67,8 +66,7 @@ async function startBot() {
 
     try {
         await client.loadEvents("events");
-        await client.login(client.config.bot.token);
-        initializeMongoose(client);
+        client.login(client.config.bot.token);
     } catch (error) {
         throw error;
     }
