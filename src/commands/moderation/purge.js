@@ -19,12 +19,12 @@ module.exports = {
                     option
                         .setName("count")
                         .setDescription(
-                            "Number of messages to delete. Limit 100."
+                            "Number of messages to delete. Limit 100.",
                         )
                         .setMaxValue(100)
                         .setMinValue(1)
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -34,12 +34,12 @@ module.exports = {
                     option
                         .setName("count")
                         .setDescription(
-                            "Number of messages to delete. Limit 100."
+                            "Number of messages to delete. Limit 100.",
                         )
                         .setMaxValue(100)
                         .setMinValue(1)
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -49,33 +49,33 @@ module.exports = {
                     option
                         .setName("user")
                         .setDescription("Select a user to delete messages.")
-                        .setRequired(true)
+                        .setRequired(true),
                 )
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
                         .setDescription(
-                            "Number of messages to delete. Limit 100."
+                            "Number of messages to delete. Limit 100.",
                         )
                         .setMaxValue(100)
                         .setMinValue(1)
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
                 .setName("after")
                 .setDescription(
-                    "Delete messages that were sent after a specific message.(ID/Link)"
+                    "Delete messages that were sent after a specific message.(ID/Link)",
                 )
                 .addStringOption((option) =>
                     option
                         .setName("message")
                         .setDescription(
-                            "Message ID/Link to delete messages after"
+                            "Message ID/Link to delete messages after",
                         )
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -85,12 +85,12 @@ module.exports = {
                     option
                         .setName("count")
                         .setDescription(
-                            "Number of messages to delete. Limit 100."
+                            "Number of messages to delete. Limit 100.",
                         )
                         .setMaxValue(100)
                         .setMinValue(1)
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -100,12 +100,12 @@ module.exports = {
                     option
                         .setName("count")
                         .setDescription(
-                            "Number of messages to delete. Limit 100."
+                            "Number of messages to delete. Limit 100.",
                         )
                         .setMaxValue(100)
                         .setMinValue(1)
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -115,12 +115,12 @@ module.exports = {
                     option
                         .setName("count")
                         .setDescription(
-                            "Number of messages to delete. Limit 100."
+                            "Number of messages to delete. Limit 100.",
                         )
                         .setMaxValue(100)
                         .setMinValue(1)
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         ),
     category: "moderation",
     usage: "/purge [Sub Command]",

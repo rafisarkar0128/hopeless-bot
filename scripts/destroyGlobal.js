@@ -48,8 +48,8 @@ async function deleteCommands() {
             colors.yellow(
                 `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${
                     command.id
-                } - ${command.name} `
-            )
+                } - ${command.name} `,
+            ),
         );
     });
 

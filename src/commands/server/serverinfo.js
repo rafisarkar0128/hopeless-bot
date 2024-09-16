@@ -37,7 +37,7 @@ module.exports = {
                 .setColor(
                     client.colors.array[
                         Math.floor(Math.random() * client.colors.array.length)
-                    ]
+                    ],
                 )
                 .setThumbnail(Iconurl)
                 .setImage(Bannerurl)
@@ -108,14 +108,14 @@ module.exports = {
                     {
                         name: "Server created on (DD/MM/YYYY)",
                         value: `\`\`\`\n${DateTime.fromMillis(
-                            Guild.createdTimestamp
+                            Guild.createdTimestamp,
                         ).toFormat(
-                            "dd/LL/yy, h:mm:ss a"
+                            "dd/LL/yy, h:mm:ss a",
                         )} (${DateTime.fromMillis(
-                            Guild.createdTimestamp
+                            Guild.createdTimestamp,
                         ).toRelativeCalendar()})\n\`\`\``,
                         inline: true,
-                    }
+                    },
                 )
                 .setFooter({
                     text: `Powered by ${client.user.username}`,

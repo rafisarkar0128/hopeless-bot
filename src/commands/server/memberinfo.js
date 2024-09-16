@@ -17,9 +17,9 @@ module.exports = {
             option
                 .setName("member")
                 .setDescription(
-                    "Select a member or leave empty to view your own info."
+                    "Select a member or leave empty to view your own info.",
                 )
-                .setRequired(false)
+                .setRequired(false),
         ),
     category: "server",
     usage: "/memberinfo [member]",
@@ -54,20 +54,20 @@ module.exports = {
         });
 
         const joinTime = `${DateTime.fromMillis(
-            member.joinedTimestamp
+            member.joinedTimestamp,
         ).toFormat(
-            "dd/LL/yyyy h:mm:ss"
+            "dd/LL/yyyy h:mm:ss",
         )} (${DateTime.fromMillis(member.joinedTimestamp).toRelativeCalendar()})`;
 
         const creationTime = `${DateTime.fromMillis(
-            member.user.createdTimestamp
+            member.user.createdTimestamp,
         ).toFormat("dd/LL/yyyy h:mm:ss")} (${DateTime.fromMillis(
-            member.user.createdTimestamp
+            member.user.createdTimestamp,
         ).toRelativeCalendar()})`;
 
         const Booster = member.premiumSince
             ? `Since ${DateTime.fromMillis(
-                  member.premiumSinceTimestamp
+                  member.premiumSinceTimestamp,
               ).toFormat("LLLL dd, yyyy")}`
             : "No";
 
@@ -78,8 +78,8 @@ module.exports = {
                 `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${
                     member.id
                 }> joind as the **${addSuffix(
-                    await getJoinedPosition(interaction, member.id)
-                )}** member of this server.`
+                    await getJoinedPosition(interaction, member.id),
+                )}** member of this server.`,
             )
             .setImage("attachment://profile.png")
             .setThumbnail(avatar)
@@ -138,7 +138,7 @@ module.exports = {
                     name: "Banner Url",
                     value: `[Link](${banner})`,
                     inline: true,
-                }
+                },
             )
             .setFooter({
                 text: `Powered by ${client.user.username}`,
@@ -194,7 +194,7 @@ async function getJoinedPosition(interaction, id) {
         Array.from(
             guildMembers
                 .sort((a, b) => a.joinedTimestamp - b.joinedTimestamp)
-                .keys()
+                .keys(),
         ).indexOf(id) + 1;
     return position;
 }

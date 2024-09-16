@@ -16,13 +16,13 @@ module.exports = {
             option
                 .setName("member")
                 .setDescription("The member to untimeout.")
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption((option) =>
             option
                 .setName("reason")
                 .setDescription("Reason for the the untimeout.")
-                .setRequired(false)
+                .setRequired(false),
         ),
     category: "moderation",
     usage: "/untimeout",
@@ -46,7 +46,7 @@ module.exports = {
             return interaction.followUp({
                 embeds: [
                     errorEmbed.setDescription(
-                        "Member has most likely left the server."
+                        "Member has most likely left the server.",
                     ),
                 ],
                 ephemeral: true,
@@ -62,7 +62,7 @@ module.exports = {
             member.roles.highest.position
         ) {
             errorsArray.push(
-                "Selected member has a higher role position than you."
+                "Selected member has a higher role position than you.",
             );
         }
 

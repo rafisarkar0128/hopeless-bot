@@ -17,19 +17,19 @@ module.exports = {
             option
                 .setName("member")
                 .setDescription("The member to timeout.")
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption((option) =>
             option
                 .setName("duration")
                 .setDescription("Duration of the timeout.")
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption((option) =>
             option
                 .setName("reason")
                 .setDescription("Reason for the the timeout.")
-                .setRequired(false)
+                .setRequired(false),
         ),
     category: "moderation",
     usage: "/timeout",
@@ -54,7 +54,7 @@ module.exports = {
             return interaction.followUp({
                 embeds: [
                     errorEmbed.setDescription(
-                        "Member has most likely left the server."
+                        "Member has most likely left the server.",
                     ),
                 ],
                 ephemeral: true,
@@ -62,7 +62,7 @@ module.exports = {
         }
         if (!ms(duration) || ms(duration) > ms("28d")) {
             errorsArray.push(
-                "The provided time is invalid or over the 28 days limit."
+                "The provided time is invalid or over the 28 days limit.",
             );
         }
         if (!member.moderatable || !member.manageable) {
@@ -73,7 +73,7 @@ module.exports = {
             member.roles.highest.position
         ) {
             errorsArray.push(
-                "Selected member has a higher role position than you."
+                "Selected member has a higher role position than you.",
             );
         }
         if (errorsArray.length) {

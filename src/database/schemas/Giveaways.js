@@ -57,7 +57,7 @@ const Schema = new mongoose.Schema(
     {
         id: false,
         autoIndex: false,
-    }
+    },
 );
 
 const Model = mongoose.model("giveaways", Schema);

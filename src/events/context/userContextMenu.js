@@ -55,7 +55,7 @@ module.exports = {
             if (command.botPermissions?.length) {
                 if (
                     !interaction.guild.members.me.permissions.has(
-                        command.botPermissions
+                        command.botPermissions,
                     )
                 ) {
                     return interaction.reply({

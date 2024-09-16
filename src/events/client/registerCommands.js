@@ -41,11 +41,11 @@ module.exports = {
                 .put(
                     Routes.applicationGuildCommands(
                         client.config.bot.id,
-                        client.config.serverId
+                        client.config.serverId,
                     ),
                     {
                         body: applicationCommands,
-                    }
+                    },
                 )
                 .catch((error) => {
                     throw error;

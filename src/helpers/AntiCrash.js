@@ -28,56 +28,56 @@ module.exports = () => {
     process.on("unhandledRejection", async (reason, promise) => {
         console.log(
             colors.yellow(
-                "[AntiCrash] | [UnhandledRejection_Logs] | [start] : ==============="
-            )
+                "[AntiCrash] | [UnhandledRejection_Logs] | [start] : ===============",
+            ),
         );
         await logger.error(reason);
         console.log(
             colors.yellow(
-                "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ==============="
-            )
+                "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ===============",
+            ),
         );
     });
 
     process.on("rejectionHandled", async (promise) => {
         console.log(
             colors.yellow(
-                "[AntiCrash] | [RejectionHandled_Logs] | [Start] : ==============="
-            )
+                "[AntiCrash] | [RejectionHandled_Logs] | [Start] : ===============",
+            ),
         );
         await logger.error(promise);
         console.log(
             colors.yellow(
-                "[AntiCrash] | [RejectionHandled_Logs] | [End] : ==============="
-            )
+                "[AntiCrash] | [RejectionHandled_Logs] | [End] : ===============",
+            ),
         );
     });
 
     process.on("uncaughtException", async (error, origin) => {
         console.log(
             colors.yellow(
-                "[AntiCrash] | [UncaughtException_Logs] | [Start] : ==============="
-            )
+                "[AntiCrash] | [UncaughtException_Logs] | [Start] : ===============",
+            ),
         );
         await logger.error(error);
         console.log(
             colors.yellow(
-                "[AntiCrash] | [UncaughtException_Logs] | [End] : ==============="
-            )
+                "[AntiCrash] | [UncaughtException_Logs] | [End] : ===============",
+            ),
         );
     });
 
     process.on("warning", (warning) => {
         console.log(
             colors.yellow(
-                "[AntiCrash] | [Warning_Logs] | [Start] : ==============="
-            )
+                "[AntiCrash] | [Warning_Logs] | [Start] : ===============",
+            ),
         );
         logger.warn(warning);
         console.log(
             colors.yellow(
-                "[AntiCrash] | [Warning_Logs] | [End] : ==============="
-            )
+                "[AntiCrash] | [Warning_Logs] | [End] : ===============",
+            ),
         );
     });
 };

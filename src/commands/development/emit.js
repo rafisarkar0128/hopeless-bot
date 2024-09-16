@@ -24,14 +24,14 @@ module.exports = {
                     {
                         name: "guildMemberRemove",
                         value: "remove",
-                    }
-                )
+                    },
+                ),
         )
         .addUserOption((option) =>
             option
                 .setName("member")
                 .setDescription("Select a member.")
-                .setRequired(false)
+                .setRequired(false),
         ),
     category: "development",
     usage: "/emit",

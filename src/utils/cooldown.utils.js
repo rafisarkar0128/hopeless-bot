@@ -1,7 +1,7 @@
 async function onCoolDown(client, interaction, command) {
     const now = Date.now();
     const timestamps = await client.cooldowns.get(
-        command.data?.name || command?.name
+        command.data?.name || command?.name,
     );
     const cooldownAmount = (command.cooldown || 1) * 1000;
 
@@ -18,7 +18,7 @@ async function onCoolDown(client, interaction, command) {
             await timestamps.set(interaction.user.id, now);
             setTimeout(
                 () => timestamps.delete(interaction.user.id),
-                cooldownAmount
+                cooldownAmount,
             );
             return false;
         }
@@ -26,7 +26,7 @@ async function onCoolDown(client, interaction, command) {
         await timestamps.set(interaction.user.id, now);
         setTimeout(
             () => timestamps.delete(interaction.user.id),
-            cooldownAmount
+            cooldownAmount,
         );
         return false;
     }

@@ -19,7 +19,7 @@ class Logger {
      */
     warn(content) {
         return console.log(
-            `${dt} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(`${content}`)}`
+            `${dt} ${colors.bold.bgYellow(" WARN ")} ${colors.yellow(`${content}`)}`,
         );
     }
 
@@ -30,7 +30,7 @@ class Logger {
         let error = content.stack ? content.stack : content;
         await sendError(content);
         return console.log(
-            `${dt} ${colors.bold.bgRed(" ERROR ")} ${colors.red(`${error}`)}`
+            `${dt} ${colors.bold.bgRed(" ERROR ")} ${colors.red(`${error}`)}`,
         );
     }
 
@@ -62,7 +62,7 @@ async function sendError(error) {
                     errorStack.length > 4000
                         ? errorStack.substring(length, 4000) + "..."
                         : errorStack
-                }\n\`\`\``
+                }\n\`\`\``,
             )
             .setFooter({
                 text: `Memory: ${(
@@ -70,7 +70,7 @@ async function sendError(error) {
                     1024 /
                     1024
                 ).toFixed(
-                    2
+                    2,
                 )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
             })
             .setTimestamp();

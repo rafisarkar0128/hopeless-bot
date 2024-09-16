@@ -62,7 +62,7 @@ async function startBot() {
                 top: 1,
                 bottom: 1,
             },
-        }
+        },
     );
 
     try {

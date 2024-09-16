@@ -17,7 +17,7 @@ module.exports = {
         .setContexts(
             InteractionContextType.BotDM,
             InteractionContextType.Guild,
-            InteractionContextType.PrivateChannel
+            InteractionContextType.PrivateChannel,
         ),
     aliases: ["te", "est", "tt"],
     usage: "h!test | /test",

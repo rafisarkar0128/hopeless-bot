@@ -20,7 +20,7 @@ module.exports = {
                 `Member(s)`,
                 `${client.guilds.cache
                     .reduce((a, b) => a + b.memberCount, 0)
-                    .toLocaleString()} Members`
+                    .toLocaleString()} Members`,
             )
             .addRow(`Commands`, `${client.commands.size}`)
             .addRow(`Discord.JS version`, `${version}`)
@@ -28,10 +28,10 @@ module.exports = {
             .addRow(
                 `Memory`,
                 `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
-                    2
+                    2,
                 )} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(
-                    2
-                )} MB`
+                    2,
+                )} MB`,
             );
 
         await client.logBox(table.toString(), {

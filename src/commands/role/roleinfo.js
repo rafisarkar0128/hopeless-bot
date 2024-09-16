@@ -15,7 +15,7 @@ module.exports = {
             option
                 .setName("role")
                 .setDescription("Select a role.")
-                .setRequired(true)
+                .setRequired(true),
         ),
     category: "role",
     usage: "/info role",
@@ -28,7 +28,7 @@ module.exports = {
      */
     execute: async (client, interaction) => {
         const role = (await interaction.guild.roles.fetch()).get(
-            interaction.options.getRole("role").id
+            interaction.options.getRole("role").id,
         );
         const embed = new EmbedBuilder()
             .setTitle("ROLE INFORMATION")
@@ -75,7 +75,7 @@ module.exports = {
                 {
                     name: "Created On",
                     value: `\`\`\`\n${moment(role.createdTimestamp).format("")})\`\`\``,
-                }
+                },
             )
             .setFooter({
                 text: `Powered by ${client.user.username}`,

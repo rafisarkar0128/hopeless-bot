@@ -23,7 +23,7 @@ const Schema = new mongoose.Schema(
             createdAt: "created_at",
             updatedAt: false,
         },
-    }
+    },
 );
 
 const Model = mongoose.model("reaction-roles", Schema);
@@ -79,7 +79,7 @@ module.exports = {
                     roles: { emote, role_id: roleId },
                 },
             },
-            { upsert: true, new: true }
+            { upsert: true, new: true },
         ).lean();
 
         // update cache

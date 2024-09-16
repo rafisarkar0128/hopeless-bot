@@ -36,7 +36,7 @@ module.exports = {
             .setColor(
                 client.colors.array[
                     Math.floor(Math.random() * client.colors.array.length)
-                ]
+                ],
             )
             .setThumbnail(client.user.displayAvatarURL())
             .addFields([

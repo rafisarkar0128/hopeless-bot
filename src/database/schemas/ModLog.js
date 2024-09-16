@@ -42,7 +42,7 @@ const Schema = new mongoose.Schema(
             createdAt: "created_at",
             updatedAt: false,
         },
-    }
+    },
 );
 
 const Model = mongoose.model("mod-logs", Schema);

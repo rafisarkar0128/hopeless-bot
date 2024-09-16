@@ -19,14 +19,14 @@ module.exports = {
                     option
                         .setName("role")
                         .setDescription("The role to give.")
-                        .setRequired(true)
+                        .setRequired(true),
                 )
                 .addUserOption((option) =>
                     option
                         .setName("target")
                         .setDescription("The user to give the role.")
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -36,14 +36,14 @@ module.exports = {
                     option
                         .setName("role")
                         .setDescription("The role to remove.")
-                        .setRequired(true)
+                        .setRequired(true),
                 )
                 .addUserOption((option) =>
                     option
                         .setName("target")
                         .setDescription("The user to remove the role.")
-                        .setRequired(true)
-                )
+                        .setRequired(true),
+                ),
         )
         .addSubcommand((option) =>
             option
@@ -56,14 +56,14 @@ module.exports = {
                         .setRequired(true)
                         .addChoices(
                             { name: "Give", value: "give" },
-                            { name: "Remove", value: "remove" }
-                        )
+                            { name: "Remove", value: "remove" },
+                        ),
                 )
                 .addRoleOption((option) =>
                     option
                         .setName("role")
                         .setDescription("The role to gives.")
-                        .setRequired(true)
+                        .setRequired(true),
                 )
                 .addStringOption((option) =>
                     option
@@ -73,9 +73,9 @@ module.exports = {
                         .addChoices(
                             { name: "All Members", value: "all" },
                             { name: "Humans", value: "humans" },
-                            { name: "Bots", value: "bots" }
-                        )
-                )
+                            { name: "Bots", value: "bots" },
+                        ),
+                ),
         ),
     category: "role",
     /**

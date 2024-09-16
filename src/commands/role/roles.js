@@ -28,7 +28,7 @@ module.exports = {
         const embed = new EmbedBuilder().setColor(
             client.colors.array[
                 Math.floor(Math.random() * client.colors.array.length)
-            ]
+            ],
         );
         const roleEmbeds = [];
 

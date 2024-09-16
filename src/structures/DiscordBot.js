@@ -72,7 +72,7 @@ class DiscordBot extends Client {
         };
 
         const files = await glob(
-            path.join(__dirname, "..", dirname, `**/*.js`).replace(/\\/g, "/")
+            path.join(__dirname, "..", dirname, `**/*.js`).replace(/\\/g, "/"),
         );
         const jsFiles = files.filter((file) => path.extname(file) === ".js");
         await Promise.all(jsFiles.map(deleteCashedFile));

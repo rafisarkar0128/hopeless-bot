@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 module.exports = async (
     client,
     commands,
-    options = { debug: false, guildId: null }
+    options = { debug: false, guildId: null },
 ) => {
     const log = (message) => options.debug && console.log(message);
 
@@ -11,14 +11,14 @@ module.exports = async (
         : new Promise((resolve) => client.once("ready", resolve));
     await ready;
     const currentCommands = await client.application.commands.fetch(
-        options.guildId && { guildId: options.guildId }
+        options.guildId && { guildId: options.guildId },
     );
 
     log(`Synchronizing commands...`);
     log(`Currently ${currentCommands.size} commands.`);
 
     const newCommands = commands.filter(
-        (command) => !currentCommands.some((c) => c.name === command.name)
+        (command) => !currentCommands.some((c) => c.name === command.name),
     );
     for (const newCommand of newCommands) {
         await client.application.commands.create(newCommand, options.guildId);
@@ -36,13 +36,13 @@ module.exports = async (
     log(`Deleted ${deletedCommands.length} commands!`);
 
     const updatedCommands = commands.filter((command) =>
-        currentCommands.some((c) => c.name === command.name)
+        currentCommands.some((c) => c.name === command.name),
     );
     let updatedCommandCount = 0;
     for (const updatedCommand of updatedCommands) {
         const newCommand = updatedCommand;
         const previousCommand = currentCommands.find(
-            (c) => c.name === updatedCommand.name
+            (c) => c.name === updatedCommand.name,
         );
         let modified = false;
         if (previousCommand.description !== newCommand.description)
@@ -50,7 +50,7 @@ module.exports = async (
         if (
             !Discord.ApplicationCommand.optionsEqual(
                 previousCommand.options ?? [],
-                newCommand.options ?? []
+                newCommand.options ?? [],
             )
         )
             modified = true;
