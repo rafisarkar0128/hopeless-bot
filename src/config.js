@@ -5,12 +5,15 @@ module.exports = {
         token: process.env.BOT_TOKEN, // bot's token
         secret: process.env.BOT_SECRET, // bot's secret
         invite: process.env.ALLOWED_INVITE, // invite permission
-        footer: `Copyright © 2024 - ${new Date().getFullYear()} @theassassin0128`, // Footer text for embeds
+        footer: `Copyright © 2023 - ${new Date().getFullYear()} @theassassin0128`, // Footer text for embeds
     },
     ownerId: process.env.OWNER_ID, // bot's owner id
     serverId: process.env.SERVER_ID, // bot's test server id
     devs: process.env.DEVELOPER_IDS, // bot developers id
     mongodbUri: process.env.MONGO_URI, // mongodb database connection string
+    antiCrash: {
+        enabled: true,
+    },
     commands: {
         messageCommands: true,
         slashCommands: true,
@@ -48,12 +51,6 @@ module.exports = {
     },
 
     // PLUGINS
-    antiCrash: {
-        enable: true,
-    },
-    logger: {
-        enable: false,
-    },
     auto_moderation: {
         enabled: true,
     },

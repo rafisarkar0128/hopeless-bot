@@ -57,8 +57,8 @@ module.exports = {
                         clientPing <= 200
                             ? "🟢"
                             : clientPing <= 400
-                            ? "🟡"
-                            : "🔴"
+                              ? "🟡"
+                              : "🔴"
                     } ${clientPing}ms\`\`\``,
                     inline: true,
                 },

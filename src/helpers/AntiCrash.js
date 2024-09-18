@@ -1,29 +1,33 @@
 const colors = require("colors");
-const { Logger } = require("../structures/Logger.js");
-const logger = new Logger();
 
-module.exports = () => {
-    //process.on("beforeExit", async (code) => {
-    //  console.log(
-    //    colors.yellow(
-    //      "[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="
-    //    )
-    //  );
-    //  logger.error(code);
-    //  console.log(
-    //    colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ===============")
-    //  );
-    //});
+module.exports = (client) => {
+    process.on("beforeExit", async (code) => {
+        console.log(
+            colors.yellow(
+                "[AntiCrash] | [BeforeExit_Logs] | [Start] : ===============",
+            ),
+        );
+        await client.logger.error(code);
+        console.log(
+            colors.yellow(
+                "[AntiCrash] | [BeforeExit_Logs] | [End] : ===============",
+            ),
+        );
+    });
 
-    //process.on("exit", async (error) => {
-    //  console.log(
-    //    colors.yellow("[AntiCrash] | [Exit_Logs] | [Start]  : ===============")
-    //  );
-    //  logger.error(error);
-    //  console.log(
-    //    colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ===============")
-    //  );
-    //});
+    process.on("exit", async (error) => {
+        console.log(
+            colors.yellow(
+                "[AntiCrash] | [Exit_Logs] | [Start]  : ===============",
+            ),
+        );
+        await client.logger.error(error);
+        console.log(
+            colors.yellow(
+                "[AntiCrash] | [Exit_Logs] | [End] : ===============",
+            ),
+        );
+    });
 
     process.on("unhandledRejection", async (reason, promise) => {
         console.log(
@@ -31,7 +35,7 @@ module.exports = () => {
                 "[AntiCrash] | [UnhandledRejection_Logs] | [start] : ===============",
             ),
         );
-        await logger.error(reason);
+        await client.logger.error(reason);
         console.log(
             colors.yellow(
                 "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ===============",
@@ -45,7 +49,7 @@ module.exports = () => {
                 "[AntiCrash] | [RejectionHandled_Logs] | [Start] : ===============",
             ),
         );
-        await logger.error(promise);
+        await client.logger.error(promise);
         console.log(
             colors.yellow(
                 "[AntiCrash] | [RejectionHandled_Logs] | [End] : ===============",
@@ -59,7 +63,7 @@ module.exports = () => {
                 "[AntiCrash] | [UncaughtException_Logs] | [Start] : ===============",
             ),
         );
-        await logger.error(error);
+        await client.logger.error(error);
         console.log(
             colors.yellow(
                 "[AntiCrash] | [UncaughtException_Logs] | [End] : ===============",
@@ -67,13 +71,13 @@ module.exports = () => {
         );
     });
 
-    process.on("warning", (warning) => {
+    process.on("warning", async (warning) => {
         console.log(
             colors.yellow(
                 "[AntiCrash] | [Warning_Logs] | [Start] : ===============",
             ),
         );
-        logger.warn(warning);
+        await client.logger.warn(warning);
         console.log(
             colors.yellow(
                 "[AntiCrash] | [Warning_Logs] | [End] : ===============",

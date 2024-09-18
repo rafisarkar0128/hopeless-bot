@@ -18,11 +18,8 @@ module.exports = {
             InteractionContextType.Guild,
             InteractionContextType.PrivateChannel,
         ),
-    options: {
-        aliases: ["te", "est", "tt"],
-        minArgsCount: 0,
-        subcommands: [],
-    },
+    aliases: ["te", "est", "tt"],
+    minArgsCount: 0,
     usage: "h!test | /test",
     cooldown: 0,
     category: "TEST",
