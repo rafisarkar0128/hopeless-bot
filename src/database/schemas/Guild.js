@@ -15,7 +15,10 @@ const Schema = new mongoose.Schema({
         leftAt: Date,
         bots: { type: Number, default: 0 },
     },
-    prefix: { type: String, default: config.bot.defaultPrefix },
+    prefix: {
+        type: String,
+        default: config.bot.defaultPrefix,
+    },
     stats: {
         enabled: Boolean,
         xp: {

@@ -26,9 +26,7 @@ module.exports = {
             .sort((a, b) => b.position - a.position)
             .map((r) => `<@&${r.id}>`);
         const embed = new EmbedBuilder().setColor(
-            client.colors.array[
-                Math.floor(Math.random() * client.colors.array.length)
-            ],
+            client.colors.array[Math.floor(Math.random() * client.colors.array.length)],
         );
         const roleEmbeds = [];
 

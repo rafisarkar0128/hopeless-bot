@@ -18,9 +18,7 @@ module.exports = {
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
-                        .setDescription(
-                            "Number of messages to delete. Limit 100.",
-                        )
+                        .setDescription("Number of messages to delete. Limit 100.")
                         .setMaxValue(100)
                         .setMinValue(1)
                         .setRequired(true),
@@ -33,9 +31,7 @@ module.exports = {
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
-                        .setDescription(
-                            "Number of messages to delete. Limit 100.",
-                        )
+                        .setDescription("Number of messages to delete. Limit 100.")
                         .setMaxValue(100)
                         .setMinValue(1)
                         .setRequired(true),
@@ -54,9 +50,7 @@ module.exports = {
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
-                        .setDescription(
-                            "Number of messages to delete. Limit 100.",
-                        )
+                        .setDescription("Number of messages to delete. Limit 100.")
                         .setMaxValue(100)
                         .setMinValue(1)
                         .setRequired(true),
@@ -71,9 +65,7 @@ module.exports = {
                 .addStringOption((option) =>
                     option
                         .setName("message")
-                        .setDescription(
-                            "Message ID/Link to delete messages after",
-                        )
+                        .setDescription("Message ID/Link to delete messages after")
                         .setRequired(true),
                 ),
         )
@@ -84,9 +76,7 @@ module.exports = {
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
-                        .setDescription(
-                            "Number of messages to delete. Limit 100.",
-                        )
+                        .setDescription("Number of messages to delete. Limit 100.")
                         .setMaxValue(100)
                         .setMinValue(1)
                         .setRequired(true),
@@ -99,9 +89,7 @@ module.exports = {
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
-                        .setDescription(
-                            "Number of messages to delete. Limit 100.",
-                        )
+                        .setDescription("Number of messages to delete. Limit 100.")
                         .setMaxValue(100)
                         .setMinValue(1)
                         .setRequired(true),
@@ -114,9 +102,7 @@ module.exports = {
                 .addIntegerOption((option) =>
                     option
                         .setName("count")
-                        .setDescription(
-                            "Number of messages to delete. Limit 100.",
-                        )
+                        .setDescription("Number of messages to delete. Limit 100.")
                         .setMaxValue(100)
                         .setMinValue(1)
                         .setRequired(true),

@@ -18,10 +18,7 @@ module.exports = async (client) => {
                 try {
                     if (command.enabled === false) return;
                     if (command.cooldown) {
-                        client.cooldowns.set(
-                            command.data?.name,
-                            new Collection(),
-                        );
+                        client.cooldowns.set(command.data?.name, new Collection());
                     }
 
                     if (command.aliases?.length) {
@@ -43,23 +40,16 @@ module.exports = async (client) => {
 
         //client.info(colors.yellow("🔎 Checking for changes in Slash Commands"));
 
-        client.logger.write(
-            colors.gray("📩 Fetching slash commands from discord...."),
-        );
+        client.logger.write(colors.gray("📩 Fetching slash commands from discord...."));
         await client.wait(2000);
         const fetchtedCommands = await fetchSlashCommands(client);
         client.logger.write(
-            colors.yellow(
-                `📦 Found ${fetchtedCommands.length} slash commands.`,
-            ),
+            colors.yellow(`📦 Found ${fetchtedCommands.length} slash commands.`),
         );
 
         //console.log(currentSlashCommands.length, currentSlashCommands);
         client.rest.put(
-            Routes.applicationGuildCommands(
-                client.config.bot.id,
-                client.config.serverId,
-            ),
+            Routes.applicationGuildCommands(client.config.bot.id, client.config.serverId),
             {
                 body: SlashCommands,
             },

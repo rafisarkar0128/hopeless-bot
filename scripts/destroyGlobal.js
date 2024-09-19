@@ -46,9 +46,7 @@ async function deleteCommands() {
         i++;
         console.log(
             colors.yellow(
-                `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${
-                    command.id
-                } - ${command.name} `,
+                `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${command.id} - ${command.name} `,
             ),
         );
     });

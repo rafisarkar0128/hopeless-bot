@@ -64,8 +64,13 @@ module.exports = {
     },
 
     getReputationLb: async (limit = 10) => {
-        return Model.find({ "reputation.received": { $gt: 0 } })
-            .sort({ "reputation.received": -1, "reputation.given": 1 })
+        return Model.find({
+            "reputation.received": { $gt: 0 },
+        })
+            .sort({
+                "reputation.received": -1,
+                "reputation.given": 1,
+            })
             .limit(limit)
             .lean();
     },

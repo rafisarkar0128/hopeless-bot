@@ -114,8 +114,7 @@ module.exports = {
     stats: {
         enabled: true,
         xp_cooldown: 10,
-        default_levelup_message:
-            "{member:tag}, You just advanced to **Level {level}**",
+        default_levelup_message: "{member:tag}, You just advanced to **Level {level}**",
     },
 
     suggestion: {

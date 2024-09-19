@@ -4,20 +4,20 @@ const {
     ChatInputCommandInteraction,
     SlashCommandBuilder,
 } = require("discord.js");
-const date = new Date();
+const { DateTime } = require("luxon");
 
+/**
+ * @type {import("@src/index").CommandStructure}
+ */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("roleinfo")
         .setDescription("📖 View any role's information.")
         .setDMPermission(false)
         .addRoleOption((option) =>
-            option
-                .setName("role")
-                .setDescription("Select a role.")
-                .setRequired(true),
+            option.setName("role").setDescription("Select a role.").setRequired(true),
         ),
-    category: "role",
+    category: "INFORMATION",
     usage: "/info role",
     userPermissions: [],
     botPermissions: [],
@@ -47,9 +47,7 @@ module.exports = {
                 },
                 {
                     name: `Position (from top)`,
-                    value: `\`\`\`m\n${
-                        interaction.guild.roles.cache.size - role.position
-                    }\`\`\``,
+                    value: `\`\`\`m\n${interaction.guild.roles.cache.size - role.position}\`\`\``,
                     inline: true,
                 },
                 {
@@ -74,7 +72,10 @@ module.exports = {
                 },
                 {
                     name: "Created On",
-                    value: `\`\`\`\n${moment(role.createdTimestamp).format("")})\`\`\``,
+                    value: `\`\`\`\n${DateTime.fromMillis(role.createdTimestamp).toFormat(
+                        "dd/LL/yy, h:mm:ss a",
+                    )} (${DateTime.fromMillis(role.createdTimestamp).toRelativeCalendar()})\n\`\`\``,
+                    inline: false,
                 },
             )
             .setFooter({

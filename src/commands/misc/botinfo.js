@@ -61,26 +61,19 @@ module.exports = {
             )
             .setTitle(`${client.user.tag}'s Information`)
             .setDescription(
-                [
-                    `**Tag:** ${client.user.tag}`,
-                    `**Version:** ${pkg.version}`,
-                ].join("\n"),
+                [`**Tag:** ${client.user.tag}`, `**Version:** ${pkg.version}`].join("\n"),
             )
             .setThumbnail(client.user.avatarURL())
             .setImage("attachment://profile.png")
             .addFields(
                 {
                     name: `📡 WS Ping`,
-                    value: `\`\`\`yml\n${
-                        wsPing <= 200 ? "🟢" : wsPing <= 400 ? "🟡" : "🔴"
-                    } ${wsPing}ms\`\`\``,
+                    value: `\`\`\`yml\n${wsPing <= 200 ? "🟢" : wsPing <= 400 ? "🟡" : "🔴"} ${wsPing}ms\`\`\``,
                     inline: true,
                 },
                 {
                     name: `🛰 API Ping`,
-                    value: `\`\`\`yml\n${
-                        apiPing <= 200 ? "🟢" : apiPing <= 400 ? "🟡" : "🔴"
-                    } ${apiPing}ms\`\`\``,
+                    value: `\`\`\`yml\n${apiPing <= 200 ? "🟢" : apiPing <= 400 ? "🟡" : "🔴"} ${apiPing}ms\`\`\``,
                     inline: true,
                 },
                 {
@@ -119,9 +112,7 @@ module.exports = {
         const inviteButton = new ButtonBuilder()
             .setLabel("Invite Me")
             .setStyle(ButtonStyle.Link)
-            .setURL(
-                "https://discord.com/oauth2/authorize?client_id=1272259032098275358",
-            );
+            .setURL("https://discord.com/oauth2/authorize?client_id=1272259032098275358");
 
         const websiteButton = new ButtonBuilder()
             .setLabel("Website")

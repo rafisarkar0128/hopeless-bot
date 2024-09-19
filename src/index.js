@@ -1,11 +1,13 @@
 require("dotenv").config();
+require("module-alias/register");
 
 const { GatewayIntentBits, Partials } = require("discord.js");
-const { DiscordBot } = require("./lib/DiscordBot.js");
-const config = require("./config.js");
+const { DiscordBot } = require("@lib/DiscordBot.js");
+const config = require("@src/config.js");
 const colors = require("colors");
-const pkg = require("../package.json");
+const pkg = require("@root/package.json");
 
+// initializing the client
 const client = new DiscordBot({
     intents: [
         GatewayIntentBits.Guilds,
@@ -42,8 +44,41 @@ const client = new DiscordBot({
     restTimeOffset: 0,
 });
 
-if (config.antiCrash.enabled) require("./helpers/AntiCrash.js")(client);
+// function to start everything
+async function start() {
+    if (config.antiCrash.enabled) require("@helpers/AntiCrash.js")(client);
 
-client.startBot();
+    console.clear();
+    await client.logBox(
+        [
+            `Welcome to ${colors.blue(pkg.name.toUpperCase())} github project`,
+            `Running on Node.Js ${colors.green(process.version)}`,
+            `Version ${colors.yellow(pkg.version)}`,
+            `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
+        ].join("\n"),
+        {
+            borderColor: "#00BFFF",
+            textAlignment: "center",
+            padding: {
+                left: 10,
+                right: 10,
+                top: 1,
+                bottom: 1,
+            },
+        },
+    );
 
+    await client.loadEvents("events");
+    await client.login(client.config.bot.token);
+    await client.database.connect(client);
+    await client.wait(2000);
+    client.loadCommands("commands");
+}
+
+// starting the bot
+start().catch((error) => {
+    throw error;
+});
+
+// exporting the client for other use
 module.exports = client;

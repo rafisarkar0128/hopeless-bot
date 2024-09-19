@@ -56,7 +56,10 @@ module.exports = {
                         .setRequired(true)
                         .addChoices(
                             { name: "Give", value: "give" },
-                            { name: "Remove", value: "remove" },
+                            {
+                                name: "Remove",
+                                value: "remove",
+                            },
                         ),
                 )
                 .addRoleOption((option) =>
@@ -71,8 +74,14 @@ module.exports = {
                         .setDescription("Pick a type")
                         .setRequired(true)
                         .addChoices(
-                            { name: "All Members", value: "all" },
-                            { name: "Humans", value: "humans" },
+                            {
+                                name: "All Members",
+                                value: "all",
+                            },
+                            {
+                                name: "Humans",
+                                value: "humans",
+                            },
                             { name: "Bots", value: "bots" },
                         ),
                 ),

@@ -14,9 +14,7 @@ class Logger {
      * @param {String} content
      */
     info(content) {
-        return console.log(
-            `${dt} ${colors.bgCyan(" INFO ")} ${colors.cyan(content)}`,
-        );
+        return console.log(`${dt} ${colors.bgCyan(" INFO ")} ${colors.cyan(content)}`);
     }
 
     /**
@@ -36,18 +34,14 @@ class Logger {
     async error(content, origin, type) {
         const error = content.stack ? content.stack : content;
         await this.client.utils.sendError(content, type, origin);
-        return console.log(
-            `${dt} ${colors.bgRed(" ERROR ")} ${colors.red(`${error}`)}`,
-        );
+        return console.log(`${dt} ${colors.bgRed(" ERROR ")} ${colors.red(`${error}`)}`);
     }
 
     /**
      * @param {String} content
      */
     debug(content) {
-        return console.log(
-            `${dt} ${colors.bgGreen(" DEBUG ")} ${colors.green(content)}`,
-        );
+        return console.log(`${dt} ${colors.bgGreen(" DEBUG ")} ${colors.green(content)}`);
     }
 
     /**
@@ -67,9 +61,7 @@ class Logger {
     log(message) {
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
-        return console.log(
-            `${colors.bgWhite(" DEBUG ")} ${colors.gray(message)}`,
-        );
+        return console.log(`${colors.bgWhite(" DEBUG ")} ${colors.gray(message)}`);
     }
 }
 

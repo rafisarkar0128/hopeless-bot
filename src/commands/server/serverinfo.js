@@ -54,9 +54,7 @@ module.exports = {
                     },
                     {
                         name: `Members [${Members.size}]`,
-                        value: `\`\`\`\nMembers: ${
-                            Members.filter((m) => m.user.bot === false).size
-                        } | Bots: ${
+                        value: `\`\`\`\nMembers: ${Members.filter((m) => m.user.bot === false).size} | Bots: ${
                             Members.filter((m) => m.user.bot === true).size
                         }\n\`\`\``,
                         inline: false,
@@ -98,9 +96,7 @@ module.exports = {
                     },
                     {
                         name: `Server Emojis and Stickers [${Emojis.size + Stickers.size}]`,
-                        value: `\`\`\`\nNormal: ${
-                            Emojis.filter((e) => e.animated === false).size
-                        } | Animated: ${
+                        value: `\`\`\`\nNormal: ${Emojis.filter((e) => e.animated === false).size} | Animated: ${
                             Emojis.filter((e) => e.animated === true).size
                         } | Sticker: ${Stickers.size}\n\`\`\``,
                         inline: false,
@@ -111,9 +107,7 @@ module.exports = {
                             Guild.createdTimestamp,
                         ).toFormat(
                             "dd/LL/yy, h:mm:ss a",
-                        )} (${DateTime.fromMillis(
-                            Guild.createdTimestamp,
-                        ).toRelativeCalendar()})\n\`\`\``,
+                        )} (${DateTime.fromMillis(Guild.createdTimestamp).toRelativeCalendar()})\n\`\`\``,
                         inline: true,
                     },
                 )

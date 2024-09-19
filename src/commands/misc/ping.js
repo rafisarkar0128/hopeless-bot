@@ -30,8 +30,7 @@ module.exports = {
         const minutes = Math.floor(client.uptime / 60000) % 60;
         const seconds = Math.floor(client.uptime / 1000) % 60;
 
-        const clientPing =
-            reply.createdTimestamp - interaction.createdTimestamp;
+        const clientPing = reply.createdTimestamp - interaction.createdTimestamp;
         const wsPing = client.ws.ping;
         const totalPing = wsPing + clientPing;
 
@@ -46,19 +45,13 @@ module.exports = {
             .addFields([
                 {
                     name: `📡 WS Ping`,
-                    value: `\`\`\`yml\n${
-                        wsPing <= 200 ? "🟢" : wsPing <= 400 ? "🟡" : "🔴"
-                    } ${wsPing}ms\`\`\``,
+                    value: `\`\`\`yml\n${wsPing <= 200 ? "🟢" : wsPing <= 400 ? "🟡" : "🔴"} ${wsPing}ms\`\`\``,
                     inline: true,
                 },
                 {
                     name: `🛰 BOT Ping`,
                     value: `\`\`\`yml\n${
-                        clientPing <= 200
-                            ? "🟢"
-                            : clientPing <= 400
-                              ? "🟡"
-                              : "🔴"
+                        clientPing <= 200 ? "🟢" : clientPing <= 400 ? "🟡" : "🔴"
                     } ${clientPing}ms\`\`\``,
                     inline: true,
                 },

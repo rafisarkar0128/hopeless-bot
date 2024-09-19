@@ -63,16 +63,10 @@ module.exports = {
                     invites: {
                         $subtract: [
                             {
-                                $add: [
-                                    "$invite_data.tracked",
-                                    "$invite_data.added",
-                                ],
+                                $add: ["$invite_data.tracked", "$invite_data.added"],
                             },
                             {
-                                $add: [
-                                    "$invite_data.left",
-                                    "$invite_data.fake",
-                                ],
+                                $add: ["$invite_data.left", "$invite_data.fake"],
                             },
                         ],
                     },

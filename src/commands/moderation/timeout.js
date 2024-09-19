@@ -47,34 +47,27 @@ module.exports = {
 
         const errorsArray = [];
         const errorEmbed = new EmbedBuilder()
-            .setAuthor({ name: "Could not timeout member due to" })
+            .setAuthor({
+                name: "Could not timeout member due to",
+            })
             .setColor(client.colors.americanRose);
 
         if (!member) {
             return interaction.followUp({
                 embeds: [
-                    errorEmbed.setDescription(
-                        "Member has most likely left the server.",
-                    ),
+                    errorEmbed.setDescription("Member has most likely left the server."),
                 ],
                 ephemeral: true,
             });
         }
         if (!ms(duration) || ms(duration) > ms("28d")) {
-            errorsArray.push(
-                "The provided time is invalid or over the 28 days limit.",
-            );
+            errorsArray.push("The provided time is invalid or over the 28 days limit.");
         }
         if (!member.moderatable || !member.manageable) {
             errorsArray.push("Selected member is not moderatable by this bot.");
         }
-        if (
-            interaction.member.roles.highest.position <
-            member.roles.highest.position
-        ) {
-            errorsArray.push(
-                "Selected member has a higher role position than you.",
-            );
+        if (interaction.member.roles.highest.position < member.roles.highest.position) {
+            errorsArray.push("Selected member has a higher role position than you.");
         }
         if (errorsArray.length) {
             return interaction.followUp({

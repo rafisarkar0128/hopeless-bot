@@ -6,15 +6,13 @@ const {
     ButtonStyle,
 } = require("discord.js");
 
+/**
+ * @type {import("@src/index").EventStructure}
+ */
 module.exports = {
     name: "messageCreate",
     once: false,
     rest: false,
-    /**
-     * @param {import("../../structures/DiscordBot.js").DiscordBot} client
-     * @param {Message} message
-     * @returns
-     */
     execute: async (client, message) => {
         if (message.author.bot) return;
 
@@ -31,7 +29,7 @@ module.exports = {
                 `I am ${client.user.username}, a bot developed by **<@${client.config.ownerId}>** to manage this server. For help use **\`/help\`**. For more information visit my website.`,
             )
             .setThumbnail(client.user.displayAvatarURL())
-            .setColor(client.randomColor())
+            .setColor(client.utils.getRandomColor())
             .setFooter({
                 text: client.config.bot.footer,
             });
@@ -49,9 +47,7 @@ module.exports = {
         const inviteButton = new ButtonBuilder()
             .setLabel("Invite Me")
             .setStyle(ButtonStyle.Link)
-            .setURL(
-                "https://discord.com/oauth2/authorize?client_id=1272259032098275358",
-            );
+            .setURL("https://discord.com/oauth2/authorize?client_id=1272259032098275358");
 
         const websiteButton = new ButtonBuilder()
             .setLabel("Website")

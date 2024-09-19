@@ -39,15 +39,15 @@ module.exports = {
 
         const errorsArray = [];
         const errorEmbed = new EmbedBuilder()
-            .setAuthor({ name: "Could not untimeout member due to" })
+            .setAuthor({
+                name: "Could not untimeout member due to",
+            })
             .setColor(client.colors.americanRose);
 
         if (!member) {
             return interaction.followUp({
                 embeds: [
-                    errorEmbed.setDescription(
-                        "Member has most likely left the server.",
-                    ),
+                    errorEmbed.setDescription("Member has most likely left the server."),
                 ],
                 ephemeral: true,
             });
@@ -57,13 +57,8 @@ module.exports = {
             errorsArray.push("Selected member is not moderatable by this bot.");
         }
 
-        if (
-            interaction.member.roles.highest.position <
-            member.roles.highest.position
-        ) {
-            errorsArray.push(
-                "Selected member has a higher role position than you.",
-            );
+        if (interaction.member.roles.highest.position < member.roles.highest.position) {
+            errorsArray.push("Selected member has a higher role position than you.");
         }
 
         if (errorsArray.length) {

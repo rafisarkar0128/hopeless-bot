@@ -35,9 +35,7 @@ rl.question(warningMsg, async function (name) {
 
 async function deleteCommands() {
     const guild = await rest.get(Routes.guild(serverId));
-    const commands = await rest.get(
-        Routes.applicationGuildCommands(clientId, serverId),
-    );
+    const commands = await rest.get(Routes.applicationGuildCommands(clientId, serverId));
 
     if (commands?.length === 0) {
         return console.log(
@@ -49,9 +47,7 @@ async function deleteCommands() {
 
     console.log(
         colors.cyan(
-            `✅ Found ${commands.length} guild commands in ${colors.underline(
-                guild.name,
-            )}.\n`,
+            `✅ Found ${commands.length} guild commands in ${colors.underline(guild.name)}.\n`,
         ),
     );
 
@@ -60,9 +56,7 @@ async function deleteCommands() {
         i++;
         console.log(
             colors.yellow(
-                `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${
-                    command.id
-                } - ${command.name} `,
+                `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${command.id} - ${command.name} `,
             ),
         );
     });
@@ -72,8 +66,6 @@ async function deleteCommands() {
     });
 
     return console.log(
-        colors.green(
-            `\n✅ Deleted ${i} commands in ${colors.underline(guild.name)}.`,
-        ),
+        colors.green(`\n✅ Deleted ${i} commands in ${colors.underline(guild.name)}.`),
     );
 }

@@ -3,30 +3,20 @@ const colors = require("colors");
 module.exports = (client) => {
     process.on("beforeExit", async (code) => {
         console.log(
-            colors.yellow(
-                "[AntiCrash] | [BeforeExit_Logs] | [Start] : ===============",
-            ),
+            colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="),
         );
         await client.logger.error(code);
         console.log(
-            colors.yellow(
-                "[AntiCrash] | [BeforeExit_Logs] | [End] : ===============",
-            ),
+            colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ==============="),
         );
     });
 
     process.on("exit", async (error) => {
         console.log(
-            colors.yellow(
-                "[AntiCrash] | [Exit_Logs] | [Start]  : ===============",
-            ),
+            colors.yellow("[AntiCrash] | [Exit_Logs] | [Start]  : ==============="),
         );
         await client.logger.error(error);
-        console.log(
-            colors.yellow(
-                "[AntiCrash] | [Exit_Logs] | [End] : ===============",
-            ),
-        );
+        console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));
     });
 
     process.on("unhandledRejection", async (reason, promise) => {
@@ -73,15 +63,11 @@ module.exports = (client) => {
 
     process.on("warning", async (warning) => {
         console.log(
-            colors.yellow(
-                "[AntiCrash] | [Warning_Logs] | [Start] : ===============",
-            ),
+            colors.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="),
         );
         await client.logger.warn(warning);
         console.log(
-            colors.yellow(
-                "[AntiCrash] | [Warning_Logs] | [End] : ===============",
-            ),
+            colors.yellow("[AntiCrash] | [Warning_Logs] | [End] : ==============="),
         );
     });
 };

@@ -5,7 +5,7 @@ const {
 } = require("discord.js");
 
 /**
- * @type {import("../../structures/CommandStructure.js")}
+ * @type {import("@src/index").CommandStructure}
  */
 module.exports = {
     data: new SlashCommandBuilder()
@@ -32,7 +32,7 @@ module.exports = {
      */
     execute: async (client, interaction, data) => {
         interaction.reply({
-            content: `**Current commands collection size: ${client.commands.size}**`,
+            content: `**\`\`\`m\n${client.utils.timeFormat(client.uptime)}\`\`\`**`,
             ephemeral: true,
         });
     },

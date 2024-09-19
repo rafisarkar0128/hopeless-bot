@@ -27,14 +27,10 @@ module.exports = {
                 ),
         )
         .addSubcommand((option) =>
-            option
-                .setName("delete")
-                .setDescription("Delete the error logging system"),
+            option.setName("delete").setDescription("Delete the error logging system"),
         )
         .addSubcommand((option) =>
-            option
-                .setName("preview")
-                .setDescription("Test the error logging system"),
+            option.setName("preview").setDescription("Test the error logging system"),
         )
         .addSubcommandGroup((option) =>
             option
@@ -43,15 +39,11 @@ module.exports = {
                 .addSubcommand((option) =>
                     option
                         .setName("channel")
-                        .setDescription(
-                            "Update the log channel of error logging system",
-                        )
+                        .setDescription("Update the log channel of error logging system")
                         .addChannelOption((option) =>
                             option
                                 .setName("channel")
-                                .setDescription(
-                                    "The channel to mark as log channel",
-                                )
+                                .setDescription("The channel to mark as log channel")
                                 .addChannelTypes(ChannelType.GuildText)
                                 .setRequired(true),
                         ),
@@ -59,9 +51,7 @@ module.exports = {
                 .addSubcommand((option) =>
                     option
                         .setName("categories")
-                        .setDescription(
-                            "Update categories of the error logging system",
-                        )
+                        .setDescription("Update categories of the error logging system")
                         .addStringOption((option) =>
                             option
                                 .setName("categories")
@@ -97,9 +87,7 @@ module.exports = {
                         .addBooleanOption((option) =>
                             option
                                 .setName("enable")
-                                .setDescription(
-                                    "Enable or disable the category",
-                                )
+                                .setDescription("Enable or disable the category")
                                 .setRequired(true),
                         ),
                 ),

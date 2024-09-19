@@ -44,8 +44,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction
      */
     execute: async (client, interaction) => {
-        const member =
-            interaction.options.getMember("member") || interaction.member;
+        const member = interaction.options.getMember("member") || interaction.member;
         const string = interaction.options.getString("event");
 
         switch (string) {
@@ -64,8 +63,7 @@ module.exports = {
                     client.emit("guildMemberRemove", member);
 
                     interaction.reply({
-                        content:
-                            "Emitted Guild Member Remove event successfully.",
+                        content: "Emitted Guild Member Remove event successfully.",
                         ephemeral: true,
                     });
                 }

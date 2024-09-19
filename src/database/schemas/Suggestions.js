@@ -25,7 +25,10 @@ const Schema = new mongoose.Schema(
                     enum: ["APPROVED", "REJECTED", "DELETED"],
                 },
                 reason: String,
-                timestamp: { type: Date, default: new Date() },
+                timestamp: {
+                    type: Date,
+                    default: new Date(),
+                },
             },
         ],
     },
@@ -53,7 +56,10 @@ module.exports = {
     },
 
     findSuggestion: async (guildId, messageId) => {
-        return Model.findOne({ guild_id: guildId, message_id: messageId });
+        return Model.findOne({
+            guild_id: guildId,
+            message_id: messageId,
+        });
     },
 
     deleteSuggestionDb: async (guildId, messageId, memberId, reason) => {

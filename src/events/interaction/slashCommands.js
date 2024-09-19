@@ -1,8 +1,4 @@
-const {
-    ChatInputCommandInteraction,
-    Client,
-    EmbedBuilder,
-} = require("discord.js");
+const { ChatInputCommandInteraction, Client, EmbedBuilder } = require("discord.js");
 const { onCoolDown } = require("../../utils/cooldown.utils.js");
 
 module.exports = {
@@ -53,9 +49,7 @@ module.exports = {
             }
 
             if (command.userPermissions?.length) {
-                if (
-                    !interaction.member.permissions.has(command.userPermissions)
-                ) {
+                if (!interaction.member.permissions.has(command.userPermissions)) {
                     return interaction.reply({
                         content: `You need \`${command.userPermissions
                             .map((p) => p)
@@ -67,9 +61,7 @@ module.exports = {
 
             if (command.botPermissions?.length) {
                 if (
-                    !interaction.guild.members.me.permissions.has(
-                        command.botPermissions,
-                    )
+                    !interaction.guild.members.me.permissions.has(command.botPermissions)
                 ) {
                     return interaction.reply({
                         content: `I need \`${command.botPermissions

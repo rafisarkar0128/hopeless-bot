@@ -16,9 +16,7 @@ module.exports = {
         .addUserOption((option) =>
             option
                 .setName("member")
-                .setDescription(
-                    "Select a member or leave empty to view your own info.",
-                )
+                .setDescription("Select a member or leave empty to view your own info.")
                 .setRequired(false),
         ),
     category: "server",
@@ -34,8 +32,7 @@ module.exports = {
     execute: async (client, interaction) => {
         await interaction.deferReply();
 
-        const member =
-            interaction.options.getMember("member") || interaction.member;
+        const member = interaction.options.getMember("member") || interaction.member;
 
         const banner = (await member.user.fetch()).bannerURL({
             size: 4096,
@@ -53,31 +50,25 @@ module.exports = {
             name: "profile.png",
         });
 
-        const joinTime = `${DateTime.fromMillis(
-            member.joinedTimestamp,
-        ).toFormat(
+        const joinTime = `${DateTime.fromMillis(member.joinedTimestamp).toFormat(
             "dd/LL/yyyy h:mm:ss",
         )} (${DateTime.fromMillis(member.joinedTimestamp).toRelativeCalendar()})`;
 
         const creationTime = `${DateTime.fromMillis(
             member.user.createdTimestamp,
-        ).toFormat("dd/LL/yyyy h:mm:ss")} (${DateTime.fromMillis(
-            member.user.createdTimestamp,
-        ).toRelativeCalendar()})`;
+        ).toFormat(
+            "dd/LL/yyyy h:mm:ss",
+        )} (${DateTime.fromMillis(member.user.createdTimestamp).toRelativeCalendar()})`;
 
         const Booster = member.premiumSince
-            ? `Since ${DateTime.fromMillis(
-                  member.premiumSinceTimestamp,
-              ).toFormat("LLLL dd, yyyy")}`
+            ? `Since ${DateTime.fromMillis(member.premiumSinceTimestamp).toFormat("LLLL dd, yyyy")}`
             : "No";
 
         const embed = new EmbedBuilder()
             .setTitle("General Information")
             .setColor(member.displayHexColor || client.colors.azure)
             .setDescription(
-                `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${
-                    member.id
-                }> joind as the **${addSuffix(
+                `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${member.id}> joind as the **${addSuffix(
                     await getJoinedPosition(interaction, member.id),
                 )}** member of this server.`,
             )
@@ -192,9 +183,7 @@ async function getJoinedPosition(interaction, id) {
     let guildMembers = await interaction.guild.members.fetch();
     let position =
         Array.from(
-            guildMembers
-                .sort((a, b) => a.joinedTimestamp - b.joinedTimestamp)
-                .keys(),
+            guildMembers.sort((a, b) => a.joinedTimestamp - b.joinedTimestamp).keys(),
         ).indexOf(id) + 1;
     return position;
 }

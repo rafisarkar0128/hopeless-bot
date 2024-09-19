@@ -30,8 +30,7 @@ const Model = mongoose.model("reaction-roles", Schema);
 
 // Cache
 const rrCache = new Map();
-const getKey = (guildId, channelId, messageId) =>
-    `${guildId}|${channelId}|${messageId}`;
+const getKey = (guildId, channelId, messageId) => `${guildId}|${channelId}|${messageId}`;
 
 module.exports = {
     model: Model,
@@ -70,7 +69,9 @@ module.exports = {
         };
 
         // Pull if existing configuration is present
-        await Model.updateOne(filter, { $pull: { roles: { emote } } });
+        await Model.updateOne(filter, {
+            $pull: { roles: { emote } },
+        });
 
         const data = await Model.findOneAndUpdate(
             filter,
