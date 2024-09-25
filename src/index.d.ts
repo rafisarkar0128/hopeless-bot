@@ -1,5 +1,12 @@
-import { APIMessage } from "discord.js";
+import {
+    APIMessage,
+    ApplicationCommand,
+    ApplicationCommandData,
+    ApplicationCommandDataResolvable,
+    ChatInputCommandInteraction,
+} from "discord.js";
 
+// Discord.JS Event Names
 export type EventName =
     | "applicationCommandPermissionsUpdate"
     | "autoModerationActionExecution"
@@ -80,6 +87,8 @@ export type EventName =
     | "warn"
     | "webhooksUpdate"
     | "webhookUpdate";
+
+// Base Event Module Structure
 export interface EventStructure {
     name: EventName;
     once: boolean;
@@ -90,10 +99,13 @@ export interface EventStructure {
     ) => Promise<any>;
 }
 
+// Command Categories
 export type CommandCategory =
     | "ADMIN"
     | "ANIME"
     | "AUTOMOD"
+    | "CONFIG"
+    | "DEVELOPMENT"
     | "ECONOMY"
     | "FUN"
     | "IMAGE"
@@ -101,13 +113,14 @@ export type CommandCategory =
     | "INVITE"
     | "MODERATION"
     | "MUSIC"
-    | "TEST"
     | "NONE"
-    | "OWNER"
     | "SOCIAL"
     | "SUGGESTION"
+    | "TEST"
     | "TICKET"
     | "UTILITY";
+
+// Base Command Structure
 export interface CommandStructure {
     data: import("discord.js").SlashCommandBuilder;
     aliases?: string[];
@@ -116,6 +129,10 @@ export interface CommandStructure {
     cooldown: number;
     category: CommandCategory;
     premium?: boolean;
+    disabled?: boolean;
+    global?: boolean;
+    guildOnly?: boolean;
+    devOnly?: boolean;
     botPermissions?: import("discord.js").PermissionResolvable[];
     userPermissions?: import("discord.js").PermissionResolvable[];
     run: (
@@ -131,6 +148,7 @@ export interface CommandStructure {
     ) => Promise<any>;
 }
 
+// File Exentions
 export type FileExtensions =
     | ".js"
     | ".jsx"
@@ -148,27 +166,33 @@ export type FileExtensions =
     | ".mp4"
     | ".mp3"
     | ".mkv";
+
+// Function loadFiles()
 export type LoadFiles = (dirname: string, ext: FileExtensions) => Promise<string[]>;
 
+// Error Types
 export type ErrorTypes =
     | "error"
     | "event"
     | "command"
     | "internal"
     | "external"
-    | "player";
+    | "player"
+    | "fetch";
+
+// Function sendError() to send error messages
 export type SendError = (
     error: Error,
-    type: ErorTypes,
+    type: ErrorTypes,
     data?: any,
 ) => Promise<void> | Error;
 
+// Type definations for Utils Class
 export type ContainsLink = (text: string) => boolean;
 export type ContainsDiscordInvite = (text: string) => boolean;
 export type GetRandomColor = () => string;
 export type IsHex = (text: string) => boolean;
 export type IsValidColor = (text: string) => boolean;
-
 export type GetRandomInt = (max: number) => number;
 export type DiffHours = (dt2: Date, dt1: Date) => Date;
 export type Timeformat = (timeInSeconds: number) => string;
@@ -177,3 +201,28 @@ export type GetRemainingTime = (timeUntil: Date) => number;
 export type ParsePermissions = (
     permissions: import("discord.js").PermissionResolvable[],
 ) => string;
+export type OnCoolDown = (
+    interaction: ChatInputCommandInteraction,
+    command: CommandStructure,
+) => promise<boolean | number>;
+
+// Fucntion syncCommands() to synchronize Application Commands
+export type SyncCommands = (
+    client: import("@lib/DiscordBot").DiscordBot,
+    Commands: {
+        globalCommands: ApplicationCommandDataResolvable[];
+        guildCommands: ApplicationCommandDataResolvable[];
+    },
+) => Promise<void>;
+
+// Fucntion fetchCommands() to fetch Application Commands
+export type FetchCommands = (client: import("@lib/DiscordBot").DiscordBot) => Promise<{
+    GlobalCommands: ApplicationCommandData[];
+    GuildCommands: ApplicationCommandData[];
+}>;
+
+//
+export type CheckForChanges = (
+    newCommands: ApplicationCommandDataResolvable[],
+    oldCommands: ApplicationCommandData[],
+) => Promise<void>;

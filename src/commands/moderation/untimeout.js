@@ -6,6 +6,7 @@ const {
     EmbedBuilder,
 } = require("discord.js");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("untimeout")
@@ -24,16 +25,20 @@ module.exports = {
                 .setDescription("Reason for the the untimeout.")
                 .setRequired(false),
         ),
-    category: "moderation",
-    usage: "/untimeout",
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/untimeout | {prefix}untimeout",
+    cooldown: 0,
+    category: "MODERATION",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: false,
+    devOnly: false,
     botPermissions: ["ModerateMembers"],
     userPermissions: ["ModerateMembers"],
-    /**
-     *
-     * @param {Client} client
-     * @param {ChatInputCommandInteraction} interaction
-     */
-    execute: async (client, interaction) => {
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         const member = interaction.options.getMember("member");
         const reason = interaction.options.getString("reason");
 

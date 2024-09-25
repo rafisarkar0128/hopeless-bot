@@ -1,7 +1,5 @@
 const { glob } = require("glob");
 const path = require("path");
-const { Colors, ColorArray } = require("../colors.json");
-const { Permissions } = require("../helpers/validations/permissions.js");
 const { EmbedBuilder, WebhookClient } = require("discord.js");
 
 class Utils {
@@ -48,17 +46,19 @@ class Utils {
             : undefined;
 
         const embed = new EmbedBuilder()
-            .setColor(Colors.Wrong)
+            .setColor(this.client.colors.Wrong)
             .setTitle(`**An Error Occoured**`)
             .setDescription(
-                `\`\`\`\n${errStack.length > 4000 ? errStack.substring(length, 4000) + "..." : errStack}\n\`\`\``,
+                `\`\`\`\n${
+                    errStack.length > 4000
+                        ? errStack.substring(length, 4000) + "..."
+                        : errStack
+                }\n\`\`\``,
             )
             .setFooter({
-                text: `Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB CPU: ${(
-                    process.cpuUsage().system /
-                    1024 /
-                    1024
-                ).toFixed(2)}%`,
+                text: `Memory: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
+                    2,
+                )} MB CPU: ${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}%`,
             })
             .setTimestamp();
 
@@ -106,7 +106,9 @@ class Utils {
      * @example client.utils.getRandomColor();
      */
     getRandomColor() {
-        return ColorArray[Math.floor(Math.random() * ColorArray.length)];
+        return this.client.colors.array[
+            Math.floor(Math.random() * this.client.colors.array.length)
+        ];
     }
 
     /** Checks if a string is a valid Hex color
@@ -122,7 +124,7 @@ class Utils {
      * @example client.utils.isValidColor(text);
      */
     isValidColor(text) {
-        if (Colors.indexOf(text) > -1) {
+        if (this.client.colors.indexOf(text) > -1) {
             return true;
         } else return false;
     }
@@ -182,10 +184,35 @@ class Utils {
      * @example client.utils.parsePermissions(permissions)
      */
     parsePermissions(permissions) {
-        const permissionWord = `permission${perms.length > 1 ? "s" : ""}`;
-        return (
-            permissions.map((p) => `\`${Permissions[p]}\``).join(", ") + permissionWord
-        );
+        const permissionWord = ` permission${permissions.length > 1 ? "s" : ""}`;
+        return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
+    }
+
+    /** @type {import("@src/index").OnCoolDown} */
+    async onCoolDown(interaction, command) {
+        const now = Date.now();
+        const timestamps = this.client.cooldowns.get(command.data.name);
+        const cooldownAmount = (command.cooldown || 1) * 1000;
+
+        if (!timestamps) return false;
+
+        if (timestamps.has(interaction.user.id)) {
+            const expirationTime =
+                (await timestamps.get(interaction.user.id)) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeleft = (expirationTime - now) / 1000;
+                return timeleft;
+            } else {
+                await timestamps.set(interaction.user.id, now);
+                setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+                return false;
+            }
+        } else {
+            await timestamps.set(interaction.user.id, now);
+            setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+            return false;
+        }
     }
 }
 

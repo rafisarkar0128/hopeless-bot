@@ -8,6 +8,6 @@ module.exports = {
     once: true,
     rest: false,
     execute: async (client) => {
-        await client.logger.info(`${colors.green(client.user.tag)} is online`);
+        client.logger.info(`${colors.green(client.user.tag)} is online`);
     },
 };

@@ -1,35 +1,32 @@
-const {
-    Client,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    AttachmentBuilder,
-    SlashCommandBuilder,
-} = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder, SlashCommandBuilder } = require("discord.js");
 const { profileImage } = require("discord-arts");
 const { DateTime } = require("luxon");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("memberinfo")
         .setDescription("📖 View your or any member's information.")
-        .setDMPermission(true)
         .addUserOption((option) =>
             option
                 .setName("member")
                 .setDescription("Select a member or leave empty to view your own info.")
                 .setRequired(false),
         ),
-    category: "server",
-    usage: "/memberinfo [member]",
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/memberinfo [member] | {prefix}memeberinfo [member]",
     cooldown: 20,
-    userPermissions: [],
+    category: "INFORMATION",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: true,
+    devOnly: false,
     botPermissions: [],
-    /**
-     *
-     * @param {import("../../structures/DiscordBot.js").DiscordBot} client
-     * @param {ChatInputCommandInteraction} interaction
-     */
-    execute: async (client, interaction) => {
+    userPermissions: [],
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         await interaction.deferReply();
 
         const member = interaction.options.getMember("member") || interaction.member;
@@ -56,19 +53,23 @@ module.exports = {
 
         const creationTime = `${DateTime.fromMillis(
             member.user.createdTimestamp,
-        ).toFormat(
-            "dd/LL/yyyy h:mm:ss",
-        )} (${DateTime.fromMillis(member.user.createdTimestamp).toRelativeCalendar()})`;
+        ).toFormat("dd/LL/yyyy h:mm:ss")} (${DateTime.fromMillis(
+            member.user.createdTimestamp,
+        ).toRelativeCalendar()})`;
 
         const Booster = member.premiumSince
-            ? `Since ${DateTime.fromMillis(member.premiumSinceTimestamp).toFormat("LLLL dd, yyyy")}`
+            ? `Since ${DateTime.fromMillis(member.premiumSinceTimestamp).toFormat(
+                  "LLLL dd, yyyy",
+              )}`
             : "No";
 
         const embed = new EmbedBuilder()
             .setTitle("General Information")
             .setColor(member.displayHexColor || client.colors.azure)
             .setDescription(
-                `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${member.id}> joind as the **${addSuffix(
+                `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${
+                    member.id
+                }> joind as the **${addSuffix(
                     await getJoinedPosition(interaction, member.id),
                 )}** member of this server.`,
             )

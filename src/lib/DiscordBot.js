@@ -1,26 +1,23 @@
-const { Client, Collection, Routes } = require("discord.js");
-const { Colors, ColorArray } = require(`@src/colors.json`);
+const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const colors = require("colors");
-const path = require("path");
+const commandCategories = require("@src/commandCategories.js");
+const syncCommands = require("@helpers/syncCommands");
 
 class DiscordBot extends Client {
-    /** Client Options to use while intializing the this
+    /** Client Options to use while initializing the this
      * @param {import("discord.js").ClientOptions} options
      */
     constructor(options) {
         super(options);
 
         this.config = require(`@src/config.js`);
-        this.colors = Colors;
-        this.colors.array = ColorArray;
+        this.colors = require(`@src/colors.json`);
         this.wait = require("timers/promises").setTimeout;
         this.database = require("@src/database/mongoose.js");
         this.logger = new Logger(this);
         this.utils = new Utils(this);
-        this.getCommands = require("@helpers/getCommands");
-        this.fetchApplicationCommands = require("@helpers/fetchSlashCommands");
 
         /** @type {Collection<string, import("../index").EventStructure>} */
         this.events = new Collection();
@@ -49,6 +46,7 @@ class DiscordBot extends Client {
      * @return {Promise<void>}
      */
     async loadEvents(dirname = "events") {
+        this.logger.info(`started to load event modules`);
         const files = await this.utils.loadFiles(dirname, ".js");
         this.events.clear();
         for (const file of files) {
@@ -58,11 +56,15 @@ class DiscordBot extends Client {
                 const target = event.rest ? this.rest : this;
 
                 this.events.set(file.replace(/\\/g, "/").split("/").pop(), event);
+                console.log(
+                    `[${colors.yellow("EVENT")}] ${colors.cyan("loaded")} ${colors.green(
+                        file.replace(/\\/g, "/").split("/").pop(),
+                    )}`,
+                );
                 target[event.once ? "once" : "on"](event.name, execute);
             } catch (error) {
-                this.utils.sendError(error, {
+                this.utils.sendError(error, "event", {
                     origin: "src/lib/DiscordBot.js",
-                    type: "event",
                 });
                 throw error;
             }
@@ -75,53 +77,57 @@ class DiscordBot extends Client {
      * @return {Promise<void>}
      */
     async loadCommands(dirname) {
-        const { Commands, ApplicationCommands } = await this.getCommands(this, dirname);
+        this.logger.info(colors.cyan(`started to load command modules`));
+        const ApplicationCommands = {
+            globalCommands: new Array(),
+            guildCommands: new Array(),
+        };
+        const files = await this.utils.loadFiles(dirname, ".js");
         this.commands.clear();
 
-        Commands.forEach(
-            /** @param {import("@src/index").CommandStructure} command */
-            async (command) => {
-                try {
-                    if (command.enabled === false) return;
-                    if (command.cooldown) {
-                        this.cooldowns.set(command.data.name, new Collection());
-                    }
+        for (const file of files) {
+            try {
+                /** @type {import("@src/index").CommandStructure} */
+                const command = require(file);
 
-                    if (command.aliases?.length) {
-                        for (const alias of command.aliases) {
-                            this.aliases.set(alias, command.data.name);
-                        }
-                    }
-
-                    this.commands.set(command.data.name, command);
-                } catch (error) {
-                    throw error;
+                if (command.category) {
+                    if (commandCategories[command.category]?.enabled === false) continue;
                 }
-            },
-        );
+
+                if (command.cooldown) {
+                    this.cooldowns.set(command.data.name, new Collection());
+                }
+
+                if (command.aliases?.length) {
+                    for (const alias of command.aliases) {
+                        this.aliases.set(alias, command.data.name);
+                    }
+                }
+
+                this.commands.set(command.data.name, command);
+                console.log(
+                    `[${colors.blue("COMMAND")}] ${colors.cyan("loaded")} ${colors.green(
+                        command.data.name,
+                    )}`,
+                );
+
+                if (command?.data) {
+                    if (command.global) {
+                        ApplicationCommands.globalCommands.push(command.data.toJSON());
+                    } else {
+                        ApplicationCommands.guildCommands.push(command.data.toJSON());
+                    }
+                }
+            } catch (error) {
+                throw error;
+            }
+        }
 
         this.logger.info(
-            colors.blue(`loaded ${colors.yellow(this.commands.size)} command module`),
+            colors.cyan(`loaded ${colors.yellow(this.commands.size)} command modules`),
         );
 
-        this.logger.info(
-            colors.yellow("🔎 Checking for changes in Application Commands"),
-        );
-        this.logger.write(colors.gray("📩 Fetching slash commands from discord"));
-        const fCommands = await this.fetchApplicationCommands(this);
-        await this.wait(2000);
-        this.logger.log(
-            colors.blue(
-                `📦 Found ${colors.yellow(fCommands.length)} application commands`,
-            ),
-        );
-
-        this.rest.put(
-            Routes.applicationGuildCommands(this.config.bot.id, this.config.serverId),
-            {
-                body: ApplicationCommands,
-            },
-        );
+        return syncCommands(this, ApplicationCommands);
     }
 
     /**

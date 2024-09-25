@@ -1,45 +1,93 @@
 module.exports = {
     bot: {
-        defaultPrefix: process.env.DEAFULT_PREFIX, // bot's prefix
-        id: process.env.BOT_ID, // bot's id
-        token: process.env.BOT_TOKEN, // bot's token
-        secret: process.env.BOT_SECRET, // bot's secret
-        invite: process.env.ALLOWED_INVITE, // invite permission
-        footer: `Copyright © 2023 - ${new Date().getFullYear()} @theassassin0128`, // Footer text for embeds
+        defaultPrefix: process.env.DEAFULT_PREFIX,
+        id: process.env.BOT_ID,
+        token: process.env.BOT_TOKEN,
+        secret: process.env.BOT_SECRET,
+        invite: process.env.ALLOWED_INVITE,
+        footer: `Copyright © 2023 - ${new Date().getFullYear()} | @theassassin0128`,
     },
-    ownerId: process.env.OWNER_ID, // bot's owner id
-    serverId: process.env.SERVER_ID, // bot's test server id
-    devs: process.env.DEVELOPER_IDS, // bot developers id
-    mongodbUri: process.env.MONGO_URI, // mongodb database connection string
+    emojis: {
+        normal: {
+            error: "❌",
+            check: "✔️",
+            music: "🎵",
+            volume: "🔉",
+            ball: "🎱",
+            christmas: "🎄",
+            heart: "❤️",
+            paper: "📰",
+            scissors: "✂️",
+            stone: "🪨",
+            pong: "🏓",
+            birthday: "🎂",
+            clock: "⏰",
+            gift: "🎁",
+            medal: "🏅",
+            party: "🎉",
+            info: "ℹ️",
+            arrowDown: "⬇️",
+            arrowUp: "⬆️",
+            dcredits: "💳",
+            tv: "📺",
+            slash: "",
+        },
+        Bot: {
+            add: "📥",
+            info: "ℹ️",
+            min: "🔻",
+        },
+        economy: {
+            pocket: "👛",
+            bank: "🏦",
+            coins: "💰",
+        },
+        music: {
+            next: "⏭️",
+            pause: "⏸️",
+            previous: "⏮️",
+            stop: "⏹️",
+            play: "▶️",
+            resume: "▶️",
+            loop: "🔁",
+            loop2: "🔂",
+            shuffle: "🔀",
+            speedup: "⏩",
+            slowdown: "⏪",
+            queue: "📄",
+            repeat: "🔁",
+        },
+        badges: {
+            bot: "🤖",
+            management: "👑",
+            bug: "🐛",
+            developer: "👨‍💻",
+            supporter: "👨‍🔧",
+            team: "👨‍👩‍👧‍👦",
+            booster: "🚀",
+            partner: "🤝",
+            voter: "🗳️",
+            support: "🔧",
+            moderator: "👮",
+            designer: "🎨",
+            active: "🔥",
+            event: "🎉",
+            vip: "👑",
+            marketing: "📈",
+        },
+        animated: {
+            loading: "🔄️",
+        },
+    },
+    ownerId: process.env.OWNER_ID,
+    serverId: process.env.SERVER_ID,
+    devs: process.env.DEVELOPER_IDS,
+    mongodbUri: process.env.MONGO_URI,
     antiCrash: {
         enabled: true,
     },
-    commands: {
-        messageCommands: true,
-        slashCommands: true,
-        contextMenuCommands: false,
-        modalSubmit: false,
-        globalCommands: false,
-    },
-    emojis: {
-        resume: "▶️",
-        pause: "⏸️",
-        next: "⏭️",
-        previous: "⏮️",
-        stop: "⏹️",
-        loop: "🔁",
-        loop2: "🔂",
-        shuffle: "🔀",
-        speedup: "⏩",
-        slowdown: "⏪",
-        play: "▶️",
-        queue: "📄",
-        repeat: "🔁",
-        error: "❌",
-        success: "✅",
-    },
     links: {
-        suportServer: "https://discord.gg/E6H9VvBdTk",
+        supportServer: "https://discord.gg/E6H9VvBdTk",
     },
     imageLinks: {
         glitch: "https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png",
@@ -51,30 +99,27 @@ module.exports = {
     },
 
     // PLUGINS
-    auto_moderation: {
-        enabled: true,
+    automod: {
+        enabled: false,
     },
     dashboard: {
-        enabled: true,
-        base_url: "https://discord-js-bot.crazyyopppp.repl.co",
-        failure_url: "https://discord-js-bot.crazyyopppp.repl.co",
+        enabled: false,
+        base_url: "",
+        failure_url: "",
         port: "3000",
     },
     economy: {
-        enabled: true,
+        enabled: false,
         currency: "💵",
-        daily_coins: 100,
-        min_beg_amount: 100,
-        max_beg_amount: 2500,
+        daily_coins: 25,
+        min_beg_amount: 10,
+        max_beg_amount: 250,
     },
     music: {
-        enabled: true,
+        enabled: false,
         idle_time: 180000,
         max_search_results: 5,
-        default_source: "YTM", // YT = Youtube, YTM = Youtube Music, SC = SoundCloud
-
-        // Add any number of lavalink nodes here
-        // Refer to https://github.com/freyacodes/Lavalink to host your own lavalink server
+        default_source: "YTM",
         lavalink_nodes: [
             {
                 host: "lavalink.oddcoder.xyz",
@@ -90,7 +135,7 @@ module.exports = {
         reaction: "🎁",
     },
     image: {
-        enabled: true,
+        enabled: false,
         base_api: "https://strangeapi.fun/api",
     },
     moderation: {
@@ -110,22 +155,20 @@ module.exports = {
             //MOVE: colors.Magenta,
         },
     },
-
     stats: {
-        enabled: true,
-        xp_cooldown: 10,
-        default_levelup_message: "{member:tag}, You just advanced to **Level {level}**",
+        enabled: false,
+        xpCoolDown: 10,
+        defaultLevelUpMessage: "{member:tag}, You just advanced to **Level {level}**",
     },
 
     suggestion: {
-        enabled: true, // Should the suggestion system be enabled
+        enabled: false,
         emoji: {
-            up_vote: "⬆️",
-            down_vote: "⬇️",
+            upVote: "⬆️",
+            downVote: "⬇️",
         },
     },
-
     ticket: {
-        enabled: true,
+        enabled: false,
     },
 };

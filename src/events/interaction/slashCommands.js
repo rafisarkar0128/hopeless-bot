@@ -1,75 +1,117 @@
-const { ChatInputCommandInteraction, Client, EmbedBuilder } = require("discord.js");
-const { onCoolDown } = require("../../utils/cooldown.utils.js");
+const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
 
+/** @type {import("@src/index").EventStructure} */
 module.exports = {
     name: "interactionCreate",
     once: false,
     rest: false,
     /**
-     *
-     * @param {import("../../structures/DiscordBot.js").DiscordBot} client
      * @param {ChatInputCommandInteraction} interaction
-     * @returns
      */
     async execute(client, interaction) {
         if (!interaction.isChatInputCommand()) return;
 
-        try {
-            const command = await client.commands.get(interaction.commandName);
+        const { config, colors, utils } = client;
+        const { commandName, user, member, guild } = interaction;
 
+        try {
+            const command = client.commands.get(commandName);
             if (!command) {
                 return interaction.reply({
-                    content: "This command isn't available.",
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(
+                                "**This command isn't available. Try again after sometime.**",
+                            )
+                            .setColor(colors.Wrong),
+                    ],
                     ephemeral: true,
                 });
             }
 
-            if (command.toggleOff) {
+            if (command.disabled) {
                 return interaction.reply({
-                    content: "This command isn't available right now.",
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(
+                                "**This command is disabled by the __Owner__ or __Devs__**.",
+                            )
+                            .setColor(colors.Wrong),
+                    ],
                     ephemeral: true,
                 });
             }
 
-            const cooldown = await onCoolDown(client, interaction, command);
-            if (cooldown && !client.config.devs.includes(interaction.user.id)) {
+            if (command.guildOnly) {
                 return interaction.reply({
-                    content: `Chill! Command in on cooldown.\n\`\`\`m\nWait for ${cooldown} seconds\n\`\`\``,
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(
+                                `**This command can only be used in a __Guild (Discord Server)__**`,
+                            )
+                            .setColor(colors.Wrong),
+                    ],
+                    ephemeral: true,
+                });
+            }
+
+            const cooldown = await utils.onCoolDown(interaction, command);
+            if (cooldown && !config.devs.includes(user.id)) {
+                return interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(
+                                `**Chill! Command in on cool down wait for \`${cooldown}\` seconds**`,
+                            )
+                            .setColor(colors.Wrong),
+                    ],
                     ephemeral: true,
                 });
             }
 
             if (command.devOnly) {
-                if (!client.config.devs.includes(interaction.user.id)) {
+                if (!config.devs.includes(interaction.user.id)) {
                     return interaction.reply({
-                        content: `**Only Devs are allowed to use this command.**`,
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle(
+                                    `**Only Devs are allowed to use this command.**`,
+                                )
+                                .setColor(colors.Wrong),
+                        ],
                         ephemeral: true,
                     });
                 }
             }
 
-            if (command.userPermissions?.length) {
-                if (!interaction.member.permissions.has(command.userPermissions)) {
-                    return interaction.reply({
-                        content: `You need \`${command.userPermissions
-                            .map((p) => p)
-                            .join(", ")}\` permission to use this command.`,
-                        ephemeral: true,
-                    });
-                }
+            if (!member.permissions.has(command.userPermissions)) {
+                return interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(
+                                `**You need \`${utils.parsePermissions(
+                                    command.userPermissions,
+                                )}\` to use this command.**`,
+                            )
+                            .setColor(colors.Wrong),
+                    ],
+                    ephemeral: true,
+                });
             }
 
-            if (command.botPermissions?.length) {
-                if (
-                    !interaction.guild.members.me.permissions.has(command.botPermissions)
-                ) {
-                    return interaction.reply({
-                        content: `I need \`${command.botPermissions
-                            .map((p) => p)
-                            .join(", ")}\` permission to execute this command.`,
-                        ephemeral: true,
-                    });
-                }
+            if (!guild.members.me.permissions.has(command.botPermissions)) {
+                return interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(
+                                `**I need ${utils.parsePermissions(
+                                    command.botPermissions,
+                                )} to execute this command.**`,
+                            )
+                            .setColor(colors.Wrong),
+                    ],
+                    ephemeral: true,
+                });
             }
 
             return command.execute(client, interaction);
@@ -86,17 +128,15 @@ module.exports = {
                 content: `${interaction.user}`,
                 embeds: [
                     new EmbedBuilder()
-                        .setColor(client.colors.StandBy)
-                        .setTitle(
-                            `<:error_logo:1276700084293079161> An error has occured! Try again later!`,
-                        ),
+                        .setColor(colors.StandBy)
+                        .setTitle(`** An error has occurred! Try again later!**`),
                 ],
             });
+
             setTimeout(() => {
                 message.delete();
             }, 9000);
 
-            // /await client.sendErrors(client, interaction, error);
             throw error;
         }
     },

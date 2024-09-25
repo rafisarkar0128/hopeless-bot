@@ -1,27 +1,25 @@
-const {
-    EmbedBuilder,
-    Client,
-    ChatInputCommandInteraction,
-    SlashCommandBuilder,
-} = require("discord.js");
-const { getChannelCountString } = require("../../utils/server.utils.js");
+const { EmbedBuilder, SlashCommandBuilder, ChannelType } = require("discord.js");
 const { DateTime } = require("luxon");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("serverinfo")
-        .setDescription("📖 View the server information.")
-        .setDMPermission(false),
-    category: "server",
-    usage: "/info member",
-    userPermissions: [],
+        .setDescription("📖 View the server information."),
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/info member | {prefix}serverinfo",
+    cooldown: 0,
+    category: "NONE",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: true,
+    devOnly: false,
     botPermissions: [],
-    /**
-     *
-     * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
-     */
-    execute: async (client, interaction) => {
+    userPermissions: [],
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         try {
             const Guild = await interaction.guild.fetch();
             const Owner = await Guild.fetchOwner();
@@ -54,7 +52,9 @@ module.exports = {
                     },
                     {
                         name: `Members [${Members.size}]`,
-                        value: `\`\`\`\nMembers: ${Members.filter((m) => m.user.bot === false).size} | Bots: ${
+                        value: `\`\`\`\nMembers: ${
+                            Members.filter((m) => m.user.bot === false).size
+                        } | Bots: ${
                             Members.filter((m) => m.user.bot === true).size
                         }\n\`\`\``,
                         inline: false,
@@ -95,8 +95,12 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: `Server Emojis and Stickers [${Emojis.size + Stickers.size}]`,
-                        value: `\`\`\`\nNormal: ${Emojis.filter((e) => e.animated === false).size} | Animated: ${
+                        name: `Server Emojis and Stickers [${
+                            Emojis.size + Stickers.size
+                        }]`,
+                        value: `\`\`\`\nNormal: ${
+                            Emojis.filter((e) => e.animated === false).size
+                        } | Animated: ${
                             Emojis.filter((e) => e.animated === true).size
                         } | Sticker: ${Stickers.size}\n\`\`\``,
                         inline: false,
@@ -105,9 +109,9 @@ module.exports = {
                         name: "Server created on (DD/MM/YYYY)",
                         value: `\`\`\`\n${DateTime.fromMillis(
                             Guild.createdTimestamp,
-                        ).toFormat(
-                            "dd/LL/yy, h:mm:ss a",
-                        )} (${DateTime.fromMillis(Guild.createdTimestamp).toRelativeCalendar()})\n\`\`\``,
+                        ).toFormat("dd/LL/yy, h:mm:ss a")} (${DateTime.fromMillis(
+                            Guild.createdTimestamp,
+                        ).toRelativeCalendar()})\n\`\`\``,
                         inline: true,
                     },
                 )
@@ -123,3 +127,21 @@ module.exports = {
         }
     },
 };
+
+async function getChannelCountString(Channels) {
+    const ChannelString = `Categories: ${
+        Channels.filter((c) => c.type === ChannelType.GuildCategory).size
+    } | Text: ${Channels.filter((c) => c.type === ChannelType.GuildText).size} | Voice: ${
+        Channels.filter((c) => c.type === ChannelType.GuildVoice).size
+    } | Announcement: ${
+        Channels.filter((c) => c.type === ChannelType.GuildAnnouncement).size
+    } | Stage: ${
+        Channels.filter((c) => c.type === ChannelType.GuildStageVoice).size
+    } | Forum: ${
+        Channels.filter((c) => c.type === ChannelType.GuildForum).size
+    } | Media: ${
+        Channels.filter((c) => c.type === ChannelType.GuildMedia).size
+    } | Directory: ${Channels.filter((c) => c.type === ChannelType.GuildDirectory).size}`;
+
+    return ChannelString;
+}

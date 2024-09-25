@@ -7,11 +7,11 @@ const {
 } = require("discord.js");
 const ms = require("ms");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("timeout")
         .setDescription("⏰ Restrict a member's ability to communicate.")
-        .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addUserOption((option) =>
             option
@@ -31,16 +31,20 @@ module.exports = {
                 .setDescription("Reason for the the timeout.")
                 .setRequired(false),
         ),
-    category: "moderation",
-    usage: "/timeout",
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/timeout [options] | {prefix}timeout [options]",
+    cooldown: 0,
+    category: "MODERATION",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: false,
+    devOnly: false,
     botPermissions: ["ModerateMembers"],
     userPermissions: ["ModerateMembers"],
-    /**
-     *
-     * @param {Client} client
-     * @param {ChatInputCommandInteraction} interaction
-     */
-    execute: async (client, interaction) => {
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         const member = interaction.options.getMember("member");
         const duration = interaction.options.getString("duration");
         const reason = interaction.options.getString("reason");
@@ -82,9 +86,10 @@ module.exports = {
             return interaction.reply({
                 content: `**✅ @${member.user.username} has been timed out for ${reason}**`,
             });
-        } else
+        } else {
             return interaction.reply({
                 content: `**✅ @${member.user.username} has been timed out!**`,
             });
+        }
     },
 };

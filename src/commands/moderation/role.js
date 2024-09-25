@@ -5,11 +5,11 @@ const {
     Client,
 } = require("discord.js");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("role")
         .setDescription("Give | Remove role(s) from server members")
-        .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
         .addSubcommand((option) =>
             option
@@ -86,11 +86,18 @@ module.exports = {
                         ),
                 ),
         ),
-    category: "role",
-    /**
-     *
-     * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
-     */
-    execute: async (interaction, client) => {},
+    aliases: [],
+    minArgsCount: 0,
+    usage: "",
+    cooldown: 30,
+    category: "MODERATION",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: true,
+    devOnly: true,
+    botPermissions: [],
+    userPermissions: [],
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {},
 };

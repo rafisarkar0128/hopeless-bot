@@ -5,21 +5,25 @@ const {
     ChatInputCommandInteraction,
 } = require("discord.js");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("roles")
-        .setDescription("Get the role list of a server.")
-        .setDMPermission(false),
-    category: "role",
-    usage: "/roles",
-    userPermissions: [],
+        .setDescription("Get the role list of a server."),
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/roles | {prefix}roles",
+    cooldown: 15,
+    category: "INFORMATION",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: true,
+    devOnly: false,
     botPermissions: [],
-    /**
-     *
-     * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
-     */
-    execute: async (client, interaction) => {
+    userPermissions: [],
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         await interaction.deferReply();
 
         const roles = interaction.guild.roles.cache

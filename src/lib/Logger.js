@@ -1,6 +1,6 @@
 const colors = require("colors");
 const { DateTime } = require("luxon");
-const dt = colors.gray(DateTime.now().toFormat("[dd/LL/yyyy - HH:mm:ss]"));
+const dt = colors.gray(DateTime.now().toFormat("dd/LL/yyyy - HH:mm:ss"));
 
 class Logger {
     /**
@@ -14,7 +14,7 @@ class Logger {
      * @param {String} content
      */
     info(content) {
-        return console.log(`${dt} ${colors.bgCyan(" INFO ")} ${colors.cyan(content)}`);
+        return console.log(`[${dt}] [${colors.cyan("INFO")}] ${colors.cyan(content)}`);
     }
 
     /**
@@ -22,26 +22,26 @@ class Logger {
      */
     warn(content) {
         return console.log(
-            `${dt} ${colors.bgYellow(" WARN ")} ${colors.yellow(`${content}`)}`,
+            `[${dt}] [${colors.yellow("WARN")}] ${colors.yellow(`${content}`)}`,
         );
     }
 
     /**
      * @param {Error} content
      * @param {String} origin
-     * @param {String} type
+     * @param {import("@src/index").ErrorTypes} type
      */
-    async error(content, origin, type) {
+    async error(content) {
         const error = content.stack ? content.stack : content;
-        await this.client.utils.sendError(content, type, origin);
-        return console.log(`${dt} ${colors.bgRed(" ERROR ")} ${colors.red(`${error}`)}`);
+        await this.client.utils.sendError(content, "error");
+        return console.log(`[${dt}] [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
     }
 
     /**
      * @param {String} content
      */
     debug(content) {
-        return console.log(`${dt} ${colors.bgGreen(" DEBUG ")} ${colors.green(content)}`);
+        return console.log(`[${dt}] [${colors.green("DEBUG")}] ${colors.green(content)}`);
     }
 
     /**
@@ -50,9 +50,7 @@ class Logger {
     write(message) {
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
-        return process.stdout.write(
-            `${colors.bgWhite(" DEBUG ")} ${colors.gray(message)}`,
-        );
+        return process.stdout.write(message);
     }
 
     /**
@@ -61,7 +59,7 @@ class Logger {
     log(message) {
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
-        return console.log(`${colors.bgWhite(" DEBUG ")} ${colors.gray(message)}`);
+        return console.log(message);
     }
 }
 

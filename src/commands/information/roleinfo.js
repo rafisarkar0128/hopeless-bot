@@ -6,27 +6,28 @@ const {
 } = require("discord.js");
 const { DateTime } = require("luxon");
 
-/**
- * @type {import("@src/index").CommandStructure}
- */
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("roleinfo")
         .setDescription("📖 View any role's information.")
-        .setDMPermission(false)
         .addRoleOption((option) =>
             option.setName("role").setDescription("Select a role.").setRequired(true),
         ),
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/roleinfo [role] | {prefix}roleinfo [role]",
+    cooldown: 0,
     category: "INFORMATION",
-    usage: "/info role",
-    userPermissions: [],
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: false,
+    devOnly: false,
     botPermissions: [],
-    /**
-     *
-     * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
-     */
-    execute: async (client, interaction) => {
+    userPermissions: [],
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         const role = (await interaction.guild.roles.fetch()).get(
             interaction.options.getRole("role").id,
         );
@@ -47,7 +48,9 @@ module.exports = {
                 },
                 {
                     name: `Position (from top)`,
-                    value: `\`\`\`m\n${interaction.guild.roles.cache.size - role.position}\`\`\``,
+                    value: `\`\`\`m\n${
+                        interaction.guild.roles.cache.size - role.position
+                    }\`\`\``,
                     inline: true,
                 },
                 {
@@ -74,7 +77,9 @@ module.exports = {
                     name: "Created On",
                     value: `\`\`\`\n${DateTime.fromMillis(role.createdTimestamp).toFormat(
                         "dd/LL/yy, h:mm:ss a",
-                    )} (${DateTime.fromMillis(role.createdTimestamp).toRelativeCalendar()})\n\`\`\``,
+                    )} (${DateTime.fromMillis(
+                        role.createdTimestamp,
+                    ).toRelativeCalendar()})\n\`\`\``,
                     inline: false,
                 },
             )

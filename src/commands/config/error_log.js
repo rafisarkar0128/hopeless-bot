@@ -5,9 +5,7 @@ const {
     ChannelType,
 } = require("discord.js");
 
-/**
- * @type {import("../../index.d.ts").CommandStructure}
- */
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("error-log")
@@ -92,13 +90,16 @@ module.exports = {
                         ),
                 ),
         ),
-
     aliases: ["errlog", "elog", "error", "logger"],
     minArgsCount: 0,
-    usage: "{prefix}error-log [subcommand] (args)|/error-log [subcommand|subcommandgroup]",
+    usage: "/error-log [subcommand | subcommand group] | {prefix}error-log [subcommand] (args)",
     cooldown: 0,
-    category: "OWNER",
+    category: "CONFIG",
     premium: false,
+    disabled: false,
+    global: false,
+    guildOnly: true,
+    devOnly: true,
     botPermissions: ["ManageChannels", "ManageGuild"],
     userPermissions: ["Administrator"],
     run: async (client, message, args, data) => {

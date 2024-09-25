@@ -1,21 +1,22 @@
 const colors = require("colors");
 
+/** @param {import("@lib/DiscordBot").DiscordBot} client */
 module.exports = (client) => {
     process.on("beforeExit", async (code) => {
         console.log(
             colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="),
         );
-        await client.logger.error(code);
+        console.log(colors.red(code));
         console.log(
             colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ==============="),
         );
     });
 
-    process.on("exit", async (error) => {
+    process.on("exit", async (code) => {
         console.log(
             colors.yellow("[AntiCrash] | [Exit_Logs] | [Start]  : ==============="),
         );
-        await client.logger.error(error);
+        console.log(colors.red(code));
         console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));
     });
 

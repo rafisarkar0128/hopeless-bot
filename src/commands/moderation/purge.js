@@ -1,15 +1,10 @@
-const {
-    SlashCommandBuilder,
-    Client,
-    PermissionFlagsBits,
-    ChatInputCommandInteraction,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("purge")
         .setDescription("🧹 Delete bulk amount of messages.")
-        .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addSubcommand((option) =>
             option
@@ -108,15 +103,18 @@ module.exports = {
                         .setRequired(true),
                 ),
         ),
-    category: "moderation",
-    usage: "/purge [Sub Command]",
+    aliases: [],
+    minArgsCount: 0,
+    usage: "/purge [Sub Command] | {prefix}purge [subcommand]",
+    cooldown: 0,
+    category: "MODERATION",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: false,
+    devOnly: false,
     botPermissions: ["ManageMessages"],
     userPermissions: ["ManageMessages"],
-    cooldown: 20,
-    /**
-     *
-     * @param {ChatInputCommandInteraction} interaction
-     * @param {Client} client
-     */
-    execute: async (client, interaction) => {},
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {},
 };

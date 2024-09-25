@@ -5,12 +5,12 @@ const {
     ChatInputCommandInteraction,
 } = require("discord.js");
 
+/** @type {import("@src/index").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("emit")
         .setDescription("Emit an Event")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-        .setDMPermission(false)
         .addStringOption((option) =>
             option
                 .setName("event")
@@ -18,7 +18,7 @@ module.exports = {
                 .setRequired(true)
                 .setChoices(
                     {
-                        name: "guildMemeberAdd",
+                        name: "guildMemberAdd",
                         value: "add",
                     },
                     {
@@ -33,17 +33,20 @@ module.exports = {
                 .setDescription("Select a member.")
                 .setRequired(false),
         ),
-    category: "development",
-    usage: "/emit",
+    aliases: [],
+    minArgsCount: 0,
+    usage: "",
+    cooldown: 0,
+    category: "DEVELOPMENT",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: true,
+    devOnly: false,
     botPermissions: ["ManageGuild"],
     userPermissions: ["ManageGuild"],
-    devOnly: true,
-    /**
-     *
-     * @param {Client} client
-     * @param {ChatInputCommandInteraction} interaction
-     */
-    execute: async (client, interaction) => {
+    run: async (client, message, args, data) => {},
+    execute: async (client, interaction, data) => {
         const member = interaction.options.getMember("member") || interaction.member;
         const string = interaction.options.getString("event");
 

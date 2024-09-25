@@ -1,4 +1,4 @@
-const config = require("@src/config.js");
+const config = require("./config.js");
 
 module.exports = {
     ADMIN: {
@@ -8,7 +8,7 @@ module.exports = {
     },
     AUTOMOD: {
         name: "Automod",
-        enabled: config.auto_moderation.enabled,
+        enabled: config.automod.enabled,
         image: "https://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Settings-icon.png",
         emoji: "🤖",
     },
@@ -16,6 +16,11 @@ module.exports = {
         name: "Anime",
         image: "https://wallpaperaccess.com/full/5680679.jpg",
         emoji: "🎨",
+    },
+    CONFIG: {
+        name: "Config",
+        image: "",
+        emoji: "⚙️",
     },
     ECONOMY: {
         name: "Economy",
@@ -28,7 +33,7 @@ module.exports = {
         image: "https://icons.iconarchive.com/icons/flameia/aqua-smiles/128/make-fun-icon.png",
         emoji: "😂",
     },
-    GIVEAWAY: {
+    GIVEAWAYS: {
         name: "Giveaway",
         enabled: config.giveaways.enabled,
         image: "https://cdn-icons-png.flaticon.com/512/4470/4470928.png",
@@ -63,8 +68,8 @@ module.exports = {
         image: "https://icons.iconarchive.com/icons/wwalczyszyn/iwindows/256/Music-Library-icon.png",
         emoji: "🎵",
     },
-    OWNER: {
-        name: "Owner",
+    DEVELOPMENT: {
+        name: "Development",
         image: "https://www.pinclipart.com/picdir/middle/531-5318253_web-designing-icon-png-clipart.png",
         emoji: "🤴",
     },
@@ -84,6 +89,11 @@ module.exports = {
         enabled: config.suggestion.enabled,
         image: "https://cdn-icons-png.flaticon.com/512/1484/1484815.png",
         emoji: "📝",
+    },
+    TEST: {
+        name: "Test",
+        image: "",
+        emoji: "🪛",
     },
     TICKET: {
         name: "Ticket",
