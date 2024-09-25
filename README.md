@@ -97,7 +97,7 @@ Written below are some public commands of the bot.
 | invite     | Get a button with embeded invite-link.  |
 | ping       | View bot's ping, response & uptime      |
 | serverinfo | View information about a discord server |
-| userinfo   | View information of a discord user      |
+| memberinfo | View information of a discord user      |
 
 ## 🔗 Useful Links
 
