@@ -19,7 +19,9 @@ module.exports = {
                 type: ActivityType.Watching,
             },
             {
-                name: `With ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} Users.`,
+                name: `With ${client.guilds.cache
+                    .reduce((a, b) => a + b.memberCount, 0)
+                    .toLocaleString()} Users.`,
                 type: ActivityType.Playing,
             },
             {
@@ -28,7 +30,7 @@ module.exports = {
             },
         ];
 
-        client.user.setStatus("idle");
+        client.user.setStatus("online");
 
         let i = 0;
         setInterval(() => {

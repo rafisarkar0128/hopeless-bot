@@ -1,17 +1,15 @@
 const colors = require("colors");
 
 /** @type {import("@src/index").CheckForChanges} */
-module.exports = async (newCommands, oldCommands) => {
-    newCommands.forEach(async (newCommand) => {
-        const oldCommand = oldCommands.find(
-            (command) => command.name === newCommand.name,
-        );
+module.exports = async (newCommand, oldCommand) => {
+    if (!oldCommand?.description === newCommand?.description) return true;
+    if (!(oldCommand.options?.length || 0) === (newCommand.options?.length || 0))
+        return true;
 
-        const change = await changes(newCommand, oldCommand);
-
-        console.log(change);
-    });
+    return false;
 };
+
+function checkForChange(newCommand, oldCommand) {}
 
 const changes = (existingCommand, localCommand) => {
     const areChoicesDifferent = (existingChoices, localChoices) => {
@@ -58,11 +56,7 @@ const changes = (existingCommand, localCommand) => {
         return false;
     };
 
-    if (
-        existingCommand.description !== localCommand.description ||
-        existingCommand.options?.length !== (localCommand.options?.length || 0) ||
-        areOptionsDifferent(existingCommand.options, localCommand.options || [])
-    ) {
+    if (areOptionsDifferent(existingCommand.options, localCommand.options || [])) {
         return true;
     }
 

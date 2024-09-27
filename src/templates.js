@@ -32,3 +32,22 @@ module.exports = {
     rest: false,
     execute: async (client, ...args) => {},
 };
+
+// ContextMenu Structure
+
+const { ContextMenuCommandBuilder, ApplicationCommandType } = require("discord.js");
+
+/** @type {import("@src/index").ContextMenuStructure} */
+module.exports = {
+    data: ContextMenuCommandBuilder(),
+    cooldown: 0,
+    category: "NONE",
+    premium: false,
+    disabled: false,
+    global: true,
+    guildOnly: false,
+    devOnly: false,
+    botPermissions: [],
+    userPermissions: [],
+    execute: async (client, interaction, data) => {},
+};

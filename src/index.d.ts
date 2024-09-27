@@ -4,7 +4,15 @@ import {
     ApplicationCommandData,
     ApplicationCommandDataResolvable,
     ChatInputCommandInteraction,
+    ermissionResolvable,
+    ContextMenuCommandBuilder,
+    SlashCommandBuilder,
+    PermissionResolvable,
+    Message,
+    MessageContextMenuCommandInteraction,
+    UserContextMenuCommandInteraction,
 } from "discord.js";
+import { DiscordBot } from "@lib/DiscordBot";
 
 // Discord.JS Event Names
 export type EventName =
@@ -93,10 +101,7 @@ export interface EventStructure {
     name: EventName;
     once: boolean;
     rest: boolean;
-    execute: (
-        client: import("./lib/DiscordBot").DiscordBot,
-        ...args: any
-    ) => Promise<any>;
+    execute: (client: DiscordBot, ...args: any) => Promise<any>;
 }
 
 // Command Categories
@@ -122,7 +127,7 @@ export type CommandCategory =
 
 // Base Command Structure
 export interface CommandStructure {
-    data: import("discord.js").SlashCommandBuilder;
+    data: ApplicationCommand | SlashCommandBuilder;
     aliases?: string[];
     minArgsCount?: number;
     usage?: string;
@@ -133,17 +138,38 @@ export interface CommandStructure {
     global?: boolean;
     guildOnly?: boolean;
     devOnly?: boolean;
-    botPermissions?: import("discord.js").PermissionResolvable[];
-    userPermissions?: import("discord.js").PermissionResolvable[];
+    botPermissions: PermissionResolvable[];
+    userPermissions: PermissionResolvable[];
     run: (
-        client: import("./lib/DiscordBot").DiscordBot,
-        message: import("discord.js").Message,
+        client: DiscordBot,
+        message: Message,
         args: string[],
         data: Object,
     ) => Promise<any>;
     execute: (
-        client: import("./lib/DiscordBot").DiscordBot,
-        interaction: import("discord.js").ChatInputCommandInteraction,
+        client: DiscordBot,
+        interaction: ChatInputCommandInteraction,
+        data: Object,
+    ) => Promise<any>;
+}
+
+// Base ContextMenu Structure
+export interface ContextMenuStructure {
+    data: ContextMenuCommandBuilder;
+    cooldown: number;
+    category: CommandCategory;
+    premium?: boolean;
+    disabled?: boolean;
+    global?: boolean;
+    guildOnly?: boolean;
+    devOnly?: boolean;
+    botPermissions: PermissionResolvable[];
+    userPermissions: PermissionResolvable[];
+    execute: (
+        client: DiscordBot,
+        interaction:
+            | MessageContextMenuCommandInteraction
+            | UserContextMenuCommandInteraction,
         data: Object,
     ) => Promise<any>;
 }
@@ -198,31 +224,32 @@ export type DiffHours = (dt2: Date, dt1: Date) => Date;
 export type Timeformat = (timeInSeconds: number) => string;
 export type DurationToMillis = (duration: string) => number;
 export type GetRemainingTime = (timeUntil: Date) => number;
-export type ParsePermissions = (
-    permissions: import("discord.js").PermissionResolvable[],
-) => string;
+export type ParsePermissions = (permissions: PermissionResolvable[]) => string;
 export type OnCoolDown = (
     interaction: ChatInputCommandInteraction,
     command: CommandStructure,
 ) => promise<boolean | number>;
 
+// Type Defination
+export type NewCommands = [
+    {
+        data: ApplicationCommandData;
+        disabled: Boolean;
+        global: Boolean;
+    },
+];
+
 // Fucntion syncCommands() to synchronize Application Commands
 export type SyncCommands = (
-    client: import("@lib/DiscordBot").DiscordBot,
-    Commands: {
-        globalCommands: ApplicationCommandDataResolvable[];
-        guildCommands: ApplicationCommandDataResolvable[];
-    },
+    client: DiscordBot,
+    newCommands: NewCommands,
 ) => Promise<void>;
 
 // Fucntion fetchCommands() to fetch Application Commands
-export type FetchCommands = (client: import("@lib/DiscordBot").DiscordBot) => Promise<{
-    GlobalCommands: ApplicationCommandData[];
-    GuildCommands: ApplicationCommandData[];
-}>;
+export type FetchCommands = (client: DiscordBot) => Promise<ApplicationCommandData[]>;
 
-//
+// Fucntion checkForChange() to check for changes in Application Command Data
 export type CheckForChanges = (
-    newCommands: ApplicationCommandDataResolvable[],
-    oldCommands: ApplicationCommandData[],
+    newCommand: ApplicationCommandData,
+    oldCommand: ApplicationCommandData,
 ) => Promise<void>;

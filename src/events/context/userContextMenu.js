@@ -1,79 +1,128 @@
-const { UserContextMenuCommandInteraction, Client } = require("discord.js");
+const { UserContextMenuCommandInteraction } = require("discord.js");
 
+/** @type {import("@src/index").EventStructure} */
 module.exports = {
     name: "interactionCreate",
     once: false,
     rest: false,
     /**
-     *
-     * @param {Client} client
      * @param {UserContextMenuCommandInteraction} interaction
-     * @returns
      */
     async execute(client, interaction) {
         if (!interaction.isUserContextMenuCommand()) return;
 
+        const { config, colors, utils } = client;
+        const { commandName, user, member, guild } = interaction;
+
         try {
-            const command = await client.commands.get(interaction.commandName);
+            const context = client.context.get(commandName);
 
-            if (!command) {
+            const mCommand = new EmbedBuilder()
+                .setTitle("**This command isn't available. Try again after sometime.**")
+                .setColor(colors.Wrong);
+            if (!context) {
                 return interaction.reply({
-                    content: "This command isn't available.",
+                    embeds: [mCommand],
                     ephemeral: true,
                 });
             }
 
-            if (command.toggleOff) {
+            const dCommand = new EmbedBuilder()
+                .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
+                .setColor(colors.Wrong);
+            if (context.disabled) {
                 return interaction.reply({
-                    content: "This command isn't available right now.",
+                    embeds: [dCommand],
                     ephemeral: true,
                 });
             }
 
-            if (command.devOnly) {
-                if (!client.config.devs.includes(interaction.user.id)) {
-                    return interaction.reply({
-                        content: "Only developers can use this command.",
-                        ephemeral: true,
-                    });
-                }
+            const gCommand = new EmbedBuilder()
+                .setTitle(
+                    `**This command can only be used in a __Guild (Discord Server)__**`,
+                )
+                .setColor(colors.Wrong);
+            if (context.guildOnly && !interaction.inGuild()) {
+                return interaction.reply({
+                    embeds: [gCommand],
+                    ephemeral: true,
+                });
             }
 
-            if (command.userPermissions?.length) {
-                if (!interaction.member.permissions.has(command.userPermissions)) {
-                    return interaction.reply({
-                        content: `You need \`${command.userPermissions
-                            .map((p) => p)
-                            .join(", ")}\` permission to use this command.`,
-                        ephemeral: true,
-                    });
-                }
+            const cooldown = await utils.onCoolDown(interaction, context);
+            const cCommand = new EmbedBuilder()
+                .setTitle(
+                    `**Chill! Command in on cool down wait for \`${cooldown}\` seconds**`,
+                )
+                .setColor(colors.Wrong);
+            if (cooldown && !config.devs.includes(user.id)) {
+                return interaction.reply({
+                    embeds: [cCommand],
+                    ephemeral: true,
+                });
             }
 
-            if (command.botPermissions?.length) {
-                if (
-                    !interaction.guild.members.me.permissions.has(command.botPermissions)
-                ) {
-                    return interaction.reply({
-                        content: `I need \`${command.botPermissions
-                            .map((p) => p)
-                            .join(", ")}\` permission to execute this command.`,
-                        ephemeral: true,
-                    });
-                }
+            const dvCommand = new EmbedBuilder()
+                .setTitle(`**Only Devs are allowed to use this command.**`)
+                .setColor(colors.Wrong);
+            if (context.devOnly && !config.devs.includes(user.id)) {
+                return interaction.reply({
+                    embeds: [dvCommand],
+                    ephemeral: true,
+                });
             }
 
-            return command.execute(client, interaction);
+            const uPermission = new EmbedBuilder()
+                .setTitle(
+                    `**You need \`${utils.parsePermissions(
+                        command.userPermissions,
+                    )}\` to use this command.**`,
+                )
+                .setColor(colors.Wrong);
+            if (!member.permissions.has(context?.userPermissions)) {
+                return interaction.reply({
+                    embeds: [uPermission],
+                    ephemeral: true,
+                });
+            }
+
+            const bPermission = new EmbedBuilder()
+                .setTitle(
+                    `**I need ${utils.parsePermissions(
+                        command.botPermissions,
+                    )} to execute this command.**`,
+                )
+                .setColor(colors.Wrong);
+            if (!guild.members.me.permissions.has(context?.botPermissions)) {
+                return interaction.reply({
+                    embeds: [bPermission],
+                    ephemeral: true,
+                });
+            }
+
+            return context.execute(client, interaction);
         } catch (error) {
-            if (interaction.replied) {
-                interaction.editReply({
-                    content: `An error occured while executing the command.`,
-                });
-            } else {
+            const eCommand = new EmbedBuilder()
+                .setColor(colors.StandBy)
+                .setTitle(`** An error has occurred! Try again later!**`);
+
+            if (interaction.isRepliable() || !interaction.replied) {
                 interaction.reply({
-                    content: `An error occured while executing the command.`,
+                    content: `${interaction.user}`,
+                    embeds: [eCommand],
                     ephemeral: true,
                 });
+            }
+
+            if (interaction.replied || interaction.deferred) {
+                const message = await interaction.editReply({
+                    content: `${interaction.user}`,
+                    embeds: [eCommand],
+                });
+
+                setTimeout(() => {
+                    message.delete();
+                }, 9000);
             }
 
             throw error;

@@ -6,15 +6,16 @@ module.exports = async (client) => {
         `[${colors.magenta("FETCHING")}] ${colors.yellow("slash commands from discord")}`,
     );
 
-    const GlobalCommands = new Array();
-    const GuildCommands = new Array();
+    const ApplicationCommands = new Array();
+    let i = 0,
+        g = 0;
 
     try {
         const globalCommands = await client.application.commands.fetch({
             withLocalizations: true,
         });
         globalCommands.forEach((command) => {
-            GlobalCommands.push(command.toJSON());
+            ApplicationCommands.push(command.toJSON()) && i++;
         });
 
         const guildCommands = await client.application.commands.fetch({
@@ -22,24 +23,25 @@ module.exports = async (client) => {
             withLocalizations: true,
         });
         guildCommands.forEach((command) => {
-            GuildCommands.push(command.toJSON());
+            ApplicationCommands.push(command.toJSON()) && g++;
         });
     } catch (error) {
-        client.utils.sendError(error, "fetch", {
-            origin: `src/${__dirname}/${__filename}`,
-        });
-        throw error;
+        console.log(
+            colors.yellow(
+                "[AntiCrash] | [Fetch_Error_Logs] | [Start]  : ===============",
+            ),
+        );
+        console.log(colors.red(error));
+        console.log(
+            colors.yellow("[AntiCrash] | [Fetch_Error_Logs] | [End] : ==============="),
+        );
     }
 
-    await client.wait(2000);
-
     client.logger.log(
-        `[${colors.magenta("FOUND")}] ${colors.cyan(
-            `${colors.yellow(GlobalCommands?.length)} global command & ${colors.yellow(
-                GuildCommands?.length,
-            )} guild command`,
+        `[${colors.magenta("FETCHED")}] ${colors.cyan(
+            `${colors.yellow(i)} global & ${colors.yellow(g)} guild command(s)`,
         )}`,
     );
 
-    return { GlobalCommands, GuildCommands };
+    return ApplicationCommands;
 };

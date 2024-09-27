@@ -66,7 +66,7 @@ module.exports = (client) => {
         console.log(
             colors.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="),
         );
-        await client.logger.warn(warning);
+        client.logger.warn(warning);
         console.log(
             colors.yellow("[AntiCrash] | [Warning_Logs] | [End] : ==============="),
         );
