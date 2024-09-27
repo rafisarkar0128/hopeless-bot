@@ -118,7 +118,7 @@ Thank you for your interest in contributing to Hopeless-Bot! Here are some guide
 3. Create detailed and thorough documentation for any new features or changes.
 4. Write and run tests for your code.
 5. Submit a pull request with your changes.
-   Your contribution will be reviewed, and any necessary feedback or changes will be discussed with you. We appreciate your help in making Lavamusic better!
+   Your contribution will be reviewed, and any necessary feedback or changes will be discussed with you. We appreciate your help in making Hopeless Bot better!
 
 ## 🔐 License
 
@@ -126,10 +126,10 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 
 ## 🫡 Credit
 
--   [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bot.
+-   [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bots.
 -   [@discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) Took inspiration and tried to improve this project.
--   [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got impressed by the use of colors on terminal.
--   [@lavamusic](https://github.com/appujet/lavamusic) The readme.md looks quite good. See the Similarity.
+-   [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got impressed by the use of colors.
+-   [@lavamusic](https://github.com/appujet/lavamusic) The README.md looks quite good. See the Similarity.
 
 [version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
