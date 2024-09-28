@@ -11,6 +11,9 @@ import {
     Message,
     MessageContextMenuCommandInteraction,
     UserContextMenuCommandInteraction,
+    BaseApplicationCommandData,
+    APIApplicationCommandInteractionDataMentionableOption,
+    LocalizationMap,
 } from "discord.js";
 import { DiscordBot } from "@lib/DiscordBot";
 
@@ -134,7 +137,7 @@ export interface CommandStructure {
     cooldown: number;
     category: CommandCategory;
     premium?: boolean;
-    disabled?: boolean;
+    disabled?: { slash: boolean; prefix: boolean };
     global?: boolean;
     guildOnly?: boolean;
     devOnly?: boolean;
@@ -233,8 +236,14 @@ export type OnCoolDown = (
 // Type Defination
 export type NewCommands = [
     {
-        data: ApplicationCommandData;
-        disabled: Boolean;
+        data: SlashCommandBuilder | ContextMenuCommandBuilder;
+        global: Boolean;
+        disabled: boolean;
+    },
+];
+export type OldCommands = [
+    {
+        data: ApplicationCommand;
         global: Boolean;
     },
 ];
@@ -246,10 +255,22 @@ export type SyncCommands = (
 ) => Promise<void>;
 
 // Fucntion fetchCommands() to fetch Application Commands
-export type FetchCommands = (client: DiscordBot) => Promise<ApplicationCommandData[]>;
+export type FetchCommands = (client: DiscordBot) => Promise<OldCommands>;
 
 // Fucntion checkForChange() to check for changes in Application Command Data
 export type CheckForChanges = (
-    newCommand: ApplicationCommandData,
-    oldCommand: ApplicationCommandData,
-) => Promise<void>;
+    oldCommand: ApplicationCommand,
+    newCommand: SlashCommandBuilder | ContextMenuCommandBuilder,
+) => Promise<boolean>;
+
+// Function CheckForChangeInNameLocalization() to check for changes in nameLocalizations
+export type CheckForChangeInNameLocalization = (
+    nameLocalizations: LocalizationMap,
+    name_localizations: LocalizationMap,
+) => Promise<boolean>;
+
+// Function CheckForChangeInDescriptionLocalization() to check for changes in descriptionLocalizations
+export type CheckForChangeInDescriptionLocalization = (
+    descriptionLocalizations: LocalizationMap,
+    description_localizations: LocalizationMap,
+) => Promise<boolean>;

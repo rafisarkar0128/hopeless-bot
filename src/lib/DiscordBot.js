@@ -48,7 +48,7 @@ class DiscordBot extends Client {
      * @return {Promise<void>}
      */
     async loadEvents(dirname = "events") {
-        this.logger.info(`started to load event modules`);
+        this.logger.info(`loading event modules`);
         const errors = new Array();
 
         const files = await this.utils.loadFiles(dirname, ".js");
@@ -81,7 +81,7 @@ class DiscordBot extends Client {
         if (errors.length > 0) {
             console.log(
                 colors.yellow(
-                    "[AntiCrash] | [Event_Error_Logs] | [Start]  : ===============",
+                    "[AntiCrash] | [Event_Error_Logs] | [Start] : ===============",
                 ),
             );
             errors.forEach((error) => {
@@ -104,8 +104,7 @@ class DiscordBot extends Client {
      * @return {Promise<void>}
      */
     async loadCommands(dirname) {
-        this.logger.info(colors.cyan(`started to load command modules`));
-
+        this.logger.info(colors.cyan(`loading command modules`));
         const errors = new Array();
 
         /** @type {import("@src/index").NewCommands} */
@@ -115,7 +114,7 @@ class DiscordBot extends Client {
 
         for (const file of files) {
             try {
-                /** @type {import("@src/index").BaseCommandStructure} */
+                /** @type {import("@src/index").CommandStructure} */
                 const command = require(file);
 
                 if (command.category) {
@@ -141,7 +140,7 @@ class DiscordBot extends Client {
                 newCommands.push({
                     data: command.data.toJSON(),
                     global: command?.global,
-                    disabled: command?.disabled,
+                    disabled: command.disabled.slash,
                 });
 
                 console.log(
@@ -162,7 +161,7 @@ class DiscordBot extends Client {
         if (errors.length > 0) {
             console.log(
                 colors.yellow(
-                    "[AntiCrash] | [Command_Error_Logs] | [Start]  : ===============",
+                    "[AntiCrash] | [Command_Error_Logs] | [Start] : ===============",
                 ),
             );
             errors.forEach((error) => {

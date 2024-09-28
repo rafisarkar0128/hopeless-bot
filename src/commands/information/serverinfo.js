@@ -12,7 +12,7 @@ module.exports = {
     cooldown: 0,
     category: "NONE",
     premium: false,
-    disabled: false,
+    disabled: { slash: false, prefix: false },
     global: true,
     guildOnly: true,
     devOnly: false,

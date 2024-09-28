@@ -21,7 +21,7 @@ module.exports = {
     cooldown: 60,
     category: "UTILITY",
     premium: false,
-    disabled: false,
+    disabled: { slash: false, prefix: false },
     global: true,
     guildOnly: false,
     devOnly: true,

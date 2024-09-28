@@ -6,6 +6,7 @@ module.exports = async (client) => {
         `[${colors.magenta("FETCHING")}] ${colors.yellow("slash commands from discord")}`,
     );
 
+    /** @type {import("@src/index").OldCommands} */
     const ApplicationCommands = new Array();
     let i = 0,
         g = 0;
@@ -15,7 +16,7 @@ module.exports = async (client) => {
             withLocalizations: true,
         });
         globalCommands.forEach((command) => {
-            ApplicationCommands.push(command.toJSON()) && i++;
+            ApplicationCommands.push({ data: command, global: true }) && i++;
         });
 
         const guildCommands = await client.application.commands.fetch({
@@ -23,7 +24,7 @@ module.exports = async (client) => {
             withLocalizations: true,
         });
         guildCommands.forEach((command) => {
-            ApplicationCommands.push(command.toJSON()) && g++;
+            ApplicationCommands.push({ data: command, global: false }) && g++;
         });
     } catch (error) {
         console.log(

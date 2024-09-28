@@ -96,7 +96,7 @@ module.exports = {
     cooldown: 0,
     category: "CONFIG",
     premium: false,
-    disabled: false,
+    disabled: { slash: false, prefix: false },
     global: false,
     guildOnly: true,
     devOnly: true,

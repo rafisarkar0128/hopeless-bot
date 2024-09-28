@@ -14,7 +14,7 @@ module.exports = (client) => {
 
     process.on("exit", async (code) => {
         console.log(
-            colors.yellow("[AntiCrash] | [Exit_Logs] | [Start]  : ==============="),
+            colors.yellow("[AntiCrash] | [Exit_Logs] | [Start] : ==============="),
         );
         console.log(colors.red(code));
         console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));

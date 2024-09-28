@@ -11,7 +11,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("untimeout")
         .setDescription("⏰ Remove timeout from a member.")
-        .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addUserOption((option) =>
             option
@@ -31,7 +30,7 @@ module.exports = {
     cooldown: 0,
     category: "MODERATION",
     premium: false,
-    disabled: false,
+    disabled: { slash: false, prefix: false },
     global: true,
     guildOnly: false,
     devOnly: false,

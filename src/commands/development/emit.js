@@ -10,7 +10,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("emit")
         .setDescription("Emit an Event")
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+        .setDefaultMemberPermissions(
+            PermissionFlagsBits.ManageGuild | PermissionFlagsBits.Administrator,
+        )
         .addStringOption((option) =>
             option
                 .setName("event")
@@ -39,7 +41,7 @@ module.exports = {
     cooldown: 0,
     category: "DEVELOPMENT",
     premium: false,
-    disabled: false,
+    disabled: { slash: false, prefix: false },
     global: true,
     guildOnly: true,
     devOnly: false,
