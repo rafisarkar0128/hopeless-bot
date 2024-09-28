@@ -30,7 +30,7 @@ module.exports = {
             const dCommand = new EmbedBuilder()
                 .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
                 .setColor(colors.Wrong);
-            if (command.disabled) {
+            if (command.disabled.slash) {
                 return interaction.reply({
                     embeds: [dCommand],
                     ephemeral: true,
