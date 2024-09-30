@@ -1,9 +1,9 @@
-const { Client, Collection, ApplicationCommandType } = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const colors = require("colors");
 const commandCategories = require("@src/commandCategories.js");
-const syncCommands = require("@helpers/syncCommands");
+const { syncCommands } = require("@helpers/syncCommands");
 
 class DiscordBot extends Client {
     /** Client Options to use while initializing the client
@@ -104,10 +104,10 @@ class DiscordBot extends Client {
      * @return {Promise<void>}
      */
     async loadCommands(dirname) {
-        this.logger.info(colors.cyan(`loading command modules`));
+        this.logger.info(`loading command modules`);
         const errors = new Array();
 
-        /** @type {import("@src/index").NewCommands} */
+        /** @type {import("@src/index").NewCommand} */
         const newCommands = new Array();
         const files = await this.utils.loadFiles(dirname, ".js");
         this.commands.clear();
@@ -116,6 +116,13 @@ class DiscordBot extends Client {
             try {
                 /** @type {import("@src/index").CommandStructure} */
                 const command = require(file);
+
+                if (
+                    command.disabled === true ||
+                    (command.disabled.slash && command.disabled.prefix)
+                ) {
+                    continue;
+                }
 
                 if (command.category) {
                     if (commandCategories[command.category]?.enabled === false) continue;
@@ -131,17 +138,21 @@ class DiscordBot extends Client {
                     }
                 }
 
-                if (command.data.toJSON().type === ApplicationCommandType.ChatInput) {
+                if (command.data.toJSON().type === 1) {
                     this.commands.set(command.data.name, command);
+                    newCommands.push({
+                        data: command.data.toJSON(),
+                        global: command?.global,
+                        disabled: command.disabled.slash,
+                    });
                 } else {
                     this.context.set(command.data.name, command);
+                    newCommands.push({
+                        data: command.data.toJSON(),
+                        global: command?.global,
+                        disabled: command.disabled,
+                    });
                 }
-
-                newCommands.push({
-                    data: command.data.toJSON(),
-                    global: command?.global,
-                    disabled: command.disabled.slash,
-                });
 
                 console.log(
                     `[${colors.blue("COMMAND")}] ${colors.green(
@@ -175,10 +186,12 @@ class DiscordBot extends Client {
         }
 
         this.logger.info(
-            colors.cyan(`loaded ${colors.yellow(this.commands.size)} command modules`),
+            `loaded ${colors.yellow(
+                this.commands.size + this.context.size,
+            )} command modules`,
         );
 
-        return syncCommands(this, newCommands);
+        return await syncCommands(this, newCommands);
     }
 
     /**

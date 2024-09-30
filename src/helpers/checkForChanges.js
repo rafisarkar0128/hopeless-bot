@@ -1,67 +1,182 @@
 /** @type {import("@src/index").CheckForChanges} */
-module.exports = async (oldCommand, newCommand) => {
-    const { nameLocalizations, descriptionLocalizations } = oldCommand;
-    const { name_localizations, description_localizations } = newCommand;
+async function checkForChange(OldCommand, NewCommand) {
+    const oldCommand = OldCommand.data;
+    const newCommand = NewCommand.data;
 
-    if (nameLocalizations || name_localizations) {
-        return await checkForChangeInNameLocalization(
-            nameLocalizations,
-            name_localizations,
-        );
-    }
-
-    if ((oldCommand.type || newCommand.type) === 1) {
-        if (oldCommand?.description !== newCommand?.description) {
-            return true;
-        }
-
-        if (descriptionLocalizations || description_localizations) {
-            return await checkForChangeInDescriptionLocalization(
-                descriptionLocalizations,
-                description_localizations,
-            );
-        }
-    }
-
-    if (oldCommand?.defaultMemberPermissions || newCommand?.default_member_permissions) {
+    if (oldCommand.nameLocalizations || newCommand.name_localizations) {
         if (
-            oldCommand?.defaultMemberPermissions.toJSON() !==
-            (newCommand?.default_member_permissions || null)
+            await checkForChangeInNameLocalization(
+                oldCommand.nameLocalizations,
+                newCommand.name_localizations,
+            )
         ) {
             return true;
         }
     }
 
+    if ((oldCommand.type || newCommand.type) === 1) {
+        if (oldCommand.description !== newCommand.description) {
+            return true;
+        }
+
+        if (oldCommand.descriptionLocalizations || newCommand.description_localizations) {
+            if (
+                await checkForChangeInDescriptionLocalization(
+                    oldCommand.descriptionLocalizations,
+                    newCommand.description_localizations,
+                )
+            ) {
+                return true;
+            }
+        }
+    }
+
+    if (
+        oldCommand.defaultMemberPermissions !=
+        (newCommand.default_member_permissions || null)
+    ) {
+        return true;
+    }
+
     if (oldCommand.nsfw !== (newCommand.nsfw || false)) return true;
 
-    //if (oldCommand?.contexts || newCommand?.contexts) {
-    //    oldCommand?.contexts.forEach((c) => {
-    //        if (newCommand.contexts.includes(c)) return false;
-    //        else return true;
-    //    });
-    //    return false;
-    //
-    //    if (
-    //        oldCommand?.contexts.flatMap((e) => e) ===
-    //        newCommand?.contexts.flatMap((e) => e)
-    //    ) {
-    //        console.log(oldCommand.contexts);
-    //        console.log(newCommand.contexts);
-    //    }
-    //}
+    if (OldCommand.global || NewCommand.global) {
+        if (oldCommand.contexts || newCommand.contexts) {
+            if (
+                Array.isArray(oldCommand.contexts) &&
+                Array.isArray(newCommand.contexts)
+            ) {
+                if (
+                    oldCommand.contexts.map((c) => c).join("") !==
+                    newCommand.contexts.map((c) => c).join("")
+                ) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
 
-    //if (!oldCommand.options?.length === (newCommand.options?.length || 0)) return true;
+        if (oldCommand.integrationTypes || newCommand.integration_types) {
+            if (!Array.isArray(newCommand.integration_types)) {
+                if (oldCommand.integrationTypes.map((i) => i).join("") !== "0") {
+                    return true;
+                }
+            }
+
+            if (
+                Array.isArray(oldCommand.integrationTypes) &&
+                Array.isArray(newCommand.integration_types)
+            ) {
+                if (
+                    oldCommand.integrationTypes.map((c) => c).join("") !==
+                    newCommand.integration_types.map((c) => c).join("")
+                ) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    if (oldCommand.options || newCommand.options) {
+        if (oldCommand.options.length !== newCommand.options.length) return true;
+
+        if (await checkForChangesinOptions(oldCommand.options, newCommand.options)) {
+            return true;
+        }
+    }
 
     return false;
-};
-
-/*
-{ 
-  options: [],
-  integrationTypes: [ 0 ],
-  contexts: null,
 }
-*/
+
+//options: undefined,
+//channelTypes: undefined,
+
+/** @type {import("@src/index").CheckForChangeInChoices} */
+async function checkForChangeInChoices(oldChoices, newChoices) {
+    for (const newChoice of newChoices) {
+        const oldChoice = oldChoices?.find((choice) => choice.name === newChoice.name);
+
+        if (!oldChoice) return true;
+
+        if (oldChoice.value !== newChoice.value) return true;
+
+        if (oldChoice.nameLocalizations || newChoice.name_localizations) {
+            console.log(oldChoice.nameLocalizations);
+            console.log(newChoice.name_localizations);
+
+            if (
+                await checkForChangeInNameLocalization(
+                    oldChoice.nameLocalizations,
+                    newChoice.name_localizations,
+                )
+            ) {
+                return true;
+            }
+        }
+    }
+}
+
+/** @type {import("@src/index").CheckForChangesinOptions} */
+async function checkForChangesinOptions(oldOptions, newOptions) {
+    for (const newOption of newOptions) {
+        const oldOption = oldOptions.find((option) => option.name === newOption.name);
+
+        if (!oldOption) return true;
+
+        if (oldOption.nameLocalizations || newOption.name_localizations) {
+            if (
+                await checkForChangeInNameLocalization(
+                    oldOption.nameLocalizations,
+                    newOption.name_localizations,
+                )
+            ) {
+                return true;
+            }
+        }
+
+        if (oldOption.description !== newOption.description) return true;
+
+        if (oldOption.descriptionLocalizations || newOption.description_localizations) {
+            if (
+                await checkForChangeInDescriptionLocalization(
+                    oldOption.descriptionLocalizations,
+                    newOption.description_localizations,
+                )
+            ) {
+                return true;
+            }
+        }
+
+        if (oldOption.type !== newOption.type) return true;
+
+        if ((oldOption.required || false) !== (newOption?.required || false)) {
+            return true;
+        }
+
+        if ((oldOption.autocomplete || false) !== (newOption?.autocomplete || false)) {
+            return true;
+        }
+
+        if ((oldOption.minLength || 0) !== (newOption?.min_length || 0)) return true;
+        if ((oldOption.maxLength || 0) !== (newOption?.max_length || 0)) return true;
+
+        if ((oldOption.minValue || 0) !== (newOption.min_value || 0)) return true;
+        if ((oldOption.maxValue || 0) !== (newOption.max_value || 0)) return true;
+
+        if (oldOption.choices || newOption.choices) {
+            if ((oldOption.choices.length || 0) !== (newOption.choices.length || 0)) {
+                return true;
+            }
+
+            if (await checkForChangeInChoices(oldOption.choices, newOption.choices)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 /** @type {import("@src/index").CheckForChangeInNameLocalization} */
 function checkForChangeInNameLocalization(nameLocalizations, name_localizations) {
@@ -97,7 +212,6 @@ function checkForChangeInNameLocalization(nameLocalizations, name_localizations)
     if (nameLocalizations?.vi !== name_localizations?.vi) return true;
     if (nameLocalizations?.["zh-CN"] !== name_localizations?.["zh-CN"]) return true;
     if (nameLocalizations?.["zh-TW"] !== name_localizations?.["zh-TW"]) return true;
-    return false;
 }
 
 /** @type {import("@src/index").CheckForChangeInDescriptionLocalization} */
@@ -153,58 +267,6 @@ function checkForChangeInDescriptionLocalization(
     if (descriptionLocalizations?.["zh-TW"] !== description_localizations?.["zh-TW"]) {
         return true;
     }
-    return false;
 }
 
-const changes = (existingCommand, localCommand) => {
-    const areChoicesDifferent = (existingChoices, localChoices) => {
-        for (const localChoice of localChoices) {
-            const existingChoice = existingChoices?.find(
-                (choice) => choice.name === localChoice.name,
-            );
-
-            if (!existingChoice) {
-                return true;
-            }
-
-            if (localChoice.value !== existingChoice.value) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    const areOptionsDifferent = (existingOptions, localOptions) => {
-        for (const localOption of localOptions) {
-            const existingOption = existingOptions?.find(
-                (option) => option.name === localOption.name,
-            );
-
-            if (!existingOption) {
-                return true;
-            }
-
-            if (
-                localOption.description !== existingOption.description ||
-                localOption.type !== existingOption.type ||
-                (localOption.required || false) !== existingOption.required ||
-                (localOption.choices?.length || 0) !==
-                    (existingOption.choices?.length || 0) ||
-                areChoicesDifferent(
-                    localOption.choices || [],
-                    existingOption.choices || [],
-                )
-            ) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    if (areOptionsDifferent(existingCommand.options, localCommand.options || [])) {
-        return true;
-    }
-
-    return false;
-};
-
+module.exports = { checkForChange };

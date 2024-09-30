@@ -14,7 +14,7 @@ class Logger {
      * @param {String} content
      */
     info(content) {
-        return console.log(`[${dt}] [${colors.cyan("INFO")}] ${colors.cyan(content)}`);
+        return console.log(`[${dt}] [${colors.cyan("INFO")}] ${colors.blue(content)}`);
     }
 
     /**
@@ -31,10 +31,10 @@ class Logger {
      * @param {String} origin
      * @param {import("@src/index").ErrorTypes} type
      */
-    async error(content) {
+    async error(content, type) {
         const error = content.stack ? content.stack : content;
-        await this.client.utils.sendError(content, "error");
-        return console.log(`[${dt}] [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
+        console.log(`[${dt}] [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
+        return this.client.utils.sendError(content, type);
     }
 
     /**

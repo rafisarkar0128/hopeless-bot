@@ -18,7 +18,7 @@ module.exports = {
     cooldown: 0,
     category: "INFORMATION",
     premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: false,
     devOnly: false,

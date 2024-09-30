@@ -1,71 +1,58 @@
 const colors = require("colors");
-const fetchCommands = require("./fetchCommands.js");
-const checkForChange = require("./checkForChanges.js");
+const { fetchCommands } = require("./fetchCommands.js");
+const { checkForChange } = require("./checkForChanges.js");
 
 /** @type {import("@src/index").SyncCommands} */
-module.exports = async (client, newCommands) => {
-    client.logger.info(colors.yellow("synchronizing application commands"));
+async function syncCommands(client, newCommands) {
+    client.logger.info(
+        `${colors.yellow("synchronizing application commands")} (${colors.gray(
+            "This might take time",
+        )})`,
+    );
 
     const errors = new Array();
-    const Guild = await client.guilds.fetch(client.config.serverId);
-    const oldCommands = await fetchCommands(client);
     let i = 0;
+    const { guildId } = client.config;
+    const oldCommands = await fetchCommands(client);
 
-    if (oldCommands.length === 0) {
-        let globalCommands = new Array();
-        let guildCommands = new Array();
-        let clogs = new Array();
-
-        for (const command of newCommands) {
+    const oldSlashCommands = oldCommands.filter((c) => c.data.type === 1);
+    const newSlashCommands = newCommands.filter((c) => c.data.type === 1);
+    try {
+        const commandsToAdd = newSlashCommands.filter(
+            (command) => !oldSlashCommands.some((c) => c.data.name === command.data.name),
+        );
+        for (const command of commandsToAdd) {
             if (command.disabled) continue;
 
             if (command.global) {
-                globalCommands.push(command.data);
+                await client.application.commands.create(command.data);
             } else {
-                guildCommands.push(command.data);
+                await client.application.commands.create(command.data, guildId);
             }
 
-            clogs.push(`[${colors.green("ADDED")}] ${colors.cyan(command.data.name)}`);
+            console.log(`[${colors.green("ADDED")}] ${colors.blue(command.data.name)}`);
+            i++;
         }
 
-        await client.application.commands.set(globalCommands);
-        await Guild.commands.set(guildCommands);
-
-        for (const log of clogs) {
-            console.log(log);
+        const commandsToDelete = oldSlashCommands.filter(
+            (command) => !newSlashCommands.some((c) => c.data.name === command.data.name),
+        );
+        for (const command of commandsToDelete) {
+            //await command.data.delete();
+            console.log(`[${colors.red("DELETED")}] ${colors.cyan(command.data.name)}`);
+            i++;
         }
-    }
 
-    for (const newCommand of newCommands) {
-        try {
+        const commandsToModify = newSlashCommands.filter((command) =>
+            oldSlashCommands.some((c) => c.data.name === command.data.name),
+        );
+        for (const newCommand of commandsToModify) {
             const oldCommand = oldCommands.find(
-                (c) =>
-                    c.data.name == newCommand.data.name &&
-                    c.data.type == newCommand.data.type,
+                (c) => c.data.name === newCommand.data.name,
             );
 
-            if (!oldCommand) {
-                if (newCommand.disabled) continue;
-
-                if (newCommand.global) {
-                    await client.application.commands.create(newCommand.data);
-                } else {
-                    await Guild.commands.create(newCommand.data);
-                }
-
-                i++;
-                console.log(
-                    `[${colors.green("ADDED")}] ${colors.cyan(newCommand.data.name)}`,
-                );
-                continue;
-            }
-
-            if (oldCommand && newCommand.disabled) {
-                if (oldCommand.global) {
-                    await client.application.commands.delete(oldCommand.data.id);
-                } else {
-                    await Guild.commands.delete(oldCommand.data.id);
-                }
+            if (newCommand.disabled) {
+                await oldCommand.data.delete();
 
                 i++;
                 console.log(
@@ -74,11 +61,13 @@ module.exports = async (client, newCommands) => {
                 continue;
             }
 
-            if (oldCommand && (await checkForChange(oldCommand.data, newCommand.data))) {
-                if (newCommand.global) {
+            if (oldCommand.global !== newCommand?.global) {
+                await oldCommand.data.delete();
+
+                if (newCommand?.global) {
                     await client.application.commands.create(newCommand.data);
                 } else {
-                    await Guild.commands.create(newCommand.data);
+                    await client.application.commands.create(newCommand.data, guildId);
                 }
 
                 i++;
@@ -87,17 +76,38 @@ module.exports = async (client, newCommands) => {
                 );
                 continue;
             }
-        } catch (error) {
-            errors.push(error);
+
+            if (await checkForChange(oldCommand, newCommand)) {
+                if (newCommand?.global) {
+                    await client.application.commands.create(newCommand.data);
+                } else {
+                    await client.application.commands.delete(oldCommand.data.id, guildId);
+                }
+
+                i++;
+                console.log(
+                    `[${colors.yellow("MODIFIED")}] ${colors.cyan(newCommand.data.name)}`,
+                );
+                continue;
+            }
         }
+    } catch (error) {
+        errors.push(error);
+    }
+
+    try {
+        const oldContextMenuCommands = oldCommands.filter(
+            (c) => c.data.type === (2 || 3),
+        );
+        const newContextMenuCommands = newCommands.filter(
+            (c) => c.data.type === (2 || 3),
+        );
+    } catch (error) {
+        errors.push(error);
     }
 
     if (i <= 0) {
-        console.log(
-            `[${colors.cyan("INFO")}] ${colors.green(
-                "no changes found in application command data",
-            )}`,
-        );
+        console.log(`[${colors.cyan("INFO")}] ${colors.blue("no changes found")}`);
     }
 
     if (errors.length > 0) {
@@ -117,4 +127,6 @@ module.exports = async (client, newCommands) => {
     }
 
     return client.logger.info(colors.yellow("synchronized application commands"));
-};
+}
+
+module.exports = { syncCommands };

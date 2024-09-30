@@ -12,8 +12,13 @@ import {
     MessageContextMenuCommandInteraction,
     UserContextMenuCommandInteraction,
     BaseApplicationCommandData,
-    APIApplicationCommandInteractionDataMentionableOption,
     LocalizationMap,
+    ApplicationCommandOption,
+    ApplicationCommandOptionData,
+    APIApplicationCommandOption,
+    APIApplicationCommand,
+    APIApplicationCommandOptionChoice,
+    ApplicationCommandOptionChoiceData,
 } from "discord.js";
 import { DiscordBot } from "@lib/DiscordBot";
 
@@ -130,7 +135,7 @@ export type CommandCategory =
 
 // Base Command Structure
 export interface CommandStructure {
-    data: ApplicationCommand | SlashCommandBuilder;
+    data: SlashCommandBuilder;
     aliases?: string[];
     minArgsCount?: number;
     usage?: string;
@@ -210,11 +215,7 @@ export type ErrorTypes =
     | "fetch";
 
 // Function sendError() to send error messages
-export type SendError = (
-    error: Error,
-    type: ErrorTypes,
-    data?: any,
-) => Promise<void> | Error;
+export type SendError = (error: Error, type: ErrorTypes, data?: any) => Promise<void>;
 
 // Type definations for Utils Class
 export type ContainsLink = (text: string) => boolean;
@@ -233,34 +234,30 @@ export type OnCoolDown = (
     command: CommandStructure,
 ) => promise<boolean | number>;
 
-// Type Defination
-export type NewCommands = [
-    {
-        data: SlashCommandBuilder | ContextMenuCommandBuilder;
-        global: Boolean;
-        disabled: boolean;
-    },
-];
-export type OldCommands = [
-    {
-        data: ApplicationCommand;
-        global: Boolean;
-    },
-];
+// Command Types
+export type NewCommand = {
+    data: APIApplicationCommand;
+    global: Boolean;
+    disabled: boolean;
+};
+export type OldCommand = {
+    data: ApplicationCommand;
+    global: Boolean;
+};
 
 // Fucntion syncCommands() to synchronize Application Commands
 export type SyncCommands = (
     client: DiscordBot,
-    newCommands: NewCommands,
+    newCommands: NewCommand[],
 ) => Promise<void>;
 
 // Fucntion fetchCommands() to fetch Application Commands
-export type FetchCommands = (client: DiscordBot) => Promise<OldCommands>;
+export type FetchCommands = (client: DiscordBot) => Promise<OldCommand[]>;
 
 // Fucntion checkForChange() to check for changes in Application Command Data
 export type CheckForChanges = (
-    oldCommand: ApplicationCommand,
-    newCommand: SlashCommandBuilder | ContextMenuCommandBuilder,
+    oldCommand: OldCommand,
+    newCommand: NewCommand,
 ) => Promise<boolean>;
 
 // Function CheckForChangeInNameLocalization() to check for changes in nameLocalizations
@@ -273,4 +270,16 @@ export type CheckForChangeInNameLocalization = (
 export type CheckForChangeInDescriptionLocalization = (
     descriptionLocalizations: LocalizationMap,
     description_localizations: LocalizationMap,
+) => Promise<boolean>;
+
+// Function checkForChangesinOptions() to check for changes in options;
+export type CheckForChangesinOptions = (
+    oldOptions: ApplicationCommandOption[],
+    newOptions: APIApplicationCommandOption[],
+) => Promise<boolean>;
+
+// Function CheckForChangeInChoices() to check for changes in choices;
+export type CheckForChangeInChoices = (
+    oldChoices: ApplicationCommandOptionChoiceData[],
+    newChoices: APIApplicationCommandOptionChoice[],
 ) => Promise<boolean>;

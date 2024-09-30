@@ -1,4 +1,4 @@
-const { UserContextMenuCommandInteraction } = require("discord.js");
+const { UserContextMenuCommandInteraction, EmbedBuilder } = require("discord.js");
 
 /** @type {import("@src/index").EventStructure} */
 module.exports = {
@@ -75,11 +75,11 @@ module.exports = {
             const uPermission = new EmbedBuilder()
                 .setTitle(
                     `**You need \`${utils.parsePermissions(
-                        command.userPermissions,
+                        context.userPermissions,
                     )}\` to use this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (!member.permissions.has(context?.userPermissions)) {
+            if (guild && !member.permissions.has(context?.userPermissions)) {
                 return interaction.reply({
                     embeds: [uPermission],
                     ephemeral: true,
@@ -89,11 +89,11 @@ module.exports = {
             const bPermission = new EmbedBuilder()
                 .setTitle(
                     `**I need ${utils.parsePermissions(
-                        command.botPermissions,
+                        context.botPermissions,
                     )} to execute this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (!guild.members.me.permissions.has(context?.botPermissions)) {
+            if (guild && !guild.members.me.permissions.has(context?.botPermissions)) {
                 return interaction.reply({
                     embeds: [bPermission],
                     ephemeral: true,

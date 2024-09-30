@@ -80,7 +80,7 @@ module.exports = {
         },
     },
     ownerId: process.env.OWNER_ID,
-    serverId: process.env.SERVER_ID,
+    guildId: process.env.SERVER_ID,
     devs: process.env.DEVELOPER_IDS,
     mongodbUri: process.env.MONGO_URI,
     antiCrash: {

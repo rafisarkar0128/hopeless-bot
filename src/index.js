@@ -1,6 +1,7 @@
 require("dotenv").config();
 require("module-alias/register");
 
+const { AntiCrash } = require("@helpers/AntiCrash.js");
 const { GatewayIntentBits, Partials } = require("discord.js");
 const { DiscordBot } = require("@lib/DiscordBot.js");
 const config = require("@root/src/config.js");
@@ -46,7 +47,7 @@ const client = new DiscordBot({
 
 // function to start everything
 async function start() {
-    if (config.antiCrash.enabled) require("@helpers/AntiCrash.js")(client);
+    if (config.antiCrash.enabled) AntiCrash(client);
 
     console.clear();
     await client.logBox(

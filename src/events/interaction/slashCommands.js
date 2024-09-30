@@ -79,7 +79,7 @@ module.exports = {
                     )}\` to use this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (!member.permissions.has(command?.userPermissions)) {
+            if (guild && !member.permissions.has(command?.userPermissions)) {
                 return interaction.reply({
                     embeds: [uPermission],
                     ephemeral: true,
@@ -93,7 +93,7 @@ module.exports = {
                     )} to execute this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (!guild.members.me.permissions.has(command?.botPermissions)) {
+            if (guild && !guild.members.me.permissions.has(command?.botPermissions)) {
                 return interaction.reply({
                     embeds: [bPermission],
                     ephemeral: true,

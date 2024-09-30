@@ -1,3 +1,4 @@
+const colors = require("colors");
 const { glob } = require("glob");
 const path = require("path");
 const { EmbedBuilder, WebhookClient } = require("discord.js");
@@ -62,15 +63,25 @@ class Utils {
             })
             .setTimestamp();
 
-        try {
-            return webhookClient.send({
+        return webhookClient
+            .send({
                 username: this.client.user?.tag || undefined,
                 avatarURL: this.client.user?.avatarURL() || undefined,
                 embeds: [embed],
+            })
+            .catch((error) => {
+                console.log(
+                    colors.yellow(
+                        "[AntiCrash] | [Send_Error_Logs] | [Start] : ===============",
+                    ),
+                );
+                console.log(colors.red(error));
+                console.log(
+                    colors.yellow(
+                        "[AntiCrash] | [Send_Error_Logs] | [End] : ===============",
+                    ),
+                );
             });
-        } catch (error) {
-            throw error;
-        }
     }
 
     /** Checks if a string contains a URL

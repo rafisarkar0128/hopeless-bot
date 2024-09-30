@@ -1,12 +1,12 @@
 const colors = require("colors");
 
 /** @param {import("@lib/DiscordBot").DiscordBot} client */
-module.exports = (client) => {
+function AntiCrash(client) {
     process.on("beforeExit", async (code) => {
         console.log(
             colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="),
         );
-        console.log(colors.red(code));
+        client.logger.error(code);
         console.log(
             colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ==============="),
         );
@@ -16,7 +16,7 @@ module.exports = (client) => {
         console.log(
             colors.yellow("[AntiCrash] | [Exit_Logs] | [Start] : ==============="),
         );
-        console.log(colors.red(code));
+        client.logger.error(code);
         console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));
     });
 
@@ -26,7 +26,7 @@ module.exports = (client) => {
                 "[AntiCrash] | [UnhandledRejection_Logs] | [start] : ===============",
             ),
         );
-        await client.logger.error(reason);
+        await client.logger.error(reason, "unhandledRejection");
         console.log(
             colors.yellow(
                 "[AntiCrash] | [UnhandledRejection_Logs] | [end] : ===============",
@@ -40,7 +40,7 @@ module.exports = (client) => {
                 "[AntiCrash] | [RejectionHandled_Logs] | [Start] : ===============",
             ),
         );
-        await client.logger.error(promise);
+        await client.logger.error(promise, "rejectionHandled");
         console.log(
             colors.yellow(
                 "[AntiCrash] | [RejectionHandled_Logs] | [End] : ===============",
@@ -54,7 +54,7 @@ module.exports = (client) => {
                 "[AntiCrash] | [UncaughtException_Logs] | [Start] : ===============",
             ),
         );
-        await client.logger.error(error);
+        await client.logger.error(error, "uncaughtException");
         console.log(
             colors.yellow(
                 "[AntiCrash] | [UncaughtException_Logs] | [End] : ===============",
@@ -71,4 +71,6 @@ module.exports = (client) => {
             colors.yellow("[AntiCrash] | [Warning_Logs] | [End] : ==============="),
         );
     });
-};
+}
+
+module.exports = { AntiCrash };

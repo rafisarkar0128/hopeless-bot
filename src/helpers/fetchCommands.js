@@ -1,12 +1,16 @@
 const colors = require("colors");
 
 /** @type {import("@src/index").FetchCommands} */
-module.exports = async (client) => {
+async function fetchCommands(client) {
     client.logger.write(
-        `[${colors.magenta("FETCHING")}] ${colors.yellow("slash commands from discord")}`,
+        `[${colors.cyan("INFO")}] ${colors.magenta("fetching")} ${colors.blue(
+            "commands from discord",
+        )}`,
     );
 
-    /** @type {import("@src/index").OldCommands} */
+    await client.wait(2000);
+
+    /** @type {import("@src/index").OldCommand} */
     const ApplicationCommands = new Array();
     let i = 0,
         g = 0;
@@ -20,7 +24,7 @@ module.exports = async (client) => {
         });
 
         const guildCommands = await client.application.commands.fetch({
-            guildId: client.config.serverId,
+            guildId: client.config.guildId,
             withLocalizations: true,
         });
         guildCommands.forEach((command) => {
@@ -39,10 +43,12 @@ module.exports = async (client) => {
     }
 
     client.logger.log(
-        `[${colors.magenta("FETCHED")}] ${colors.cyan(
+        `[${colors.cyan("INFO")}] ${colors.magenta("fetched")} ${colors.blue(
             `${colors.yellow(i)} global & ${colors.yellow(g)} guild command(s)`,
         )}`,
     );
 
     return ApplicationCommands;
-};
+}
+
+module.exports = { fetchCommands };
