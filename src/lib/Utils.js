@@ -184,11 +184,11 @@ class Utils {
      * @type {import("@src/index").GetRemainingTime}
      * @example client.utils.getRemainingTime(timeUntil);
      */
-    getRemainingTime(timeUntil) {
-        const seconds = Math.abs((timeUntil - new Date()) / 1000);
-        const time = Utils.timeformat(seconds);
-        return time;
-    }
+    //getRemainingTime(timeUntil) {
+    //    const seconds = Math.abs((timeUntil - new Date()) / 1000);
+    //    const time = Utils.timeformat(seconds);
+    //    return time;
+    //}
 
     /** Takes a single or array of permissions and returns a formated string
      * @type {import("@src/index").ParsePermissions}
@@ -199,29 +199,21 @@ class Utils {
         return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
     }
 
-    /** @type {import("@src/index").OnCoolDown} */
-    async onCoolDown(interaction, command) {
-        const now = Date.now();
-        const timestamps = this.client.cooldowns.get(command.data.name);
-        const cooldownAmount = (command.cooldown || 1) * 1000;
-
+    /** @type {import("@src/index").GetRemainingTime} */
+    getRemainingTime(timestamps, cooldown, userId) {
         if (!timestamps) return false;
+        const now = Date.now();
 
-        if (timestamps.has(interaction.user.id)) {
-            const expirationTime =
-                (await timestamps.get(interaction.user.id)) + cooldownAmount;
+        if (timestamps.has(userId)) {
+            const expirationTime = timestamps.get(userId) + cooldown;
 
             if (now < expirationTime) {
-                const timeleft = (expirationTime - now) / 1000;
-                return timeleft;
-            } else {
-                await timestamps.set(interaction.user.id, now);
-                setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
-                return false;
+                const remainingTime = (expirationTime - now) / 1000;
+                return remainingTime;
             }
         } else {
-            await timestamps.set(interaction.user.id, now);
-            setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+            timestamps.set(userId, now);
+            setTimeout(() => timestamps.delete(userId), cooldown);
             return false;
         }
     }

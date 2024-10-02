@@ -4,7 +4,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("🏓Replies with an embed containing information."),
+        .setDescription("🏓Pong! Replies with an embed containing ping information."),
     aliases: [],
     minArgsCount: 0,
     usage: "/ping | {prefix}ping",
@@ -27,16 +27,12 @@ module.exports = {
         const minutes = Math.floor(client.uptime / 60000) % 60;
         const seconds = Math.floor(client.uptime / 1000) % 60;
 
-        const clientPing = reply.createdTimestamp - interaction.createdTimestamp;
+        const clientPing = reply.createdTimestamp - message.createdTimestamp;
         const wsPing = client.ws.ping;
 
         const embed = new EmbedBuilder()
             .setTitle("MY RUNTIME STATS")
-            .setColor(
-                client.colors.array[
-                    Math.floor(Math.random() * client.colors.array.length)
-                ],
-            )
+            .setColor(client.utils.getRandomColor())
             .setThumbnail(client.user.displayAvatarURL())
             .addFields([
                 {

@@ -1,6 +1,6 @@
 module.exports = {
     bot: {
-        defaultPrefix: process.env.DEAFULT_PREFIX,
+        defaultPrefix: process.env.DEFAULT_PREFIX,
         id: process.env.BOT_ID,
         token: process.env.BOT_TOKEN,
         secret: process.env.BOT_SECRET,

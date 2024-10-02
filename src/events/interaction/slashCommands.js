@@ -17,57 +17,64 @@ module.exports = {
         try {
             const command = client.commands.get(commandName);
 
-            const mCommand = new EmbedBuilder()
+            const mEmbed = new EmbedBuilder()
                 .setTitle("**This command isn't available. Try again after sometime.**")
                 .setColor(colors.Wrong);
             if (!command) {
                 return interaction.reply({
-                    embeds: [mCommand],
+                    embeds: [mEmbed],
                     ephemeral: true,
                 });
             }
 
-            const dCommand = new EmbedBuilder()
+            const dEmbed = new EmbedBuilder()
                 .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
                 .setColor(colors.Wrong);
-            if (command.disabled.slash) {
+            if (command.disabled.slash && !config.devs.includes(user.id)) {
                 return interaction.reply({
-                    embeds: [dCommand],
+                    embeds: [dEmbed],
                     ephemeral: true,
                 });
             }
 
-            const gCommand = new EmbedBuilder()
+            const dvEmbed = new EmbedBuilder()
+                .setTitle(
+                    `**Only the owner or developers are allowed to use this command.**`,
+                )
+                .setColor(colors.Wrong);
+            if (
+                (command.devOnly || command.category === "DEVELOPMENT") &&
+                !config.devs.includes(user.id)
+            ) {
+                return interaction.reply({
+                    embeds: [dvEmbed],
+                    ephemeral: true,
+                });
+            }
+
+            const gEmbed = new EmbedBuilder()
                 .setTitle(
                     `**This command can only be used in a __Guild (Discord Server)__**`,
                 )
                 .setColor(colors.Wrong);
             if (command.guildOnly && !interaction.inGuild()) {
                 return interaction.reply({
-                    embeds: [gCommand],
+                    embeds: [gEmbed],
                     ephemeral: true,
                 });
             }
 
-            const cooldown = await utils.onCoolDown(interaction, command);
-            const cCommand = new EmbedBuilder()
+            const timestamps = client.cooldowns.get(command.data.name);
+            const cooldown = (command.cooldown || 3) * 1000;
+            const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
+            const cdEmbed = new EmbedBuilder()
                 .setTitle(
-                    `**Chill! Command in on cool down wait for \`${cooldown}\` seconds**`,
+                    `**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`,
                 )
                 .setColor(colors.Wrong);
-            if (cooldown && !config.devs.includes(user.id)) {
+            if (remainingTime && !config.devs.includes(user.id)) {
                 return interaction.reply({
-                    embeds: [cCommand],
-                    ephemeral: true,
-                });
-            }
-
-            const dvCommand = new EmbedBuilder()
-                .setTitle(`**Only Devs are allowed to use this command.**`)
-                .setColor(colors.Wrong);
-            if (command.devOnly && !config.devs.includes(user.id)) {
-                return interaction.reply({
-                    embeds: [dvCommand],
+                    embeds: [cdEmbed],
                     ephemeral: true,
                 });
             }
@@ -79,7 +86,7 @@ module.exports = {
                     )}\` to use this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (guild && !member.permissions.has(command?.userPermissions)) {
+            if (member && !member.permissions.has(command?.userPermissions)) {
                 return interaction.reply({
                     embeds: [uPermission],
                     ephemeral: true,
@@ -93,7 +100,7 @@ module.exports = {
                     )} to execute this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (guild && !guild.members.me.permissions.has(command?.botPermissions)) {
+            if (member && !guild.members.me.permissions.has(command?.botPermissions)) {
                 return interaction.reply({
                     embeds: [bPermission],
                     ephemeral: true,
@@ -102,14 +109,14 @@ module.exports = {
 
             return command.execute(client, interaction);
         } catch (error) {
-            const eCommand = new EmbedBuilder()
+            const eEmbed = new EmbedBuilder()
                 .setColor(colors.StandBy)
                 .setTitle(`** An error has occurred! Try again later!**`);
 
             if (interaction.isRepliable() || !interaction.replied) {
                 interaction.reply({
                     content: `${interaction.user}`,
-                    embeds: [eCommand],
+                    embeds: [eEmbed],
                     ephemeral: true,
                 });
             }
@@ -117,7 +124,7 @@ module.exports = {
             if (interaction.replied || interaction.deferred) {
                 const message = await interaction.editReply({
                     content: `${interaction.user}`,
-                    embeds: [eCommand],
+                    embeds: [eEmbed],
                 });
 
                 setTimeout(() => {

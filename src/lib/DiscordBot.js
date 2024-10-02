@@ -19,16 +19,16 @@ class DiscordBot extends Client {
         this.logger = new Logger(this);
         this.utils = new Utils(this);
 
-        /** @type {Collection<string, import("@src/index").EventStructure>} */
+        /** @type {import("@src/index").EventCollection} */
         this.events = new Collection();
-        /** @type {Collection<string, import("@src/index").CommandStructure>} */
+        /** @type {import("@src/index").CommandCollection} */
         this.commands = new Collection();
-        /** @type {Collection<string, string>} */
+        /** @type {import("@src/index").AliasCollection} */
         this.aliases = new Collection();
-        /** @type {Collection<string, new Collection(string, number)>} */
+        /** @type {import("@src/index").CooldownCollection} */
         this.cooldowns = new Collection();
-        /** @type {Collection<string, import("@src/index").ContextMenuStructure>} */
-        this.context = new Collection();
+        /** @type {import("@src/index").ContextCollection} */
+        this.contexts = new Collection();
 
         // store (alias, arrayIndex) pair
         //this.commandIndex = new Collection();
@@ -146,7 +146,7 @@ class DiscordBot extends Client {
                         disabled: command.disabled.slash,
                     });
                 } else {
-                    this.context.set(command.data.name, command);
+                    this.contexts.set(command.data.name, command);
                     newCommands.push({
                         data: command.data.toJSON(),
                         global: command?.global,
@@ -187,7 +187,7 @@ class DiscordBot extends Client {
 
         this.logger.info(
             `loaded ${colors.yellow(
-                this.commands.size + this.context.size,
+                this.commands.size + this.contexts.size,
             )} command modules`,
         );
 

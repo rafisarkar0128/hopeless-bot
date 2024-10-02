@@ -15,7 +15,7 @@ module.exports = {
         const { commandName, user, member, guild } = interaction;
 
         try {
-            const context = client.context.get(commandName);
+            const context = client.contexts.get(commandName);
 
             const mCommand = new EmbedBuilder()
                 .setTitle("**This command isn't available. Try again after sometime.**")

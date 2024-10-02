@@ -23,9 +23,7 @@ module.exports = {
 
 // Event Structure
 
-/**
- * @type {import("@src/index").EventStructure}
- */
+/** @type {import("@src/index").EventStructure} */
 module.exports = {
     name: "",
     once: false,
@@ -39,7 +37,9 @@ const { ContextMenuCommandBuilder, ApplicationCommandType } = require("discord.j
 
 /** @type {import("@src/index").ContextMenuStructure} */
 module.exports = {
-    data: ContextMenuCommandBuilder(),
+    data: new ContextMenuCommandBuilder().setType(
+        ApplicationCommandType.User || ApplicationCommandType.User, // Either User or Message not both
+    ),
     cooldown: 0,
     category: "NONE",
     premium: false,

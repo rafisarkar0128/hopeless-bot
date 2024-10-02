@@ -19,6 +19,7 @@ import {
     APIApplicationCommand,
     APIApplicationCommandOptionChoice,
     ApplicationCommandOptionChoiceData,
+    Collection,
 } from "discord.js";
 import { DiscordBot } from "@lib/DiscordBot";
 
@@ -182,6 +183,14 @@ export interface ContextMenuStructure {
     ) => Promise<any>;
 }
 
+// Collection Types
+export type TimestampCollection = Collection<string, date>;
+export type EventCollection = Collection<string, EventStructure>;
+export type CommandCollection = Collection<string, CommandStructure>;
+export type AliasCollection = Collection<string, string>;
+export type CooldownCollection = Collection<string, TimestampCollection>;
+export type ContextCollection = Collection<string, ContextMenuStructure>;
+
 // File Exentions
 export type FileExtensions =
     | ".js"
@@ -227,11 +236,11 @@ export type GetRandomInt = (max: number) => number;
 export type DiffHours = (dt2: Date, dt1: Date) => Date;
 export type Timeformat = (timeInSeconds: number) => string;
 export type DurationToMillis = (duration: string) => number;
-export type GetRemainingTime = (timeUntil: Date) => number;
 export type ParsePermissions = (permissions: PermissionResolvable[]) => string;
-export type OnCoolDown = (
-    interaction: ChatInputCommandInteraction,
-    command: CommandStructure,
+export type GetRemainingTime = (
+    timestamps: TimestampCollection,
+    cooldown: number,
+    userId: string,
 ) => promise<boolean | number>;
 
 // Command Types

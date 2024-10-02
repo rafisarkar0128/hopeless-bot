@@ -17,7 +17,7 @@ module.exports = {
     aliases: [],
     minArgsCount: 0,
     usage: "/roleinfo [role] | {prefix}roleinfo [role]",
-    cooldown: 0,
+    cooldown: 15,
     category: "INFORMATION",
     premium: false,
     disabled: { slash: false, prefix: false },
