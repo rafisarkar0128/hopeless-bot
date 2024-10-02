@@ -31,9 +31,10 @@
 
 ## 💡 Features
 
-1. Includes an advance command and Event Handler.
-1. Includes error logging system.
-1. Includes a validator. (Still in development)
+1. **Advance command and Event Handler**
+1. **Advance command synchronizer**
+1. **Error logging system**
+1. **Validator. (Still in development)**
 
 ## ❗Prerequisites❗
 
@@ -72,10 +73,9 @@ Before starting with the **SETUP**, you need to have the following:
 
 **Will be updated soon**
 
-### NOTE: This might get updated anytime.
-
--   By default, the bot loads slash commands to a single server. To load slash commands to all servers, go to `config.js`, in `interactions` change value of `global` to `true`. This will make sure that the slash commands are available in all servers.
--   Sharding is not recommended for bots that are in less than 2,000 servers. Sharding is disabled by default. To enable sharding, go to `config.js`, in `sharding` change value of `enabled` to `true`.
+> [!NOTE]
+>
+> By default, the bot will make most slash & contextmenu commands available for every server. To load slash commands to a private server, go to a command file, change value of `global` to `false`.
 
 ### **Need help with setup?**
 
@@ -85,19 +85,20 @@ Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help in the
 
 [`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
 
-> **Caution** : use hex color code for the colors. Use the colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) which has more than 100 HTML Hex Color Codes.
+> [!IMPORTANT]
+> Use hex color code for Embed colors. Use colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) through `client.colors.(Color)`
 
 ## Commands
 
 Written below are some public commands of the bot.
 
-| Name       | description                             |
-| ---------- | --------------------------------------- |
-| botinfo    | View bot's status & runtime status      |
-| invite     | Get a button with embeded invite-link.  |
-| ping       | View bot's ping, response & uptime      |
-| serverinfo | View information about a discord server |
-| memberinfo | View information of a discord user      |
+| Name        | description                             |
+| ----------- | --------------------------------------- |
+| /botinfo    | View bot's status & runtime status      |
+| /invite     | Get a button with embeded invite-link.  |
+| /ping       | View bot's ping, response & uptime      |
+| /serverinfo | View information about a discord server |
+| /memberinfo | View information of a discord user      |
 
 ## 🔗 Useful Links
 
@@ -128,8 +129,10 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 
 -   [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bots.
 -   [@discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) Took inspiration and tried to improve this project.
--   [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got impressed by the use of colors.
+-   [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got idea to use [colors](https://www.npmjs.com/package/colors) in `console.log()`.
 -   [@lavamusic](https://github.com/appujet/lavamusic) The README.md looks quite good. See the Similarity.
+-   [@UnderCtrl](https://www.youtube.com/@UnderCtrl) Got the initial idea for SyncCommand feature
+-   [@Bord-Pi](https://github.com/thomasbnt/Bord-Pi) Solved some problems of SyncCommand feature from [A post on CodeDev](https://dev.to/mrrobot/creating-a-discord-bot-with-slash-commands-51fa)
 
 [version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge

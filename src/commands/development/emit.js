@@ -1,8 +1,8 @@
 const {
     SlashCommandBuilder,
     PermissionFlagsBits,
-    Client,
-    ChatInputCommandInteraction,
+    InteractionContextType,
+    ApplicationIntegrationType,
 } = require("discord.js");
 
 /** @type {import("@src/index").CommandStructure} */
@@ -10,9 +10,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("emit")
         .setDescription("Emit an Event")
-        .setDefaultMemberPermissions(
-            PermissionFlagsBits.ManageGuild | PermissionFlagsBits.Administrator,
-        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+        .setContexts(InteractionContextType.Guild)
+        .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
         .addStringOption((option) =>
             option
                 .setName("event")
@@ -44,7 +44,7 @@ module.exports = {
     disabled: { slash: false, prefix: false },
     global: true,
     guildOnly: true,
-    devOnly: false,
+    devOnly: true,
     botPermissions: ["ManageGuild"],
     userPermissions: ["ManageGuild"],
     run: async (client, message, args, data) => {},

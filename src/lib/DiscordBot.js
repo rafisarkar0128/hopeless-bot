@@ -197,6 +197,7 @@ class DiscordBot extends Client {
     /**
      * @param {String} content - The text to display (must be a string)
      * @param {import("boxen").Options} options - Options for styling
+     * @return {Promise<void>}
      */
     async logBox(content, options) {
         const boxen = (await import("boxen")).default;

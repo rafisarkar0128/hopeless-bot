@@ -4,7 +4,7 @@ const colors = require("colors");
 async function fetchCommands(client) {
     client.logger.write(
         `[${colors.cyan("INFO")}] ${colors.magenta("fetching")} ${colors.blue(
-            "commands from discord",
+            "application commands from discord",
         )}`,
     );
 
@@ -44,7 +44,7 @@ async function fetchCommands(client) {
 
     client.logger.log(
         `[${colors.cyan("INFO")}] ${colors.magenta("fetched")} ${colors.blue(
-            `${colors.yellow(i)} global & ${colors.yellow(g)} guild command(s)`,
+            `${colors.yellow(i + g)} application command(s)`,
         )}`,
     );
 

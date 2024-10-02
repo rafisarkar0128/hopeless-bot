@@ -10,6 +10,112 @@ async function syncCommands(client, newCommands) {
         )})`,
     );
 
+    /**
+     * @param {import("@src/index").OldCommand[]} oldCommands
+     * @param {import("@src/index").NewCommand[]} newCommands
+     */
+    const syncCommands = async (oldCommands, newCommands) => {
+        const commandsToAdd = newCommands.filter(
+            (command) => !oldCommands.some((c) => c.data.name === command.data.name),
+        );
+        for (const command of commandsToAdd) {
+            try {
+                if (command.disabled) continue;
+
+                if (command.global) {
+                    await client.application.commands.create(command.data);
+                } else {
+                    await client.application.commands.create(command.data, guildId);
+                }
+
+                console.log(
+                    `[${colors.green("ADDED")}] ${colors.blue(command.data.name)}`,
+                );
+                i++;
+            } catch (error) {
+                errors.push(error);
+            }
+        }
+
+        const commandsToDelete = oldCommands.filter(
+            (command) => !newCommands.some((c) => c.data.name === command.data.name),
+        );
+        for (const command of commandsToDelete) {
+            try {
+                await command.data.delete();
+                console.log(
+                    `[${colors.red("DELETED")}] ${colors.cyan(command.data.name)}`,
+                );
+                i++;
+            } catch (error) {
+                errors.push(error);
+            }
+        }
+
+        const commandsToModify = newCommands.filter((command) =>
+            oldCommands.some((c) => c.data.name === command.data.name),
+        );
+        for (const newCommand of commandsToModify) {
+            try {
+                const oldCommand = oldCommands.find(
+                    (c) => c.data.name === newCommand.data.name,
+                );
+
+                if (newCommand.disabled) {
+                    await oldCommand.data.delete();
+
+                    i++;
+                    console.log(
+                        `[${colors.red("DELETED")}] ${colors.cyan(newCommand.data.name)}`,
+                    );
+                    continue;
+                }
+
+                if (oldCommand.global !== newCommand?.global) {
+                    await oldCommand.data.delete();
+
+                    if (newCommand?.global) {
+                        await client.application.commands.create(newCommand.data);
+                    } else {
+                        await client.application.commands.create(
+                            newCommand.data,
+                            guildId,
+                        );
+                    }
+
+                    i++;
+                    console.log(
+                        `[${colors.yellow("MODIFIED")}] ${colors.cyan(
+                            newCommand.data.name,
+                        )}`,
+                    );
+                    continue;
+                }
+
+                if (await checkForChange(oldCommand, newCommand)) {
+                    if (newCommand?.global) {
+                        await client.application.commands.create(newCommand.data);
+                    } else {
+                        await client.application.commands.delete(
+                            oldCommand.data.id,
+                            guildId,
+                        );
+                    }
+
+                    i++;
+                    console.log(
+                        `[${colors.yellow("MODIFIED")}] ${colors.cyan(
+                            newCommand.data.name,
+                        )}`,
+                    );
+                    continue;
+                }
+            } catch (error) {
+                errors.push(error);
+            }
+        }
+    };
+
     const errors = new Array();
     let i = 0;
     const { guildId } = client.config;
@@ -17,97 +123,18 @@ async function syncCommands(client, newCommands) {
 
     const oldSlashCommands = oldCommands.filter((c) => c.data.type === 1);
     const newSlashCommands = newCommands.filter((c) => c.data.type === 1);
-    try {
-        const commandsToAdd = newSlashCommands.filter(
-            (command) => !oldSlashCommands.some((c) => c.data.name === command.data.name),
-        );
-        for (const command of commandsToAdd) {
-            if (command.disabled) continue;
+    await syncCommands(oldSlashCommands, newSlashCommands);
 
-            if (command.global) {
-                await client.application.commands.create(command.data);
-            } else {
-                await client.application.commands.create(command.data, guildId);
-            }
-
-            console.log(`[${colors.green("ADDED")}] ${colors.blue(command.data.name)}`);
-            i++;
-        }
-
-        const commandsToDelete = oldSlashCommands.filter(
-            (command) => !newSlashCommands.some((c) => c.data.name === command.data.name),
-        );
-        for (const command of commandsToDelete) {
-            //await command.data.delete();
-            console.log(`[${colors.red("DELETED")}] ${colors.cyan(command.data.name)}`);
-            i++;
-        }
-
-        const commandsToModify = newSlashCommands.filter((command) =>
-            oldSlashCommands.some((c) => c.data.name === command.data.name),
-        );
-        for (const newCommand of commandsToModify) {
-            const oldCommand = oldCommands.find(
-                (c) => c.data.name === newCommand.data.name,
-            );
-
-            if (newCommand.disabled) {
-                await oldCommand.data.delete();
-
-                i++;
-                console.log(
-                    `[${colors.red("DELETED")}] ${colors.cyan(newCommand.data.name)}`,
-                );
-                continue;
-            }
-
-            if (oldCommand.global !== newCommand?.global) {
-                await oldCommand.data.delete();
-
-                if (newCommand?.global) {
-                    await client.application.commands.create(newCommand.data);
-                } else {
-                    await client.application.commands.create(newCommand.data, guildId);
-                }
-
-                i++;
-                console.log(
-                    `[${colors.yellow("MODIFIED")}] ${colors.cyan(newCommand.data.name)}`,
-                );
-                continue;
-            }
-
-            if (await checkForChange(oldCommand, newCommand)) {
-                if (newCommand?.global) {
-                    await client.application.commands.create(newCommand.data);
-                } else {
-                    await client.application.commands.delete(oldCommand.data.id, guildId);
-                }
-
-                i++;
-                console.log(
-                    `[${colors.yellow("MODIFIED")}] ${colors.cyan(newCommand.data.name)}`,
-                );
-                continue;
-            }
-        }
-    } catch (error) {
-        errors.push(error);
-    }
-
-    try {
-        const oldContextMenuCommands = oldCommands.filter(
-            (c) => c.data.type === (2 || 3),
-        );
-        const newContextMenuCommands = newCommands.filter(
-            (c) => c.data.type === (2 || 3),
-        );
-    } catch (error) {
-        errors.push(error);
-    }
+    const oldContextMenuCommands = oldCommands.filter((c) => c.data.type === (2 || 3));
+    const newContextMenuCommands = newCommands.filter((c) => c.data.type === (2 || 3));
+    await syncCommands(oldContextMenuCommands, newContextMenuCommands);
 
     if (i <= 0) {
-        console.log(`[${colors.cyan("INFO")}] ${colors.blue("no changes found")}`);
+        console.log(
+            `[${colors.cyan("INFO")}] ${colors.blue(
+                "all application commands are synchronized",
+            )}`,
+        );
     }
 
     if (errors.length > 0) {

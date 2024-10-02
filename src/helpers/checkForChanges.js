@@ -29,6 +29,14 @@ async function checkForChange(OldCommand, NewCommand) {
                 return true;
             }
         }
+
+        if (oldCommand.options || newCommand.options) {
+            if (oldCommand.options.length !== newCommand.options.length) return true;
+
+            if (await checkForChangesinOptions(oldCommand.options, newCommand.options)) {
+                return true;
+            }
+        }
     }
 
     if (
@@ -46,10 +54,14 @@ async function checkForChange(OldCommand, NewCommand) {
                 Array.isArray(oldCommand.contexts) &&
                 Array.isArray(newCommand.contexts)
             ) {
-                if (
-                    oldCommand.contexts.map((c) => c).join("") !==
-                    newCommand.contexts.map((c) => c).join("")
-                ) {
+                const addedContext = newCommand.contexts.some(
+                    (context) => !oldCommand.contexts.includes(context),
+                );
+                const removedContext = oldCommand.contexts.some(
+                    (context) => !newCommand.contexts.includes(context),
+                );
+
+                if (addedContext || removedContext) {
                     return true;
                 }
             } else {
@@ -68,53 +80,21 @@ async function checkForChange(OldCommand, NewCommand) {
                 Array.isArray(oldCommand.integrationTypes) &&
                 Array.isArray(newCommand.integration_types)
             ) {
-                if (
-                    oldCommand.integrationTypes.map((c) => c).join("") !==
-                    newCommand.integration_types.map((c) => c).join("")
-                ) {
+                const addedIntegrationType = newCommand.integration_types.some(
+                    (context) => !oldCommand.integrationTypes.includes(context),
+                );
+                const removedIntegrationType = oldCommand.integrationTypes.some(
+                    (context) => !newCommand.integration_types.includes(context),
+                );
+
+                if (addedIntegrationType || removedIntegrationType) {
                     return true;
                 }
             }
         }
     }
 
-    if (oldCommand.options || newCommand.options) {
-        if (oldCommand.options.length !== newCommand.options.length) return true;
-
-        if (await checkForChangesinOptions(oldCommand.options, newCommand.options)) {
-            return true;
-        }
-    }
-
     return false;
-}
-
-//options: undefined,
-//channelTypes: undefined,
-
-/** @type {import("@src/index").CheckForChangeInChoices} */
-async function checkForChangeInChoices(oldChoices, newChoices) {
-    for (const newChoice of newChoices) {
-        const oldChoice = oldChoices?.find((choice) => choice.name === newChoice.name);
-
-        if (!oldChoice) return true;
-
-        if (oldChoice.value !== newChoice.value) return true;
-
-        if (oldChoice.nameLocalizations || newChoice.name_localizations) {
-            console.log(oldChoice.nameLocalizations);
-            console.log(newChoice.name_localizations);
-
-            if (
-                await checkForChangeInNameLocalization(
-                    oldChoice.nameLocalizations,
-                    newChoice.name_localizations,
-                )
-            ) {
-                return true;
-            }
-        }
-    }
 }
 
 /** @type {import("@src/index").CheckForChangesinOptions} */
@@ -173,6 +153,56 @@ async function checkForChangesinOptions(oldOptions, newOptions) {
                 return true;
             }
         }
+
+        if (oldOption.channelTypes || newOption.channel_types) {
+            if (
+                Array.isArray(oldOption.channelTypes) &&
+                Array.isArray(newOption.channel_types)
+            ) {
+                const addedChannelType = newOption.channel_types.some(
+                    (context) => !oldOption.channelTypes.includes(context),
+                );
+                const removedChannelType = oldOption.channelTypes.some(
+                    (context) => !newOption.channel_types.includes(context),
+                );
+
+                if (addedChannelType || removedChannelType) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        if (oldOption.options || newOption.options) {
+            if (await checkForChangesinOptions(oldOption.options, newOption.options)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/** @type {import("@src/index").CheckForChangeInChoices} */
+async function checkForChangeInChoices(oldChoices, newChoices) {
+    for (const newChoice of newChoices) {
+        const oldChoice = oldChoices?.find((choice) => choice.name === newChoice.name);
+
+        if (!oldChoice) return true;
+
+        if (oldChoice.value !== newChoice.value) return true;
+
+        if (oldChoice.nameLocalizations || newChoice.name_localizations) {
+            if (
+                await checkForChangeInNameLocalization(
+                    oldChoice.nameLocalizations,
+                    newChoice.name_localizations,
+                )
+            ) {
+                return true;
+            }
+        }
     }
 
     return false;
@@ -212,6 +242,8 @@ function checkForChangeInNameLocalization(nameLocalizations, name_localizations)
     if (nameLocalizations?.vi !== name_localizations?.vi) return true;
     if (nameLocalizations?.["zh-CN"] !== name_localizations?.["zh-CN"]) return true;
     if (nameLocalizations?.["zh-TW"] !== name_localizations?.["zh-TW"]) return true;
+
+    return false;
 }
 
 /** @type {import("@src/index").CheckForChangeInDescriptionLocalization} */
@@ -267,6 +299,8 @@ function checkForChangeInDescriptionLocalization(
     if (descriptionLocalizations?.["zh-TW"] !== description_localizations?.["zh-TW"]) {
         return true;
     }
+
+    return false;
 }
 
 module.exports = { checkForChange };

@@ -8,7 +8,7 @@ module.exports = {
     connect: async (client) => {
         try {
             await mongoose.connect(client.config.mongodbUri);
-            client.logger.info(`${colors.magenta("mongodatabase")} connected`);
+            client.logger.info(`${colors.magenta("mongodb")} database connected`);
         } catch (error) {
             client.logger.error(error);
         }

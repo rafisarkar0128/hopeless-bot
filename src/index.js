@@ -52,8 +52,8 @@ async function start() {
     console.clear();
     await client.logBox(
         [
-            `Welcome to ${colors.blue(pkg.name.toUpperCase())} github project`,
-            `Running on Node.Js ${colors.green(process.version)}`,
+            `Welcome to ${colors.blue(pkg.name.toUpperCase())} js project`,
+            `Running on Node.JS ${colors.green(process.version)}`,
             `Version ${colors.yellow(pkg.version)}`,
             `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
         ].join("\n"),
