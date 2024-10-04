@@ -1,4 +1,4 @@
-/** @type {import("@src/index").CheckForChanges} */
+/** @type {import("@types/sync").CheckForChanges} */
 async function checkForChange(OldCommand, NewCommand) {
     const oldCommand = OldCommand.data;
     const newCommand = NewCommand.data;
@@ -97,7 +97,7 @@ async function checkForChange(OldCommand, NewCommand) {
     return false;
 }
 
-/** @type {import("@src/index").CheckForChangesinOptions} */
+/** @type {import("@types/sync").CheckForChangesinOptions} */
 async function checkForChangesinOptions(oldOptions, newOptions) {
     for (const newOption of newOptions) {
         const oldOption = oldOptions.find((option) => option.name === newOption.name);
@@ -184,7 +184,7 @@ async function checkForChangesinOptions(oldOptions, newOptions) {
     return false;
 }
 
-/** @type {import("@src/index").CheckForChangeInChoices} */
+/** @type {import("@types/sync").CheckForChangeInChoices} */
 async function checkForChangeInChoices(oldChoices, newChoices) {
     for (const newChoice of newChoices) {
         const oldChoice = oldChoices?.find((choice) => choice.name === newChoice.name);
@@ -208,7 +208,7 @@ async function checkForChangeInChoices(oldChoices, newChoices) {
     return false;
 }
 
-/** @type {import("@src/index").CheckForChangeInNameLocalization} */
+/** @type {import("@types/sync").CheckForChangeInNameLocalization} */
 function checkForChangeInNameLocalization(nameLocalizations, name_localizations) {
     if (nameLocalizations?.bg !== name_localizations?.bg) return true;
     if (nameLocalizations?.cs !== name_localizations?.cs) return true;
@@ -246,7 +246,7 @@ function checkForChangeInNameLocalization(nameLocalizations, name_localizations)
     return false;
 }
 
-/** @type {import("@src/index").CheckForChangeInDescriptionLocalization} */
+/** @type {import("@types/sync").CheckForChangeInDescriptionLocalization} */
 function checkForChangeInDescriptionLocalization(
     descriptionLocalizations,
     description_localizations,

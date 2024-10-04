@@ -1,6 +1,6 @@
 const { UserContextMenuCommandInteraction, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@src/index").EventStructure} */
+/** @type {import("@types/events").DiscordEventStructure} */
 module.exports = {
     name: "interactionCreate",
     once: false,

@@ -3,28 +3,6 @@ const { glob } = require("glob");
 const path = require("path");
 const { EmbedBuilder, WebhookClient } = require("discord.js");
 
-async function onCoolDown(client, interaction, cooldown) {
-    if (!cooldown || cooldown === 0) return false;
-
-    const now = Date.now();
-    const cooldownAmount = cooldown * 1000;
-
-    const timestamps = await client.cooldowns.get(interaction.commandName);
-    if (!timestamps) return false;
-
-    if (timestamps.has(interaction.user.id)) {
-        const expirationTime =
-            (await timestamps.get(interaction.user.id)) + cooldownAmount;
-        return (expirationTime - now) / 1000;
-    } else {
-        await timestamps.set(interaction.user.id, now);
-        setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
-        return false;
-    }
-}
-
-//module.exports = { onCoolDown };
-
 class Utils {
     /**
      * @param {import("@lib/DiscordBot").DiscordBot} client
@@ -34,7 +12,7 @@ class Utils {
     }
 
     /** Returns an array of files from given direcotry filtered by provided extension
-     * @type {import("@src/index").LoadFiles}
+     * @type {import("@types/utils").LoadFiles}
      * @example const file = await client.utils.loadFiles("src", ".js");
      */
     async loadFiles(dirname, ext) {
@@ -54,7 +32,7 @@ class Utils {
     }
 
     /** A function to send error to a discord channel
-     * @type {import("@src/index.d.ts").SendError}
+     * @type {import("@types/utils").SendError}
      * @example client.utils.sendError(error, type, data);
      */
     async sendError(error, type, data) {
@@ -64,18 +42,17 @@ class Utils {
         const errStack = error?.stack ? error.stack : error;
         const webhookClient = process.env.ERROR_WEBHOOK_URL
             ? new WebhookClient({
-                  url: process.env.ERROR_WEBHOOK_URL,
-              })
+                url: process.env.ERROR_WEBHOOK_URL,
+            })
             : undefined;
 
         const embed = new EmbedBuilder()
             .setColor(this.client.colors.Wrong)
             .setTitle(`**An Error Occoured**`)
             .setDescription(
-                `\`\`\`\n${
-                    errStack.length > 4000
-                        ? errStack.substring(length, 4000) + "..."
-                        : errStack
+                `\`\`\`\n${errStack.length > 4000
+                    ? errStack.substring(0, 4000) + "..."
+                    : errStack
                 }\n\`\`\``,
             )
             .setFooter({
@@ -107,7 +84,7 @@ class Utils {
     }
 
     /** Checks if a string contains a URL
-     * @type {import("@src/index.d.ts").ContainsLink}
+     * @type {import("@types/utils").ContainsLink}
      * @example client.utils.containsLink(text);
      */
     containsLink(text) {
@@ -117,7 +94,7 @@ class Utils {
     }
 
     /** Checks if a string is a valid discord invite
-     * @type {import("src/index.d.ts").ContainsDiscordInvite}
+     * @type {import("@types/utils").ContainsDiscordInvite}
      * @example client.utils.containsDiscordInvite(text);
      */
     containsDiscordInvite(text) {
@@ -127,7 +104,7 @@ class Utils {
     }
 
     /** Returns a random number below a max
-     * @type {import("@src/index").GetRandomInt}
+     * @type {import("@types/utils").GetRandomInt}
      * @example client.utils.getRandomInt(max);
      */
     getRandomInt(max) {
@@ -135,7 +112,7 @@ class Utils {
     }
 
     /** Return a random color from colors.json
-     * @type {import("@src/index").GetRandomColor}
+     * @type {import("@types/utils").GetRandomColor}
      * @example client.utils.getRandomColor();
      */
     getRandomColor() {
@@ -145,7 +122,7 @@ class Utils {
     }
 
     /** Checks if a string is a valid Hex color
-     * @type {import("@src/index").IsHex}
+     * @type {import("@types/utils").IsHex}
      * @example client.utils.isHex(text)
      */
     isHex(text) {
@@ -153,7 +130,7 @@ class Utils {
     }
 
     /** Checks if a string is a valid Hex color
-     * @type {import("@src/index").IsValidColor}
+     * @type {import("@types/utils").IsValidColor}
      * @example client.utils.isValidColor(text);
      */
     isValidColor(text) {
@@ -163,7 +140,7 @@ class Utils {
     }
 
     /** Returns hour difference between two dates
-     * @type {import("@src/index").DiffHours}
+     * @type {import("@types/utils").DiffHours}
      * @example client.utils.dissHours(Date2, Date1);
      */
     diffHours(dt2, dt1) {
@@ -173,7 +150,7 @@ class Utils {
     }
 
     /** Returns remaining time in days, hours, minutes and seconds
-     * @type {import("@src/index").Timeformat}
+     * @type {import("@types/utils").Timeformat}
      * @example client.utils.timeFormat(timeInMillis);
      */
     timeFormat(timeInMillis) {
@@ -190,7 +167,7 @@ class Utils {
     }
 
     /** Converts duration to milliseconds
-     * @type {import("@src/index").DurationToMillis}
+     * @type {import("@types/utils").DurationToMillis}
      * @example client.utils.durationToMillis(duration);
      */
     durationToMillis(duration) {
@@ -203,7 +180,7 @@ class Utils {
     }
 
     /** Returns time remaining until provided date
-     * @type {import("@src/index").GetRemainingTime}
+     * @type {import("@types/utils").GetRemainingTime}
      * @example client.utils.getRemainingTime(timeUntil);
      */
     //getRemainingTime(timeUntil) {
@@ -213,7 +190,7 @@ class Utils {
     //}
 
     /** Takes a single or array of permissions and returns a formated string
-     * @type {import("@src/index").ParsePermissions}
+     * @type {import("@types/utils").ParsePermissions}
      * @example client.utils.parsePermissions(permissions)
      */
     parsePermissions(permissions) {
@@ -221,7 +198,7 @@ class Utils {
         return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
     }
 
-    /** @type {import("@src/index").GetRemainingTime} */
+    /** @type {import("@types/utils").GetRemainingTime} */
     getRemainingTime(timestamps, cooldown, userId) {
         if (!timestamps) return false;
         const now = Date.now();

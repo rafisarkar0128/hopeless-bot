@@ -1,13 +1,10 @@
 const { ActivityType } = require("discord.js");
 
+/** @type {import("@types/events").DiscordEventStructure} */
 module.exports = {
     name: "ready",
     once: true,
     rest: false,
-    /**
-     *
-     * @param {import("../../structures/DiscordBot.js").DiscordBot} client
-     */
     execute: async (client) => {
         const activities = [
             {

@@ -6,7 +6,7 @@ const {
     ButtonStyle,
 } = require("discord.js");
 
-/** @type {import("@src/index").EventStructure} */
+/** @type {import("@types/events").DiscordEventStructure} */
 module.exports = {
     name: "messageCreate",
     once: false,

@@ -1,7 +1,7 @@
 const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
-const { LavalinkManager } = require("lavalink-client");
+const { Manager } = require("moonlink.js");
 const colors = require("colors");
 const commandCategories = require("@src/commandCategories.js");
 const { syncCommands } = require("@helpers/syncCommands");
@@ -17,81 +17,31 @@ class DiscordBot extends Client {
         this.colors = require(`@src/colors.json`);
         this.wait = require("timers/promises").setTimeout;
         this.database = require("@src/database/mongoose.js");
+        this.pkg = require("@root/package.json");
         this.logger = new Logger(this);
         this.utils = new Utils(this);
 
-        /** @type {import("@src/index").EventCollection} */
+        /** @type {import("@types/collections").EventCollection} */
         this.events = new Collection();
-        /** @type {import("@src/index").CommandCollection} */
+        /** @type {import("@types/collections").CommandCollection} */
         this.commands = new Collection();
-        /** @type {import("@src/index").AliasCollection} */
+        /** @type {import("@types/collections").AliasCollection} */
         this.aliases = new Collection();
-        /** @type {import("@src/index").CooldownCollection} */
+        /** @type {import("@types/collections").CoolDownCollection} */
         this.cooldowns = new Collection();
-        /** @type {import("@src/index").ContextCollection} */
+        /** @type {import("@types/collections").ContextCollection} */
         this.contexts = new Collection();
 
         // Music Manager
         if (this.config.music.enabled) {
-            this.lavalink = new LavalinkManager({
+            this.moonlink = new Manager({
                 nodes: this.config.music.lavalink_nodes,
-                sendToShard: (guildId, payload) =>
-                    this.guilds.cache.get(guildId)?.shard?.send(payload),
-                autoSkip: true,
-                client: {
-                    id: this.config.bot.id,
-                    username: "HopelessBot",
+                options: {
+                    clientName: `${this.pkg.name}/${this.pkg.version}`
                 },
-            });
-            let lavalink = new LavalinkManager({
-                nodes: [
-                    {
-                        authorization: "yourverystrongpassword",
-                        host: "localhost",
-                        port: 2333,
-                        id: "testnode",
-                    },
-                ],
-                sendToShard: (guildId, payload) =>
-                    client.guilds.cache.get(guildId)?.shard?.send(payload),
-                client: {
-                    id: process.env.CLIENT_ID,
-                    username: "TESTBOT",
-                },
-                // optional Options:
-                autoSkip: true,
-                playerOptions: {
-                    applyVolumeAsFilter: false,
-                    clientBasedPositionUpdateInterval: 150,
-                    defaultSearchPlatform: "ytmsearch",
-                    volumeDecrementer: 0.75,
-                    //requesterTransformer: YourRequesterTransformerFunction,
-                    onDisconnect: {
-                        autoReconnect: true,
-                        destroyPlayer: false,
-                    },
-                    onEmptyQueue: {
-                        destroyAfterMs: 30_000,
-                        //autoPlayFunction: YourAutoplayFunction,
-                    },
-                    useUnresolvedData: true,
-                },
-                queueOptions: {
-                    maxPreviousTracks: 25,
-                    //queueStore: yourCustomQueueStoreManagerClass,
-                    //queueChangesWatcher: yourCustomQueueChangesWatcherClass
-                },
-                linksBlacklist: [],
-                linksWhitelist: [],
-                advancedOptions: {
-                    maxFilterFixDuration: 600_000,
-                    debugOptions: {
-                        noAudio: false,
-                        playerDestroy: {
-                            dontThrowError: false,
-                            debugLogs: false,
-                        },
-                    },
+                sendPayload: (guildId, payload) => {
+                    const guild = this.guilds.cache.get(guildId);
+                    if (guild) guild.shard.send(JSON.parse(payload));
                 },
             });
         }
@@ -116,9 +66,14 @@ class DiscordBot extends Client {
 
         for (const file of files) {
             try {
+                /** @type {import("@types/events").BaseEventStructure} */
                 const event = require(file);
                 const execute = (...args) => event.execute(this, ...args);
-                const target = event.rest ? this.rest : this;
+                var target = this;
+
+                if (event.rest) target = this.rest;
+                if (event.ws) target = this.ws;
+                if (event.moonlink) target = this.moonlink;
 
                 this.events.set(file.replace(/\\/g, "/").split("/").pop(), event);
                 console.log(
@@ -167,14 +122,14 @@ class DiscordBot extends Client {
         this.logger.info(`loading command modules`);
         const errors = new Array();
 
-        /** @type {import("@src/index").NewCommand} */
+        /** @type {import("@types/sync").NewCommand} */
         const newCommands = new Array();
         const files = await this.utils.loadFiles(dirname, ".js");
         this.commands.clear();
 
         for (const file of files) {
             try {
-                /** @type {import("@src/index").CommandStructure} */
+                /** @type {import("@types/commands").BaseCommandStructure} */
                 const command = require(file);
 
                 if (

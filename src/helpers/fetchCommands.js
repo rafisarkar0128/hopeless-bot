@@ -1,6 +1,6 @@
 const colors = require("colors");
 
-/** @type {import("@src/index").FetchCommands} */
+/** @type {import("@types/sync").FetchCommands} */
 async function fetchCommands(client) {
     client.logger.write(
         `[${colors.cyan("INFO")}] ${colors.magenta("fetching")} ${colors.blue(
@@ -10,7 +10,7 @@ async function fetchCommands(client) {
 
     await client.wait(2000);
 
-    /** @type {import("@src/index").OldCommand} */
+    /** @type {import("@types/sync").OldCommand} */
     const ApplicationCommands = new Array();
     let i = 0,
         g = 0;

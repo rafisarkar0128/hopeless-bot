@@ -29,7 +29,7 @@ class Logger {
     /**
      * @param {Error} content
      * @param {String} origin
-     * @param {import("@src/index").ErrorTypes} type
+     * @param {import("@types/utils").ErrorTypes} type
      */
     async error(content, type) {
         const error = content.stack ? content.stack : content;

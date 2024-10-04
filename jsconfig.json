@@ -8,6 +8,7 @@
             "@root/*": ["./*"],
             "@src/*": ["./src/*"],
             "@lib/*": ["./src/lib/*"],
+            "@types/*": ["./src/types/*"],
             "@handlers/*": ["./src/handlers/*"],
             "@commands/*": ["./src/commands/*"],
             "@assets/*": ["./src/assets/*"],

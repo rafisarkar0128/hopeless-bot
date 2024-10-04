@@ -2,7 +2,7 @@ const colors = require("colors");
 const { fetchCommands } = require("./fetchCommands.js");
 const { checkForChange } = require("./checkForChanges.js");
 
-/** @type {import("@src/index").SyncCommands} */
+/** @type {import("@types/sync").SyncCommands} */
 async function syncCommands(client, newCommands) {
     client.logger.info(
         `${colors.yellow("synchronizing application commands")} (${colors.gray(
@@ -11,8 +11,8 @@ async function syncCommands(client, newCommands) {
     );
 
     /**
-     * @param {import("@src/index").OldCommand[]} oldCommands
-     * @param {import("@src/index").NewCommand[]} newCommands
+     * @param {import("@types/sync").OldCommand[]} oldCommands
+     * @param {import("@types/sync").NewCommand[]} newCommands
      */
     const syncCommands = async (oldCommands, newCommands) => {
         const commandsToAdd = newCommands.filter(

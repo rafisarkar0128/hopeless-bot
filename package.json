@@ -1,13 +1,14 @@
 {
     "name": "hopeless-bot",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "description": "A discord bot made for a private server.",
     "main": "src/index.js",
     "_moduleAliases": {
         "@root": ".",
         "@src": "src/",
-        "@handlers": "src/handlers/",
         "@lib": "src/lib/",
+        "@types": "src/types/",
+        "@handlers": "src/handlers/",
         "@helpers": "src/helpers/",
         "@schemas": "src/database/schemas/",
         "@commands": "src/commands/",
@@ -58,9 +59,11 @@
         "luxon": "^3.5.0",
         "module-alias": "^2.2.3",
         "mongoose": "^8.5.2",
+        "moonlink.js": "^4.0.2",
         "ms": "^2.1.3",
         "pretty-ms": "^9.1.0",
-        "readline": "^1.3.0"
+        "readline": "^1.3.0",
+        "redis": "^4.7.0"
     },
     "optionalDependencies": {
         "bufferutil": "^4.0.8",

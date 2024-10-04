@@ -7,6 +7,13 @@ module.exports = {
         invite: process.env.ALLOWED_INVITE,
         footer: `Copyright © 2023 - ${new Date().getFullYear()} | @theassassin0128`,
     },
+    ownerId: process.env.OWNER_ID,
+    guildId: process.env.SERVER_ID,
+    devs: process.env.DEVELOPER_IDS,
+    mongodbUri: process.env.MONGO_URI,
+    antiCrash: {
+        enabled: true,
+    },
     emojis: {
         normal: {
             error: "❌",
@@ -79,13 +86,6 @@ module.exports = {
             loading: "🔄️",
         },
     },
-    ownerId: process.env.OWNER_ID,
-    guildId: process.env.SERVER_ID,
-    devs: process.env.DEVELOPER_IDS,
-    mongodbUri: process.env.MONGO_URI,
-    antiCrash: {
-        enabled: true,
-    },
     links: {
         supportServer: "https://discord.gg/E6H9VvBdTk",
     },
@@ -125,7 +125,7 @@ module.exports = {
                 host: "localhost",
                 port: 2333,
                 authorization: "youshallnotpass",
-                id: "Local Node",
+                identifier: "node_1",
             },
         ],
     },
