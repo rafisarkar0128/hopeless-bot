@@ -9,5 +9,7 @@ module.exports = {
     rest: false,
     execute: async (client) => {
         client.logger.info(`${colors.green(client.user.tag)} is online`);
+        await client.lavalink.init(client.user);
+        client.logger.info(`music system is online`);
     },
 };

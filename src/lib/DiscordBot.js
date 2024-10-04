@@ -1,6 +1,7 @@
 const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
+const { LavalinkManager } = require("lavalink-client");
 const colors = require("colors");
 const commandCategories = require("@src/commandCategories.js");
 const { syncCommands } = require("@helpers/syncCommands");
@@ -30,11 +31,70 @@ class DiscordBot extends Client {
         /** @type {import("@src/index").ContextCollection} */
         this.contexts = new Collection();
 
-        // store (alias, arrayIndex) pair
-        //this.commandIndex = new Collection();
-
-        // Music Player
-        //if (this.config.music.enabled) this.musicManager = lavaclient(this);
+        // Music Manager
+        if (this.config.music.enabled) {
+            this.lavalink = new LavalinkManager({
+                nodes: this.config.music.lavalink_nodes,
+                sendToShard: (guildId, payload) =>
+                    this.guilds.cache.get(guildId)?.shard?.send(payload),
+                autoSkip: true,
+                client: {
+                    id: this.config.bot.id,
+                    username: "HopelessBot",
+                },
+            });
+            let lavalink = new LavalinkManager({
+                nodes: [
+                    {
+                        authorization: "yourverystrongpassword",
+                        host: "localhost",
+                        port: 2333,
+                        id: "testnode",
+                    },
+                ],
+                sendToShard: (guildId, payload) =>
+                    client.guilds.cache.get(guildId)?.shard?.send(payload),
+                client: {
+                    id: process.env.CLIENT_ID,
+                    username: "TESTBOT",
+                },
+                // optional Options:
+                autoSkip: true,
+                playerOptions: {
+                    applyVolumeAsFilter: false,
+                    clientBasedPositionUpdateInterval: 150,
+                    defaultSearchPlatform: "ytmsearch",
+                    volumeDecrementer: 0.75,
+                    //requesterTransformer: YourRequesterTransformerFunction,
+                    onDisconnect: {
+                        autoReconnect: true,
+                        destroyPlayer: false,
+                    },
+                    onEmptyQueue: {
+                        destroyAfterMs: 30_000,
+                        //autoPlayFunction: YourAutoplayFunction,
+                    },
+                    useUnresolvedData: true,
+                },
+                queueOptions: {
+                    maxPreviousTracks: 25,
+                    //queueStore: yourCustomQueueStoreManagerClass,
+                    //queueChangesWatcher: yourCustomQueueChangesWatcherClass
+                },
+                linksBlacklist: [],
+                linksWhitelist: [],
+                advancedOptions: {
+                    maxFilterFixDuration: 600_000,
+                    debugOptions: {
+                        noAudio: false,
+                        playerDestroy: {
+                            dontThrowError: false,
+                            debugLogs: false,
+                        },
+                    },
+                },
+            });
+        }
 
         // Giveaways
         //if (this.config.giveaways.enabled) this.giveawaysManager = giveawaysHandler(this);

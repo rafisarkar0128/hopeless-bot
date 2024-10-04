@@ -20,7 +20,7 @@ module.exports = {
             const mEmbed = new EmbedBuilder()
                 .setTitle("**This command isn't available. Try again after sometime.**")
                 .setColor(colors.Wrong);
-            if (!command) {
+            if (!command || !command.execute) {
                 return interaction.reply({
                     embeds: [mEmbed],
                     ephemeral: true,

@@ -116,17 +116,16 @@ module.exports = {
         max_beg_amount: 250,
     },
     music: {
-        enabled: false,
+        enabled: true,
         idle_time: 180000,
         max_search_results: 5,
         default_source: "YTM",
         lavalink_nodes: [
             {
-                host: "lavalink.oddcoder.xyz",
-                port: 443,
-                password: "oddcoder",
+                host: "localhost",
+                port: 2333,
+                authorization: "youshallnotpass",
                 id: "Local Node",
-                secure: true,
             },
         ],
     },

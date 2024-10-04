@@ -1,12 +1,12 @@
 {
     "name": "hopeless-bot",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "A discord bot made for a private server.",
     "main": "src/index.js",
     "_moduleAliases": {
         "@root": ".",
         "@src": "src/",
-        "@config": "src/config/",
+        "@handlers": "src/handlers/",
         "@lib": "src/lib/",
         "@helpers": "src/helpers/",
         "@schemas": "src/database/schemas/",
@@ -23,7 +23,10 @@
         "trace": "node --trace-warnings .",
         "start": "node .",
         "destroyGlobal": "node scripts/destroyGlobal.js",
-        "destroyGuild": "node scripts/destroyGuild.js"
+        "destroyGuild": "node scripts/destroyGuild.js",
+        "lavalink": "cd ./lavalink && java -jar Lavalink.jar",
+        "docker-up-lavalink": "cd ./lavalink && docker compose up -d",
+        "docker-kill-lavalink": "docker kill lavalink"
     },
     "keywords": [
         "bot",
@@ -51,6 +54,7 @@
         "discord.js": "^14.15.3",
         "dotenv": "^16.4.5",
         "glob": "^11.0.0",
+        "lavalink-client": "^2.4.0",
         "luxon": "^3.5.0",
         "module-alias": "^2.2.3",
         "mongoose": "^8.5.2",

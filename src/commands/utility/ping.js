@@ -60,6 +60,7 @@ module.exports = {
             });
 
         return reply.edit({
+            content: "",
             embeds: [embed],
         });
     },

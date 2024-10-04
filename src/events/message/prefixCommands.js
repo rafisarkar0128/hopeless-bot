@@ -22,12 +22,10 @@ module.exports = {
             const command =
                 commands.get(commandName) || commands.get(aliases.get(commandName));
 
-            console.log(commandName);
-
             const mEmbed = new EmbedBuilder()
                 .setTitle("**This command isn't available. Try again after sometime.**")
                 .setColor(colors.Wrong);
-            if (!command) {
+            if (!command || !command.run) {
                 return message.reply({
                     embeds: [mEmbed],
                 });

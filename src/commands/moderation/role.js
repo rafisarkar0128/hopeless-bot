@@ -99,5 +99,99 @@ module.exports = {
     botPermissions: [],
     userPermissions: [],
     run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {},
+    execute: async (client, interaction, data) => {
+        const { options, user, guild } = interaction;
+        const role = await guild.roles.fetch(options.getRole("role")?.id);
+        const target = options.getUser("target")
+            ? (await guild.members.fetch()).get(options.getUser("target").id)
+            : null;
+        const bot = await guild.members.fetchMe();
+        const fetchedUser = (await guild.members.fetch()).get(user.id);
+        const action = options.getString("action");
+        const type = options.getString("type");
+        const subcommand = options.getSubcommand();
+        let memberArray = [];
+
+        if (role.position >= bot.roles.highest.position) {
+            interaction.reply({
+                content: `I am not allowed to manage this role | ${role}`,
+                ephemeral: true,
+            });
+            return;
+        }
+
+        if (
+            !fetchedUser.id == guild.ownerId &&
+            fetchedUser.roles.highest.position < role.position
+        ) {
+            interaction.reply({
+                content: `You are not allowed to manage this role | ${role}`,
+                ephemeral: true,
+            });
+            return;
+        }
+
+        switch (subcommand) {
+            case "give":
+                {
+                    await target.roles.add(role);
+                    interaction.reply({
+                        content: `${role} | Role given to ${target}.`,
+                        ephemeral: true,
+                    });
+                }
+                break;
+            case "remove":
+                {
+                    await target.roles.remove(role);
+                    interaction.reply({
+                        content: `${role} | Role removed from ${target}.`,
+                        ephemeral: true,
+                    });
+                }
+                break;
+            case "multiple":
+                {
+                    const allMembers = await guild.members.fetch();
+                    allMembers.forEach((member) => {
+                        switch (type) {
+                            case "all":
+                                memberArray.push(member);
+                                break;
+                            case "humans":
+                                if (!member.user.bot) memberArray.push(member);
+                                break;
+                            case "bots":
+                                if (member.user.bot) memberArray.push(member);
+                                break;
+                        }
+                    });
+                    switch (action) {
+                        case "give":
+                            {
+                                memberArray.forEach((member) => {
+                                    member.roles.add(role);
+                                });
+                                interaction.reply({
+                                    content: `${role} | Given the role to selected members.`,
+                                    ephemeral: true,
+                                });
+                            }
+                            break;
+                        case "remove":
+                            {
+                                memberArray.forEach((member) => {
+                                    member.roles.remove(role);
+                                });
+                                interaction.reply({
+                                    content: `${role} | Removed the role from selected members.`,
+                                    ephemeral: true,
+                                });
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
+    },
 };

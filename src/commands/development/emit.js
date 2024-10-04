@@ -47,7 +47,7 @@ module.exports = {
     devOnly: true,
     botPermissions: ["ManageGuild"],
     userPermissions: ["ManageGuild"],
-    run: async (client, message, args, data) => {},
+    //run: async (client, message, args, data) => {},
     execute: async (client, interaction, data) => {
         const member = interaction.options.getMember("member") || interaction.member;
         const string = interaction.options.getString("event");

@@ -3,6 +3,28 @@ const { glob } = require("glob");
 const path = require("path");
 const { EmbedBuilder, WebhookClient } = require("discord.js");
 
+async function onCoolDown(client, interaction, cooldown) {
+    if (!cooldown || cooldown === 0) return false;
+
+    const now = Date.now();
+    const cooldownAmount = cooldown * 1000;
+
+    const timestamps = await client.cooldowns.get(interaction.commandName);
+    if (!timestamps) return false;
+
+    if (timestamps.has(interaction.user.id)) {
+        const expirationTime =
+            (await timestamps.get(interaction.user.id)) + cooldownAmount;
+        return (expirationTime - now) / 1000;
+    } else {
+        await timestamps.set(interaction.user.id, now);
+        setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+        return false;
+    }
+}
+
+//module.exports = { onCoolDown };
+
 class Utils {
     /**
      * @param {import("@lib/DiscordBot").DiscordBot} client

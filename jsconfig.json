@@ -8,7 +8,7 @@
             "@root/*": ["./*"],
             "@src/*": ["./src/*"],
             "@lib/*": ["./src/lib/*"],
-            "@config/*": ["./src/config/*"],
+            "@handlers/*": ["./src/handlers/*"],
             "@commands/*": ["./src/commands/*"],
             "@assets/*": ["./src/assets/*"],
             "@events/*": ["./src/events/*"],

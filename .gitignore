@@ -12,3 +12,7 @@ logs
 
 # Extra files
 collected
+
+# Lavalink
+lavalink/plugins 
+lavalink/Lavalink.jar
