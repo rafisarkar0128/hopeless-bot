@@ -22,7 +22,7 @@ module.exports = {
     devOnly: false,
     botPermissions: [],
     userPermissions: [],
-    run: (client, message, args) => {
+    run: (client, message) => {
         const inviteLink = client.generateInvite({
             permissions: BigInt(630567770521207),
             scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
@@ -39,7 +39,7 @@ module.exports = {
             components: [new ActionRowBuilder().addComponents(button)],
         });
     },
-    execute: (client, interaction, data) => {
+    execute: (client, interaction) => {
         const inviteLink = client.generateInvite({
             permissions: BigInt(630567770521207),
             scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
