@@ -1,10 +1,12 @@
 const { Message, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@types/events").DiscordEventStructure} */
+/** @type {import("@types/events").EventStructure} */
 module.exports = {
     name: "messageCreate",
     once: false,
     rest: false,
+    ws: false,
+    moonlink: false,
     /** @param {Message} message */
     execute: async (client, message) => {
         if (message.author.bot) return;
@@ -23,7 +25,7 @@ module.exports = {
                 commands.get(commandName) || commands.get(aliases.get(commandName));
 
             const mEmbed = new EmbedBuilder()
-                .setTitle("**This command isn't available. Try again after sometime.**")
+                .setTitle("**This command isn't available. Try again later.**")
                 .setColor(colors.Wrong);
             if (!command || !command.run) {
                 return message.reply({
@@ -34,7 +36,7 @@ module.exports = {
             const dEmbed = new EmbedBuilder()
                 .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
                 .setColor(colors.Wrong);
-            if (command.disabled.prefix && !config.devs.includes(author.id)) {
+            if (command.disabled && !config.devs.includes(author.id)) {
                 return message.reply({
                     embeds: [dEmbed],
                 });
@@ -106,13 +108,13 @@ module.exports = {
             }
 
             const vcEmbed = new EmbedBuilder()
-                .setTitle(
-                    `**You must have to be in a voice channel to use this command.**`,
-                )
-                .setColor(colors.Wrong);
-            if (command.inVoiceChannel && !message.member.voice.channel) {
-                return message.reply({
-                    embeds: [vcEmbed],
+                .setColor(client.colors.Wrong)
+                .setDescription(
+                    "**You must have to be in a voice channel to use this command.**",
+                );
+            if (command.inVoiceChannel && !member.voice.channel) {
+                return interaction.reply({
+                    embed: [vcEmbed],
                 });
             }
 
@@ -134,4 +136,3 @@ module.exports = {
         }
     },
 };
-

@@ -1,10 +1,12 @@
 const { UserContextMenuCommandInteraction, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@types/events").DiscordEventStructure} */
+/** @type {import("@types/events").EventStructure} */
 module.exports = {
     name: "interactionCreate",
     once: false,
     rest: false,
+    ws: false,
+    moonlink: false,
     /**
      * @param {UserContextMenuCommandInteraction} interaction
      */
@@ -17,57 +19,54 @@ module.exports = {
         try {
             const context = client.contexts.get(commandName);
 
-            const mCommand = new EmbedBuilder()
-                .setTitle("**This command isn't available. Try again after sometime.**")
+            const mEmbed = new EmbedBuilder()
+                .setTitle("**This command isn't available. Try again later.**")
                 .setColor(colors.Wrong);
-            if (!context) {
+            if (!context || !context.execute) {
                 return interaction.reply({
-                    embeds: [mCommand],
+                    embeds: [mEmbed],
                     ephemeral: true,
                 });
             }
 
-            const dCommand = new EmbedBuilder()
-                .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
+            const dvEmbed = new EmbedBuilder()
+                .setTitle(
+                    `**Only the owner or developers are allowed to use this command.**`,
+                )
                 .setColor(colors.Wrong);
-            if (context.disabled) {
+            if (
+                (context.devOnly || context.category === "DEVELOPMENT") &&
+                !config.devs.includes(user.id)
+            ) {
                 return interaction.reply({
-                    embeds: [dCommand],
+                    embeds: [dvEmbed],
                     ephemeral: true,
                 });
             }
 
-            const gCommand = new EmbedBuilder()
+            const gEmbed = new EmbedBuilder()
                 .setTitle(
                     `**This command can only be used in a __Guild (Discord Server)__**`,
                 )
                 .setColor(colors.Wrong);
             if (context.guildOnly && !interaction.inGuild()) {
                 return interaction.reply({
-                    embeds: [gCommand],
+                    embeds: [gEmbed],
                     ephemeral: true,
                 });
             }
 
-            const cooldown = await utils.onCoolDown(interaction, context);
-            const cCommand = new EmbedBuilder()
+            const timestamps = client.cooldowns.get(context.data.name);
+            const cooldown = (context.cooldown || 3) * 1000;
+            const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
+            const cdEmbed = new EmbedBuilder()
                 .setTitle(
-                    `**Chill! Command in on cool down wait for \`${cooldown}\` seconds**`,
+                    `**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`,
                 )
                 .setColor(colors.Wrong);
-            if (cooldown && !config.devs.includes(user.id)) {
+            if (remainingTime && !config.devs.includes(user.id)) {
                 return interaction.reply({
-                    embeds: [cCommand],
-                    ephemeral: true,
-                });
-            }
-
-            const dvCommand = new EmbedBuilder()
-                .setTitle(`**Only Devs are allowed to use this command.**`)
-                .setColor(colors.Wrong);
-            if (context.devOnly && !config.devs.includes(user.id)) {
-                return interaction.reply({
-                    embeds: [dvCommand],
+                    embeds: [cdEmbed],
                     ephemeral: true,
                 });
             }
@@ -79,7 +78,7 @@ module.exports = {
                     )}\` to use this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (guild && !member.permissions.has(context?.userPermissions)) {
+            if (member && !member.permissions.has(context?.userPermissions)) {
                 return interaction.reply({
                     embeds: [uPermission],
                     ephemeral: true,
@@ -93,7 +92,7 @@ module.exports = {
                     )} to execute this command.**`,
                 )
                 .setColor(colors.Wrong);
-            if (guild && !guild.members.me.permissions.has(context?.botPermissions)) {
+            if (member && !guild.members.me.permissions.has(context?.botPermissions)) {
                 return interaction.reply({
                     embeds: [bPermission],
                     ephemeral: true,

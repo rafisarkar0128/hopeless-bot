@@ -1,43 +1,35 @@
-const {
-    SlashCommandBuilder,
-    PermissionFlagsBits,
-    Client,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("untimeout")
         .setDescription("⏰ Remove timeout from a member.")
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-        .addUserOption((option) =>
+        .addUserOption(option =>
             option
                 .setName("member")
                 .setDescription("The member to untimeout.")
                 .setRequired(true),
         )
-        .addStringOption((option) =>
+        .addStringOption(option =>
             option
                 .setName("reason")
                 .setDescription("Reason for the the untimeout.")
                 .setRequired(false),
         ),
     aliases: [],
-    minArgsCount: 0,
     usage: "/untimeout | {prefix}untimeout",
     cooldown: 0,
     category: "MODERATION",
-    premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: false,
     devOnly: false,
     botPermissions: ["ModerateMembers"],
     userPermissions: ["ModerateMembers"],
-    run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {
+    run: async (client, message, args) => {},
+    execute: async (client, interaction) => {
         const member = interaction.options.getMember("member");
         const reason = interaction.options.getString("reason");
 

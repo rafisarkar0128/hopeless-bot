@@ -7,24 +7,22 @@ const {
     OAuth2Scopes,
 } = require("discord.js");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("invite")
         .setDescription("returns a link button with bots invite url."),
     aliases: ["invt"],
-    minArgsCount: 0,
     usage: "{prefix}invite | /invite",
     cooldown: 0,
     category: "UTILITY",
-    premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: false,
     devOnly: false,
     botPermissions: [],
     userPermissions: [],
-    run: (client, message, args, data) => {
+    run: (client, message, args) => {
         const inviteLink = client.generateInvite({
             permissions: BigInt(630567770521207),
             scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],

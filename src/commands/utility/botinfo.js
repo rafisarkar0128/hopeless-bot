@@ -7,28 +7,25 @@ const {
     ActionRowBuilder,
     ButtonStyle,
 } = require("discord.js");
-const pkg = require(`${process.cwd()}/package.json`);
 const { profileImage } = require("discord-arts");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("botinfo")
         .setDescription("📖 View bot's information."),
     aliases: [],
-    minArgsCount: 0,
     usage: "/botinfo | {prefix}botinfo",
     cooldown: 60,
     category: "UTILITY",
-    premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: false,
     devOnly: true,
     botPermissions: [],
     userPermissions: [],
-    run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {
+    //run: async (client, message, args) => {},
+    execute: async (client, interaction) => {
         try {
             await interaction.deferReply();
 
@@ -57,9 +54,10 @@ module.exports = {
                 .setColor(client.utils.getRandomColor())
                 .setTitle(`${client.user.tag}'s Information`)
                 .setDescription(
-                    [`**Tag:** ${client.user.tag}`, `**Version:** ${pkg.version}`].join(
-                        "\n",
-                    ),
+                    [
+                        `**Tag:** ${client.user.tag}`,
+                        `**Version:** ${client.pkg.version}`,
+                    ].join("\n"),
                 )
                 .setThumbnail(client.user.avatarURL())
                 .setImage("attachment://profile.png")

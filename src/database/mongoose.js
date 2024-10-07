@@ -5,7 +5,7 @@ module.exports = {
     /**
      * @param {import("../lib/DiscordBot.js").DiscordBot} client
      */
-    connect: async (client) => {
+    connect: async client => {
         try {
             await mongoose.connect(client.config.mongodbUri);
             client.logger.info(`${colors.magenta("mongodb")} database connected`);
@@ -23,6 +23,6 @@ module.exports = {
         TranslateLog: require("./schemas/TranslateLog.js").model,
         User: require("./schemas/User.js"),
         Suggestions: require("./schemas/Suggestions.js").model,
-        ErrorLogConfig: require("./schemas/ErrorLogConfig.js").model,
+        ErrorLogConfig: require("./schemas/errorlogs.js").model,
     },
 };

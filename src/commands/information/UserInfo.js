@@ -5,7 +5,7 @@ const {
     InteractionContextType,
 } = require("discord.js");
 
-/** @type {import("@src/index").ContextMenuStructure} */
+/** @type {import("@types/commands").ContextMenuStructure} */
 module.exports = {
     data: new ContextMenuCommandBuilder()
         .setName("User Information")
@@ -17,14 +17,13 @@ module.exports = {
         ]),
     cooldown: 0,
     category: "INFORMATION",
-    premium: false,
     disabled: false,
     global: true,
     guildOnly: false,
     devOnly: false,
     botPermissions: [],
     userPermissions: [],
-    execute: async (client, interaction, data) => {
+    execute: async (client, interaction) => {
         interaction.reply({
             embeds: [
                 new EmbedBuilder()
@@ -35,4 +34,3 @@ module.exports = {
         });
     },
 };
-

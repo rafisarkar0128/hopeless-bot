@@ -1,50 +1,42 @@
-const {
-    SlashCommandBuilder,
-    PermissionFlagsBits,
-    Client,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 const ms = require("ms");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("timeout")
         .setDescription("⏰ Restrict a member's ability to communicate.")
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-        .addUserOption((option) =>
+        .addUserOption(option =>
             option
                 .setName("member")
                 .setDescription("The member to timeout.")
                 .setRequired(true),
         )
-        .addStringOption((option) =>
+        .addStringOption(option =>
             option
                 .setName("duration")
                 .setDescription("Duration of the timeout.")
                 .setRequired(true),
         )
-        .addStringOption((option) =>
+        .addStringOption(option =>
             option
                 .setName("reason")
                 .setDescription("Reason for the the timeout.")
                 .setRequired(false),
         ),
     aliases: [],
-    minArgsCount: 0,
     usage: "/timeout [options] | {prefix}timeout [options]",
     cooldown: 0,
     category: "MODERATION",
-    premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: false,
     devOnly: false,
     botPermissions: ["ModerateMembers"],
     userPermissions: ["ModerateMembers"],
-    run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {
+    //run: async (client, message, args) => {},
+    execute: async (client, interaction) => {
         const member = interaction.options.getMember("member");
         const duration = interaction.options.getString("duration");
         const reason = interaction.options.getString("reason");

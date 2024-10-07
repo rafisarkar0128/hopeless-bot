@@ -1,5 +1,3 @@
-// ContextMenu Structure
-
 const { ContextMenuCommandBuilder, ApplicationCommandType } = require("discord.js");
 
 /** @type {import("@types/commands").ContextMenuStructure} */
@@ -16,5 +14,5 @@ module.exports = {
     devOnly: false,
     botPermissions: [],
     userPermissions: [],
-    execute: async (client, interaction, data) => { },
+    execute: async (client, interaction, data) => {},
 };

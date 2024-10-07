@@ -1,11 +1,13 @@
 import {
     APIApplicationCommand,
+    ApplicationCommand,
     ChatInputCommandInteraction,
     ContextMenuCommandBuilder,
     Message,
     MessageContextMenuCommandInteraction,
     PermissionResolvable,
     SlashCommandBuilder,
+    SlashCommandOptionsOnlyBuilder,
     UserContextMenuCommandInteraction,
 } from "discord.js";
 import { DiscordBot } from "@lib/DiscordBot";
@@ -31,20 +33,18 @@ export type CommandCategory =
     | "TICKET"
     | "UTILITY";
 
-// Base Application Command Structure
+// Base Command Structure
 export interface BaseCommandStructure {
     data: APIApplicationCommand;
     aliases?: string[];
-    minArgsCount?: number;
     usage?: string;
     cooldown: number;
     category: CommandCategory;
-    premium?: boolean;
-    disabled?: boolean | { slash: boolean; prefix: boolean };
+    disabled?: boolean;
     global?: boolean;
     guildOnly?: boolean;
     devOnly?: boolean;
-    inVoice: boolean;
+    inVoiceChannel: boolean;
     botPermissions: PermissionResolvable[];
     userPermissions: PermissionResolvable[];
     run: (client: DiscordBot, message: Message, args: string[]) => Promise<any>;
@@ -54,20 +54,18 @@ export interface BaseCommandStructure {
     ) => Promise<any>;
 }
 
-// Base Command Structure
+// Command Structure
 export interface CommandStructure {
-    data: SlashCommandBuilder;
+    data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
     aliases?: string[];
-    minArgsCount?: number;
     usage?: string;
     cooldown: number;
     category: CommandCategory;
-    premium?: boolean;
-    disabled?: boolean | { slash: boolean; prefix: boolean };
+    disabled?: boolean;
     global?: boolean;
     guildOnly?: boolean;
     devOnly?: boolean;
-    inVoice: boolean;
+    inVoiceChannel: boolean;
     botPermissions: PermissionResolvable[];
     userPermissions: PermissionResolvable[];
     run: (client: DiscordBot, message: Message, args: string[]) => Promise<any>;
@@ -77,12 +75,11 @@ export interface CommandStructure {
     ) => Promise<any>;
 }
 
-// Base ContextMenu Structure
+// ContextMenu Structure
 export interface ContextMenuStructure {
     data: ContextMenuCommandBuilder;
     cooldown: number;
     category: CommandCategory;
-    premium?: boolean;
     disabled?: boolean;
     global?: boolean;
     guildOnly?: boolean;
@@ -94,6 +91,16 @@ export interface ContextMenuStructure {
         interaction:
             | MessageContextMenuCommandInteraction
             | UserContextMenuCommandInteraction,
-        data: Object,
     ) => Promise<any>;
 }
+
+// Command Types
+export type NewCommand = {
+    data: APIApplicationCommand;
+    global: Boolean;
+    disabled: boolean;
+};
+export type OldCommand = {
+    data: ApplicationCommand;
+    global: Boolean;
+};

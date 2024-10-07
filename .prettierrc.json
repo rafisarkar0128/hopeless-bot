@@ -6,6 +6,6 @@
     "singleQuote": false,
     "printWidth": 90,
     "bracketSpacing": true,
-    "arrowParens": "always",
-    "endOfLine": "crlf"
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
 }

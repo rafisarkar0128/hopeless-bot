@@ -7,17 +7,7 @@ import {
     ApplicationCommandOptionChoiceData,
 } from "discord.js";
 import { DiscordBot } from "@lib/DiscordBot";
-
-// Command Types
-export type NewCommand = {
-    data: APIApplicationCommand;
-    global: Boolean;
-    disabled: boolean;
-};
-export type OldCommand = {
-    data: ApplicationCommand;
-    global: Boolean;
-};
+import { NewCommand, OldCommand } from "./commands";
 
 // Fucntion syncCommands() to synchronize Application Commands
 export type SyncCommands = (

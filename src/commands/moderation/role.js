@@ -1,55 +1,50 @@
-const {
-    SlashCommandBuilder,
-    PermissionFlagsBits,
-    ChatInputCommandInteraction,
-    Client,
-} = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("role")
         .setDescription("Give | Remove role(s) from server members")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
-        .addSubcommand((option) =>
+        .addSubcommand(option =>
             option
                 .setName("give")
                 .setDescription("Gives a role to a user.")
-                .addRoleOption((option) =>
+                .addRoleOption(option =>
                     option
                         .setName("role")
                         .setDescription("The role to give.")
                         .setRequired(true),
                 )
-                .addUserOption((option) =>
+                .addUserOption(option =>
                     option
                         .setName("target")
                         .setDescription("The user to give the role.")
                         .setRequired(true),
                 ),
         )
-        .addSubcommand((option) =>
+        .addSubcommand(option =>
             option
                 .setName("remove")
                 .setDescription("Removes a role from a user.")
-                .addRoleOption((option) =>
+                .addRoleOption(option =>
                     option
                         .setName("role")
                         .setDescription("The role to remove.")
                         .setRequired(true),
                 )
-                .addUserOption((option) =>
+                .addUserOption(option =>
                     option
                         .setName("target")
                         .setDescription("The user to remove the role.")
                         .setRequired(true),
                 ),
         )
-        .addSubcommand((option) =>
+        .addSubcommand(option =>
             option
                 .setName("multiple")
                 .setDescription("Role command for multiple users.")
-                .addStringOption((option) =>
+                .addStringOption(option =>
                     option
                         .setName("action")
                         .setDescription("Pick an action")
@@ -62,13 +57,13 @@ module.exports = {
                             },
                         ),
                 )
-                .addRoleOption((option) =>
+                .addRoleOption(option =>
                     option
                         .setName("role")
                         .setDescription("The role to gives.")
                         .setRequired(true),
                 )
-                .addStringOption((option) =>
+                .addStringOption(option =>
                     option
                         .setName("type")
                         .setDescription("Pick a type")
@@ -87,19 +82,17 @@ module.exports = {
                 ),
         ),
     aliases: [],
-    minArgsCount: 0,
     usage: "",
     cooldown: 30,
     category: "MODERATION",
-    premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: true,
     devOnly: true,
     botPermissions: [],
     userPermissions: [],
-    run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {
+    //run: async (client, message, args) => {},
+    execute: async (client, interaction) => {
         const { options, user, guild } = interaction;
         const role = await guild.roles.fetch(options.getRole("role")?.id);
         const target = options.getUser("target")
@@ -153,7 +146,7 @@ module.exports = {
             case "multiple":
                 {
                     const allMembers = await guild.members.fetch();
-                    allMembers.forEach((member) => {
+                    allMembers.forEach(member => {
                         switch (type) {
                             case "all":
                                 memberArray.push(member);
@@ -169,7 +162,7 @@ module.exports = {
                     switch (action) {
                         case "give":
                             {
-                                memberArray.forEach((member) => {
+                                memberArray.forEach(member => {
                                     member.roles.add(role);
                                 });
                                 interaction.reply({
@@ -180,7 +173,7 @@ module.exports = {
                             break;
                         case "remove":
                             {
-                                memberArray.forEach((member) => {
+                                memberArray.forEach(member => {
                                     member.roles.remove(role);
                                 });
                                 interaction.reply({

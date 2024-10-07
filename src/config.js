@@ -118,14 +118,38 @@ module.exports = {
     music: {
         enabled: true,
         idle_time: 180000,
-        max_search_results: 5,
+        max_search_results: 10,
         default_source: "YTM",
         lavalink_nodes: [
+            // local hosted nodes for lavalink
             {
                 host: "localhost",
                 port: 2333,
-                authorization: "youshallnotpass",
-                identifier: "node_1",
+                password: "youshallnotpass",
+                secure: false,
+                identifier: "Local Node",
+            },
+            // nodes from https://lavalinks-list.vercel.app/non-ssl 
+            {
+                identifier: "LewdHuTao - Lavalink",
+                password: "youshallnotpass",
+                host: "node.lewdhutao.my.eu.org",
+                port: 80,
+                secure: false,
+            },
+            {
+                identifier: "INZEWORLD.COM (DE)",
+                password: "saher.inzeworld.com",
+                host: "lava.inzeworld.com",
+                port: 3128,
+                secure: false,
+            },
+            {
+                identifier: "Koi Node V4",
+                password: "fypmoon.org",
+                host: "nodev4.fypmoon.org",
+                port: 1118,
+                secure: false,
             },
         ],
     },

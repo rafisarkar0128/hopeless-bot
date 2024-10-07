@@ -6,11 +6,13 @@ const {
     ButtonStyle,
 } = require("discord.js");
 
-/** @type {import("@types/events").DiscordEventStructure} */
+/** @type {import("@types/events").EventStructure} */
 module.exports = {
     name: "messageCreate",
     once: false,
     rest: false,
+    ws: false,
+    moonlink: false,
     /** @param {Message} message */
     execute: async (client, message) => {
         if (message.author.bot) return;

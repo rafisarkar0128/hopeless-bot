@@ -2,28 +2,22 @@ server: # REST and WS server
     port: 2333
     address: 0.0.0.0
     http2:
-        enabled: false # Whether to enable HTTP/2 support
+        enabled: false
 plugins:
     youtube:
-        enabled: true # Whether this source can be used.
-        allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
-        allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
-        allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
-        # The clients to use for track loading. See below for a list of valid clients.
-        # Clients are queried in the order they are given (so the first client is queried first and so on...)
+        enabled: true
+        allowSearch: true
+        allowDirectVideoIds: true
+        allowDirectPlaylistIds: true
         clients:
             - MUSIC
-            - ANDROID_TESTSUITE
-            - WEB
-            - TVHTML5EMBEDDED
-#       name: # Name of the plugin
-#       some_key: some_value # Some key-value pair for the plugin
-#       another_key: another_value
+            # - ANDROID_TESTSUITE
+            # - WEB
+            # - TVHTML5EMBEDDED
 lavalink:
     plugins:
-        # Replace VERSION with the current version as shown by the Releases tab or a long commit hash for snapshots.
         - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.3"
-          snapshot: false # Set to true if you want to use a snapshot version.
+          snapshot: false
     server:
         password: "youshallnotpass"
         sources:
@@ -33,7 +27,7 @@ lavalink:
             twitch: true
             vimeo: true
             nico: true
-            http: false # warning: keeping HTTP enabled without a proxy configured could expose your server's IP address.
+            http: false
             local: true
         filters: # All filters are enabled by default
             volume: true
@@ -46,15 +40,15 @@ lavalink:
             rotation: true
             channelMix: true
             lowPass: true
-        nonAllocatingFrameBuffer: false # Setting to true reduces the number of allocations made by each player at the expense of frame rebuilding (e.g. non-instantaneous volume changes)
-        bufferDurationMs: 400 # The duration of the NAS buffer. Higher values fare better against longer GC pauses. Duration <= 0 to disable JDA-NAS. Minimum of 40ms, lower values may introduce pauses.
-        frameBufferDurationMs: 5000 # How many milliseconds of audio to keep buffered
-        opusEncodingQuality: 10 # Opus encoder quality. Valid values range from 0 to 10, where 10 is best quality but is the most expensive on the CPU.
-        resamplingQuality: LOW # Quality of resampling operations. Valid values are LOW, MEDIUM and HIGH, where HIGH uses the most CPU.
-        trackStuckThresholdMs: 10000 # The threshold for how long a track can be stuck. A track is stuck if does not return any audio data.
-        useSeekGhosting: true # Seek ghosting is the effect where whilst a seek is in progress, the audio buffer is read from until empty, or until seek is ready.
-        youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
-        playerUpdateInterval: 5 # How frequently to send player updates to clients, in seconds
+        nonAllocatingFrameBuffer: true
+        bufferDurationMs: 1000
+        frameBufferDurationMs: 5000
+        opusEncodingQuality: 10
+        resamplingQuality: LOW
+        trackStuckThresholdMs: 5000
+        useSeekGhosting: true
+        youtubePlaylistLoadLimit: 6
+        playerUpdateInterval: 5
         youtubeSearchEnabled: true
         soundcloudSearchEnabled: true
         gc-warnings: true
@@ -81,13 +75,11 @@ metrics:
 sentry:
     dsn: ""
     environment: ""
-#   tags:
-#       some_key: some_value
-#       another_key: another_value
 
 logging:
-    file:
-        path: ./logs/
+    # upto you if you want to save the logs in a file
+    # file:
+    #    path: ./logs/
 
     level:
         root: INFO

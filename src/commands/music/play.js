@@ -1,43 +1,30 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
-const search_prefix = {
-    YT: "ytsearch",
-    YTM: "ytmsearch",
-    SC: "scsearch",
-};
-
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
-        .setDescription("play a song from youtube")
-        .addStringOption((option) =>
+        .setDescription("play a song from youtube music")
+        .addStringOption(option =>
             option.setName("query").setDescription("song name or url").setRequired(true),
         ),
     aliases: ["pl"],
-    minArgsCount: 0,
     usage: "/play < option >| {prefix}play <song-name | options>",
     cooldown: 0,
     category: "MUSIC",
-    premium: false,
-    disabled: { slash: false, prefix: true },
+    disabled: false,
     global: false,
     guildOnly: true,
     devOnly: true,
+    inVoiceChannel: true,
     botPermissions: ["EmbedLinks"],
     userPermissions: [],
-    run: async (client, message, args, data) => { },
-    execute: async (client, interaction, data) => {
-        if (!interaction.member.voice.channel) {
-            // Responding with a message if the user is not in a voice channel
-            return interaction.reply({
-                content: `You are not in a voice channel`,
-                ephemeral: true,
-            });
-        }
+    //run: async (client, message, args) => {},
+    execute: async (client, interaction) => {
+        await interaction.deferReply();
 
-        let query = interaction.options.getString("query");
-        let player = client.moonlink.createPlayer({
+        const query = interaction.options.getString("query");
+        const player = client.moonlink.createPlayer({
             guildId: interaction.guild.id,
             voiceChannelId: interaction.member.voice.channel.id,
             textChannelId: interaction.channel.id,
@@ -45,7 +32,6 @@ module.exports = {
         });
 
         if (!player.connected) {
-            // Connecting to the voice channel if not already connected
             player.connect({
                 setDeaf: true,
                 setMute: false,
@@ -54,25 +40,25 @@ module.exports = {
 
         let res = await client.moonlink.search({
             query,
-            source: "youtube",
+            source: "youtubemusic",
             requester: interaction.user.id,
         });
 
         if (res.loadType === "loadfailed") {
             // Responding with an error message if loading fails
-            return interaction.reply({
+            return interaction.editReply({
                 content: `:x: Load failed - the system is not cooperating.`,
             });
         } else if (res.loadType === "empty") {
             // Responding with a message if the search returns no results
-            return interaction.reply({
+            return interaction.editReply({
                 content: `:x: No matches found!`,
             });
         }
 
         if (res.loadType === "playlist") {
-            interaction.reply({
-                content: `${res.playlistInfo.name} This playlist has been added to the waiting list, spreading joy`,
+            interaction.editReply({
+                content: `${res.playlistInfo.name} This playlist has been added to the waiting list`,
             });
 
             for (const track of res.tracks) {
@@ -81,13 +67,12 @@ module.exports = {
             }
         } else {
             player.queue.add(res.tracks[0]);
-            interaction.reply({
+            interaction.editReply({
                 content: `${res.tracks[0].title} was added to the waiting list`,
             });
         }
 
         if (!player.playing) {
-            // Starting playback if not already playing
             player.play();
         }
     },
@@ -100,7 +85,7 @@ const query = options.getString("query");
 const errEmbed = new EmbedBuilder().setColor(colors.Wrong);
 
 if (!member.voice.channel) {
-    return interaction.reply({
+    return interaction.editReply({
         embeds: [errEmbed.setDescription("🚫 You need to join a voice channel first")],
         ephemeral: true,
     });
@@ -113,7 +98,7 @@ if (player && !guild.members.me.voice.channel) {
 }
 
 if (player && member.voice.channel !== guild.members.me.voice.channel) {
-    return interaction.reply({
+    return interaction.editReply({
         content: "🚫 You must be in the same voice channel as mine",
         ephemeral: true,
     });

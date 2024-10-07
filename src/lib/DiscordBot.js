@@ -7,7 +7,7 @@ const commandCategories = require("@src/commandCategories.js");
 const { syncCommands } = require("@helpers/syncCommands");
 
 class DiscordBot extends Client {
-    /** Client Options to use while initializing the client
+    /** Options to use while initializing the client
      * @param {import("discord.js").ClientOptions} options
      */
     constructor(options) {
@@ -37,24 +37,17 @@ class DiscordBot extends Client {
             this.moonlink = new Manager({
                 nodes: this.config.music.lavalink_nodes,
                 options: {
-                    clientName: `${this.pkg.name}/${this.pkg.version}`
+                    clientName: `${this.pkg.name}@${this.pkg.version}`,
                 },
                 sendPayload: (guildId, payload) => {
-                    const guild = this.guilds.cache.get(guildId);
-                    if (guild) guild.shard.send(JSON.parse(payload));
+                    this.guilds.cache.get(guildId)?.shard?.send(JSON.parse(payload));
                 },
             });
         }
-
-        // Giveaways
-        //if (this.config.giveaways.enabled) this.giveawaysManager = giveawaysHandler(this);
-
-        // Discord Together
-        //this.discordTogether = new DiscordTogether(this);
     }
 
     /** Function to load event modules
-     * @param {string} dirname Directory name of events
+     * @param {string} dirname Directory name for event files defaults to "events"
      * @return {Promise<void>}
      */
     async loadEvents(dirname = "events") {
@@ -66,23 +59,25 @@ class DiscordBot extends Client {
 
         for (const file of files) {
             try {
-                /** @type {import("@types/events").BaseEventStructure} */
+                /** @type {import("@types/events").EventStructure} */
                 const event = require(file);
                 const execute = (...args) => event.execute(this, ...args);
-                var target = this;
-
-                if (event.rest) target = this.rest;
-                if (event.ws) target = this.ws;
-                if (event.moonlink) target = this.moonlink;
+                const target = event.rest
+                    ? this.rest
+                    : event.ws
+                    ? this.ws
+                    : event.moonlink
+                    ? this.moonlink
+                    : this;
 
                 this.events.set(file.replace(/\\/g, "/").split("/").pop(), event);
+                target[event.once ? "once" : "on"](event.name, execute);
+
                 console.log(
                     `[${colors.yellow("EVENT")}] ${colors.green(
                         file.replace(/\\/g, "/").split("/").pop(),
                     )}`,
                 );
-
-                target[event.once ? "once" : "on"](event.name, execute);
             } catch (error) {
                 console.log(
                     `[${colors.yellow("EVENT")}] ${colors.red(
@@ -99,7 +94,7 @@ class DiscordBot extends Client {
                     "[AntiCrash] | [Event_Error_Logs] | [Start] : ===============",
                 ),
             );
-            errors.forEach((error) => {
+            errors.forEach(error => {
                 console.log(colors.red(error));
             });
             console.log(
@@ -109,20 +104,18 @@ class DiscordBot extends Client {
             );
         }
 
-        return this.logger.info(
-            `loaded ${colors.yellow(this.events.size)} event modules`,
-        );
+        this.logger.info(`loaded ${colors.yellow(this.events.size)} event modules`);
     }
 
     /** Function to load command modules
-     * @param {string} dirname Directory name of commands
+     * @param {string} dirname Directory name for command files defaults to "commands"
      * @return {Promise<void>}
      */
     async loadCommands(dirname) {
         this.logger.info(`loading command modules`);
         const errors = new Array();
 
-        /** @type {import("@types/sync").NewCommand} */
+        /** @type {import("@types/sync").NewCommand[]} */
         const newCommands = new Array();
         const files = await this.utils.loadFiles(dirname, ".js");
         this.commands.clear();
@@ -132,20 +125,13 @@ class DiscordBot extends Client {
                 /** @type {import("@types/commands").BaseCommandStructure} */
                 const command = require(file);
 
-                if (
-                    command.disabled === true ||
-                    (command.disabled.slash && command.disabled.prefix)
-                ) {
+                if (command.disabled === true) {
                     continue;
                 }
 
-                if (command.category) {
-                    if (commandCategories[command.category]?.enabled === false) continue;
-                }
+                if (commandCategories[command.category]?.enabled === false) continue;
 
-                if (command.cooldown) {
-                    this.cooldowns.set(command.data.name, new Collection());
-                }
+                this.cooldowns.set(command.data.name, new Collection());
 
                 if (command.aliases?.length) {
                     for (const alias of command.aliases) {
@@ -155,19 +141,15 @@ class DiscordBot extends Client {
 
                 if (command.data.toJSON().type === 1) {
                     this.commands.set(command.data.name, command);
-                    newCommands.push({
-                        data: command.data.toJSON(),
-                        global: command?.global,
-                        disabled: command.disabled.slash,
-                    });
                 } else {
                     this.contexts.set(command.data.name, command);
-                    newCommands.push({
-                        data: command.data.toJSON(),
-                        global: command?.global,
-                        disabled: command.disabled,
-                    });
                 }
+
+                newCommands.push({
+                    data: command.data.toJSON(),
+                    global: command.global,
+                    disabled: command.disabled,
+                });
 
                 console.log(
                     `[${colors.blue("COMMAND")}] ${colors.green(
@@ -190,7 +172,7 @@ class DiscordBot extends Client {
                     "[AntiCrash] | [Command_Error_Logs] | [Start] : ===============",
                 ),
             );
-            errors.forEach((error) => {
+            errors.forEach(error => {
                 console.log(colors.red(error));
             });
             console.log(
@@ -206,7 +188,7 @@ class DiscordBot extends Client {
             )} command modules`,
         );
 
-        return await syncCommands(this, newCommands);
+        await syncCommands(this, newCommands);
     }
 
     /**
@@ -216,7 +198,7 @@ class DiscordBot extends Client {
      */
     async logBox(content, options) {
         const boxen = (await import("boxen")).default;
-        return console.log(boxen(content, options));
+        console.log(boxen(content, options));
     }
 }
 

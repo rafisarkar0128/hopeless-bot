@@ -1,15 +1,5 @@
 import { DiscordBot } from "@lib/DiscordBot";
 
-// Base Event Structure
-export interface BaseEventStructure {
-    name: string;
-    once: boolean;
-    rest: boolean;
-    ws: boolean;
-    moonlink: boolean;
-    execute: (client: DiscordBot, ...args: any) => Promise<any>;
-}
-
 // Discord.JS Event Names
 export type DiscordEventNames =
     | "applicationCommandPermissionsUpdate"
@@ -92,15 +82,6 @@ export type DiscordEventNames =
     | "webhooksUpdate"
     | "webhookUpdate";
 
-// Base Event Module Structure
-export interface DiscordEventStructure {
-    name: DiscordEventNames;
-    once: boolean;
-    rest: boolean;
-    ws: boolean;
-    execute: (client: DiscordBot, ...args: any) => Promise<any>;
-}
-
 // Moonlink Client Events
 export type MoonlinkEventNames =
     | "autoLeaved"
@@ -122,9 +103,12 @@ export type MoonlinkEventNames =
     | "trackStart"
     | "trackStuck";
 
-// Base Moonlink Event Structure
-export interface MoonlinkEventStructure {
-    name: MoonlinkEventNames;
+// Base Event Module Structure
+export interface EventStructure {
+    name: DiscordEventNames | MoonlinkEventNames;
+    once: boolean;
+    rest: boolean;
+    ws: boolean;
     moonlink: boolean;
     execute: (client: DiscordBot, ...args: any) => Promise<any>;
 }

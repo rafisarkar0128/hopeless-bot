@@ -1,14 +1,14 @@
 const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@types/events").DiscordEventStructure} */
+/** @type {import("@types/events").EventStructure} */
 module.exports = {
     name: "interactionCreate",
     once: false,
     rest: false,
-    /**
-     * @param {ChatInputCommandInteraction} interaction
-     */
-    async execute(client, interaction) {
+    ws: false,
+    moonlink: false,
+    /** @param {ChatInputCommandInteraction} interaction */
+    execute: async (client, interaction) => {
         if (!interaction.isChatInputCommand()) return;
 
         const { config, colors, utils } = client;
@@ -18,7 +18,7 @@ module.exports = {
             const command = client.commands.get(commandName);
 
             const mEmbed = new EmbedBuilder()
-                .setTitle("**This command isn't available. Try again after sometime.**")
+                .setTitle("**This command isn't available. Try again later.**")
                 .setColor(colors.Wrong);
             if (!command || !command.execute) {
                 return interaction.reply({
@@ -30,7 +30,7 @@ module.exports = {
             const dEmbed = new EmbedBuilder()
                 .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
                 .setColor(colors.Wrong);
-            if (command.disabled.slash && !config.devs.includes(user.id)) {
+            if (command.disabled && !config.devs.includes(user.id)) {
                 return interaction.reply({
                     embeds: [dEmbed],
                     ephemeral: true,
@@ -104,6 +104,17 @@ module.exports = {
                 return interaction.reply({
                     embeds: [bPermission],
                     ephemeral: true,
+                });
+            }
+
+            const vcEmbed = new EmbedBuilder()
+                .setColor(client.colors.Wrong)
+                .setTitle(
+                    "**You must have to be in a voice channel to use this command.**",
+                );
+            if (command.inVoiceChannel && !member.voice.channel) {
+                return interaction.reply({
+                    embed: [vcEmbed],
                 });
             }
 

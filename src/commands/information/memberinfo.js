@@ -1,140 +1,66 @@
-const { EmbedBuilder, AttachmentBuilder, SlashCommandBuilder } = require("discord.js");
+const {
+    EmbedBuilder,
+    AttachmentBuilder,
+    SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    Message,
+    Embed,
+    Attachment,
+} = require("discord.js");
 const { profileImage } = require("discord-arts");
 const { DateTime } = require("luxon");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("memberinfo")
         .setDescription("📖 View your or any member's information.")
-        .addUserOption((option) =>
+        .addUserOption(option =>
             option
                 .setName("member")
                 .setDescription("Select a member or leave empty to view your own info.")
                 .setRequired(false),
         ),
     aliases: [],
-    minArgsCount: 0,
-    usage: "/memberinfo [member] | {prefix}memeberinfo [member]",
+    usage: "/memberinfo [member] <GuildMember | InteractionUser> | {prefix}memeberinfo <MemberMention | MemberId>",
     cooldown: 20,
     category: "INFORMATION",
-    premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: true,
     devOnly: false,
     botPermissions: [],
     userPermissions: [],
-    run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {
+    run: async (client, message, args) => {
+        const waitEmbed = new EmbedBuilder()
+            .setColor(client.colors.Good)
+            .setTitle("**Please be patient and wait for the embed.**");
+        const reply = await message.reply({
+            embeds: [waitEmbed],
+        });
+
+        var member = message.member;
+        const patternMatch = args[0].match(/(\d{17,20})/);
+        if (patternMatch) {
+            const id = patternMatch[1];
+            member = await message.guild.members.fetch(id);
+        }
+
+        const { embed, imageAttachment } = await getMemberEmbed(client, message, member);
+        return reply.edit({
+            embeds: [embed],
+            files: [imageAttachment],
+        });
+    },
+    execute: async (client, interaction) => {
         await interaction.deferReply();
 
         const member = interaction.options.getMember("member") || interaction.member;
-
-        const banner = (await member.user.fetch()).bannerURL({
-            size: 4096,
-        });
-        const avatar = member.user.displayAvatarURL({
-            size: 4096,
-        });
-
-        const profileBuffer = await profileImage(member.id, {
-            customBackground: banner ? "" : `../../assets/blured.jpg`,
-            usernameColor: client.colors.AmericanRose,
-            tagColor: client.colors.PowderBlue,
-        });
-        const imageAttachment = new AttachmentBuilder(profileBuffer, {
-            name: "profile.png",
-        });
-
-        const joinTime = `${DateTime.fromMillis(member.joinedTimestamp).toFormat(
-            "dd/LL/yyyy h:mm:ss",
-        )} (${DateTime.fromMillis(member.joinedTimestamp).toRelativeCalendar()})`;
-
-        const creationTime = `${DateTime.fromMillis(
-            member.user.createdTimestamp,
-        ).toFormat("dd/LL/yyyy h:mm:ss")} (${DateTime.fromMillis(
-            member.user.createdTimestamp,
-        ).toRelativeCalendar()})`;
-
-        const Booster = member.premiumSince
-            ? `Since ${DateTime.fromMillis(member.premiumSinceTimestamp).toFormat(
-                  "LLLL dd, yyyy",
-              )}`
-            : "No";
-
-        const embed = new EmbedBuilder()
-            .setTitle("General Information")
-            .setColor(member.displayHexColor || client.colors.azure)
-            .setDescription(
-                `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${
-                    member.id
-                }> joind as the **${addSuffix(
-                    await getJoinedPosition(interaction, member.id),
-                )}** member of this server.`,
-            )
-            .setImage("attachment://profile.png")
-            .setThumbnail(avatar)
-            .addFields(
-                {
-                    name: "Username",
-                    value: `\`\`\`\n${member.user.username}\n\`\`\``,
-                    inline: true,
-                },
-                {
-                    name: "Nickname",
-                    value: `\`\`\`\n${member.user.displayName}\n\`\`\``,
-                    inline: true,
-                },
-                {
-                    name: "User ID",
-                    value: `\`\`\`m\n${member.user.id}\n\`\`\``,
-                    inline: false,
-                },
-                {
-                    name: "Badges",
-                    value: `${await addBadges(member.user.flags.toArray())}`,
-                    inline: true,
-                },
-                {
-                    name: "Is Boosting",
-                    value: Booster,
-                    inline: true,
-                },
-                {
-                    name: `Roles [${member.roles.cache.size - 1}]`,
-                    value: `${member.roles.cache
-                        .sort((a, b) => b.position - a.position)
-                        .map((role) => role)
-                        .join("")
-                        .replace("@everyone", "")}`,
-                    inline: false,
-                },
-
-                {
-                    name: "Joined this server on (DD/MM/YYYY)",
-                    value: `\`\`\`\n${joinTime}\n\`\`\``,
-                    inline: false,
-                },
-                {
-                    name: "Account created on (DD/MM/YYYY)",
-                    value: `\`\`\`\n${creationTime}\n\`\`\``,
-                    inline: false,
-                },
-                {
-                    name: "Avatar Url",
-                    value: `[Link](${avatar})`,
-                    inline: true,
-                },
-                {
-                    name: "Banner Url",
-                    value: `[Link](${banner})`,
-                    inline: true,
-                },
-            )
-            .setFooter({
-                text: `Powered by ${client.user.username}`,
-            });
+        const { embed, imageAttachment } = await getMemberEmbed(
+            client,
+            interaction,
+            member,
+        );
 
         return interaction.followUp({
             embeds: [embed],
@@ -142,6 +68,120 @@ module.exports = {
         });
     },
 };
+
+/** Function to get memberinfo Embed and image attachment
+ * @param {import("@lib/DiscordBot").DiscordBot} client
+ * @param {ChatInputCommandInteraction | Message} ctx
+ * @param {import("discord.js").GuildMember} member
+ * @returns {Promise<Embed, Attachment>}
+ */
+async function getMemberEmbed(client, ctx, member) {
+    const banner = (await member.user.fetch()).bannerURL({
+        size: 4096,
+    });
+    const avatar = member.user.displayAvatarURL({
+        size: 4096,
+    });
+
+    const profileBuffer = await profileImage(member.id, {
+        customBackground: banner ? "" : `${process.cwd()}/src/assets/mountains_dark.jpg`,
+        usernameColor: client.colors.Aquamarine,
+        tagColor: client.colors.StandBy,
+        removeAvatarFrame: false,
+    });
+    const imageAttachment = new AttachmentBuilder(profileBuffer, {
+        name: "profile.png",
+    });
+
+    const joinTime = `${DateTime.fromMillis(member.joinedTimestamp).toFormat(
+        "dd/LL/yyyy h:mm:ss",
+    )} (${DateTime.fromMillis(member.joinedTimestamp).toRelativeCalendar()})`;
+
+    const creationTime = `${DateTime.fromMillis(member.user.createdTimestamp).toFormat(
+        "dd/LL/yyyy h:mm:ss",
+    )} (${DateTime.fromMillis(member.user.createdTimestamp).toRelativeCalendar()})`;
+
+    const Booster = member.premiumSince
+        ? `Since ${DateTime.fromMillis(member.premiumSinceTimestamp).toFormat(
+              "LLLL dd, yyyy",
+          )}`
+        : "No";
+
+    const embed = new EmbedBuilder()
+        .setTitle("General Information")
+        .setColor(member.displayHexColor || client.utils.getRandomColor())
+        .setDescription(
+            `On <t:${parseInt(member.joinedTimestamp / 1000)}:D> <@${
+                member.id
+            }> joind as the **${addSuffix(
+                await getJoinedPosition(ctx, member.id),
+            )}** member of this server.`,
+        )
+        .setImage("attachment://profile.png")
+        .setThumbnail(avatar)
+        .addFields(
+            {
+                name: "Username",
+                value: `\`\`\`\n${member.user.username}\n\`\`\``,
+                inline: true,
+            },
+            {
+                name: "Nickname",
+                value: `\`\`\`\n${member.user.displayName}\n\`\`\``,
+                inline: true,
+            },
+            {
+                name: "User ID",
+                value: `\`\`\`m\n${member.user.id}\n\`\`\``,
+                inline: false,
+            },
+            {
+                name: "Badges",
+                value: `${await addBadges(member.user.flags.toArray())}`,
+                inline: true,
+            },
+            {
+                name: "Is Boosting",
+                value: Booster,
+                inline: true,
+            },
+            {
+                name: `Roles [${member.roles.cache.size - 1}]`,
+                value: `${member.roles.cache
+                    .sort((a, b) => b.position - a.position)
+                    .map(role => role)
+                    .join("")
+                    .replace("@everyone", "")}`,
+                inline: false,
+            },
+
+            {
+                name: "Joined this server on (DD/MM/YYYY)",
+                value: `\`\`\`\n${joinTime}\n\`\`\``,
+                inline: false,
+            },
+            {
+                name: "Account created on (DD/MM/YYYY)",
+                value: `\`\`\`\n${creationTime}\n\`\`\``,
+                inline: false,
+            },
+            {
+                name: "Avatar Url",
+                value: `[Link](${avatar})`,
+                inline: true,
+            },
+            {
+                name: "Banner Url",
+                value: `[Link](${banner})`,
+                inline: true,
+            },
+        )
+        .setFooter({
+            text: client.config.bot.footer,
+        });
+
+    return { embed, imageAttachment };
+}
 
 function addSuffix(number) {
     if (number % 100 >= 11 && number % 100 <= 13) return number + "th";
@@ -177,11 +217,16 @@ function addBadges(badgeNames) {
 
         //"<:verifiedbot1:1275477687108108358><:verifiedbot2:1275477702362533991>" return verified bot logo,
     };
-    return badgeNames.map((badgeName) => badgeMap[badgeName] || "❔").join("");
+    return badgeNames.map(badgeName => badgeMap[badgeName] || "❔").join("");
 }
 
-async function getJoinedPosition(interaction, id) {
-    let guildMembers = await interaction.guild.members.fetch();
+/** Function to get guild member joined position
+ * @param {ChatInputCommandInteraction | Message} ctx
+ * @param {string} id
+ * @returns {Promise<number>}
+ */
+async function getJoinedPosition(ctx, id) {
+    let guildMembers = await ctx.guild.members.fetch();
     let position =
         Array.from(
             guildMembers.sort((a, b) => a.joinedTimestamp - b.joinedTimestamp).keys(),

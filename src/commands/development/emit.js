@@ -5,7 +5,7 @@ const {
     ApplicationIntegrationType,
 } = require("discord.js");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("emit")
@@ -13,7 +13,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-        .addStringOption((option) =>
+        .addStringOption(option =>
             option
                 .setName("event")
                 .setDescription("The event to emit")
@@ -21,60 +21,52 @@ module.exports = {
                 .setChoices(
                     {
                         name: "guildMemberAdd",
-                        value: "add",
+                        value: "gadd",
                     },
                     {
                         name: "guildMemberRemove",
-                        value: "remove",
+                        value: "gremove",
                     },
                 ),
         )
-        .addUserOption((option) =>
+        .addUserOption(option =>
             option
                 .setName("member")
                 .setDescription("Select a member.")
                 .setRequired(false),
         ),
     aliases: [],
-    minArgsCount: 0,
-    usage: "",
+    usage: "/emit [event] <Event Name>",
     cooldown: 0,
     category: "DEVELOPMENT",
     premium: false,
-    disabled: { slash: false, prefix: false },
+    disabled: false,
     global: true,
     guildOnly: true,
     devOnly: true,
-    botPermissions: ["ManageGuild"],
-    userPermissions: ["ManageGuild"],
-    //run: async (client, message, args, data) => {},
-    execute: async (client, interaction, data) => {
+    botPermissions: [],
+    userPermissions: [],
+    //run: async (client, message, args) => {},
+    execute: async (client, interaction) => {
         const member = interaction.options.getMember("member") || interaction.member;
         const string = interaction.options.getString("event");
 
         switch (string) {
-            case "add":
+            case "gadd":
                 {
                     client.emit("guildMemberAdd", member);
-
-                    interaction.reply({
-                        content: "Emitted Guild Member Add event successfully.",
-                        ephemeral: true,
-                    });
                 }
                 break;
-            case "remove":
+            case "gremove":
                 {
                     client.emit("guildMemberRemove", member);
-
-                    interaction.reply({
-                        content: "Emitted Guild Member Remove event successfully.",
-                        ephemeral: true,
-                    });
                 }
                 break;
-            default:
-                break;
         }
+
+        return interaction.reply({
+            content: "Emitted the selected event successfully.",
+            ephemeral: true,
+        });
     },
 };

@@ -14,5 +14,6 @@ logs
 collected
 
 # Lavalink
-lavalink/plugins 
 lavalink/Lavalink.jar
+lavalink/plugins
+lavalink/logs

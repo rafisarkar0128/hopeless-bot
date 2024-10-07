@@ -1,11 +1,13 @@
 const { ActivityType } = require("discord.js");
 
-/** @type {import("@types/events").DiscordEventStructure} */
+/** @type {import("@types/events").EventStructure} */
 module.exports = {
     name: "ready",
     once: true,
     rest: false,
-    execute: async (client) => {
+    ws: false,
+    moonlink: false,
+    execute: async client => {
         const activities = [
             {
                 name: "Slash Commands",
