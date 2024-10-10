@@ -30,7 +30,6 @@ module.exports = {
   userPermissions: [],
   run: async (client, message, args) => {
     const query = args.join(" ");
-    //await message.deferReply();
     return play(client, message, query);
   },
   execute: async (client, interaction) => {

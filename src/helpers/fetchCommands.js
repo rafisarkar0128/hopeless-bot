@@ -1,13 +1,10 @@
 const colors = require("colors");
 
-/** @type {import("@types/sync").FetchCommands} */
+/** A fucntion to fetch Application Commands
+ * @param {import("@lib/DiscordBot").DiscordBot} client
+ * @returns {Promise<import("@types/commands").OldCommand[]>}
+ */
 async function fetchCommands(client) {
-  client.logger.write(
-    `[${colors.cyan("INFO")}] ${colors.magenta("fetching")} ${colors.blue(
-      "application commands from discord",
-    )}`,
-  );
-
   const ApplicationCommands = new Array();
   let i = 0,
     g = 0;
@@ -37,7 +34,7 @@ async function fetchCommands(client) {
     );
   }
 
-  client.logger.log(
+  console.log(
     `[${colors.cyan("INFO")}] ${colors.magenta("fetched")} ${colors.blue(
       `${colors.yellow(i + g)} application command(s)`,
     )}`,

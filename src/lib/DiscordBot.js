@@ -4,7 +4,7 @@ const { Utils } = require("@lib/Utils.js");
 const { Manager } = require("moonlink.js");
 const colors = require("colors");
 const commandCategories = require("@src/commandCategories.js");
-const { syncCommands } = require("@helpers/syncCommands");
+const { synchronizeApplicationCommands } = require("@helpers/syncCommands");
 
 class DiscordBot extends Client {
   /** Options to use while initializing the client
@@ -65,10 +65,10 @@ class DiscordBot extends Client {
         const target = event.rest
           ? this.rest
           : event.ws
-            ? this.ws
-            : event.moonlink
-              ? this.moonlink
-              : this;
+          ? this.ws
+          : event.moonlink
+          ? this.moonlink
+          : this;
 
         this.events.set(file.replace(/\\/g, "/").split("/").pop(), event);
         target[event.once ? "once" : "on"](event.name, execute);
@@ -178,7 +178,9 @@ class DiscordBot extends Client {
       `loaded ${colors.yellow(this.commands.size + this.contexts.size)} command modules`,
     );
 
-    await syncCommands(this, newCommands);
+    this.logger.info(`${colors.yellow("synchronizing commands")}`);
+    await synchronizeApplicationCommands(this, newCommands);
+    return this.logger.info(colors.yellow("synchronization completed"));
   }
 
   /**

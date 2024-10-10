@@ -1,11 +1,15 @@
-/** @type {import("@types/sync").CheckForChanges} */
-async function checkForChange(OldCommand, NewCommand) {
+/** A fucntion to check for changes in Application Command Data
+ * @param {import("@types/commands").OldCommand} OldCommand
+ * @param {import("@types/commands").NewCommand} NewCommand
+ * @returns {boolean}
+ */
+function checkForChange(OldCommand, NewCommand) {
   const oldCommand = OldCommand.data;
   const newCommand = NewCommand.data;
 
   if (oldCommand.nameLocalizations || newCommand.name_localizations) {
     if (
-      await checkForChangeInNameLocalization(
+      checkForChangeInNameLocalization(
         oldCommand.nameLocalizations,
         newCommand.name_localizations,
       )
@@ -15,13 +19,11 @@ async function checkForChange(OldCommand, NewCommand) {
   }
 
   if ((oldCommand.type || newCommand.type) === 1) {
-    if (oldCommand.description !== newCommand.description) {
-      return true;
-    }
+    if (oldCommand.description !== newCommand.description) return true;
 
     if (oldCommand.descriptionLocalizations || newCommand.description_localizations) {
       if (
-        await checkForChangeInDescriptionLocalization(
+        checkForChangeInDescriptionLocalization(
           oldCommand.descriptionLocalizations,
           newCommand.description_localizations,
         )
@@ -33,7 +35,7 @@ async function checkForChange(OldCommand, NewCommand) {
     if (oldCommand.options || newCommand.options) {
       if (oldCommand.options.length !== newCommand.options.length) return true;
 
-      if (await checkForChangesinOptions(oldCommand.options, newCommand.options)) {
+      if (checkForChangesinOptions(oldCommand.options, newCommand.options)) {
         return true;
       }
     }
@@ -93,8 +95,12 @@ async function checkForChange(OldCommand, NewCommand) {
   return false;
 }
 
-/** @type {import("@types/sync").CheckForChangesinOptions} */
-async function checkForChangesinOptions(oldOptions, newOptions) {
+/** A function to check for changes in options;
+ * @param {import("discord.js").ApplicationCommandOption[]} oldOptions
+ * @param {import("discord.js").APIApplicationCommandOption[]} newOptions
+ * @returns {boolean}
+ */
+function checkForChangesinOptions(oldOptions, newOptions) {
   for (const newOption of newOptions) {
     const oldOption = oldOptions.find((option) => option.name === newOption.name);
 
@@ -102,7 +108,7 @@ async function checkForChangesinOptions(oldOptions, newOptions) {
 
     if (oldOption.nameLocalizations || newOption.name_localizations) {
       if (
-        await checkForChangeInNameLocalization(
+        checkForChangeInNameLocalization(
           oldOption.nameLocalizations,
           newOption.name_localizations,
         )
@@ -115,7 +121,7 @@ async function checkForChangesinOptions(oldOptions, newOptions) {
 
     if (oldOption.descriptionLocalizations || newOption.description_localizations) {
       if (
-        await checkForChangeInDescriptionLocalization(
+        checkForChangeInDescriptionLocalization(
           oldOption.descriptionLocalizations,
           newOption.description_localizations,
         )
@@ -145,7 +151,7 @@ async function checkForChangesinOptions(oldOptions, newOptions) {
         return true;
       }
 
-      if (await checkForChangeInChoices(oldOption.choices, newOption.choices)) {
+      if (checkForChangeInChoices(oldOption.choices, newOption.choices)) {
         return true;
       }
     }
@@ -162,26 +168,26 @@ async function checkForChangesinOptions(oldOptions, newOptions) {
           (context) => !newOption.channel_types.includes(context),
         );
 
-        if (addedChannelType || removedChannelType) {
-          return true;
-        }
+        if (addedChannelType || removedChannelType) return true;
       } else {
         return true;
       }
     }
 
     if (oldOption.options || newOption.options) {
-      if (await checkForChangesinOptions(oldOption.options, newOption.options)) {
-        return true;
-      }
+      if (checkForChangesinOptions(oldOption.options, newOption.options)) return true;
     }
   }
 
   return false;
 }
 
-/** @type {import("@types/sync").CheckForChangeInChoices} */
-async function checkForChangeInChoices(oldChoices, newChoices) {
+/** A function to check for changes in string option choices
+ * @param {import("discord.js").ApplicationCommandOptionChoiceData[]} oldChoices
+ * @param {import("discord.js").APIApplicationCommandOptionChoice[]} newChoices
+ * @returns {boolean}
+ */
+function checkForChangeInChoices(oldChoices, newChoices) {
   for (const newChoice of newChoices) {
     const oldChoice = oldChoices?.find((choice) => choice.name === newChoice.name);
 
@@ -191,7 +197,7 @@ async function checkForChangeInChoices(oldChoices, newChoices) {
 
     if (oldChoice.nameLocalizations || newChoice.name_localizations) {
       if (
-        await checkForChangeInNameLocalization(
+        checkForChangeInNameLocalization(
           oldChoice.nameLocalizations,
           newChoice.name_localizations,
         )
@@ -204,97 +210,86 @@ async function checkForChangeInChoices(oldChoices, newChoices) {
   return false;
 }
 
-/** @type {import("@types/sync").CheckForChangeInNameLocalization} */
-function checkForChangeInNameLocalization(nameLocalizations, name_localizations) {
-  if (nameLocalizations?.bg !== name_localizations?.bg) return true;
-  if (nameLocalizations?.cs !== name_localizations?.cs) return true;
-  if (nameLocalizations?.da !== name_localizations?.da) return true;
-  if (nameLocalizations?.de !== name_localizations?.de) return true;
-  if (nameLocalizations?.el !== name_localizations?.el) return true;
-  if (nameLocalizations?.["en-GB"] !== name_localizations?.["en-GB"]) return true;
-  if (nameLocalizations?.["en-US"] !== name_localizations?.["en-US"]) return true;
-  if (nameLocalizations?.["es-419"] !== name_localizations?.["es-419"]) return true;
-  if (nameLocalizations?.["es-ES"] !== name_localizations?.["es-ES"]) return true;
-  if (nameLocalizations?.fi !== name_localizations?.fi) return true;
-  if (nameLocalizations?.fr !== name_localizations?.fr) return true;
-  if (nameLocalizations?.hi !== name_localizations?.hi) return true;
-  if (nameLocalizations?.hr !== name_localizations?.hr) return true;
-  if (nameLocalizations?.hu !== name_localizations?.hu) return true;
-  if (nameLocalizations?.id !== name_localizations?.id) return true;
-  if (nameLocalizations?.it !== name_localizations?.it) return true;
-  if (nameLocalizations?.ja !== name_localizations?.ja) return true;
-  if (nameLocalizations?.ko !== name_localizations?.ko) return true;
-  if (nameLocalizations?.lt !== name_localizations?.lt) return true;
-  if (nameLocalizations?.nl !== name_localizations?.nl) return true;
-  if (nameLocalizations?.no !== name_localizations?.no) return true;
-  if (nameLocalizations?.pl !== name_localizations?.pl) return true;
-  if (nameLocalizations?.["pt-BR"] !== name_localizations?.["pt-BR"]) return true;
-  if (nameLocalizations?.ro !== name_localizations?.ro) return true;
-  if (nameLocalizations?.ru !== name_localizations?.ru) return true;
-  if (nameLocalizations?.["sv-SE"] !== name_localizations?.["sv-SE"]) return true;
-  if (nameLocalizations?.th !== name_localizations?.th) return true;
-  if (nameLocalizations?.tr !== name_localizations?.tr) return true;
-  if (nameLocalizations?.uk !== name_localizations?.uk) return true;
-  if (nameLocalizations?.vi !== name_localizations?.vi) return true;
-  if (nameLocalizations?.["zh-CN"] !== name_localizations?.["zh-CN"]) return true;
-  if (nameLocalizations?.["zh-TW"] !== name_localizations?.["zh-TW"]) return true;
+/** A function to check for changes in name localizations
+ * @param {import("discord.js").LocalizationMap} nLocalizations
+ * @param {import("discord.js").LocalizationMap} n_localizations
+ * @returns {boolean}
+ */
+function checkForChangeInNameLocalization(nLocalizations, n_localizations) {
+  if (nLocalizations?.bg !== n_localizations?.bg) return true;
+  if (nLocalizations?.cs !== n_localizations?.cs) return true;
+  if (nLocalizations?.da !== n_localizations?.da) return true;
+  if (nLocalizations?.de !== n_localizations?.de) return true;
+  if (nLocalizations?.el !== n_localizations?.el) return true;
+  if (nLocalizations?.["en-GB"] !== n_localizations?.["en-GB"]) return true;
+  if (nLocalizations?.["en-US"] !== n_localizations?.["en-US"]) return true;
+  if (nLocalizations?.["es-419"] !== n_localizations?.["es-419"]) return true;
+  if (nLocalizations?.["es-ES"] !== n_localizations?.["es-ES"]) return true;
+  if (nLocalizations?.fi !== n_localizations?.fi) return true;
+  if (nLocalizations?.fr !== n_localizations?.fr) return true;
+  if (nLocalizations?.hi !== n_localizations?.hi) return true;
+  if (nLocalizations?.hr !== n_localizations?.hr) return true;
+  if (nLocalizations?.hu !== n_localizations?.hu) return true;
+  if (nLocalizations?.id !== n_localizations?.id) return true;
+  if (nLocalizations?.it !== n_localizations?.it) return true;
+  if (nLocalizations?.ja !== n_localizations?.ja) return true;
+  if (nLocalizations?.ko !== n_localizations?.ko) return true;
+  if (nLocalizations?.lt !== n_localizations?.lt) return true;
+  if (nLocalizations?.nl !== n_localizations?.nl) return true;
+  if (nLocalizations?.no !== n_localizations?.no) return true;
+  if (nLocalizations?.pl !== n_localizations?.pl) return true;
+  if (nLocalizations?.["pt-BR"] !== n_localizations?.["pt-BR"]) return true;
+  if (nLocalizations?.ro !== n_localizations?.ro) return true;
+  if (nLocalizations?.ru !== n_localizations?.ru) return true;
+  if (nLocalizations?.["sv-SE"] !== n_localizations?.["sv-SE"]) return true;
+  if (nLocalizations?.th !== n_localizations?.th) return true;
+  if (nLocalizations?.tr !== n_localizations?.tr) return true;
+  if (nLocalizations?.uk !== n_localizations?.uk) return true;
+  if (nLocalizations?.vi !== n_localizations?.vi) return true;
+  if (nLocalizations?.["zh-CN"] !== n_localizations?.["zh-CN"]) return true;
+  if (nLocalizations?.["zh-TW"] !== n_localizations?.["zh-TW"]) return true;
 
   return false;
 }
 
-/** @type {import("@types/sync").CheckForChangeInDescriptionLocalization} */
-function checkForChangeInDescriptionLocalization(
-  descriptionLocalizations,
-  description_localizations,
-) {
-  if (descriptionLocalizations?.bg !== description_localizations?.bg) return true;
-  if (descriptionLocalizations?.cs !== description_localizations?.cs) return true;
-  if (descriptionLocalizations?.da !== description_localizations?.da) return true;
-  if (descriptionLocalizations?.de !== description_localizations?.de) return true;
-  if (descriptionLocalizations?.el !== description_localizations?.el) return true;
-  if (descriptionLocalizations?.["en-GB"] !== description_localizations?.["en-GB"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.["en-US"] !== description_localizations?.["en-US"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.["es-419"] !== description_localizations?.["es-419"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.["es-ES"] !== description_localizations?.["es-ES"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.fi !== description_localizations?.fi) return true;
-  if (descriptionLocalizations?.fr !== description_localizations?.fr) return true;
-  if (descriptionLocalizations?.hi !== description_localizations?.hi) return true;
-  if (descriptionLocalizations?.hr !== description_localizations?.hr) return true;
-  if (descriptionLocalizations?.hu !== description_localizations?.hu) return true;
-  if (descriptionLocalizations?.id !== description_localizations?.id) return true;
-  if (descriptionLocalizations?.it !== description_localizations?.it) return true;
-  if (descriptionLocalizations?.ja !== description_localizations?.ja) return true;
-  if (descriptionLocalizations?.ko !== description_localizations?.ko) return true;
-  if (descriptionLocalizations?.lt !== description_localizations?.lt) return true;
-  if (descriptionLocalizations?.nl !== description_localizations?.nl) return true;
-  if (descriptionLocalizations?.no !== description_localizations?.no) return true;
-  if (descriptionLocalizations?.pl !== description_localizations?.pl) return true;
-  if (descriptionLocalizations?.["pt-BR"] !== description_localizations?.["pt-BR"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.ro !== description_localizations?.ro) return true;
-  if (descriptionLocalizations?.ru !== description_localizations?.ru) return true;
-  if (descriptionLocalizations?.["sv-SE"] !== description_localizations?.["sv-SE"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.th !== description_localizations?.th) return true;
-  if (descriptionLocalizations?.tr !== description_localizations?.tr) return true;
-  if (descriptionLocalizations?.uk !== description_localizations?.uk) return true;
-  if (descriptionLocalizations?.vi !== description_localizations?.vi) return true;
-  if (descriptionLocalizations?.["zh-CN"] !== description_localizations?.["zh-CN"]) {
-    return true;
-  }
-  if (descriptionLocalizations?.["zh-TW"] !== description_localizations?.["zh-TW"]) {
-    return true;
-  }
+/** A function to check for changes in description localizations
+ * @param {import("discord.js").LocalizationMap} dLocalizations
+ * @param {import("discord.js").LocalizationMap} d_localizations
+ * @returns {boolean}
+ */
+function checkForChangeInDescriptionLocalization(dLocalizations, d_localizations) {
+  if (dLocalizations?.bg !== d_localizations?.bg) return true;
+  if (dLocalizations?.cs !== d_localizations?.cs) return true;
+  if (dLocalizations?.da !== d_localizations?.da) return true;
+  if (dLocalizations?.de !== d_localizations?.de) return true;
+  if (dLocalizations?.el !== d_localizations?.el) return true;
+  if (dLocalizations?.["en-GB"] !== d_localizations?.["en-GB"]) return true;
+  if (dLocalizations?.["en-US"] !== d_localizations?.["en-US"]) return true;
+  if (dLocalizations?.["es-419"] !== d_localizations?.["es-419"]) return true;
+  if (dLocalizations?.["es-ES"] !== d_localizations?.["es-ES"]) return true;
+  if (dLocalizations?.fi !== d_localizations?.fi) return true;
+  if (dLocalizations?.fr !== d_localizations?.fr) return true;
+  if (dLocalizations?.hi !== d_localizations?.hi) return true;
+  if (dLocalizations?.hr !== d_localizations?.hr) return true;
+  if (dLocalizations?.hu !== d_localizations?.hu) return true;
+  if (dLocalizations?.id !== d_localizations?.id) return true;
+  if (dLocalizations?.it !== d_localizations?.it) return true;
+  if (dLocalizations?.ja !== d_localizations?.ja) return true;
+  if (dLocalizations?.ko !== d_localizations?.ko) return true;
+  if (dLocalizations?.lt !== d_localizations?.lt) return true;
+  if (dLocalizations?.nl !== d_localizations?.nl) return true;
+  if (dLocalizations?.no !== d_localizations?.no) return true;
+  if (dLocalizations?.pl !== d_localizations?.pl) return true;
+  if (dLocalizations?.["pt-BR"] !== d_localizations?.["pt-BR"]) return true;
+  if (dLocalizations?.ro !== d_localizations?.ro) return true;
+  if (dLocalizations?.ru !== d_localizations?.ru) return true;
+  if (dLocalizations?.["sv-SE"] !== d_localizations?.["sv-SE"]) return true;
+  if (dLocalizations?.th !== d_localizations?.th) return true;
+  if (dLocalizations?.tr !== d_localizations?.tr) return true;
+  if (dLocalizations?.uk !== d_localizations?.uk) return true;
+  if (dLocalizations?.vi !== d_localizations?.vi) return true;
+  if (dLocalizations?.["zh-CN"] !== d_localizations?.["zh-CN"]) return true;
+  if (dLocalizations?.["zh-TW"] !== d_localizations?.["zh-TW"]) return true;
 
   return false;
 }
