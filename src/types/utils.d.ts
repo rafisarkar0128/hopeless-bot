@@ -1,34 +1,34 @@
 // File Exentions
 export type FileExtensions =
-    | ".js"
-    | ".jsx"
-    | ".json"
-    | ".cjs"
-    | ".cts"
-    | ".mjs"
-    | ".mts"
-    | ".ts "
-    | ".tsx"
-    | ".jpg"
-    | ".png"
-    | ".jpeg"
-    | ".gif"
-    | ".mp4"
-    | ".mp3"
-    | ".mkv";
+  | ".js"
+  | ".jsx"
+  | ".json"
+  | ".cjs"
+  | ".cts"
+  | ".mjs"
+  | ".mts"
+  | ".ts "
+  | ".tsx"
+  | ".jpg"
+  | ".png"
+  | ".jpeg"
+  | ".gif"
+  | ".mp4"
+  | ".mp3"
+  | ".mkv";
 
 // Function loadFiles()
 export type LoadFiles = (dirname: string, ext: FileExtensions) => Promise<string[]>;
 
 // Error Types
 export type ErrorTypes =
-    | "error"
-    | "event"
-    | "command"
-    | "internal"
-    | "external"
-    | "player"
-    | "fetch";
+  | "error"
+  | "event"
+  | "command"
+  | "internal"
+  | "external"
+  | "player"
+  | "fetch";
 
 // Function sendError() to send error messages
 export type SendError = (error: Error, type: ErrorTypes, data?: any) => Promise<void>;
@@ -45,7 +45,7 @@ export type Timeformat = (timeInSeconds: number) => string;
 export type DurationToMillis = (duration: string) => number;
 export type ParsePermissions = (permissions: PermissionResolvable[]) => string;
 export type GetRemainingTime = (
-    timestamps: TimestampCollection,
-    cooldown: number,
-    userId: string,
+  timestamps: TimestampCollection,
+  cooldown: number,
+  userId: string,
 ) => promise<boolean | number>;

@@ -1,21 +1,21 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "ES6",
-        "resolveJsonModule": true,
-        "baseUrl": "./",
-        "paths": {
-            "@root/*": ["./*"],
-            "@src/*": ["./src/*"],
-            "@lib/*": ["./src/lib/*"],
-            "@types/*": ["./src/types/*"],
-            "@handlers/*": ["./src/handlers/*"],
-            "@commands/*": ["./src/commands/*"],
-            "@assets/*": ["./src/assets/*"],
-            "@events/*": ["./src/events/*"],
-            "@helpers/*": ["./src/helpers/*"],
-            "@schemas/*": ["./src/database/schemas/*"]
-        }
-    },
-    "exclude": ["node_modules", "**/node_modules/*"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES6",
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "@root/*": ["./*"],
+      "@src/*": ["./src/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@types/*": ["./src/types/*"],
+      "@handlers/*": ["./src/handlers/*"],
+      "@commands/*": ["./src/commands/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@events/*": ["./src/events/*"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@schemas/*": ["./src/database/schemas/*"]
+    }
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
 }
