@@ -12,7 +12,7 @@ module.exports = {
     .setDescription("stop the bot from playing music")
     .setContexts(InteractionContextType.Guild)
     .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  aliases: ["pl"],
+  aliases: ["st"],
   usage: "/play < option >| {prefix}play <song-name | options>",
   cooldown: 0,
   category: "MUSIC",

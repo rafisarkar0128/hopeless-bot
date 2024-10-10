@@ -110,5 +110,5 @@ export interface EventStructure {
   rest: boolean;
   ws: boolean;
   moonlink: boolean;
-  execute: (client: DiscordBot, ...args: any) => Promise<any>;
+  execute(client: DiscordBot, ...args: any): Promise<any>;
 }

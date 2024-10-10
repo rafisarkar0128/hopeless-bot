@@ -1,10 +1,4 @@
-const {
-  Message,
-  EmbedBuilder,
-  ButtonBuilder,
-  ActionRowBuilder,
-  ButtonStyle,
-} = require("discord.js");
+const { Message, EmbedBuilder } = require("discord.js");
 
 /** @type {import("@types/events").EventStructure} */
 module.exports = {
@@ -35,35 +29,8 @@ module.exports = {
         text: client.config.bot.footer,
       });
 
-    const githubButton = new ButtonBuilder()
-      .setLabel("GitHub")
-      .setStyle(ButtonStyle.Link)
-      .setURL("https://github.com/theassassin0128/Hopeless-Bot#readme");
-
-    const discordButton = new ButtonBuilder()
-      .setLabel("Support")
-      .setStyle(ButtonStyle.Link)
-      .setURL("https://discord.gg/E6H9VvBdTk");
-
-    const inviteButton = new ButtonBuilder()
-      .setLabel("Invite Me")
-      .setStyle(ButtonStyle.Link)
-      .setURL("https://discord.com/oauth2/authorize?client_id=1272259032098275358");
-
-    const websiteButton = new ButtonBuilder()
-      .setLabel("Website")
-      .setStyle(ButtonStyle.Link)
-      .setURL("https://theassassin0128.github.io/Hopeless-Bot");
-
-    const actionRow = new ActionRowBuilder()
-      .addComponents(githubButton)
-      .addComponents(discordButton)
-      .addComponents(inviteButton)
-      .addComponents(websiteButton);
-
     return message.reply({
       embeds: [embed],
-      components: [actionRow],
     });
   },
 };

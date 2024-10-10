@@ -36,37 +36,39 @@ export type CommandCategory =
 // Base Command Structure
 export interface BaseCommandStructure {
   data: APIApplicationCommand;
-  aliases?: string[];
+  aliases: string[];
+  minArgsCount: number;
   usage?: string;
   cooldown: number;
   category: CommandCategory;
-  disabled?: boolean;
-  global?: boolean;
-  guildOnly?: boolean;
-  devOnly?: boolean;
+  disabled: boolean;
+  global: boolean;
+  guildOnly: boolean;
+  devOnly: boolean;
   inVoiceChannel: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  run: (client: DiscordBot, message: Message, args: string[]) => Promise<any>;
-  execute: (client: DiscordBot, interaction: ChatInputCommandInteraction) => Promise<any>;
+  run(client: DiscordBot, message: Message, args: string[]): Promise<any>;
+  execute(client: DiscordBot, interaction: ChatInputCommandInteraction): Promise<any>;
 }
 
 // Command Structure
 export interface CommandStructure {
   data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
-  aliases?: string[];
-  usage?: string;
+  aliases: string[];
+  minArgsCount: number;
+  usage: string;
   cooldown: number;
   category: CommandCategory;
-  disabled?: boolean;
-  global?: boolean;
-  guildOnly?: boolean;
-  devOnly?: boolean;
+  disabled: boolean;
+  global: boolean;
+  guildOnly: boolean;
+  devOnly: boolean;
   inVoiceChannel: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  run: (client: DiscordBot, message: Message, args: string[]) => Promise<any>;
-  execute: (client: DiscordBot, interaction: ChatInputCommandInteraction) => Promise<any>;
+  run(client: DiscordBot, message: Message, args: string[]): Promise<any>;
+  execute(client: DiscordBot, interaction: ChatInputCommandInteraction): Promise<any>;
 }
 
 // ContextMenu Structure
@@ -80,10 +82,10 @@ export interface ContextMenuStructure {
   devOnly?: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  execute: (
+  execute(
     client: DiscordBot,
     interaction: MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction,
-  ) => Promise<any>;
+  ): Promise<any>;
 }
 
 // Command Types

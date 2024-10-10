@@ -21,15 +21,11 @@ class DiscordBot extends Client {
     this.logger = new Logger(this);
     this.utils = new Utils(this);
 
-    /** @type {import("@types/collections").EventCollection} */
-    this.events = new Collection();
-    /** @type {import("@types/collections").CommandCollection} */
+    /** @type {Collection<string, import("@types/commands").CommandStructure>} */
     this.commands = new Collection();
-    /** @type {import("@types/collections").AliasCollection} */
+    /** @type {Collection<string, string>} */
     this.aliases = new Collection();
-    /** @type {import("@types/collections").CoolDownCollection} */
-    this.cooldowns = new Collection();
-    /** @type {import("@types/collections").ContextCollection} */
+    /** @type {Collection<string, import("@types/commands").ContextMenuStructure>} */
     this.contexts = new Collection();
 
     // Music Manager
@@ -53,9 +49,8 @@ class DiscordBot extends Client {
   async loadEvents(dirname = "events") {
     this.logger.info(`loading event modules`);
     const errors = new Array();
-
     const files = await this.utils.loadFiles(dirname, ".js");
-    this.events.clear();
+    let i = 0;
 
     for (const file of files) {
       try {
@@ -70,9 +65,9 @@ class DiscordBot extends Client {
           ? this.moonlink
           : this;
 
-        this.events.set(file.replace(/\\/g, "/").split("/").pop(), event);
         target[event.once ? "once" : "on"](event.name, execute);
 
+        i++;
         console.log(
           `[${colors.yellow("EVENT")}] ${colors.green(
             file.replace(/\\/g, "/").split("/").pop(),
@@ -100,7 +95,7 @@ class DiscordBot extends Client {
       );
     }
 
-    this.logger.info(`loaded ${colors.yellow(this.events.size)} event modules`);
+    return this.logger.info(`loaded ${colors.yellow(i)} event modules`);
   }
 
   /** Function to load command modules
@@ -127,11 +122,13 @@ class DiscordBot extends Client {
 
         if (commandCategories[command.category]?.enabled === false) continue;
 
-        this.cooldowns.set(command.data.name, new Collection());
-
         if (command.aliases?.length) {
           for (const alias of command.aliases) {
-            this.aliases.set(alias, command.data.name);
+            if (this.aliases.has(alias)) {
+              throw new Error(`alias ${colors.yellow(alias)} already exist`);
+            } else {
+              this.aliases.set(alias, command.data.name);
+            }
           }
         }
 

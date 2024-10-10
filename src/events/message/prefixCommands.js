@@ -1,4 +1,6 @@
-const { Message, EmbedBuilder } = require("discord.js");
+const { Message } = require("discord.js");
+const { commandHandler, automodHandler, statsHandler } = require("@handlers/index");
+const { getSettings } = require("@schemas/guild");
 
 /** @type {import("@types/events").EventStructure} */
 module.exports = {
@@ -8,124 +10,34 @@ module.exports = {
   ws: false,
   moonlink: false,
   /** @param {Message} message */
-  execute: async (client, message) => {
-    if (message.author.bot) return;
+  async execute(client, message) {
+    const { config, commands, aliases } = client;
+    const { author, guild } = message;
 
-    const { config, colors, commands, aliases, utils } = client;
-    const { author, member, guild, channel } = message;
+    if (author.bot) return;
+    const settings = await getSettings(guild);
 
-    const default_prefix = config.bot.defaultPrefix;
-    if (!message.content.startsWith(default_prefix)) return;
-    if (!member && guild) member = guild.fetchMember(message);
+    let isCommand = false;
 
-    try {
-      const args = message.content.slice(default_prefix.length).trim().split(/ +/g);
-      const commandName = args.shift().toLowerCase();
-      const command = commands.get(commandName) || commands.get(aliases.get(commandName));
+    if (config.enabled_commands.prefix) {
+      if (message.content && message.content.startsWith(settings.prefix)) {
+        const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+        const name = args.shift().toLowerCase();
+        const command = commands.get(name) || commands.get(aliases.get(name));
 
-      const mEmbed = new EmbedBuilder()
-        .setTitle("**This command isn't available. Try again later.**")
-        .setColor(colors.Wrong);
-      if (!command || !command.run) {
-        return message.reply({
-          embeds: [mEmbed],
-        });
+        if (command) {
+          isCommand = true;
+          commandHandler.handlePrefixCommand(client, message, command, settings);
+        }
       }
-
-      const dEmbed = new EmbedBuilder()
-        .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
-        .setColor(colors.Wrong);
-      if (command.disabled && !config.devs.includes(author.id)) {
-        return message.reply({
-          embeds: [dEmbed],
-        });
-      }
-
-      const dvEmbed = new EmbedBuilder()
-        .setTitle(`**Only the owner or developers are allowed to use this command.**`)
-        .setColor(colors.Wrong);
-      if (
-        (command.devOnly || command.category === "DEVELOPMENT") &&
-        !config.devs.includes(author.id)
-      ) {
-        return message.reply({
-          embeds: [dvEmbed],
-        });
-      }
-
-      const gEmbed = new EmbedBuilder()
-        .setTitle(`**This command can only be used in a __Guild (Discord Server)__**`)
-        .setColor(colors.Wrong);
-      if (command.guildOnly && !message.inGuild()) {
-        return message.reply({
-          embeds: [gEmbed],
-        });
-      }
-
-      const timestamps = client.cooldowns.get(command.data.name);
-      const cooldown = (command.cooldown || 3) * 1000;
-      const remainingTime = utils.getRemainingTime(timestamps, cooldown, author.id);
-      const cdEmbed = new EmbedBuilder()
-        .setTitle(`**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`)
-        .setColor(colors.Wrong);
-      if (remainingTime && !config.devs.includes(author.id)) {
-        return message.reply({
-          embeds: [cdEmbed],
-        });
-      }
-
-      const uPermission = new EmbedBuilder()
-        .setTitle(
-          `**You need \`${utils.parsePermissions(
-            command.userPermissions,
-          )}\` to use this command.**`,
-        )
-        .setColor(colors.Wrong);
-      if (member && !member.permissions.has(command?.userPermissions)) {
-        return message.reply({
-          embeds: [uPermission],
-        });
-      }
-
-      const bPermission = new EmbedBuilder()
-        .setTitle(
-          `**I need ${utils.parsePermissions(
-            command.botPermissions,
-          )} to execute this command.**`,
-        )
-        .setColor(colors.Wrong);
-      if (member && !guild.members.me.permissions.has(command?.botPermissions)) {
-        return message.reply({
-          embeds: [bPermission],
-        });
-      }
-
-      const vcEmbed = new EmbedBuilder()
-        .setColor(client.colors.Wrong)
-        .setDescription(
-          "**You must have to be in a voice channel to use this command.**",
-        );
-      if (command.inVoiceChannel && !member.voice.channel) {
-        return interaction.reply({
-          embed: [vcEmbed],
-        });
-      }
-
-      return command.run(client, message, args);
-    } catch (error) {
-      const eEmbed = new EmbedBuilder()
-        .setColor(colors.StandBy)
-        .setTitle(`** An error has occurred! Try again later!**`);
-
-      const reply = await message.reply({
-        content: `${author}`,
-        embeds: [eEmbed],
-      });
-      setTimeout(() => {
-        reply.delete();
-      }, 9000);
-
-      throw error;
     }
+
+    // stats handler
+    //if (settings.stats.enabled) {
+    //  await statsHandler.trackMessageStats(message, isCommand, settings);
+    //}
+
+    // if not a command
+    //if (!isCommand) await automodHandler.performAutomod(message, settings);
   },
 };

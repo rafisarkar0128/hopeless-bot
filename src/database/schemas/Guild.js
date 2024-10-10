@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const config = require("../../config.js");
 const FixedSizeMap = require("fixedsize-map");
-const { getUser } = require("./User");
+const { getUser } = require("./user.js");
 
 const cache = new FixedSizeMap(config.cacheSize.guilds);
 
@@ -24,7 +24,7 @@ const Schema = new mongoose.Schema({
     xp: {
       message: {
         type: String,
-        default: config.stats.default_levelup_message,
+        default: config.stats.defaultLevelUpMessage,
       },
       channel: String,
     },
@@ -131,7 +131,6 @@ module.exports = {
 
     let guildData = await Model.findById(guild.id);
     if (!guildData) {
-      // save owner details
       guild
         .fetchOwner()
         .then(async (owner) => {
@@ -140,7 +139,6 @@ module.exports = {
         })
         .catch((ex) => {});
 
-      // create a new guild model
       guildData = new Model({
         _id: guild.id,
         data: {

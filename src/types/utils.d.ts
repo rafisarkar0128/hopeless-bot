@@ -44,8 +44,3 @@ export type DiffHours = (dt2: Date, dt1: Date) => Date;
 export type Timeformat = (timeInSeconds: number) => string;
 export type DurationToMillis = (duration: string) => number;
 export type ParsePermissions = (permissions: PermissionResolvable[]) => string;
-export type GetRemainingTime = (
-  timestamps: TimestampCollection,
-  cooldown: number,
-  userId: string,
-) => promise<boolean | number>;

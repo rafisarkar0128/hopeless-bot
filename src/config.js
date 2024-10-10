@@ -5,9 +5,7 @@ module.exports = {
     token: process.env.BOT_TOKEN,
     secret: process.env.BOT_SECRET,
     invite: process.env.ALLOWED_INVITE,
-    footer: `Copyright © 2023 - ${new Date().getFullYear()} | @${
-      process.env.OWNER_NAME
-    }`,
+    footer: `Copyright © 2023 - ${new Date().getFullYear()} | @${process.env.OWNER_NAME}`,
   },
   ownerId: process.env.OWNER_ID,
   guildId: process.env.SERVER_ID,
@@ -15,6 +13,13 @@ module.exports = {
   mongodbUri: process.env.MONGO_URI,
   antiCrash: {
     enabled: true,
+  },
+  enabled_commands: {
+    prefix: true,
+    slash: true,
+    context: true,
+    buttons: false,
+    modals: false,
   },
   emojis: {
     normal: {

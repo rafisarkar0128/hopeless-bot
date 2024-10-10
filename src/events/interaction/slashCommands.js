@@ -60,18 +60,18 @@ module.exports = {
         });
       }
 
-      const timestamps = client.cooldowns.get(command.data.name);
-      const cooldown = (command.cooldown || 3) * 1000;
-      const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
-      const cdEmbed = new EmbedBuilder()
-        .setTitle(`**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`)
-        .setColor(colors.Wrong);
-      if (remainingTime && !config.devs.includes(user.id)) {
-        return interaction.reply({
-          embeds: [cdEmbed],
-          ephemeral: true,
-        });
-      }
+      //const timestamps = client.cooldowns.get(command.data.name);
+      //const cooldown = (command.cooldown || 3) * 1000;
+      //const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
+      //const cdEmbed = new EmbedBuilder()
+      //  .setTitle(`**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`)
+      //  .setColor(colors.Wrong);
+      //if (remainingTime && !config.devs.includes(user.id)) {
+      //  return interaction.reply({
+      //    embeds: [cdEmbed],
+      //    ephemeral: true,
+      //  });
+      //}
 
       const uPermission = new EmbedBuilder()
         .setTitle(

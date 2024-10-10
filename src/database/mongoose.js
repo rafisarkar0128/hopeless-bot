@@ -15,14 +15,14 @@ module.exports = {
   },
 
   schemas: {
-    Giveaways: require("./schemas/Giveaways.js"),
-    Guild: require("./schemas/Guild.js"),
-    Member: require("./schemas/Member.js"),
-    ReactionRoles: require("./schemas/ReactionRoles.js").model,
-    ModLog: require("./schemas/ModLog.js").model,
-    TranslateLog: require("./schemas/TranslateLog.js").model,
-    User: require("./schemas/User.js"),
-    Suggestions: require("./schemas/Suggestions.js").model,
+    Giveaways: require("./schemas/giveaways.js"),
+    Guild: require("./schemas/guild.js"),
+    Member: require("./schemas/member.js"),
+    ReactionRoles: require("./schemas/reactionRoles.js").model,
+    ModLog: require("./schemas/modLog.js").model,
+    TranslateLog: require("./schemas/translateLog.js").model,
+    User: require("./schemas/user.js"),
+    Suggestions: require("./schemas/suggestions.js").model,
     ErrorLogConfig: require("./schemas/errorlogs.js").model,
   },
 };
