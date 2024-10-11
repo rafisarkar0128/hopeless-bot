@@ -23,14 +23,30 @@ module.exports = {
   prefixCommand: {
     enabled: false,
     aliases: ["errlog", "elog", "error", "logger"],
-    usage: "{prefix}errorlog < subcommand | args >",
-    minArgsCount: 0,
-    subcommands: [],
+    usage: "[subcommand] <args>",
+    minArgsCount: 1,
+    subcommands: [
+      {
+        name: "create",
+        description: "Create a new error logging system",
+      },
+      {
+        name: "delete",
+        description: "Delete the error logging system",
+      },
+      {
+        name: "update",
+        description: "Update the error logging system",
+      },
+      {
+        name: "preview",
+        description: "Test the error logging system",
+      },
+    ],
   },
   slashCommand: {
     enabled: true,
     ephemeral: true,
-    usage: "/errorlog < subcommand | subcommandgroup >",
     data: new SlashCommandBuilder()
       .setName("errorlog")
       .setDescription("Config the error logging system for the bot")
@@ -144,18 +160,18 @@ module.exports = {
   run: (client, message, args, data) => {
     return message.reply({
       embeds: [
-        new EmbedBuilder.setDescription(
-          "**This Command is Still in Development**",
-        ).setColor(client.config.colors.Wrong),
+        new EmbedBuilder()
+          .setDescription("**This Command is Still in Development**")
+          .setColor(client.colors.Wrong),
       ],
     });
   },
   execute: async (client, interaction, data) => {
     return interaction.reply({
       embeds: [
-        new EmbedBuilder.setDescription(
-          "**This Command is Still in Development**",
-        ).setColor(client.config.colors.Wrong),
+        new EmbedBuilder()
+          .setDescription("**This Command is Still in Development**")
+          .setColor(client.colors.Wrong),
       ],
     });
 

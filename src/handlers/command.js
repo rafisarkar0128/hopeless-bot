@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, Embed } = require("discord.js");
 //const { OWNER_IDS, PREFIX_COMMANDS, EMBED_COLORS } = require("@root/config");
 //const { parsePermissions } = require("@helpers/Utils");
 // /const { timeformat } = require("@helpers/Utils");
@@ -14,7 +14,7 @@ module.exports = {
    * @param {object} settings
    */
   handlePrefixCommand: async function (client, message, command, settings) {
-    const { config, colors, commands, aliases, utils } = client;
+    const { config, colors, utils } = client;
     const { author, member, guild, channel } = message;
 
     const prefix = settings.prefix || config.bot.defaultPrefix;
@@ -52,7 +52,7 @@ module.exports = {
       });
     }
 
-    if (command.disabled && !config.devs.includes(author.id)) {
+    if (!command.prefixCommand.enabled && !config.devs.includes(author.id)) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -63,7 +63,7 @@ module.exports = {
     }
 
     if (
-      (command.devOnly || command.category === "DEVELOPMENT") &&
+      (command.isDevOnly || command.category === "DEVELOPMENT") &&
       !config.devs.includes(author.id)
     ) {
       return message.reply({
@@ -75,7 +75,7 @@ module.exports = {
       });
     }
 
-    if (command.guildOnly && !message.inGuild()) {
+    if (command.isGuildOnly && !message.inGuild()) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -87,7 +87,7 @@ module.exports = {
 
     if (command.cooldown > 0) {
       const remainingTime = getRemainingTime(command, author.id);
-      if (remainingTime > 0 && config.devs.includes(author.id)) {
+      if (remainingTime > 0 && !config.devs.includes(author.id)) {
         return message.reply({
           embeds: [
             new EmbedBuilder()
@@ -100,7 +100,7 @@ module.exports = {
       }
     }
 
-    if (member && !member.permissions.has(command?.userPermissions)) {
+    if (guild && !member.permissions.has(command?.userPermissions)) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -114,7 +114,7 @@ module.exports = {
       });
     }
 
-    if (member && !guild.members.me.permissions.has(command?.botPermissions)) {
+    if (guild && !guild.members.me.permissions.has(command?.botPermissions)) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -128,19 +128,19 @@ module.exports = {
       });
     }
 
-    if (command.inVoiceChannel && !member.voice.channel) {
+    if (command.isVCOnly && !member.voice.channel) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
-            .setColor(client.colors.Wrong)
+            .setColor(colors.Wrong)
             .setTitle("**You must have to be in a voice channel to use this command.**"),
         ],
       });
     }
 
-    if (command?.minArgsCount > args.length) {
-      const usageEmbed = this.getCommandUsage(command, prefix, invoke);
-      return message.safeReply({ embeds: [usageEmbed] });
+    if (command.prefixCommand.minArgsCount > args.length) {
+      const usageEmbed = this.getCommandUsage(client, command, prefix, commandName);
+      return message.reply({ embeds: [usageEmbed] });
     }
 
     try {
@@ -241,41 +241,44 @@ module.exports = {
     }
   },
 
-  /**
-   * Build a usage embed for this command
-   * @param {import('@structures/Command')} command - command object
-   * @param {string} prefix - guild bot prefix
-   * @param {string} invoke - alias that was used to trigger this command
-   * @param {string} [title] - the embed title
+  /** Build a usage embed for this command
+   * @param {import("@lib/DiscordBot").DiscordBot} client - base client
+   * @param {import("@types/commands").CommandStructure} command - command object
+   * @param {string} prefix - bot prefix
+   * @param {string} alias - alias that was used to trigger this command
+   * @returns {Embed}
    */
-  getCommandUsage(
-    command,
-    prefix = PREFIX_COMMANDS.DEFAULT_PREFIX,
-    invoke,
-    title = "Usage",
-  ) {
+  getCommandUsage(client, command, prefix, alias) {
     let desc = "";
-    if (command.command.subcommands && command.command.subcommands.length > 0) {
-      command.command.subcommands.forEach((sub) => {
-        desc += `\`${prefix}${invoke || command.name} ${sub.trigger}\`\n❯ ${
+    if (command.prefixCommand.subcommands.length > 0) {
+      command.prefixCommand.subcommands.forEach((sub) => {
+        desc += `\`\`\`\n${prefix}${alias || command.name} ${sub.name}\n\`\`\`**❯ ${
           sub.description
-        }\n\n`;
+        }**\n\n`;
       });
-      if (command.cooldown) {
-        desc += `**Cooldown:** ${timeformat(command.cooldown)}`;
-      }
     } else {
-      desc += `\`\`\`css\n${prefix}${invoke || command.name} ${
-        command.command.usage
+      desc += `\`\`\`css\n${prefix}${alias || command.name} ${
+        command.prefixCommand.usage
       }\`\`\``;
-      if (command.description !== "") desc += `\n**Help:** ${command.description}`;
-      if (command.cooldown) desc += `\n**Cooldown:** ${timeformat(command.cooldown)}`;
+      if (command.description !== "") desc += `\ndescription: ${command.description}`;
+    }
+
+    if (command.cooldown) {
+      desc += `\n**Cooldown:** ${client.utils.timeFormat(command.cooldown * 1000)}s`;
     }
 
     const embed = new EmbedBuilder()
-      .setColor(EMBED_COLORS.BOT_EMBED)
-      .setDescription(desc);
-    if (title) embed.setAuthor({ name: title });
+      .setTitle("Command Usage")
+      .setDescription(
+        [
+          `Name: ${command.name}`,
+          `description: ${command?.description}`,
+          `cooldown: ${command.cooldown}`,
+          `**usage:** \`${prefix}${command.name} ${command.prefixCommand.usage}\``,
+        ].join("\n"),
+      )
+      .setColor(client.colors.Aquamarine);
+
     return embed;
   },
 
@@ -309,7 +312,7 @@ module.exports = {
  * @returns {void}
  */
 function setCooldown(command, userId) {
-  const key = command.data.name + "-" + userId;
+  const key = command.name + "-" + userId;
   cooldownCache.set(key, Date.now());
 }
 
@@ -319,7 +322,7 @@ function setCooldown(command, userId) {
  * @returns {number}
  */
 function getRemainingTime(command, userId) {
-  const key = command.data.name + "-" + userId;
+  const key = command.name + "-" + userId;
   if (cooldownCache.has(key)) {
     const remaining = (Date.now() - cooldownCache.get(key)) * 0.001;
     if (remaining > command.cooldown) {

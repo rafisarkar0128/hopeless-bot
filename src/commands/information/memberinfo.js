@@ -12,26 +12,38 @@ const { DateTime } = require("luxon");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("memberinfo")
-    .setDescription("📖 View your or any member's information.")
-    .addUserOption((option) =>
-      option
-        .setName("member")
-        .setDescription("Select a member or leave empty to view your own info.")
-        .setRequired(false),
-    ),
-  aliases: [],
-  usage:
-    "/memberinfo [member] <GuildMember | InteractionUser> | {prefix}memeberinfo <MemberMention | MemberId>",
-  cooldown: 20,
-  category: "INFORMATION",
-  disabled: false,
-  global: true,
-  guildOnly: true,
-  devOnly: false,
+  name: "memberinfo",
+  description: "📖 View your or any member's information.",
+  cooldown: 25,
+  category: "NONE",
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: [],
   userPermissions: [],
+  prefixCommand: {
+    enabled: true,
+    aliases: ["userinfo", "infouser", "uinfo", "minfo"],
+    usage: "[member] <MemberMention|MemberId>",
+    minArgsCount: 1,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/memberinfo [member] <GuildMember|InteractionUser>",
+    data: new SlashCommandBuilder()
+      .setName("memberinfo")
+      .setDescription("📖 View your or any member's information.")
+      .addUserOption((option) =>
+        option
+          .setName("member")
+          .setDescription("Select a member or leave empty to view your own info.")
+          .setRequired(false),
+      ),
+  },
   run: async (client, message, args) => {
     const waitEmbed = new EmbedBuilder()
       .setColor(client.colors.Good)

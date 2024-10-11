@@ -7,25 +7,37 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("pause")
-    .setDescription("pause or stop music now playing music")
-    .setContexts(InteractionContextType.Guild)
-    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  aliases: ["pus"],
-  usage: "/pause < option >| {prefix}pause < options>",
+  name: "pause",
+  description: "pause or stop the current music player",
   cooldown: 0,
   category: "MUSIC",
-  disabled: false,
-  global: false,
-  guildOnly: true,
-  devOnly: true,
-  inVoiceChannel: true,
-  botPermissions: ["SendMessages", "SendMessagesInThreads"],
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: true,
+  isVCOnly: true,
+  botPermissions: [],
   userPermissions: [],
+  prefixCommand: {
+    enabled: true,
+    aliases: ["halt"],
+    usage: "<options>",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/pause <options>",
+    data: new SlashCommandBuilder()
+      .setName("pause")
+      .setDescription("pause or stop the current music player")
+      .setContexts(InteractionContextType.Guild)
+      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
-    const player = await client.moonlink.players.get(interaction.guild.id);
+    const player = client.moonlink.players.get(interaction.guild.id);
 
     if (!player) {
       const nEmbed = new EmbedBuilder()
@@ -36,17 +48,16 @@ module.exports = {
       });
     }
 
-    if (player.connected) {
-      player.stop();
-      player.disconnect();
-      player.destroy();
+    if (player.playing) {
+      player.pause();
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(client.colors.Wrong)
-      .setTitle("**Stopped the music player and disconnected from the voice channel.**");
     return interaction.reply({
-      embeds: [embed],
+      embeds: [
+        new EmbedBuilder()
+          .setColor(client.colors.Wrong)
+          .setTitle("**Paused the music player. user `/resume` to resume the player**"),
+      ],
     });
   },
 };

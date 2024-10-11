@@ -11,19 +11,32 @@ const { profileImage } = require("discord-arts");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("botinfo")
-    .setDescription("📖 View bot's information."),
-  aliases: [],
-  usage: "/botinfo | {prefix}botinfo",
+  name: "botinfo",
+  description: "📖 View bot's information.",
   cooldown: 60,
   category: "UTILITY",
-  disabled: false,
-  global: true,
-  guildOnly: false,
-  devOnly: true,
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: false,
+  isDevOnly: true,
+  isVCOnly: false,
   botPermissions: [],
   userPermissions: [],
+  prefixCommand: {
+    enabled: true,
+    aliases: ["btinfo", "bot"],
+    usage: "",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/botinfo",
+    data: new SlashCommandBuilder()
+      .setName("botinfo")
+      .setDescription("📖 View bot's information."),
+  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     try {

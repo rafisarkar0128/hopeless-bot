@@ -10,29 +10,41 @@ const { DateTime } = require("luxon");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("serverinfo")
-    .setDescription("📖 View the server information."),
-  aliases: [],
-  usage: "/info member | {prefix}serverinfo",
+  name: "serverinfo",
+  description: "📖 View the server information.",
   cooldown: 0,
-  category: "NONE",
-  disabled: false,
-  global: true,
-  guildOnly: true,
-  devOnly: false,
-  inVoiceChannel: false,
+  category: "INFORMATION",
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: [],
   userPermissions: [],
-  run: async (client, message, args) => {
-    const embed = await getGuildEmbed(client, message);
+  prefixCommand: {
+    enabled: true,
+    aliases: [],
+    usage: "",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: false,
+    usage: "/serverinfo",
+    data: new SlashCommandBuilder()
+      .setName("serverinfo")
+      .setDescription("📖 View the server information."),
+  },
+  run: async (client, message) => {
     return message.reply({
-      embeds: [embed],
+      embeds: [await getGuildEmbed(client, message)],
     });
   },
   execute: async (client, interaction) => {
+    await interaction.deferReply();
     const embed = await getGuildEmbed(client, interaction);
-    return interaction.reply({
+    return interaction.followUp({
       embeds: [embed],
     });
   },
@@ -116,9 +128,9 @@ async function getGuildEmbed(client, ctx) {
         name: `Server Emojis and Stickers [${Emojis.size + Stickers.size}]`,
         value: `\`\`\`\nNormal: ${
           Emojis.filter((e) => e.animated === false).size
-        } | Animated: ${
-          Emojis.filter((e) => e.animated === true).size
-        } | Sticker: ${Stickers.size}\n\`\`\``,
+        } | Animated: ${Emojis.filter((e) => e.animated === true).size} | Sticker: ${
+          Stickers.size
+        }\n\`\`\``,
         inline: false,
       },
       {

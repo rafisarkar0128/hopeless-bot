@@ -3,7 +3,6 @@ const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { Manager } = require("moonlink.js");
 const colors = require("colors");
-const categories = require("@config/categories");
 
 class DiscordBot extends Client {
   /** Options to use while initializing the client
@@ -13,6 +12,7 @@ class DiscordBot extends Client {
     super(options);
 
     this.config = require(`@config/config.js`);
+    this.colors = require(`@config/colors.json`);
     this.wait = require("timers/promises").setTimeout;
     this.database = require("@src/database/mongoose.js");
     this.pkg = require("@root/package.json");
@@ -49,7 +49,8 @@ class DiscordBot extends Client {
    * @return {Promise<void>}
    */
   async loadEvents(dirname = "events") {
-    this.logger.info(`loading event modules`);
+    if (this.config.console.loaders.event) this.logger.info(`loading event modules`);
+    /** @type {Array<{file: string, error: Error}>} */
     const errors = new Array();
     const files = await this.utils.loadFiles(dirname, ".js");
     let i = 0;
@@ -70,18 +71,20 @@ class DiscordBot extends Client {
         target[event.once ? "once" : "on"](event.name, execute);
 
         i++;
-        console.log(
-          `[${colors.yellow("EVENT")}] ${colors.green(
-            file.replace(/\\/g, "/").split("/").pop(),
-          )}`,
-        );
+        if (this.config.console.loaders.event) {
+          console.log(
+            `[${colors.yellow("EVENT")}] ${colors.green(
+              file.replace(/\\/g, "/").split("/").pop(),
+            )}`,
+          );
+        }
       } catch (error) {
         console.log(
           `[${colors.yellow("EVENT")}] ${colors.red(
             file.replace(/\\/g, "/").split("/").pop(),
           )}`,
         );
-        errors.push(error);
+        errors.push({ file: file, error: error });
       }
     }
 
@@ -89,8 +92,8 @@ class DiscordBot extends Client {
       console.log(
         colors.yellow("[AntiCrash] | [Event_Error_Logs] | [Start] : ==============="),
       );
-      errors.forEach((error) => {
-        console.log(colors.red(error));
+      errors.forEach((e) => {
+        console.log(colors.yellow(e.file), "\n", colors.red(e.error));
       });
       console.log(
         colors.yellow("[AntiCrash] | [Event_Error_Logs] | [End] : ==============="),
@@ -105,14 +108,14 @@ class DiscordBot extends Client {
    * @return {Promise<void>}
    */
   async loadCommands(dirname) {
-    this.logger.info(`loading command modules`);
+    if (this.config.console.loaders.command) this.logger.info(`loading command modules`);
     const errors = new Array();
     const files = await this.utils.loadFiles(dirname, ".js");
     this.commands.clear();
 
     for (const file of files) {
       try {
-        /** @type {import("@types/commands").BaseCommandStructure} */
+        /** @type {import("@types/commands").CommandStructure} */
         const command = require(file);
         const { name, prefixCommand, slashCommand, category } = command;
 
@@ -137,18 +140,20 @@ class DiscordBot extends Client {
           enabled: slashCommand.enabled,
         });
 
-        console.log(
-          `[${colors.blue("COMMAND")}] ${colors.green(
-            file.replace(/\\/g, "/").split("/").pop(),
-          )}`,
-        );
+        if (this.config.console.loaders.command) {
+          console.log(
+            `[${colors.blue("COMMAND")}] ${colors.green(
+              file.replace(/\\/g, "/").split("/").pop(),
+            )}`,
+          );
+        }
       } catch (error) {
         console.log(
           `[${colors.blue("COMMAND")}] ${colors.red(
             file.replace(/\\/g, "/").split("/").pop(),
           )}`,
         );
-        errors.push(error);
+        errors.push({ file: file, error: error });
       }
     }
 
@@ -156,8 +161,8 @@ class DiscordBot extends Client {
       console.log(
         colors.yellow("[AntiCrash] | [Command_Error_Logs] | [Start] : ==============="),
       );
-      errors.forEach((error) => {
-        console.log(colors.red(error));
+      errors.forEach((e) => {
+        console.log(colors.yellow(e.file), "\n", colors.red(e.error));
       });
       console.log(
         colors.yellow("[AntiCrash] | [Command_Error_Logs] | [End] : ==============="),

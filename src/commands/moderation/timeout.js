@@ -3,35 +3,51 @@ const ms = require("ms");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("timeout")
-    .setDescription("⏰ Restrict a member's ability to communicate.")
-    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-    .addUserOption((option) =>
-      option.setName("member").setDescription("The member to timeout.").setRequired(true),
-    )
-    .addStringOption((option) =>
-      option
-        .setName("duration")
-        .setDescription("Duration of the timeout.")
-        .setRequired(true),
-    )
-    .addStringOption((option) =>
-      option
-        .setName("reason")
-        .setDescription("Reason for the the timeout.")
-        .setRequired(false),
-    ),
-  aliases: [],
-  usage: "/timeout [options] | {prefix}timeout [options]",
+  name: "timeout",
+  description: "⏰ Restrict a member's ability to communicate.",
   cooldown: 0,
   category: "MODERATION",
-  disabled: false,
-  global: true,
-  guildOnly: false,
-  devOnly: false,
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: ["ModerateMembers"],
   userPermissions: ["ModerateMembers"],
+  prefixCommand: {
+    enabled: true,
+    aliases: ["tmout", "time", "mute"],
+    usage: "[options]",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/timeout [options]",
+    data: new SlashCommandBuilder()
+      .setName("timeout")
+      .setDescription("⏰ Restrict a member's ability to communicate.")
+      .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
+      .addUserOption((option) =>
+        option
+          .setName("member")
+          .setDescription("The member to timeout.")
+          .setRequired(true),
+      )
+      .addStringOption((option) =>
+        option
+          .setName("duration")
+          .setDescription("Duration of the timeout.")
+          .setRequired(true),
+      )
+      .addStringOption((option) =>
+        option
+          .setName("reason")
+          .setDescription("Reason for the the timeout.")
+          .setRequired(false),
+      ),
+  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const member = interaction.options.getMember("member");

@@ -5,22 +5,35 @@ const {
   ChatInputCommandInteraction,
 } = require("discord.js");
 
-/** @type {import("@src/index").CommandStructure} */
+/** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("🏓Pong! Replies with an embed containing ping information."),
-  aliases: [],
-  usage: "/ping | {prefix}ping",
-  cooldown: 0,
+  name: "ping",
+  description: "🏓Pong! Replies with an embed containing ping information.",
+  cooldown: 20,
   category: "UTILITY",
-  disabled: false,
-  global: true,
-  guildOnly: false,
-  devOnly: false,
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: false,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: [],
   userPermissions: [],
-  run: async (client, message, args) => {
+  prefixCommand: {
+    enabled: true,
+    aliases: ["latency"],
+    usage: "",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/ping",
+    data: new SlashCommandBuilder()
+      .setName("ping")
+      .setDescription("🏓Pong! Replies with an embed containing ping information."),
+  },
+  run: async (client, message) => {
     const waitEmbed = new EmbedBuilder()
       .setColor(client.colors.Good)
       .setTitle("**Please be patient and wait for the embed.**");

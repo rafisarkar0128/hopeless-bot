@@ -7,25 +7,37 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("stop")
-    .setDescription("stop the bot from playing music")
-    .setContexts(InteractionContextType.Guild)
-    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  aliases: ["st"],
-  usage: "/play < option >| {prefix}play <song-name | options>",
+  name: "stop",
+  description: "stop the bot from playing music",
   cooldown: 0,
   category: "MUSIC",
-  disabled: false,
-  global: true,
-  guildOnly: true,
-  devOnly: false,
-  inVoiceChannel: true,
-  botPermissions: ["SendMessages", "SendMessagesInThreads"],
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: true,
+  botPermissions: [],
   userPermissions: [],
+  prefixCommand: {
+    enabled: true,
+    aliases: ["st"],
+    usage: "<options>",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/stop <option>",
+    data: new SlashCommandBuilder()
+      .setName("stop")
+      .setDescription("stop the bot from playing music")
+      .setContexts(InteractionContextType.Guild)
+      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
-    const player = await client.moonlink.players.get(interaction.guild.id);
+    const player = client.moonlink.players.get(interaction.guild.id);
 
     if (!player) {
       const nEmbed = new EmbedBuilder()
@@ -42,11 +54,14 @@ module.exports = {
       player.destroy();
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(client.colors.Wrong)
-      .setTitle("**Stopped the music player and disconnected from the voice channel.**");
     return interaction.reply({
-      embeds: [embed],
+      embeds: [
+        new EmbedBuilder()
+          .setColor(client.colors.Wrong)
+          .setTitle(
+            "**Stopped the music player and disconnected from the voice channel.**",
+          ),
+      ],
     });
   },
 };

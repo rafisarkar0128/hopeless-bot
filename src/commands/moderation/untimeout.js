@@ -2,33 +2,46 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("disc
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("untimeout")
-    .setDescription("⏰ Remove timeout from a member.")
-    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-    .addUserOption((option) =>
-      option
-        .setName("member")
-        .setDescription("The member to untimeout.")
-        .setRequired(true),
-    )
-    .addStringOption((option) =>
-      option
-        .setName("reason")
-        .setDescription("Reason for the the untimeout.")
-        .setRequired(false),
-    ),
-  aliases: [],
-  usage: "/untimeout | {prefix}untimeout",
+  name: "untimeout",
+  description: "⏰ Remove timeout from a member.",
   cooldown: 0,
   category: "MODERATION",
-  disabled: false,
-  global: true,
-  guildOnly: false,
-  devOnly: false,
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: ["ModerateMembers"],
   userPermissions: ["ModerateMembers"],
-  run: async (client, message, args) => {},
+  prefixCommand: {
+    enabled: true,
+    aliases: ["untmout", "untime", "utimeout"],
+    usage: "[member] (reason)",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    usage: "/untimeout [member] (reason)",
+    data: new SlashCommandBuilder()
+      .setName("untimeout")
+      .setDescription("⏰ Remove timeout from a member.")
+      .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
+      .addUserOption((option) =>
+        option
+          .setName("member")
+          .setDescription("The member to untimeout.")
+          .setRequired(true),
+      )
+      .addStringOption((option) =>
+        option
+          .setName("reason")
+          .setDescription("Reason for the the untimeout.")
+          .setRequired(false),
+      ),
+  },
+  //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const member = interaction.options.getMember("member");
     const reason = interaction.options.getString("reason");

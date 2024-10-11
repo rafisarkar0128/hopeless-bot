@@ -1,31 +1,37 @@
-const {
-  EmbedBuilder,
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-  Message,
-  Embed,
-} = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Embed, Guild } = require("discord.js");
 const { DateTime } = require("luxon");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("roleinfo")
-    .setDescription("📖 View any role's information.")
-    .addRoleOption((option) =>
-      option.setName("role").setDescription("Select a role.").setRequired(true),
-    ),
-  aliases: [],
-  usage: "/roleinfo [role] | {prefix}roleinfo [role]",
-  cooldown: 15,
+  name: "",
+  description: "",
+  cooldown: 25,
   category: "INFORMATION",
-  disabled: false,
-  global: true,
-  guildOnly: false,
-  devOnly: false,
-  inVoiceChannel: false,
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: [],
   userPermissions: [],
+  prefixCommand: {
+    enabled: true,
+    aliases: ["rlinfo", "rinfo", "roleif"],
+    usage: "[role]",
+    minArgsCount: 1,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: false,
+    usage: "/roleinfo [role]",
+    data: new SlashCommandBuilder()
+      .setName("roleinfo")
+      .setDescription("📖 View any role's information.")
+      .addRoleOption((option) =>
+        option.setName("role").setDescription("Select a role.").setRequired(true),
+      ),
+  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const roleId = interaction.options.getRole("role").id;
@@ -40,11 +46,11 @@ module.exports = {
 
 /** Fucntion to get Role Embed
  * @param {import("@lib/DiscordBot").DiscordBot} client
- * @param {ChatInputCommandInteraction | Message} ctx
+ * @param {Guild} guild
  * @param {import("discord.js").Role} role
  * @return {Promise<Embed>}
  */
-async function getRoleEmbed(client, ctx, role) {
+async function getRoleEmbed(client, guild, role) {
   const embed = new EmbedBuilder()
     .setTitle("ROLE INFORMATION")
     .setColor(role.hexColor)
@@ -62,7 +68,7 @@ async function getRoleEmbed(client, ctx, role) {
       },
       {
         name: `Position (from top)`,
-        value: `\`\`\`m\n${ctx.guild.roles.cache.size - role.position}\`\`\``,
+        value: `\`\`\`m\n${guild.roles.cache.size - role.position}\`\`\``,
         inline: true,
       },
       {

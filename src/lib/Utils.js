@@ -4,9 +4,7 @@ const path = require("path");
 const { EmbedBuilder, WebhookClient } = require("discord.js");
 
 class Utils {
-  /**
-   * @param {import("@lib/DiscordBot").DiscordBot} client
-   */
+  /** @param {import("@lib/DiscordBot").DiscordBot} client */
   constructor(client) {
     this.client = client;
   }
@@ -178,11 +176,11 @@ class Utils {
    * @type {import("@types/utils").GetRemainingTime}
    * @example client.utils.getRemainingTime(timeUntil);
    */
-  //getRemainingTime(timeUntil) {
-  //    const seconds = Math.abs((timeUntil - new Date()) / 1000);
-  //    const time = Utils.timeformat(seconds);
-  //    return time;
-  //}
+  getRemainingTime(timeUntil) {
+    const seconds = Math.abs((timeUntil - new Date()) / 1000);
+    const time = Utils.timeformat(seconds);
+    return time;
+  }
 
   /** Takes a single or array of permissions and returns a formated string
    * @type {import("@types/utils").ParsePermissions}
@@ -192,25 +190,5 @@ class Utils {
     const permissionWord = ` permission${permissions.length > 1 ? "s" : ""}`;
     return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
   }
-
-  /** @type {import("@types/utils").GetRemainingTime} */
-  getRemainingTime(timestamps, cooldown, userId) {
-    if (!timestamps) return false;
-    const now = Date.now();
-
-    if (timestamps.has(userId)) {
-      const expirationTime = timestamps.get(userId) + cooldown;
-
-      if (now < expirationTime) {
-        const remainingTime = (expirationTime - now) / 1000;
-        return remainingTime;
-      }
-    } else {
-      timestamps.set(userId, now);
-      setTimeout(() => timestamps.delete(userId), cooldown);
-      return false;
-    }
-  }
 }
-
 module.exports = { Utils };

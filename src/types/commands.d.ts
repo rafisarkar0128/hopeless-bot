@@ -1,13 +1,12 @@
 import {
   APIApplicationCommand,
-  ApplicationCommand,
   ChatInputCommandInteraction,
   ContextMenuCommandBuilder,
   Message,
-  MessageContextMenuCommandInteraction,
   PermissionResolvable,
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
+  MessageContextMenuCommandInteraction,
   UserContextMenuCommandInteraction,
 } from "discord.js";
 import { DiscordBot } from "@lib/DiscordBot";
@@ -33,44 +32,10 @@ export type CommandCategory =
   | "TICKET"
   | "UTILITY";
 
-// Base Command Structure
-export interface BaseCommandStructure {
+export type SubCommand = {
   name: string;
   description: string;
-  cooldown: number;
-  category: CommandCategory;
-  isPremium: boolean;
-  isGlobal: boolean;
-  isGuildOnly: boolean;
-  isDevOnly: boolean;
-  isVCOnly: boolean;
-  botPermissions: PermissionResolvable[];
-  userPermissions: PermissionResolvable[];
-  prefixCommand: {
-    enabled: boolean;
-    aliases: string[];
-    usage: string;
-    minArgsCount: number;
-    subcommands: string[];
-  };
-  slashCommand: {
-    enabled: boolean;
-    ephemeral: boolean;
-    usage: string;
-    data: APIApplicationCommand;
-  };
-  run: (
-    client: DiscordBot,
-    message: Message,
-    args: string[],
-    data: object,
-  ) => Promise<any>;
-  execute: (
-    client: DiscordBot,
-    interaction: ChatInputCommandInteraction,
-    data: object,
-  ) => Promise<any>;
-}
+};
 
 // Command Structure
 export interface CommandStructure {
@@ -90,13 +55,13 @@ export interface CommandStructure {
     aliases: string[];
     usage: string;
     minArgsCount: number;
-    subcommands: string[];
+    subcommands: SubCommand[];
   };
   slashCommand: {
     enabled: boolean;
     ephemeral: boolean;
     usage: string;
-    data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+    data: APIApplicationCommand | SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
   };
   run: (
     client: DiscordBot,

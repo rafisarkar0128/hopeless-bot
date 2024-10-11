@@ -2,21 +2,33 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("roles")
-    .setDescription("Get the role list of a server."),
-  aliases: [],
-  usage: "/roles | {prefix}roles",
-  cooldown: 15,
+  name: "roles",
+  description: "Get the role list of a server.",
+  cooldown: 25,
   category: "INFORMATION",
-  disabled: false,
-  global: true,
-  guildOnly: true,
-  devOnly: false,
-  inVoiceChannel: false,
+  isPremium: false,
+  isGlobal: true,
+  isGuildOnly: true,
+  isDevOnly: false,
+  isVCOnly: false,
   botPermissions: [],
   userPermissions: [],
-  run: async (client, message, args) => {
+  prefixCommand: {
+    enabled: true,
+    aliases: ["rls"],
+    usage: "",
+    minArgsCount: 0,
+    subcommands: [],
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: false,
+    usage: "/roles",
+    data: new SlashCommandBuilder()
+      .setName("roles")
+      .setDescription("Get the role list of a server."),
+  },
+  run: async (client, message) => {
     const roles = message.guild.roles.cache
       .sort((a, b) => b.position - a.position)
       .map((r) => `<@&${r.id}>`);

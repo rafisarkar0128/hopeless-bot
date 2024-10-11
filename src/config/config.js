@@ -43,7 +43,6 @@ module.exports = {
     members: 10000,
   },
 
-  colors: require("./colors.json"),
   emojis: require("./emojis"),
   categories: require("./categories"),
   plugins: require("./plugins"),
