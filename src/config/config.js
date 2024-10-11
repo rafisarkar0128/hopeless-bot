@@ -25,8 +25,8 @@ module.exports = {
     // refer to https://moment.github.io/luxon/#/formatting?id=table-of-tokens for time formats;
     timeFormat: "dd/LL/yyyy - HH:mm:ss",
     loaders: {
-      event: true,
-      command: true,
+      event: false,
+      command: false,
       context: true,
     },
   },

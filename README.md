@@ -83,7 +83,7 @@ Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help in the
 
 ## Customization
 
-[`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
+[`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
 
 > [!IMPORTANT]
 > Use hex color code for Embed colors. Use colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) through `client.colors.(Color)`
