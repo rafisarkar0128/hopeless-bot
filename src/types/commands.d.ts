@@ -35,66 +35,99 @@ export type CommandCategory =
 
 // Base Command Structure
 export interface BaseCommandStructure {
-  data: APIApplicationCommand;
-  aliases: string[];
-  minArgsCount: number;
-  usage?: string;
+  name: string;
+  description: string;
   cooldown: number;
   category: CommandCategory;
-  disabled: boolean;
-  global: boolean;
-  guildOnly: boolean;
-  devOnly: boolean;
-  inVoiceChannel: boolean;
+  isPremium: boolean;
+  isGlobal: boolean;
+  isGuildOnly: boolean;
+  isDevOnly: boolean;
+  isVCOnly: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  run(client: DiscordBot, message: Message, args: string[]): Promise<any>;
-  execute(client: DiscordBot, interaction: ChatInputCommandInteraction): Promise<any>;
+  prefixCommand: {
+    enabled: boolean;
+    aliases: string[];
+    usage: string;
+    minArgsCount: number;
+    subcommands: string[];
+  };
+  slashCommand: {
+    enabled: boolean;
+    ephemeral: boolean;
+    usage: string;
+    data: APIApplicationCommand;
+  };
+  run: (
+    client: DiscordBot,
+    message: Message,
+    args: string[],
+    data: object,
+  ) => Promise<any>;
+  execute: (
+    client: DiscordBot,
+    interaction: ChatInputCommandInteraction,
+    data: object,
+  ) => Promise<any>;
 }
 
 // Command Structure
 export interface CommandStructure {
-  data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
-  aliases: string[];
-  minArgsCount: number;
-  usage: string;
+  name: string;
+  description: string;
   cooldown: number;
   category: CommandCategory;
-  disabled: boolean;
-  global: boolean;
-  guildOnly: boolean;
-  devOnly: boolean;
-  inVoiceChannel: boolean;
+  isPremium: boolean;
+  isGlobal: boolean;
+  isGuildOnly: boolean;
+  isDevOnly: boolean;
+  isVCOnly: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  run(client: DiscordBot, message: Message, args: string[]): Promise<any>;
-  execute(client: DiscordBot, interaction: ChatInputCommandInteraction): Promise<any>;
+  prefixCommand: {
+    enabled: boolean;
+    aliases: string[];
+    usage: string;
+    minArgsCount: number;
+    subcommands: string[];
+  };
+  slashCommand: {
+    enabled: boolean;
+    ephemeral: boolean;
+    usage: string;
+    data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+  };
+  run: (
+    client: DiscordBot,
+    message: Message,
+    args: string[],
+    data: object,
+  ) => Promise<any>;
+  execute: (
+    client: DiscordBot,
+    interaction: ChatInputCommandInteraction,
+    data: object,
+  ) => Promise<any>;
 }
 
 // ContextMenu Structure
 export interface ContextMenuStructure {
   data: ContextMenuCommandBuilder;
+  enabled: boolean;
+  ephemeral: boolean;
   cooldown: number;
   category: CommandCategory;
-  disabled?: boolean;
-  global?: boolean;
-  guildOnly?: boolean;
-  devOnly?: boolean;
+  isPremium: boolean;
+  isGlobal: boolean;
+  isGuildOnly: boolean;
+  isDevOnly: boolean;
+  isVCOnly: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  execute(
+  execute: (
     client: DiscordBot,
     interaction: MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction,
-  ): Promise<any>;
+    data: object,
+  ) => Promise<any>;
 }
-
-// Command Types
-export type NewCommand = {
-  data: APIApplicationCommand;
-  global: Boolean;
-  disabled: boolean;
-};
-export type OldCommand = {
-  data: ApplicationCommand;
-  global: Boolean;
-};

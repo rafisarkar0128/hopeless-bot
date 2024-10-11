@@ -4,7 +4,7 @@ require("module-alias/register");
 const { AntiCrash } = require("@helpers/AntiCrash.js");
 const { GatewayIntentBits, Partials } = require("discord.js");
 const { DiscordBot } = require("@lib/DiscordBot.js");
-const config = require("@root/src/config.js");
+const config = require("@root/src/config/config.js");
 const colors = require("colors");
 const pkg = require("@root/package.json");
 
@@ -72,14 +72,14 @@ async function start() {
   // Load event modules
   await client.loadEvents("events");
 
-  // Log into the client
-  await client.login(client.config.bot.token);
+  // Load command modules
+  await client.loadCommands("commands");
 
   // Connect to the database
   await client.database.connect(client);
 
-  // Load command modules
-  await client.loadCommands("commands");
+  // Log into the client
+  await client.login(client.config.bot.token);
 }
 
 // starting the bot

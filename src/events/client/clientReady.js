@@ -12,5 +12,8 @@ module.exports = {
 
     // Initializing the Moonlink.js package with the client's user ID
     client.moonlink.init(client.user.id);
+
+    // Synchronizing Slash & ContextMenu Commands with discord
+    await client.syncCommands(client);
   },
 };

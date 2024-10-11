@@ -1,6 +1,6 @@
 /** A fucntion to check for changes in Application Command Data
- * @param {import("@types/commands").OldCommand} OldCommand
- * @param {import("@types/commands").NewCommand} NewCommand
+ * @param {import("@types/types").OldCommand} OldCommand
+ * @param {import("@types/types").NewCommand} NewCommand
  * @returns {boolean}
  */
 function checkForChange(OldCommand, NewCommand) {

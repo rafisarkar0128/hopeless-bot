@@ -1,20 +1,18 @@
 const colors = require("colors");
 const { DateTime } = require("luxon");
-const dt = colors.gray(DateTime.now().toFormat("dd/LL/yyyy - HH:mm:ss"));
 
 class Logger {
-  /**
-   * @param {import("../lib/DiscordBot").DiscordBot} client
-   */
+  /** @param {import("../lib/DiscordBot").DiscordBot} client */
   constructor(client) {
     this.client = client;
+    this.dt = colors.gray(DateTime.now().toFormat(this.client.config.console.timeFormat));
   }
 
   /**
    * @param {String} content
    */
   info(content) {
-    return console.log(`[${dt}] [${colors.cyan("INFO")}] ${colors.blue(content)}`);
+    return console.log(`[${this.dt}] [${colors.cyan("INFO")}] ${colors.blue(content)}`);
   }
 
   /**
@@ -22,7 +20,7 @@ class Logger {
    */
   warn(content) {
     return console.log(
-      `[${dt}] [${colors.yellow("WARN")}] ${colors.yellow(`${content}`)}`,
+      `[${this.dt}] [${colors.yellow("WARN")}] ${colors.yellow(`${content}`)}`,
     );
   }
 
@@ -33,7 +31,7 @@ class Logger {
    */
   async error(content, type) {
     const error = content.stack ? content.stack : content;
-    console.log(`[${dt}] [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
+    console.log(`[${this.dt}] [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
     return this.client.utils.sendError(content, type);
   }
 
@@ -41,7 +39,9 @@ class Logger {
    * @param {String} content
    */
   debug(content) {
-    return console.log(`[${dt}] [${colors.green("DEBUG")}] ${colors.green(content)}`);
+    return console.log(
+      `[${this.dt}] [${colors.green("DEBUG")}] ${colors.green(content)}`,
+    );
   }
 
   /**

@@ -1,12 +1,13 @@
 {
   "name": "hopeless-bot",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "A discord bot for your every need.",
   "main": "src/index.js",
   "_moduleAliases": {
     "@root": ".",
     "@src": "src/",
     "@lib": "src/lib/",
+    "@config": "src/config/",
     "@types": "src/types/",
     "@handlers": "src/handlers/",
     "@helpers": "src/helpers/",

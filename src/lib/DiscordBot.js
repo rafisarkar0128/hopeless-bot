@@ -3,8 +3,7 @@ const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { Manager } = require("moonlink.js");
 const colors = require("colors");
-const commandCategories = require("@src/commandCategories.js");
-const { synchronizeApplicationCommands } = require("@helpers/syncCommands");
+const categories = require("@config/categories");
 
 class DiscordBot extends Client {
   /** Options to use while initializing the client
@@ -13,13 +12,16 @@ class DiscordBot extends Client {
   constructor(options) {
     super(options);
 
-    this.config = require(`@src/config.js`);
-    this.colors = require(`@src/colors.json`);
+    this.config = require(`@config/config.js`);
     this.wait = require("timers/promises").setTimeout;
     this.database = require("@src/database/mongoose.js");
     this.pkg = require("@root/package.json");
     this.logger = new Logger(this);
     this.utils = new Utils(this);
+    this.syncCommands = require("@helpers/syncCommands");
+
+    /** @type {import("@types/types").NewCommand[]} */
+    this.newCommands = new Array();
 
     /** @type {Collection<string, import("@types/commands").CommandStructure>} */
     this.commands = new Collection();
@@ -29,9 +31,9 @@ class DiscordBot extends Client {
     this.contexts = new Collection();
 
     // Music Manager
-    if (this.config.music.enabled) {
+    if (this.config.plugins.music.enabled) {
       this.moonlink = new Manager({
-        nodes: this.config.music.lavalink_nodes,
+        nodes: this.config.plugins.music.lavalink_nodes,
         options: {
           clientName: `${this.pkg.name}@${this.pkg.version}`,
         },
@@ -105,9 +107,6 @@ class DiscordBot extends Client {
   async loadCommands(dirname) {
     this.logger.info(`loading command modules`);
     const errors = new Array();
-
-    /** @type {import("@types/sync").NewCommand[]} */
-    const newCommands = new Array();
     const files = await this.utils.loadFiles(dirname, ".js");
     this.commands.clear();
 
@@ -115,33 +114,27 @@ class DiscordBot extends Client {
       try {
         /** @type {import("@types/commands").BaseCommandStructure} */
         const command = require(file);
+        const { name, prefixCommand, slashCommand, category } = command;
 
-        if (command.disabled === true) {
-          continue;
-        }
+        if (!prefixCommand.enabled && !slashCommand.enabled) continue;
+        if (this.config.categories[category]?.enabled === false) continue;
 
-        if (commandCategories[command.category]?.enabled === false) continue;
-
-        if (command.aliases?.length) {
-          for (const alias of command.aliases) {
+        if (prefixCommand.aliases?.length) {
+          for (const alias of prefixCommand.aliases) {
             if (this.aliases.has(alias)) {
               throw new Error(`alias ${colors.yellow(alias)} already exist`);
             } else {
-              this.aliases.set(alias, command.data.name);
+              this.aliases.set(alias, name);
             }
           }
         }
 
-        if (command.data.toJSON().type === 1) {
-          this.commands.set(command.data.name, command);
-        } else {
-          this.contexts.set(command.data.name, command);
-        }
+        this.commands.set(name, command);
 
-        newCommands.push({
-          data: command.data.toJSON(),
-          global: command.global,
-          disabled: command.disabled,
+        this.newCommands.push({
+          data: slashCommand.data.toJSON(),
+          global: command.isGlobal,
+          enabled: slashCommand.enabled,
         });
 
         console.log(
@@ -171,13 +164,9 @@ class DiscordBot extends Client {
       );
     }
 
-    this.logger.info(
-      `loaded ${colors.yellow(this.commands.size + this.contexts.size)} command modules`,
+    return this.logger.info(
+      `loaded ${colors.yellow(this.commands.size)} command modules`,
     );
-
-    this.logger.info(`${colors.yellow("synchronizing commands")}`);
-    await synchronizeApplicationCommands(this, newCommands);
-    return this.logger.info(colors.yellow("synchronization completed"));
   }
 
   /**

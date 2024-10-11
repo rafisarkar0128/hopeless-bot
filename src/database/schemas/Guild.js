@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const config = require("../../config.js");
+const config = require("../../config/config.js");
 const FixedSizeMap = require("fixedsize-map");
 const { getUser } = require("./user.js");
 
@@ -24,7 +24,7 @@ const Schema = new mongoose.Schema({
     xp: {
       message: {
         type: String,
-        default: config.stats.defaultLevelUpMessage,
+        default: config.plugins.stats.defaultLevelUpMessage,
       },
       channel: String,
     },

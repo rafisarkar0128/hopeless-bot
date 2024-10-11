@@ -7,7 +7,8 @@ const { checkForChange } = require("./checkForChanges.js");
  * @param {import("@types/commands").NewCommand[]} newCommands
  * @returns {Promise<void>}
  */
-async function synchronizeApplicationCommands(client, newCommands) {
+module.exports = async (client) => {
+  client.logger.info(colors.yellow("synchronizing application command(s)"));
   /**
    * @param {import("@types/commands").OldCommand[]} oldCommands
    * @param {import("@types/commands").NewCommand[]} newCommands
@@ -26,7 +27,7 @@ async function synchronizeApplicationCommands(client, newCommands) {
           await client.application.commands.create(command.data, guildId);
         }
 
-        console.log(`[${colors.green("ADDED")}] ${colors.blue(command.data.name)}`);
+        console.log(`[${colors.green("ADDED")}] ${colors.magenta(command.data.name)}`);
       } catch (error) {
         errors.push(error);
       }
@@ -38,7 +39,7 @@ async function synchronizeApplicationCommands(client, newCommands) {
     for (const command of commandsToDelete) {
       try {
         await command.data.delete();
-        console.log(`[${colors.red("DELETED")}] ${colors.cyan(command.data.name)}`);
+        console.log(`[${colors.red("DELETED")}] ${colors.magenta(command.data.name)}`);
       } catch (error) {
         errors.push(error);
       }
@@ -51,10 +52,12 @@ async function synchronizeApplicationCommands(client, newCommands) {
       try {
         const oldCommand = oldCommands.find((c) => c.data.name === newCommand.data.name);
 
-        if (newCommand.disabled) {
+        if (!newCommand.enabled) {
           await oldCommand.data.delete();
 
-          console.log(`[${colors.red("DELETED")}] ${colors.cyan(newCommand.data.name)}`);
+          console.log(
+            `[${colors.red("DELETED")}] ${colors.magenta(newCommand.data.name)}`,
+          );
           continue;
         }
 
@@ -68,7 +71,7 @@ async function synchronizeApplicationCommands(client, newCommands) {
           }
 
           console.log(
-            `[${colors.yellow("MODIFIED")}] ${colors.cyan(newCommand.data.name)}`,
+            `[${colors.yellow("MODIFIED")}] ${colors.magenta(newCommand.data.name)}`,
           );
           continue;
         }
@@ -81,7 +84,7 @@ async function synchronizeApplicationCommands(client, newCommands) {
           }
 
           console.log(
-            `[${colors.yellow("MODIFIED")}] ${colors.cyan(newCommand.data.name)}`,
+            `[${colors.yellow("MODIFIED")}] ${colors.magenta(newCommand.data.name)}`,
           );
           continue;
         }
@@ -96,17 +99,17 @@ async function synchronizeApplicationCommands(client, newCommands) {
   const oldCommands = await fetchCommands(client);
 
   const oldSlashCommands = oldCommands.filter((c) => c.data.type === 1);
-  const newSlashCommands = newCommands.filter((c) => c.data.type === 1);
+  const newSlashCommands = client.newCommands.filter((c) => c.data.type === 1);
   await syncCommands(oldSlashCommands, newSlashCommands);
 
   const oldContextMenuCommands = oldCommands.filter((c) => c.data.type === (2 || 3));
-  const newContextMenuCommands = newCommands.filter((c) => c.data.type === (2 || 3));
+  const newContextMenuCommands = client.newCommands.filter(
+    (c) => c.data.type === (2 || 3),
+  );
   await syncCommands(oldContextMenuCommands, newContextMenuCommands);
 
   console.log(
-    `[${colors.cyan("INFO")}] ${colors.cyan(
-      "all application commands are synchronized",
-    )}`,
+    `[${colors.cyan("INFO")}] ${colors.green("all application commands are in sync")}`,
   );
 
   if (errors.length > 0) {
@@ -125,7 +128,5 @@ async function synchronizeApplicationCommands(client, newCommands) {
     );
   }
 
-  return;
-}
-
-module.exports = { synchronizeApplicationCommands };
+  return client.logger.info(colors.yellow("synchronization completed"));
+};

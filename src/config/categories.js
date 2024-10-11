@@ -1,4 +1,4 @@
-const config = require("./config.js");
+const plugins = require("./plugins");
 
 module.exports = {
   ADMIN: {
@@ -9,7 +9,7 @@ module.exports = {
   },
   AUTOMOD: {
     name: "Automod",
-    enabled: config.automod.enabled,
+    enabled: plugins.automod.enabled,
     image:
       "https://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Settings-icon.png",
     emoji: "🤖",
@@ -19,14 +19,14 @@ module.exports = {
     image: "https://wallpaperaccess.com/full/5680679.jpg",
     emoji: "🎨",
   },
-  CONFIG: {
-    name: "Config",
+  plugins: {
+    name: "plugins",
     image: "",
     emoji: "⚙️",
   },
   ECONOMY: {
     name: "Economy",
-    enabled: config.economy.enabled,
+    enabled: plugins.economy.enabled,
     image:
       "https://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/128/coins-icon.png",
     emoji: "🪙",
@@ -39,13 +39,13 @@ module.exports = {
   },
   GIVEAWAYS: {
     name: "Giveaway",
-    enabled: config.giveaways.enabled,
+    enabled: plugins.giveaways.enabled,
     image: "https://cdn-icons-png.flaticon.com/512/4470/4470928.png",
     emoji: "🎉",
   },
   IMAGE: {
     name: "Image",
-    enabled: config.image.enabled,
+    enabled: plugins.image.enabled,
     image: "https://icons.iconarchive.com/icons/dapino/summer-holiday/128/photo-icon.png",
     emoji: "🖼️",
   },
@@ -63,14 +63,14 @@ module.exports = {
   },
   MODERATION: {
     name: "Moderation",
-    enabled: config.moderation.enabled,
+    enabled: plugins.moderation.enabled,
     image:
       "https://icons.iconarchive.com/icons/lawyerwordpress/law/128/Gavel-Law-icon.png",
     emoji: "🔨",
   },
   MUSIC: {
     name: "Music",
-    enabled: config.music.enabled,
+    enabled: plugins.music.enabled,
     image:
       "https://icons.iconarchive.com/icons/wwalczyszyn/iwindows/256/Music-Library-icon.png",
     emoji: "🎵",
@@ -89,14 +89,14 @@ module.exports = {
   },
   STATS: {
     name: "Statistics",
-    enabled: config.stats.enabled,
+    enabled: plugins.stats.enabled,
     image:
       "https://icons.iconarchive.com/icons/graphicloads/flat-finance/256/dollar-stats-icon.png",
     emoji: "📈",
   },
   SUGGESTION: {
     name: "Suggestion",
-    enabled: config.suggestion.enabled,
+    enabled: plugins.suggestion.enabled,
     image: "https://cdn-icons-png.flaticon.com/512/1484/1484815.png",
     emoji: "📝",
   },
@@ -107,7 +107,7 @@ module.exports = {
   },
   TICKET: {
     name: "Ticket",
-    enabled: config.ticket.enabled,
+    enabled: plugins.ticket.enabled,
     image:
       "https://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/512/ticket-icon.png",
     emoji: "🎫",
