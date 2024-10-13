@@ -6,9 +6,8 @@ on:
   push:
     branches:
       - "main"
-      - "release/**"
     paths:
-      - "./docs/**"
+      - "docs/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

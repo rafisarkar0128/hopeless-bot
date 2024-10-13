@@ -1,8 +1,6 @@
 # ⚙ Admin
 
-{% hint style="danger" %}
 These commands can only be used by members who have **MANAGE_SERVER** permission
-{% endhint %}
 
 ### Set Prefix
 
@@ -16,13 +14,11 @@ These commands can only be used by members who have **MANAGE_SERVER** permission
 
 ### Automoderation
 
-{% hint style="info" %}
 By default, Auto moderation events are ignored for members who have the following permissions since they are assumed to be channel/server moderators
 
 **KICK_MEMBERS**, **BAN_MEMBERS**, **MANAGE_GUILD**, **MANAGE_MESSAGES**
 
 `!automodconfig debug on` disables this
-{% endhint %}
 
 |                                                 |                                                                |
 | ----------------------------------------------- | -------------------------------------------------------------- |
@@ -51,9 +47,7 @@ By default, Auto moderation events are ignored for members who have the followin
 | **!automod links \<on\|off>**          | allow or disallow sending links in message                                  |
 | **!automod maxlines \<amount>**        | sets maximum lines allowed per message                                      |
 
-{% hint style="warning" %}
 Each time a member tries to break the automated rule, he/she **receives a strike**. After receiving the maximum number of strikes (default 10), the moderation action (default TIMEOUT) is performed on them
-{% endhint %}
 
 ### Channels Counters
 
@@ -74,9 +68,7 @@ Each time a member tries to break the automated rule, he/she **receives a strike
 - **Description**: enable or disable moderation logs
 - **Usage**: `!modlog <channel|off>`
 
-{% hint style="info" %}
 Moderation logging enable logging of all **moderation actions** and **automod events**
-{% endhint %}
 
 ### Flag Translations
 
@@ -94,8 +86,6 @@ _Enabling this feature will allow members to simply react to any message with a 
 
 ### Greeting
 
-{% tabs %}
-{% tab title="Welcome" %}
 **!welcome status \<on\|off>**
 
 - enable or disable welcome message
@@ -127,9 +117,7 @@ _Enabling this feature will allow members to simply react to any message with a 
 **!welcome image \<image-url>**
 
 - set welcome embed image
-  {% endtab %}
 
-{% tab title="Farewell" %}
 **!farewell status \<on\|off>**
 
 - enable or disable farewell message
@@ -161,10 +149,6 @@ _Enabling this feature will allow members to simply react to any message with a 
 **!farewell image \<#image-url>**
 
 - set farewell embed image
-  {% endtab %}
-  {% endtabs %}
-
-{% hint style="success" %}
 
 #### Allowed Content Replacements
 
@@ -179,7 +163,6 @@ _Enabling this feature will allow members to simply react to any message with a 
 - {inviter:name} : Inviter Name&#x20;
 - {inviter:tag} : Inviter Tag&#x20;
 - {invites} : Inviter Invites
-  {% endhint %}
 
 ### Reaction Roles
 
