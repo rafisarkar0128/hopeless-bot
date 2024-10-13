@@ -1,0 +1,8 @@
+{
+  "commands": {
+    "prefix": {}
+  },
+  "embeds": {
+    "footer": "Copyright © 2023 - {new:date:year} | @{owner:name}"
+  }
+}
