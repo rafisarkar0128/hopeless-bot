@@ -1,27 +1,34 @@
 module.exports = {
-  automod: {
-    enabled: false,
+  antiCrash: {
+    enabled: true,
   },
+
+  auto_moderation: {
+    enabled: true,
+  },
+
   dashboard: {
-    enabled: false,
+    enabled: true,
     base_url: "",
     failure_url: "",
     port: "3000",
   },
+
   economy: {
-    enabled: false,
+    enabled: true,
     currency: "💵",
     daily_coins: 25,
     min_beg_amount: 10,
     max_beg_amount: 250,
   },
+
   music: {
     enabled: true,
     idle_time: 180000,
     max_search_results: 10,
     default_source: "YTM",
     lavalink_nodes: [
-      // local hosted nodes for lavalink
+      // local hosted nodes
       {
         host: "localhost",
         port: 2333,
@@ -53,14 +60,17 @@ module.exports = {
       },
     ],
   },
+
   giveaways: {
-    enabled: false,
+    enabled: true,
     reaction: "🎁",
   },
+
   image: {
-    enabled: false,
+    enabled: true,
     base_api: "https://strangeapi.fun/api",
   },
+
   moderation: {
     enabled: true,
     colors: {
@@ -78,20 +88,22 @@ module.exports = {
       move: "#ffcda2",
     },
   },
-  stats: {
-    enabled: false,
-    xpCoolDown: 10,
-    defaultLevelUpMessage: "{tag}, You just advanced to **Level {level}**",
+
+  rank: {
+    enabled: true,
+    xp_cool_down: 10,
+    default_level_up_message: "{tag}, You just advanced to **Level {level}**",
   },
 
   suggestion: {
-    enabled: false,
+    enabled: true,
     emoji: {
-      upVote: "⬆️",
-      downVote: "⬇️",
+      up_vote: "⬆️",
+      down_vote: "⬇️",
     },
   },
+
   ticket: {
-    enabled: false,
+    enabled: true,
   },
 };

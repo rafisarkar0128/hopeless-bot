@@ -5,7 +5,9 @@ class Logger {
   /** @param {import("../lib/DiscordBot").DiscordBot} client */
   constructor(client) {
     this.client = client;
-    this.dt = colors.gray(DateTime.now().toFormat(this.client.config.console.timeFormat));
+    this.dt = colors.gray(
+      DateTime.now().toFormat(this.client.config.console.time_format),
+    );
   }
 
   /**

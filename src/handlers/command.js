@@ -1,7 +1,4 @@
 const { EmbedBuilder, Embed } = require("discord.js");
-//const { OWNER_IDS, PREFIX_COMMANDS, EMBED_COLORS } = require("@root/config");
-//const { parsePermissions } = require("@helpers/Utils");
-// /const { timeformat } = require("@helpers/Utils");
 const { getSettings } = require("@root/src/database/schemas/guild");
 
 const cooldownCache = new Map();

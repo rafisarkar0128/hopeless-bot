@@ -2,6 +2,7 @@ const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { Manager } = require("moonlink.js");
+const { AntiCrash } = require("@helpers/AntiCrash");
 const colors = require("colors");
 
 class DiscordBot extends Client {
@@ -49,7 +50,8 @@ class DiscordBot extends Client {
    * @return {Promise<void>}
    */
   async loadEvents(dirname = "events") {
-    if (this.config.console.loaders.event) this.logger.info(`loading event modules`);
+    let debug = this.config.console.debug.event;
+    if (debug) this.logger.info(`loading event modules`);
     /** @type {Array<{file: string, error: Error}>} */
     const errors = new Array();
     const files = await this.utils.loadFiles(dirname, ".js");
@@ -71,7 +73,7 @@ class DiscordBot extends Client {
         target[event.once ? "once" : "on"](event.name, execute);
 
         i++;
-        if (this.config.console.loaders.event) {
+        if (debug) {
           console.log(
             `[${colors.yellow("EVENT")}] ${colors.green(
               file.replace(/\\/g, "/").split("/").pop(),
@@ -79,24 +81,30 @@ class DiscordBot extends Client {
           );
         }
       } catch (error) {
-        console.log(
-          `[${colors.yellow("EVENT")}] ${colors.red(
-            file.replace(/\\/g, "/").split("/").pop(),
-          )}`,
-        );
+        if (debug) {
+          console.log(
+            `[${colors.yellow("EVENT")}] ${colors.red(
+              file.replace(/\\/g, "/").split("/").pop(),
+            )}`,
+          );
+        }
         errors.push({ file: file, error: error });
       }
     }
 
     if (errors.length > 0) {
       console.log(
-        colors.yellow("[AntiCrash] | [Event_Error_Logs] | [Start] : ==============="),
+        colors.yellow(
+          "[AntiCrash] | [Event_Loader_Error_Logs] | [Start] : ===============",
+        ),
       );
       errors.forEach((e) => {
         console.log(colors.yellow(e.file), "\n", colors.red(e.error));
       });
       console.log(
-        colors.yellow("[AntiCrash] | [Event_Error_Logs] | [End] : ==============="),
+        colors.yellow(
+          "[AntiCrash] | [Event_Loader_Error_Logs] | [End] : ===============",
+        ),
       );
     }
 
@@ -108,7 +116,10 @@ class DiscordBot extends Client {
    * @return {Promise<void>}
    */
   async loadCommands(dirname) {
-    if (this.config.console.loaders.command) this.logger.info(`loading command modules`);
+    const debug = this.config.console.debug.command;
+    if (debug) this.logger.info(`loading command modules`);
+
+    /** @type {Array<{file: string, error: Error}>} */
     const errors = new Array();
     const files = await this.utils.loadFiles(dirname, ".js");
     this.commands.clear();
@@ -140,7 +151,7 @@ class DiscordBot extends Client {
           enabled: slashCommand.enabled,
         });
 
-        if (this.config.console.loaders.command) {
+        if (debug) {
           console.log(
             `[${colors.blue("COMMAND")}] ${colors.green(
               file.replace(/\\/g, "/").split("/").pop(),
@@ -148,24 +159,30 @@ class DiscordBot extends Client {
           );
         }
       } catch (error) {
-        console.log(
-          `[${colors.blue("COMMAND")}] ${colors.red(
-            file.replace(/\\/g, "/").split("/").pop(),
-          )}`,
-        );
+        if (debug) {
+          console.log(
+            `[${colors.blue("COMMAND")}] ${colors.red(
+              file.replace(/\\/g, "/").split("/").pop(),
+            )}`,
+          );
+        }
         errors.push({ file: file, error: error });
       }
     }
 
     if (errors.length > 0) {
       console.log(
-        colors.yellow("[AntiCrash] | [Command_Error_Logs] | [Start] : ==============="),
+        colors.yellow(
+          "[AntiCrash] | [Command_Loader_Error_Logs] | [Start] : ===============",
+        ),
       );
       errors.forEach((e) => {
         console.log(colors.yellow(e.file), "\n", colors.red(e.error));
       });
       console.log(
-        colors.yellow("[AntiCrash] | [Command_Error_Logs] | [End] : ==============="),
+        colors.yellow(
+          "[AntiCrash] | [Command_Loader_Error_Logs] | [End] : ===============",
+        ),
       );
     }
 
@@ -182,6 +199,47 @@ class DiscordBot extends Client {
   async logBox(content, options) {
     const boxen = (await import("boxen")).default;
     console.log(boxen(content, options));
+  }
+
+  /** a function to start everything
+   * @returns {Promise<void>}
+   */
+  async build() {
+    if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
+
+    console.clear();
+    if (this.config.console.debug.mainLogo) {
+      await this.logBox(
+        [
+          `Welcome to ${colors.blue(this.pkg.name.toUpperCase())} js project`,
+          `Running on Node.JS ${colors.green(process.version)}`,
+          `Version ${colors.yellow(this.pkg.version)}`,
+          `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
+        ].join("\n"),
+        {
+          borderColor: "#00BFFF",
+          textAlignment: "center",
+          padding: {
+            left: 10,
+            right: 10,
+            top: 1,
+            bottom: 1,
+          },
+        },
+      );
+    }
+
+    // Load event modules
+    await this.loadEvents("events");
+
+    // Load command modules
+    await this.loadCommands("commands");
+
+    // Connect to the database
+    await this.database.connect(this);
+
+    // Log into the client
+    await this.login(this.config.bot_token);
   }
 }
 

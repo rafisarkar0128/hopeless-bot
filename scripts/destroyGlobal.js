@@ -1,8 +1,8 @@
 require("dotenv").config();
 const { REST, Routes } = require("discord.js");
 const colors = require("colors");
-const token = process.env["BOT_TOKEN"];
-const clientId = process.env["BOT_ID"];
+const token = process.env["DISCORD_CLIENT_TOKEN"];
+const clientId = process.env["DISCORD_CLIENT_ID"];
 const readline = require("readline");
 const rest = new REST({ version: 10 }).setToken(token);
 
@@ -46,7 +46,9 @@ async function deleteCommands() {
     i++;
     console.log(
       colors.yellow(
-        `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${command.id} - ${command.name} `,
+        `${i >= 100 ? "" : i >= 10 ? " " : "  "}${i} | 🔥 Deleted command - ${
+          command.id
+        } - ${command.name} `,
       ),
     );
   });

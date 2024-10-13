@@ -15,7 +15,7 @@ module.exports = {
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: true,
-  isVCOnly: false,
+  isVoceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
   prefixCommand: {

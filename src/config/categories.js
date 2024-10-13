@@ -9,7 +9,7 @@ module.exports = {
   },
   AUTOMOD: {
     name: "Automod",
-    enabled: plugins.automod.enabled,
+    enabled: plugins.auto_moderation.enabled,
     image:
       "https://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Settings-icon.png",
     emoji: "🤖",
@@ -18,11 +18,6 @@ module.exports = {
     name: "Anime",
     image: "https://wallpaperaccess.com/full/5680679.jpg",
     emoji: "🎨",
-  },
-  plugins: {
-    name: "plugins",
-    image: "",
-    emoji: "⚙️",
   },
   ECONOMY: {
     name: "Economy",
@@ -48,12 +43,6 @@ module.exports = {
     enabled: plugins.image.enabled,
     image: "https://icons.iconarchive.com/icons/dapino/summer-holiday/128/photo-icon.png",
     emoji: "🖼️",
-  },
-  INVITE: {
-    name: "Invite",
-    enabled: process.env.ALLOWED_INVITE,
-    image: "https://cdn4.iconfinder.com/data/icons/general-business/150/Invite-512.png",
-    emoji: "📨",
   },
   INFORMATION: {
     name: "Information",
@@ -87,9 +76,9 @@ module.exports = {
       "https://icons.iconarchive.com/icons/dryicons/aesthetica-2/128/community-users-icon.png",
     emoji: "🫂",
   },
-  STATS: {
-    name: "Statistics",
-    enabled: plugins.stats.enabled,
+  RANK: {
+    name: "Ranking",
+    enabled: plugins.rank.enabled,
     image:
       "https://icons.iconarchive.com/icons/graphicloads/flat-finance/256/dollar-stats-icon.png",
     emoji: "📈",
@@ -99,11 +88,6 @@ module.exports = {
     enabled: plugins.suggestion.enabled,
     image: "https://cdn-icons-png.flaticon.com/512/1484/1484815.png",
     emoji: "📝",
-  },
-  TEST: {
-    name: "Test",
-    image: "",
-    emoji: "🪛",
   },
   TICKET: {
     name: "Ticket",

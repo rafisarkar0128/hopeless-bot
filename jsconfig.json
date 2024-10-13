@@ -15,7 +15,7 @@
       "@assets/*": ["./src/assets/*"],
       "@events/*": ["./src/events/*"],
       "@helpers/*": ["./src/helpers/*"],
-      "@schemas/*": ["./src/database/schemas/*"]
+      "@schemas/*": ["collected/schemas/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"]

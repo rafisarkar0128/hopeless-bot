@@ -25,10 +25,10 @@ export type CommandCategory =
   | "INVITE"
   | "MODERATION"
   | "MUSIC"
+  | "RANK"
   | "NONE"
   | "SOCIAL"
   | "SUGGESTION"
-  | "TEST"
   | "TICKET"
   | "UTILITY";
 
@@ -47,7 +47,7 @@ export interface CommandStructure {
   isGlobal: boolean;
   isGuildOnly: boolean;
   isDevOnly: boolean;
-  isVCOnly: boolean;
+  isVoceChannelOnly: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
   prefixCommand: {

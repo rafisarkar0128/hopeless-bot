@@ -1,6 +1,6 @@
 const { Message } = require("discord.js");
 const { commandHandler, automodHandler, statsHandler } = require("@handlers/index");
-const { getSettings } = require("@schemas/guild");
+const { getSettings } = require("@root/src/database/schemas/guild");
 
 /** @type {import("@types/events").EventStructure} */
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 
     let isCommand = false;
 
-    if (config.enabled_commands.prefix) {
+    if (config.commands.prefix.enabled) {
       if (message.content && message.content.startsWith(settings.prefix)) {
         const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
         const name = args.shift().toLowerCase();

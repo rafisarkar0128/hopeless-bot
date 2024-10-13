@@ -1,12 +1,8 @@
 require("dotenv").config();
 require("module-alias/register");
 
-const { AntiCrash } = require("@helpers/AntiCrash.js");
 const { GatewayIntentBits, Partials } = require("discord.js");
 const { DiscordBot } = require("@lib/DiscordBot.js");
-const config = require("@root/src/config/config.js");
-const colors = require("colors");
-const pkg = require("@root/package.json");
 
 // initializing the client
 const client = new DiscordBot({
@@ -45,45 +41,7 @@ const client = new DiscordBot({
   restTimeOffset: 0,
 });
 
-// function to start everything
-async function start() {
-  if (config.antiCrash.enabled) AntiCrash(client);
-
-  console.clear();
-  await client.logBox(
-    [
-      `Welcome to ${colors.blue(pkg.name.toUpperCase())} js project`,
-      `Running on Node.JS ${colors.green(process.version)}`,
-      `Version ${colors.yellow(pkg.version)}`,
-      `Coded with 💖 by ${colors.cyan(pkg.author.name)}`,
-    ].join("\n"),
-    {
-      borderColor: "#00BFFF",
-      textAlignment: "center",
-      padding: {
-        left: 10,
-        right: 10,
-        top: 1,
-        bottom: 1,
-      },
-    },
-  );
-
-  // Load event modules
-  await client.loadEvents("events");
-
-  // Load command modules
-  await client.loadCommands("commands");
-
-  // Connect to the database
-  await client.database.connect(client);
-
-  // Log into the client
-  await client.login(client.config.bot.token);
-}
-
-// starting the bot
-start().catch((error) => {
+client.build().catch((error) => {
   throw error;
 });
 

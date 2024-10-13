@@ -5,7 +5,6 @@ const {
   ChannelType,
   EmbedBuilder,
 } = require("discord.js");
-const database = require("@schemas/errorlogs");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
@@ -17,7 +16,7 @@ module.exports = {
   isGlobal: false,
   isGuildOnly: true,
   isDevOnly: true,
-  isVCOnly: false,
+  isVoceChannelOnly: false,
   botPermissions: ["SendMessages", "AddReactions", "ManageMessages"],
   userPermissions: [],
   prefixCommand: {
@@ -246,14 +245,5 @@ module.exports = {
         ],
       });
     }
-
-    //interaction.reply({
-    //    content: "**__Still in testing phase__**",
-    //    ephemeral: true,
-    //});
   },
 };
-
-/*
-  
-*/
