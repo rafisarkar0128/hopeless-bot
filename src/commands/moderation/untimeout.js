@@ -2,45 +2,40 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("disc
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "untimeout",
-  description: "⏰ Remove timeout from a member.",
+  data: new SlashCommandBuilder()
+    .setName("untimeout")
+    .setDescription("⏰ Remove timeout from a member.")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
+    .addUserOption((option) =>
+      option
+        .setName("member")
+        .setDescription("The member to untimeout.")
+        .setRequired(true),
+    )
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("Reason for the the untimeout.")
+        .setRequired(false),
+    ),
+  ephemeral: true,
   cooldown: 0,
   category: "MODERATION",
+  usage: {
+    prefix: "[<member>] (<reason>)",
+    slash: "/untimeout [member] (reason)",
+  },
+  aliases: ["untmout", "untime", "utimeout"],
+  minArgsCount: 1,
+  isPrefixDisabled: true,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: false,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: ["ModerateMembers"],
   userPermissions: ["ModerateMembers"],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["untmout", "untime", "utimeout"],
-    usage: "[member] (reason)",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/untimeout [member] (reason)",
-    data: new SlashCommandBuilder()
-      .setName("untimeout")
-      .setDescription("⏰ Remove timeout from a member.")
-      .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-      .addUserOption((option) =>
-        option
-          .setName("member")
-          .setDescription("The member to untimeout.")
-          .setRequired(true),
-      )
-      .addStringOption((option) =>
-        option
-          .setName("reason")
-          .setDescription("Reason for the the untimeout.")
-          .setRequired(false),
-      ),
-  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const member = interaction.options.getMember("member");

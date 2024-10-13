@@ -191,4 +191,5 @@ class Utils {
     return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
   }
 }
+
 module.exports = { Utils };

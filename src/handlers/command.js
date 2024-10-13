@@ -37,6 +37,8 @@ module.exports = {
       });
     }
 
+    //if () {}
+
     if (!command.run) {
       return message.reply({
         embeds: [
@@ -49,7 +51,7 @@ module.exports = {
       });
     }
 
-    if (!command.prefixCommand.enabled && !config.devs.includes(author.id)) {
+    if (command.isPrefixDisabled && !config.devs.includes(author.id)) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -125,7 +127,7 @@ module.exports = {
       });
     }
 
-    if (command.isVCOnly && !member.voice.channel) {
+    if (command.isVoiceChannelOnly && !member.voice.channel) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -135,7 +137,7 @@ module.exports = {
       });
     }
 
-    if (command.prefixCommand.minArgsCount > args.length) {
+    if (command.minArgsCount > args.length) {
       const usageEmbed = this.getCommandUsage(client, command, prefix, commandName);
       return message.reply({ embeds: [usageEmbed] });
     }

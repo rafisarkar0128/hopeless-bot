@@ -7,34 +7,30 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "stop",
-  description: "stop the bot from playing music",
+  data: new SlashCommandBuilder()
+    .setName("stop")
+    .setDescription("stop the bot from playing music")
+    .setContexts(InteractionContextType.Guild)
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+  ephemeral: true,
   cooldown: 0,
   category: "MUSIC",
+
+  usage: {
+    prefix: "<options>",
+    slash: "/stop <option>",
+  },
+  aliases: ["st"],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
-  isGuildOnly: true,
+  isGuildOnly: false,
   isDevOnly: false,
-  isVoceChannelOnly: true,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["st"],
-    usage: "<options>",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/stop <option>",
-    data: new SlashCommandBuilder()
-      .setName("stop")
-      .setDescription("stop the bot from playing music")
-      .setContexts(InteractionContextType.Guild)
-      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const player = client.moonlink.players.get(interaction.guild.id);

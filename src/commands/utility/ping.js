@@ -7,32 +7,27 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "ping",
-  description: "🏓Pong! Replies with an embed containing ping information.",
+  data: new SlashCommandBuilder()
+    .setName("ping")
+    .setDescription("🏓Pong! Replies with an embed containing ping information."),
+  ephemeral: true,
   cooldown: 20,
   category: "UTILITY",
+  usage: {
+    prefix: "",
+    slash: "/ping",
+  },
+  aliases: ["latency"],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: false,
   isDevOnly: false,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["latency"],
-    usage: "",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/ping",
-    data: new SlashCommandBuilder()
-      .setName("ping")
-      .setDescription("🏓Pong! Replies with an embed containing ping information."),
-  },
   run: async (client, message) => {
     const waitEmbed = new EmbedBuilder()
       .setColor(client.colors.Good)
@@ -41,7 +36,9 @@ module.exports = {
       embeds: [waitEmbed],
     });
 
-    return reply.edit({
+    await reply.delete();
+
+    return message.reply({
       content: "",
       embeds: [await getPingEmbed(client, message, reply)],
     });

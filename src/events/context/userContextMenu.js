@@ -19,6 +19,10 @@ module.exports = {
     try {
       const context = client.contexts.get(commandName);
 
+      await interaction.deferReply({
+        ephemeral: context.ephemeral,
+      });
+
       const mEmbed = new EmbedBuilder()
         .setTitle("**This command isn't available. Try again later.**")
         .setColor(colors.Wrong);
@@ -52,18 +56,18 @@ module.exports = {
         });
       }
 
-      const timestamps = client.cooldowns.get(context.data.name);
-      const cooldown = (context.cooldown || 3) * 1000;
-      const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
-      const cdEmbed = new EmbedBuilder()
-        .setTitle(`**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`)
-        .setColor(colors.Wrong);
-      if (remainingTime && !config.devs.includes(user.id)) {
-        return interaction.reply({
-          embeds: [cdEmbed],
-          ephemeral: true,
-        });
-      }
+      //const timestamps = client.cooldowns.get(context.data.name);
+      //const cooldown = (context.cooldown || 3) * 1000;
+      //const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
+      //const cdEmbed = new EmbedBuilder()
+      //  .setTitle(`**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`)
+      //  .setColor(colors.Wrong);
+      //if (remainingTime && !config.devs.includes(user.id)) {
+      //  return interaction.reply({
+      //    embeds: [cdEmbed],
+      //    ephemeral: true,
+      //  });
+      //}
 
       const uPermission = new EmbedBuilder()
         .setTitle(

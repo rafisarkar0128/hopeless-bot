@@ -2,30 +2,25 @@ const { SlashCommandBuilder } = require("discord.js");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "",
-  description: "",
+  data: new SlashCommandBuilder(),
+  ephemeral: true,
   cooldown: 0,
   category: "NONE",
+  usage: {
+    prefix: "",
+    slash: "",
+  },
+  aliases: [],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: false,
   isDevOnly: false,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: [],
-    usage: "",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "",
-    data: new SlashCommandBuilder(),
-  },
-  run: async (client, message, args, data) => {},
-  execute: async (client, interaction, data) => {},
+  run: (client, message, args, data) => {},
+  execute: (client, interaction, data) => {},
 };

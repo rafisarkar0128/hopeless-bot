@@ -2,102 +2,95 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "role",
-  description: "Give | Remove role(s) from server members",
+  data: new SlashCommandBuilder()
+    .setName("role")
+    .setDescription("Give | Remove role(s) from server members")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+    .addSubcommand((option) =>
+      option
+        .setName("give")
+        .setDescription("Gives a role to a user.")
+        .addRoleOption((option) =>
+          option.setName("role").setDescription("The role to give.").setRequired(true),
+        )
+        .addUserOption((option) =>
+          option
+            .setName("target")
+            .setDescription("The user to give the role.")
+            .setRequired(true),
+        ),
+    )
+    .addSubcommand((option) =>
+      option
+        .setName("remove")
+        .setDescription("Removes a role from a user.")
+        .addRoleOption((option) =>
+          option.setName("role").setDescription("The role to remove.").setRequired(true),
+        )
+        .addUserOption((option) =>
+          option
+            .setName("target")
+            .setDescription("The user to remove the role.")
+            .setRequired(true),
+        ),
+    )
+    .addSubcommand((option) =>
+      option
+        .setName("multiple")
+        .setDescription("Role command for multiple users.")
+        .addStringOption((option) =>
+          option
+            .setName("action")
+            .setDescription("Pick an action")
+            .setRequired(true)
+            .addChoices(
+              { name: "Give", value: "give" },
+              {
+                name: "Remove",
+                value: "remove",
+              },
+            ),
+        )
+        .addRoleOption((option) =>
+          option.setName("role").setDescription("The role to gives.").setRequired(true),
+        )
+        .addStringOption((option) =>
+          option
+            .setName("type")
+            .setDescription("Pick a type")
+            .setRequired(true)
+            .addChoices(
+              {
+                name: "All Members",
+                value: "all",
+              },
+              {
+                name: "Humans",
+                value: "humans",
+              },
+              { name: "Bots", value: "bots" },
+            ),
+        ),
+    ),
+  ephemeral: true,
   cooldown: 0,
   category: "MODERATION",
+  usage: {
+    prefix: "",
+    slash:
+      "/role [subcommand]: <give|remove|multiple> [role]: <role> [target|type]: <GuildMember|type>",
+  },
+  aliases: [],
+  minArgsCount: 0,
+  isPrefixDisabled: true,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: false,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: ["ModerateMembers", "ManageRoles"],
   userPermissions: ["ModerateMembers"],
-  prefixCommand: {
-    enabled: true,
-    aliases: [],
-    usage: "",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "",
-    data: new SlashCommandBuilder()
-      .setName("role")
-      .setDescription("Give | Remove role(s) from server members")
-      .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
-      .addSubcommand((option) =>
-        option
-          .setName("give")
-          .setDescription("Gives a role to a user.")
-          .addRoleOption((option) =>
-            option.setName("role").setDescription("The role to give.").setRequired(true),
-          )
-          .addUserOption((option) =>
-            option
-              .setName("target")
-              .setDescription("The user to give the role.")
-              .setRequired(true),
-          ),
-      )
-      .addSubcommand((option) =>
-        option
-          .setName("remove")
-          .setDescription("Removes a role from a user.")
-          .addRoleOption((option) =>
-            option
-              .setName("role")
-              .setDescription("The role to remove.")
-              .setRequired(true),
-          )
-          .addUserOption((option) =>
-            option
-              .setName("target")
-              .setDescription("The user to remove the role.")
-              .setRequired(true),
-          ),
-      )
-      .addSubcommand((option) =>
-        option
-          .setName("multiple")
-          .setDescription("Role command for multiple users.")
-          .addStringOption((option) =>
-            option
-              .setName("action")
-              .setDescription("Pick an action")
-              .setRequired(true)
-              .addChoices(
-                { name: "Give", value: "give" },
-                {
-                  name: "Remove",
-                  value: "remove",
-                },
-              ),
-          )
-          .addRoleOption((option) =>
-            option.setName("role").setDescription("The role to gives.").setRequired(true),
-          )
-          .addStringOption((option) =>
-            option
-              .setName("type")
-              .setDescription("Pick a type")
-              .setRequired(true)
-              .addChoices(
-                {
-                  name: "All Members",
-                  value: "all",
-                },
-                {
-                  name: "Humans",
-                  value: "humans",
-                },
-                { name: "Bots", value: "bots" },
-              ),
-          ),
-      ),
-  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const { options, user, guild } = interaction;

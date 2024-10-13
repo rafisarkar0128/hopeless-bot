@@ -7,54 +7,49 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "emit",
-  description: "Emit an Event",
+  data: new SlashCommandBuilder()
+    .setName("emit")
+    .setDescription("Emit an Event")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .setContexts(InteractionContextType.Guild)
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+    .addStringOption((option) =>
+      option
+        .setName("event")
+        .setDescription("The event to emit")
+        .setRequired(true)
+        .setChoices(
+          {
+            name: "guildMemberAdd",
+            value: "gadd",
+          },
+          {
+            name: "guildMemberRemove",
+            value: "gremove",
+          },
+        ),
+    )
+    .addUserOption((option) =>
+      option.setName("member").setDescription("Select a member.").setRequired(false),
+    ),
+  ephemeral: true,
   cooldown: 0,
-  category: "NONE",
+  category: "DEVELOPMENT",
+  usage: {
+    prefix: "[<Event>]",
+    slash: "/emit [event]: <Event>",
+  },
+  aliases: ["emt", "event"],
+  minArgsCount: 1,
+  isPrefixDisabled: true,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: true,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["emt", "event"],
-    usage: "[event] <Event>",
-    minArgsCount: 1,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/emit [event] <Event>",
-    data: new SlashCommandBuilder()
-      .setName("emit")
-      .setDescription("Emit an Event")
-      .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-      .setContexts(InteractionContextType.Guild)
-      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-      .addStringOption((option) =>
-        option
-          .setName("event")
-          .setDescription("The event to emit")
-          .setRequired(true)
-          .setChoices(
-            {
-              name: "guildMemberAdd",
-              value: "gadd",
-            },
-            {
-              name: "guildMemberRemove",
-              value: "gremove",
-            },
-          ),
-      )
-      .addUserOption((option) =>
-        option.setName("member").setDescription("Select a member.").setRequired(false),
-      ),
-  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const member = interaction.options.getMember("member") || interaction.member;

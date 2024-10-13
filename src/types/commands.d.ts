@@ -37,32 +37,67 @@ export type SubCommand = {
   description: string;
 };
 
-// Command Structure
-export interface CommandStructure {
-  name: string;
-  description: string;
+// Base Command Structure
+export interface BaseCommandStructure {
+  data:
+    | APIApplicationCommand
+    | SlashCommandBuilder
+    | SlashCommandOptionsOnlyBuilder
+    | ContextMenuCommandBuilder;
+  ephemeral: boolean;
   cooldown: number;
   category: CommandCategory;
+  usage: {
+    prefix: string;
+    slash: string;
+  };
+  aliases: string[];
+  minArgsCount: number;
+  isDisabled: boolean;
+  isPrefixDisabled: booelan;
+  isSlashDisabled: boolean;
   isPremium: boolean;
   isGlobal: boolean;
   isGuildOnly: boolean;
   isDevOnly: boolean;
-  isVoceChannelOnly: boolean;
+  isVoiceChannelOnly: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
-  prefixCommand: {
-    enabled: boolean;
-    aliases: string[];
-    usage: string;
-    minArgsCount: number;
-    subcommands: SubCommand[];
+  run: (
+    client: DiscordBot,
+    message: Message,
+    args: string[],
+    data: object,
+  ) => Promise<any>;
+  execute: (
+    client: DiscordBot,
+    interaction: ChatInputCommandInteraction,
+    data: object,
+  ) => Promise<any>;
+}
+
+// Command Structure
+export interface CommandStructure {
+  data: APIApplicationCommand | SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+  ephemeral: boolean;
+  cooldown: number;
+  category: CommandCategory;
+  usage: {
+    prefix: string;
+    slash: string;
   };
-  slashCommand: {
-    enabled: boolean;
-    ephemeral: boolean;
-    usage: string;
-    data: APIApplicationCommand | SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
-  };
+  aliases: string[];
+  minArgsCount: number;
+  isDisabled: boolean;
+  isPrefixDisabled: booelan;
+  isSlashDisabled: boolean;
+  isPremium: boolean;
+  isGlobal: boolean;
+  isGuildOnly: boolean;
+  isDevOnly: boolean;
+  isVoiceChannelOnly: boolean;
+  botPermissions: PermissionResolvable[];
+  userPermissions: PermissionResolvable[];
   run: (
     client: DiscordBot,
     message: Message,
@@ -79,15 +114,15 @@ export interface CommandStructure {
 // ContextMenu Structure
 export interface ContextMenuStructure {
   data: ContextMenuCommandBuilder;
-  enabled: boolean;
   ephemeral: boolean;
   cooldown: number;
   category: CommandCategory;
+  isDisabled: boolaean;
   isPremium: boolean;
   isGlobal: boolean;
   isGuildOnly: boolean;
   isDevOnly: boolean;
-  isVCOnly: boolean;
+  isVoiceChannelOnly: boolean;
   botPermissions: PermissionResolvable[];
   userPermissions: PermissionResolvable[];
   execute: (

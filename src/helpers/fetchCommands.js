@@ -5,6 +5,7 @@ const colors = require("colors");
  * @returns {Promise<import("@types/commands").OldCommand[]>}
  */
 async function fetchCommands(client) {
+  const debug = client.config.console.debug.sync;
   const ApplicationCommands = new Array();
   let i = 0,
     g = 0;
@@ -34,11 +35,13 @@ async function fetchCommands(client) {
     );
   }
 
-  console.log(
-    `[${colors.cyan("INFO")}] ${colors.magenta("fetched")} ${colors.blue(
-      `${colors.yellow(i + g)} application command(s)`,
-    )}`,
-  );
+  if (debug) {
+    console.log(
+      `[${colors.cyan("INFO")}] ${colors.magenta("fetched")} ${colors.blue(
+        `${colors.yellow(i + g)} application command(s)`,
+      )}`,
+    );
+  }
 
   return ApplicationCommands;
 }

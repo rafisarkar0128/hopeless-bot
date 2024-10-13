@@ -26,6 +26,8 @@ class DiscordBot extends Client {
 
     /** @type {Collection<string, import("@types/commands").CommandStructure>} */
     this.commands = new Collection();
+    /** @type {Collection<string, import("@types/commands").CommandStructure>} */
+    this.slashCommands = new Collection();
     /** @type {Collection<string, string>} */
     this.aliases = new Collection();
     /** @type {Collection<string, import("@types/commands").ContextMenuStructure>} */
@@ -99,7 +101,7 @@ class DiscordBot extends Client {
         ),
       );
       errors.forEach((e) => {
-        console.log(colors.yellow(e.file), "\n", colors.red(e.error));
+        console.log(colors.yellow(e.file), "\n", colors.red(e.error), "\n");
       });
       console.log(
         colors.yellow(
@@ -115,42 +117,62 @@ class DiscordBot extends Client {
    * @param {string} dirname Directory name for command files defaults to "commands"
    * @return {Promise<void>}
    */
-  async loadCommands(dirname) {
+  async loadCommands(dirname = "commands") {
     const debug = this.config.console.debug.command;
     if (debug) this.logger.info(`loading command modules`);
 
     /** @type {Array<{file: string, error: Error}>} */
     const errors = new Array();
     const files = await this.utils.loadFiles(dirname, ".js");
+    let typeArray = [1, 2, 3];
     this.commands.clear();
 
+    let i = 0;
     for (const file of files) {
       try {
-        /** @type {import("@types/commands").CommandStructure} */
+        /** @type {import("@types/commands").BaseCommandStructure} */
         const command = require(file);
-        const { name, prefixCommand, slashCommand, category } = command;
 
-        if (!prefixCommand.enabled && !slashCommand.enabled) continue;
-        if (this.config.categories[category]?.enabled === false) continue;
+        if (
+          command?.isDisabled ||
+          (command?.isPrefixDisabled && command?.isSlashDisabled)
+        ) {
+          continue;
+        }
 
-        if (prefixCommand.aliases?.length) {
-          for (const alias of prefixCommand.aliases) {
+        if (this.config.categories[command.category]?.enabled === false) continue;
+
+        if (command?.aliases?.length) {
+          for (const alias of command.aliases) {
             if (this.aliases.has(alias)) {
               throw new Error(`alias ${colors.yellow(alias)} already exist`);
             } else {
-              this.aliases.set(alias, name);
+              this.aliases.set(alias, command.data.name);
             }
           }
         }
 
-        this.commands.set(name, command);
+        if (command?.isPrefixDisabled === false) {
+          this.commands.set(command.data.name, command);
+        }
 
-        this.newCommands.push({
-          data: slashCommand.data.toJSON(),
-          global: command.isGlobal,
-          enabled: slashCommand.enabled,
-        });
+        if (command?.isSlashDisabled === false) {
+          this.slashCommands.set(command.data.name, command);
+        }
 
+        if (command?.data.type === (2 || 3)) {
+          this.contexts.set(command.data.name, command);
+        }
+
+        if (command.data.toJSON()) {
+          this.newCommands.push({
+            data: command.data.toJSON(),
+            global: command.isGlobal,
+            disbaled: command?.isDisabled || command?.isSlashDisabled,
+          });
+        }
+
+        i++;
         if (debug) {
           console.log(
             `[${colors.blue("COMMAND")}] ${colors.green(
@@ -177,7 +199,7 @@ class DiscordBot extends Client {
         ),
       );
       errors.forEach((e) => {
-        console.log(colors.yellow(e.file), "\n", colors.red(e.error));
+        console.log(colors.yellow(e.file), "\n", colors.red(e.error), "\n");
       });
       console.log(
         colors.yellow(
@@ -186,9 +208,7 @@ class DiscordBot extends Client {
       );
     }
 
-    return this.logger.info(
-      `loaded ${colors.yellow(this.commands.size)} command modules`,
-    );
+    return this.logger.info(`loaded ${colors.yellow(i)} command modules`);
   }
 
   /**

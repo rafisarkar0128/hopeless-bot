@@ -7,34 +7,29 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "pause",
-  description: "pause or stop the current music player",
+  data: new SlashCommandBuilder()
+    .setName("pause")
+    .setDescription("pause or stop the current music player")
+    .setContexts(InteractionContextType.Guild)
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+  ephemeral: true,
   cooldown: 0,
   category: "MUSIC",
+  usage: {
+    prefix: "",
+    slash: "/pause",
+  },
+  aliases: ["halt"],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
-  isGuildOnly: true,
-  isDevOnly: true,
-  isVoceChannelOnly: true,
+  isGuildOnly: false,
+  isDevOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["halt"],
-    usage: "<options>",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/pause <options>",
-    data: new SlashCommandBuilder()
-      .setName("pause")
-      .setDescription("pause or stop the current music player")
-      .setContexts(InteractionContextType.Guild)
-      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const player = client.moonlink.players.get(interaction.guild.id);

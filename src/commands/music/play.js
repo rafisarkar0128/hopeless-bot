@@ -9,37 +9,32 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "play",
-  description: "play a song from youtube music",
+  data: new SlashCommandBuilder()
+    .setName("play")
+    .setDescription("play a song from youtube music")
+    .addStringOption((option) =>
+      option.setName("query").setDescription("song name or url").setRequired(true),
+    )
+    .setContexts(InteractionContextType.Guild)
+    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+  ephemeral: true,
   cooldown: 0,
   category: "MUSIC",
+  usage: {
+    prefix: "<song|url>",
+    slash: "/play [query]: <song|url>",
+  },
+  aliases: ["pl"],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: false,
-  isVoceChannelOnly: true,
-  botPermissions: [],
+  isVoiceChannelOnly: true,
+  botPermissions: ["SendMessages", "Connect", "Speak", "EmbedLinks"],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["pl"],
-    usage: "<song_name|url>",
-    minArgsCount: 1,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/play [query] <song_name|url>",
-    data: new SlashCommandBuilder()
-      .setName("play")
-      .setDescription("play a song from youtube music")
-      .addStringOption((option) =>
-        option.setName("query").setDescription("song name or url").setRequired(true),
-      )
-      .setContexts(InteractionContextType.Guild)
-      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  },
   run: async (client, message, args) => {
     const query = args.join(" ");
     return play(client, message, query);

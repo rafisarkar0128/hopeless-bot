@@ -3,35 +3,31 @@ const { DateTime } = require("luxon");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "",
-  description: "",
+  data: new SlashCommandBuilder()
+    .setName("roleinfo")
+    .setDescription("📖 View any role's information.")
+    .addRoleOption((option) =>
+      option.setName("role").setDescription("Select a role.").setRequired(true),
+    ),
+  ephemeral: true,
   cooldown: 25,
   category: "INFORMATION",
+  usage: {
+    prefix: "[<role>]",
+    slash: "/roleinfo [role]: <role>",
+  },
+  aliases: ["rlinfo", "rinfo", "roleif"],
+  aliases: [],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: false,
-  isVoceChannelOnly: false,
-  botPermissions: [],
+  isVoiceChannelOnly: false,
+  botPermissions: ["SendMessages"],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["rlinfo", "rinfo", "roleif"],
-    usage: "[role]",
-    minArgsCount: 1,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: false,
-    usage: "/roleinfo [role]",
-    data: new SlashCommandBuilder()
-      .setName("roleinfo")
-      .setDescription("📖 View any role's information.")
-      .addRoleOption((option) =>
-        option.setName("role").setDescription("Select a role.").setRequired(true),
-      ),
-  },
   //run: async (client, message, args) => {},
   execute: async (client, interaction) => {
     const roleId = interaction.options.getRole("role").id;

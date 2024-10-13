@@ -12,32 +12,27 @@ const {
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "invite",
-  description: "returns a link button with bots invite url.",
+  data: new SlashCommandBuilder()
+    .setName("invite")
+    .setDescription("returns a link button with bots invite url."),
+  ephemeral: true,
   cooldown: 0,
   category: "UTILITY",
+  usage: {
+    prefix: "",
+    slash: "/invite",
+  },
+  aliases: ["invt"],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: false,
   isDevOnly: false,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: ["invt"],
-    usage: "",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: true,
-    usage: "/invite",
-    data: new SlashCommandBuilder()
-      .setName("invite")
-      .setDescription("returns a link button with bots invite url."),
-  },
   run: (client, message) => {
     return sendBotInvite(client, message);
   },

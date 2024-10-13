@@ -10,32 +10,27 @@ const { DateTime } = require("luxon");
 
 /** @type {import("@types/commands").CommandStructure} */
 module.exports = {
-  name: "serverinfo",
-  description: "📖 View the server information.",
+  data: new SlashCommandBuilder()
+    .setName("serverinfo")
+    .setDescription("📖 View the server information."),
+  ephemeral: false,
   cooldown: 0,
   category: "INFORMATION",
+  usage: {
+    prefix: "",
+    slash: "/serverinfo",
+  },
+  aliases: ["server"],
+  minArgsCount: 0,
+  isPrefixDisabled: false,
+  isSlashDisabled: false,
   isPremium: false,
   isGlobal: true,
   isGuildOnly: true,
   isDevOnly: false,
-  isVoceChannelOnly: false,
+  isVoiceChannelOnly: false,
   botPermissions: [],
   userPermissions: [],
-  prefixCommand: {
-    enabled: true,
-    aliases: [],
-    usage: "",
-    minArgsCount: 0,
-    subcommands: [],
-  },
-  slashCommand: {
-    enabled: true,
-    ephemeral: false,
-    usage: "/serverinfo",
-    data: new SlashCommandBuilder()
-      .setName("serverinfo")
-      .setDescription("📖 View the server information."),
-  },
   run: async (client, message) => {
     return message.reply({
       embeds: [await getGuildEmbed(client, message)],

@@ -63,6 +63,7 @@ module.exports = {
       mainLogo: true,
       event: false,
       command: false,
+      sync: true,
     },
   },
   server_links: {

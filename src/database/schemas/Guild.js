@@ -123,7 +123,7 @@ const Model = model("guild", schema);
 
 /**
  * @param {import('discord.js').Guild} guild
- * @return {import("mongoose").Document<schema>}
+ * @return {Promise<import("mongoose").Document<schema>>}
  */
 async function getSettings(guild) {
   if (!guild) throw new Error("Guild is undefined");

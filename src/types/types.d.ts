@@ -2,7 +2,7 @@
 export type NewCommand = {
   data: APIApplicationCommand;
   global: Boolean;
-  enabled: boolean;
+  disabled: boolean;
 };
 export type OldCommand = {
   data: ApplicationCommand;
