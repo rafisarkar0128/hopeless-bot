@@ -95,7 +95,7 @@ module.exports = async (client) => {
   };
 
   const errors = new Array();
-  const { guildId } = client.config;
+  const guildId = client.config.guild_id;
   const oldCommands = await fetchCommands(client);
 
   const oldSlashCommands = oldCommands.filter((c) => c.data.type === 1);

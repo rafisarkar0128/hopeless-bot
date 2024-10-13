@@ -18,7 +18,7 @@ async function fetchCommands(client) {
     });
 
     const guildCommands = await client.application.commands.fetch({
-      guildId: client.config.guildId,
+      guildId: client.config.guild_id,
       withLocalizations: true,
     });
     guildCommands.forEach((command) => {
