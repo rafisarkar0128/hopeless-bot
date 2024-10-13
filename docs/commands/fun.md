@@ -14,7 +14,7 @@ description: 7 commands
 | **!meme \[category]**  | **/meme**      | get a random meme           |
 | **!together \[game]**  | **/together**  | discord together            |
 
-{% hint style="success" %}
+{% starthint style="success" %}
 
 #### Available games:
 
