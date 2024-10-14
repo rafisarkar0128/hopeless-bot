@@ -1,3 +1,5 @@
+import { APIApplicationCommand } from "discord.js";
+
 // Command Types
 export type NewCommand = {
   data: APIApplicationCommand;

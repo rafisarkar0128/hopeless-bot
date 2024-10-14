@@ -168,7 +168,7 @@ class DiscordBot extends Client {
           this.newCommands.push({
             data: command.data.toJSON(),
             global: command.isGlobal,
-            disbaled: command?.isDisabled || command?.isSlashDisabled,
+            disabled: command?.isDisabled || command?.isSlashDisabled,
           });
         }
 
@@ -226,9 +226,42 @@ class DiscordBot extends Client {
    */
   async build() {
     if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
+    function getVanity() {
+      //ansi color codes
+      let esc = "\u001b[0m";
+      let red = "\u001b[38;5;196m";
+      let blue = "\u001b[38;5;45m";
+      let green = "\u001b[38;5;49m";
+      let yellow = "\u001b[38;5;11m";
+
+      let vanity = [
+        `y      __`,
+        `y   ."\`  \`".`,
+        `y  /   /\\   \\`,
+        `y |    \\/    | b_   _                  _               ____        _  g______`,
+        `y  \\   ()   / b| | | | ___  _ __   ___| | ___  ___ ___| __ )  ___ | |_g\\ \\ \\ \\`,
+        `y   '.____.'  b| |_| |/ _ \\| '_ \\ / _ \\ |/ _ \\/ __/ __|  _ \\ / _ \\| __|g\\ \\ \\ \\`,
+        `y    {_.="}   b|  _  | (_) | |_) |  __/ |  __/\\__ \\__ \\ |_) | (_) | |_  g) ) ) )`,
+        `y    {_.="}   b|_| |_|\\___/| .__/ \\___|_|\\___||___/___/____/ \\___/ \\__|g/ / / /`,
+        `y    \`-..-\`   r============b|_|r========================================g/_/_/_/`,
+      ].join("\n");
+
+      vanity.split("").forEach((char) => {
+        vanity = vanity
+          .replace("r", red)
+          .replace("b", blue)
+          .replace("g", green)
+          .replace("y", yellow)
+          .replace("e", esc);
+      });
+
+      return vanity;
+    }
 
     console.clear();
     if (this.config.console.debug.mainLogo) {
+      console.log(getVanity());
+
       await this.logBox(
         [
           `Welcome to ${colors.blue(this.pkg.name.toUpperCase())} js project`,

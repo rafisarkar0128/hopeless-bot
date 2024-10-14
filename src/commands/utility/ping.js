@@ -93,10 +93,7 @@ async function getPingEmbed(client, ctx, reply) {
         value: `\`\`\`m\n${days} Days : ${hours} Hrs : ${minutes} Mins : ${seconds} Secs\n\`\`\``,
         inline: false,
       },
-    ])
-    .setFooter({
-      text: client.config.bot.footer,
-    });
+    ]);
 
   return embed;
 }
