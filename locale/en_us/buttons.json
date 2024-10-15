@@ -1,0 +1,12 @@
+{
+  "invite": "Invite",
+  "support": "Support Server",
+  "previous": "Previous",
+  "resume": "Resume",
+  "stop": "Stop",
+  "skip": "Skip",
+  "loop": "Loop",
+  "errors": {
+    "not_author": "You can't use this button."
+  }
+}

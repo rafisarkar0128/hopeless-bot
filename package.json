@@ -1,6 +1,6 @@
 {
   "name": "hopeless-bot",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A discord bot for your every need.",
   "main": "src/index.js",
   "_moduleAliases": {
@@ -55,6 +55,7 @@
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "glob": "^11.0.0",
+    "i18next": "^23.16.0",
     "lavalink-client": "^2.4.0",
     "luxon": "^3.5.0",
     "module-alias": "^2.2.3",
