@@ -17,6 +17,6 @@ module.exports = {
 
   // easy way to load schemas
   schemas: {
-    guild: require("@root/src/database/schemas/guild.js"),
+    guild: require("@schemas/guild.js"),
   },
 };

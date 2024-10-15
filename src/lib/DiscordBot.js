@@ -212,13 +212,62 @@ class DiscordBot extends Client {
   }
 
   /**
-   * @param {String} content - The text to display (must be a string)
-   * @param {import("boxen").Options} options - Options for styling
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async logBox(content, options) {
+  async getLogbox() {
     const boxen = (await import("boxen")).default;
-    console.log(boxen(content, options));
+    const logbox = boxen(
+      [
+        `Welcome to ${colors.blue(this.pkg.name.toUpperCase())} js project`,
+        `Running on Node.JS ${colors.green(process.version)}`,
+        `Version ${colors.yellow(this.pkg.version)}`,
+        `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
+      ].join("\n"),
+      {
+        borderColor: "#00BFFF",
+        textAlignment: "center",
+        padding: {
+          left: 10,
+          right: 10,
+          top: 1,
+          bottom: 1,
+        },
+      },
+    );
+    return logbox;
+  }
+
+  /** A function to get the Bot logo
+   * @returns {string}
+   */
+  getVanity() {
+    // ansi colors with escape
+    let esc = "\u001b[0m";
+    let red = "\u001b[38;5;196m";
+    let blue = "\u001b[38;5;45m";
+    let green = "\u001b[38;5;49m";
+    let yellow = "\u001b[38;5;11m";
+
+    let vanity = [
+      `y     __`,
+      `y  ."\`  \`".`,
+      `y /   /\\   \\`,
+      `y|    \\/    | b_                      _               _           _  g______`,
+      `y \\   ()   / b| |__   ___  _ __   ___| | ___  ___ ___| |__   ___ | |_g\\ \\ \\ \\ `,
+      `y  '.____.'  b| '_ \\ / _ \\| '_ \\ / _ \\ |/ _ \\/ __/ __| '_ \\ / _ \\| __|g\\ \\ \\ \\ `,
+      `y   {_.="}   b| | | | (_) | |_) |  __/ |  __/\\__ \\__ \\ |_) | (_) | |_  g) ) ) )`,
+      `y   {_.="}   b|_| |_|\\___/| .__/ \\___|_|\\___||___/___/_.__/ \\___/ \\__|g/ / / /`,
+      `y   \`-..-\`   r============b|_|r========================================g/_/_/_/`,
+    ].join("\n");
+
+    vanity = vanity
+      .replace(/r/g, red)
+      .replace(/g/g, green)
+      .replace(/b/g, blue)
+      .replace(/y/g, yellow)
+      .replace(/e/g, esc);
+
+    return vanity;
   }
 
   /** a function to start everything
@@ -226,60 +275,11 @@ class DiscordBot extends Client {
    */
   async build() {
     if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
-    function getVanity() {
-      //ansi color codes
-      let esc = "\u001b[0m";
-      let red = "\u001b[38;5;196m";
-      let blue = "\u001b[38;5;45m";
-      let green = "\u001b[38;5;49m";
-      let yellow = "\u001b[38;5;11m";
-
-      let vanity = [
-        `y      __`,
-        `y   ."\`  \`".`,
-        `y  /   /\\   \\`,
-        `y |    \\/    | b_   _                  _               ____        _  g______`,
-        `y  \\   ()   / b| | | | ___  _ __   ___| | ___  ___ ___| __ )  ___ | |_g\\ \\ \\ \\`,
-        `y   '.____.'  b| |_| |/ _ \\| '_ \\ / _ \\ |/ _ \\/ __/ __|  _ \\ / _ \\| __|g\\ \\ \\ \\`,
-        `y    {_.="}   b|  _  | (_) | |_) |  __/ |  __/\\__ \\__ \\ |_) | (_) | |_  g) ) ) )`,
-        `y    {_.="}   b|_| |_|\\___/| .__/ \\___|_|\\___||___/___/____/ \\___/ \\__|g/ / / /`,
-        `y    \`-..-\`   r============b|_|r========================================g/_/_/_/`,
-      ].join("\n");
-
-      vanity.split("").forEach((char) => {
-        vanity = vanity
-          .replace("r", red)
-          .replace("b", blue)
-          .replace("g", green)
-          .replace("y", yellow)
-          .replace("e", esc);
-      });
-
-      return vanity;
-    }
 
     console.clear();
     if (this.config.console.debug.mainLogo) {
-      console.log(getVanity());
-
-      await this.logBox(
-        [
-          `Welcome to ${colors.blue(this.pkg.name.toUpperCase())} js project`,
-          `Running on Node.JS ${colors.green(process.version)}`,
-          `Version ${colors.yellow(this.pkg.version)}`,
-          `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
-        ].join("\n"),
-        {
-          borderColor: "#00BFFF",
-          textAlignment: "center",
-          padding: {
-            left: 10,
-            right: 10,
-            top: 1,
-            bottom: 1,
-          },
-        },
-      );
+      console.log(this.getVanity());
+      console.log(await this.getLogbox());
     }
 
     // Load event modules
