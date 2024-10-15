@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> I am going to rebuild the whole project. From now there won't be any new commits on this branch untill the rebuilding process is completed in the rebuild branch. Also the code in this branch has some major bugs that needs attention. So, to prevent yourself from the hassle don't use this to run your bot atleast for the time bieng. Please be patient and wait for the rebuild. I can promise you that the new version will be faster and more understandable. Thanks for staying with me. Untill next time goodbye (_Only for a few weeks_).
+> This a **_rebuild_** branch. Its more like the new base for rebuilding the bot with new structure and classes with advance feature and some the old lagacy features as well with updated code. _Just remeber this_ that the code here will be changed or get updated without any notice. So, keep that in mind while using it to run your bot. Anyway best regards for using the code in this repo. Motivate me by simply giving a star. Wait for _a few weeks_ for the rebuild to be completed. Untill then goodbye.
 
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
