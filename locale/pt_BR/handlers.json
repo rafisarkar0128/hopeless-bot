@@ -1,8 +1,20 @@
 {
-  "commands": {
-    "prefix": {}
+  "commandHandler": {
+    "no_permission": {
+      "title": "Permissões Ausentes",
+      "description": {
+        "bot": "Eu preciso de {permissions} para executar este comando.",
+        "user": "Você deve ter estas {permissions} para poder usar este comando."
+      }
+    },
+    "no_run_function": "A versão de prefixo deste comando ainda não está concluída. Tente a versão de barra oblíqua em vez disso.",
+    "command_disabled": "Este comando está desativado pelo proprietário do bot ou pelos desenvolvedores.",
+    "dev_command": "Este comando é acessível apenas ao proprietário do bot e aos desenvolvedores.",
+    "guild_only": "Este comando só pode ser usado em uma Guilda _(Servidor Discord)_.",
+    "cooldown": "Calma! O comando está em tempo de espera, aguarde `{cooldown}` segundos.",
+    "in_voice_channel": "Você deve estar em um canal de voz para usar este comando."
   },
   "embeds": {
-    "footer": "Copyright © 2023 - {new:date:year} | @{owner:name}"
+    "footer": "Direitos Autorais © 2023 - {new:date:year} | @{bot:tag}"
   }
 }
