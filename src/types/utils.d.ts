@@ -1,25 +1,3 @@
-// File Exentions
-export type FileExtensions =
-  | ".js"
-  | ".jsx"
-  | ".json"
-  | ".cjs"
-  | ".cts"
-  | ".mjs"
-  | ".mts"
-  | ".ts "
-  | ".tsx"
-  | ".jpg"
-  | ".png"
-  | ".jpeg"
-  | ".gif"
-  | ".mp4"
-  | ".mp3"
-  | ".mkv";
-
-// Function loadFiles()
-export type LoadFiles = (dirname: string, ext: FileExtensions) => Promise<string[]>;
-
 // Error Types
 export type ErrorTypes =
   | "error"

@@ -9,26 +9,6 @@ class Utils {
     this.client = client;
   }
 
-  /** Returns an array of files from given direcotry filtered by provided extension
-   * @type {import("@types/utils").LoadFiles}
-   * @example const file = await client.utils.loadFiles("src", ".js");
-   */
-  async loadFiles(dirname, ext) {
-    const deleteCashedFile = (file) => {
-      const filePath = path.resolve(file);
-      if (require.cache[filePath]) {
-        delete require.cache[filePath];
-      }
-    };
-
-    const files = await glob(
-      path.join(`${process.cwd()}`, "src", dirname, `**/*`).replace(/\\/g, "/"),
-    );
-    const Files = files.filter((file) => path.extname(file) === ext);
-    await Promise.all(Files.map(deleteCashedFile));
-    return Files;
-  }
-
   /** A function to send error to a discord channel
    * @type {import("@types/utils").SendError}
    * @example client.utils.sendError(error, type, data);

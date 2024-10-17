@@ -1,17 +1,20 @@
 const { Client, Collection } = require("discord.js");
+const { table } = require("table");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { Manager } = require("moonlink.js");
 const { AntiCrash } = require("@helpers/AntiCrash");
+const { loadFiles, loadEvents } = require("./functions/index");
 const colors = require("colors");
 
 class DiscordBot extends Client {
-  /** Options to use while initializing the client
+  /** typingss for discord.js ClientOptions
    * @param {import("discord.js").ClientOptions} options
    */
   constructor(options) {
     super(options);
 
+    // local stored data
     this.config = require(`@config/config.js`);
     this.colors = require(`@config/colors.json`);
     this.wait = require("timers/promises").setTimeout;
@@ -21,16 +24,41 @@ class DiscordBot extends Client {
     this.utils = new Utils(this);
     this.syncCommands = require("@helpers/syncCommands");
 
-    /** @type {import("@types/types").NewCommand[]} */
+    // client collections
+
+    /**
+     * types for event collection
+     * @type {Collection<string, import("@structures/event").EventStructure>}
+     */
+    this.events = new Collection();
+
+    /**
+     * types for
+     * @type {import("@types/types").NewCommand[]} */
     this.newCommands = new Array();
 
-    /** @type {Collection<string, import("@types/commands").CommandStructure>} */
+    /**
+     * types for commands collection
+     * @type {Collection<string, import("@types/commands").CommandStructure>}
+     */
     this.commands = new Collection();
-    /** @type {Collection<string, import("@types/commands").CommandStructure>} */
-    this.slashCommands = new Collection();
-    /** @type {Collection<string, string>} */
+
+    /**
+     * types for alias collection
+     * @type {Collection<string, string>}
+     */
     this.aliases = new Collection();
-    /** @type {Collection<string, import("@types/commands").ContextMenuStructure>} */
+
+    /**
+     * types for slash command collection
+     * @type {Collection<string, import("@structures/command").CommandStructure>}
+     */
+    this.slashCommands = new Collection();
+
+    /**
+     * types for contextmenu collection
+     * @type {Collection<string, import("@types/commands").ContextMenuStructure>}
+     */
     this.contexts = new Collection();
 
     // Music Manager
@@ -47,72 +75,6 @@ class DiscordBot extends Client {
     }
   }
 
-  /** Function to load event modules
-   * @param {string} dirname Directory name for event files defaults to "events"
-   * @return {Promise<void>}
-   */
-  async loadEvents(dirname = "events") {
-    let debug = this.config.console.debug.event;
-    if (debug) this.logger.info(`loading event modules`);
-    /** @type {Array<{file: string, error: Error}>} */
-    const errors = new Array();
-    const files = await this.utils.loadFiles(dirname, ".js");
-    let i = 0;
-
-    for (const file of files) {
-      try {
-        /** @type {import("@types/events").EventStructure} */
-        const event = require(file);
-        const execute = (...args) => event.execute(this, ...args);
-        const target = event.rest
-          ? this.rest
-          : event.ws
-          ? this.ws
-          : event.moonlink
-          ? this.moonlink
-          : this;
-
-        target[event.once ? "once" : "on"](event.name, execute);
-
-        i++;
-        if (debug) {
-          console.log(
-            `[${colors.yellow("EVENT")}] ${colors.green(
-              file.replace(/\\/g, "/").split("/").pop(),
-            )}`,
-          );
-        }
-      } catch (error) {
-        if (debug) {
-          console.log(
-            `[${colors.yellow("EVENT")}] ${colors.red(
-              file.replace(/\\/g, "/").split("/").pop(),
-            )}`,
-          );
-        }
-        errors.push({ file: file, error: error });
-      }
-    }
-
-    if (errors.length > 0) {
-      console.log(
-        colors.yellow(
-          "[AntiCrash] | [Event_Loader_Error_Logs] | [Start] : ===============",
-        ),
-      );
-      errors.forEach((e) => {
-        console.log(colors.yellow(e.file), "\n", colors.red(e.error), "\n");
-      });
-      console.log(
-        colors.yellow(
-          "[AntiCrash] | [Event_Loader_Error_Logs] | [End] : ===============",
-        ),
-      );
-    }
-
-    return this.logger.info(`loaded ${colors.yellow(i)} event modules`);
-  }
-
   /** Function to load command modules
    * @param {string} dirname Directory name for command files defaults to "commands"
    * @return {Promise<void>}
@@ -123,7 +85,7 @@ class DiscordBot extends Client {
 
     /** @type {Array<{file: string, error: Error}>} */
     const errors = new Array();
-    const files = await this.utils.loadFiles(dirname, ".js");
+    const files = await loadFiles(dirname, [".js"]);
     let typeArray = [1, 2, 3];
     this.commands.clear();
 
@@ -283,10 +245,10 @@ class DiscordBot extends Client {
     }
 
     // Load event modules
-    await this.loadEvents("events");
+    await loadEvents(this, "src/events");
 
     // Load command modules
-    await this.loadCommands("commands");
+    await this.loadCommands("src/commands");
 
     // Connect to the database
     await this.database.connect(this);

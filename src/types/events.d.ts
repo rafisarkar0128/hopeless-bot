@@ -103,6 +103,29 @@ export type MoonlinkEventNames =
   | "trackStart"
   | "trackStuck";
 
+export type LavalinkclientEvents =
+  | "playerCreate"
+  | "playerDestroy"
+  | "playerDisconnect"
+  | "playerMove"
+  | "playerSocketClosed"
+  | "trackStart"
+  | "trackStuck"
+  | "trackError"
+  | "trackEnd"
+  | "queueEnd"
+  | "playerUpdate"
+  | "create"
+  | "error"
+  | "raw"
+  | "disconnect"
+  | "connect"
+  | "reconnecting"
+  | "create"
+  | "destroy"
+  | "error"
+  | "resumed";
+
 // Base Event Module Structure
 export interface EventStructure {
   name: DiscordEventNames | MoonlinkEventNames;

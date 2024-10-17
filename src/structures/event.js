@@ -1,9 +1,10 @@
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("./event").EventStructure} */
 module.exports = {
   name: "",
   once: false,
   rest: false,
   ws: false,
-  moonlink: true,
+  lavalink: false,
+  lavalink_node: false,
   execute: async (client, ...args) => {},
 };

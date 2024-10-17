@@ -1,12 +1,9 @@
 const colors = require("colors");
 
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "ready",
   once: true,
-  rest: false,
-  ws: false,
-  moonlink: false,
   execute: async (client) => {
     client.logger.info(`${colors.green(client.user.tag)} is online`);
 

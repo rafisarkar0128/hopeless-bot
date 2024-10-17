@@ -1,39 +1,25 @@
-const {
-  DISCORD_CLIENT_TOKEN,
-  DISCORD_CLIENT_ID,
-  DISCORD_CLIENT_SECRET,
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET,
-  MYANIMELIST_CLIENT_ID,
-  MYANIMELIST_CLIENT_SECRET,
-  DEFAULT_PREFIX,
-  OWNER_ID,
-  SERVER_ID,
-  DEVELOPER_IDS,
-} = process.env;
-
 module.exports = {
   // basic settings
   defualt_locale: "en_us",
 
   // bot secrets
-  bot_token: DISCORD_CLIENT_TOKEN,
-  bot_id: DISCORD_CLIENT_ID,
-  bot_secret: DISCORD_CLIENT_SECRET,
+  bot_token: process.env.DISCORD_CLIENT_TOKEN,
+  bot_id: process.env.DISCORD_CLIENT_ID,
+  bot_secret: process.env.DISCORD_CLIENT_SECRET,
 
   // spotify secrets
-  spotify_client_id: SPOTIFY_CLIENT_ID,
-  spotify_client_iecret: SPOTIFY_CLIENT_SECRET,
+  spotify_client_id: process.env.SPOTIFY_CLIENT_ID,
+  spotify_client_iecret: process.env.SPOTIFY_CLIENT_SECRET,
 
   // myanimelist secrets
-  myanimelist_client_d: MYANIMELIST_CLIENT_ID,
-  myanimelist_client_secret: MYANIMELIST_CLIENT_SECRET,
+  myanimelist_client_d: process.env.MYANIMELIST_CLIENT_ID,
+  myanimelist_client_secret: process.env.MYANIMELIST_CLIENT_SECRET,
 
   // bot configs
-  default_prefix: DEFAULT_PREFIX,
-  owner_id: OWNER_ID,
-  guild_id: SERVER_ID,
-  devs: DEVELOPER_IDS,
+  default_prefix: process.env.DEFAULT_PREFIX,
+  owner_id: process.env.OWNER_ID,
+  guild_id: process.env.SERVER_ID,
+  devs: process.env.DEVELOPER_IDS,
 
   // mongodb config
   mongo_uri: process.env.MONGO_URI,
@@ -45,9 +31,11 @@ module.exports = {
     },
     slash: {
       enabled: true,
+      global: true,
     },
     context: {
       enabled: true,
+      global: true,
     },
     buttons: {
       enabled: false,
@@ -61,8 +49,8 @@ module.exports = {
     time_format: "dd/LL/yyyy - HH:mm:ss",
     debug: {
       mainLogo: true,
-      event: false,
-      command: false,
+      event: true,
+      command: true,
       sync: true,
     },
   },

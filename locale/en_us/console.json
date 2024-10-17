@@ -1,0 +1,16 @@
+{
+  "info": {
+    "welcome": "Welcome to {color:start:cyan}{pkg:name}{color:end}{color:yellow:start}Javascript{color:end} project",
+    "message": "Coded with ❤️ by {color:start:magenta}{code:author}{color:end}"
+  },
+  "loaders": {
+    "event": {
+      "start": "Started to load event files from {color:start:green}{dir}{color:end}",
+      "end": "Successfully loaded {color:start:yellow}{size}{color:end} event file(s)"
+    },
+    "command": {
+      "start": "Started to load command files from {color:start:green}{dir}{color:end}",
+      "end": "Successfully loaded {color:start:yellow}{size}{color:end} command file(s)"
+    }
+  }
+}
