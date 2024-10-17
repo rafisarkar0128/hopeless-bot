@@ -66,7 +66,7 @@ module.exports = {
           ].join("\n"),
         },
       )
-      .setColor(member.roles.color.hexColor || client.utils.getRandomColor());
+      .setColor(member.roles.color?.hexColor || client.utils.getRandomColor());
 
     interaction.followUp({
       embeds: [embed],
