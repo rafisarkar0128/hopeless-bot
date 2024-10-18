@@ -60,7 +60,7 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### 📝 Normal Setup
 
-> ![NOTE]
+> [!NOTE]
 > Right now the bot still has some major bugs
 
 - **Step 1:** Open `.env.example` copy eveything to a new file named `.env`
