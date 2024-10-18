@@ -1,9 +1,9 @@
 > [!IMPORTANT]
-> This a **_rebuild_** branch. Its more like the new base for rebuilding the bot with new structure and classes with advance feature and some the old lagacy features as well with updated code. _Just remeber this_ that the code here will be changed or get updated without any notice. So, keep that in mind while using it to run your bot. Anyway best regards for using the code in this repo. Motivate me by simply giving a star. Wait for _a few weeks_ for the rebuild to be completed. Untill then goodbye.
+> This is **_rebuild_** branch. Its more like the new base for rebuilding the bot with new structure and classes with advance feature and some of the old lagacy features as well with updated code. _Just remeber this_ that the code here will be changed or get updated without any notice. So, keep that in mind when using it to run your bot. Anyway best regards for using the code in this repo. Motivate me by simply giving a star. Wait for _a few weeks_ for the rebuild to be completed. Untill then goodbye.
 
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
-[![Version][version-shield]]()
+[![Version][version-shield]][version-shield-link]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -28,12 +28,14 @@
 - [x] **Advance Bot**
 - [ ] **Documentation**
 - [ ] **Moderation Bot**
-- [ ] **Music Bot**
+- [x] **Music Bot** _(missing some key features)_
 - [ ] **Web based Dashboard**
 - [ ] **Website**
 
 ## 💡 Features
 
+1. **Advance Logger**
+1. **Full customizations and configuration**
 1. **Advance command and Event Handler**
 1. **Advance command synchronizer**
 1. **Error logging system**
@@ -58,6 +60,9 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### 📝 Normal Setup
 
+> ![NOTE]
+> Right now the bot still has some major bugs
+
 - **Step 1:** Open `.env.example` copy eveything to a new file named `.env`
 - **Step 2:** Put the required values in `.env`
 - **Step 3:** Open the terminal and run `npm install`. This installs all the necessary packages
@@ -65,7 +70,7 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### 📝 Setup with Docker
 
-**Note:** Currently Missing docker config files
+**Note:** Missing docker compose config files (Will be updated soon)
 
 - **Step 1:** Open `env.example`
 - **Step 2:** Put the required values and rename it to `.env`
@@ -74,7 +79,7 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### 📝 Replit Guide
 
-**Will be updated soon**
+**Will be updated in next update**
 
 > [!NOTE]
 >
@@ -89,19 +94,19 @@ Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help in the
 [`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
 
 > [!IMPORTANT]
-> Use hex color code for Embed colors. Use colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) through `client.colors.(Color)`
+> Use hex color code for Embed colors. I recommend using hex colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) through `client.config.colors.(Color)`
 
 ## Commands
 
 Written below are some public commands of the bot.
 
-| Name        | description                             |
-| ----------- | --------------------------------------- |
-| /botinfo    | View bot's status & runtime status      |
-| /invite     | Get a button with embeded invite-link.  |
-| /ping       | View bot's ping, response & uptime      |
-| /serverinfo | View information about a discord server |
-| /memberinfo | View information of a discord user      |
+| Slash       | Prefix      | description                             |
+| ----------- | ----------- | --------------------------------------- |
+| /botinfo    | ?botinfo    | View bot's status & runtime status      |
+| /invite     | ?invite     | Get a button with embeded invite-link.  |
+| /ping       | ?ping       | View bot's ping, response & uptime      |
+| /serverinfo | ?serverinfo | View information about a discord server |
+| /memberinfo | ?memberinfo | View information of a discord user      |
 
 ## 🔗 Useful Links
 
@@ -138,6 +143,7 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 - [@Bord-Pi](https://github.com/thomasbnt/Bord-Pi) Solved some problems of SyncCommand feature from [A post on CodeDev](https://dev.to/mrrobot/creating-a-discord-bot-with-slash-commands-51fa)
 
 [version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
+[version-shield-link]: https://github.com/theassassin0128/Hopeless-Bot/tree/main/package.json
 [contributors-shield]: https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
 [contributors-url]: https://github.com/theassassin0128/Hopeless-Bot/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/theassassin0128/Hopeless-Bot.svg?style=for-the-badge
