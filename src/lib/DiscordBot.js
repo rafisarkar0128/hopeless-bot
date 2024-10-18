@@ -1,10 +1,9 @@
 const { Client, Collection } = require("discord.js");
-const { table } = require("table");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { Manager } = require("moonlink.js");
 const { AntiCrash } = require("@helpers/AntiCrash");
-const { loadFiles, loadEvents } = require("./functions/index");
+const { loadEvents, loadLocales, loadCommands } = require("./functions/index");
 const colors = require("colors");
 
 class DiscordBot extends Client {
@@ -75,104 +74,6 @@ class DiscordBot extends Client {
     }
   }
 
-  /** Function to load command modules
-   * @param {string} dirname Directory name for command files defaults to "commands"
-   * @return {Promise<void>}
-   */
-  async loadCommands(dirname = "commands") {
-    const debug = this.config.console.debug.command;
-    if (debug) this.logger.info(`loading command modules`);
-
-    /** @type {Array<{file: string, error: Error}>} */
-    const errors = new Array();
-    const files = await loadFiles(dirname, [".js"]);
-    let typeArray = [1, 2, 3];
-    this.commands.clear();
-
-    let i = 0;
-    for (const file of files) {
-      try {
-        /** @type {import("@types/commands").BaseCommandStructure} */
-        const command = require(file);
-
-        if (
-          command?.isDisabled ||
-          (command?.isPrefixDisabled && command?.isSlashDisabled)
-        ) {
-          continue;
-        }
-
-        if (this.config.categories[command.category]?.enabled === false) continue;
-
-        if (command?.aliases?.length) {
-          for (const alias of command.aliases) {
-            if (this.aliases.has(alias)) {
-              throw new Error(`alias ${colors.yellow(alias)} already exist`);
-            } else {
-              this.aliases.set(alias, command.data.name);
-            }
-          }
-        }
-
-        if (command?.isPrefixDisabled === false) {
-          this.commands.set(command.data.name, command);
-        }
-
-        if (command?.isSlashDisabled === false) {
-          this.slashCommands.set(command.data.name, command);
-        }
-
-        if (command?.data.type === (2 || 3)) {
-          this.contexts.set(command.data.name, command);
-        }
-
-        if (command.data.toJSON()) {
-          this.newCommands.push({
-            data: command.data.toJSON(),
-            global: command.isGlobal,
-            disabled: command?.isDisabled || command?.isSlashDisabled,
-          });
-        }
-
-        i++;
-        if (debug) {
-          console.log(
-            `[${colors.blue("COMMAND")}] ${colors.green(
-              file.replace(/\\/g, "/").split("/").pop(),
-            )}`,
-          );
-        }
-      } catch (error) {
-        if (debug) {
-          console.log(
-            `[${colors.blue("COMMAND")}] ${colors.red(
-              file.replace(/\\/g, "/").split("/").pop(),
-            )}`,
-          );
-        }
-        errors.push({ file: file, error: error });
-      }
-    }
-
-    if (errors.length > 0) {
-      console.log(
-        colors.yellow(
-          "[AntiCrash] | [Command_Loader_Error_Logs] | [Start] : ===============",
-        ),
-      );
-      errors.forEach((e) => {
-        console.log(colors.yellow(e.file), "\n", colors.red(e.error), "\n");
-      });
-      console.log(
-        colors.yellow(
-          "[AntiCrash] | [Command_Loader_Error_Logs] | [End] : ===============",
-        ),
-      );
-    }
-
-    return this.logger.info(`loaded ${colors.yellow(i)} command modules`);
-  }
-
   /**
    * @return {Promise<string>}
    */
@@ -235,7 +136,10 @@ class DiscordBot extends Client {
   /** a function to start everything
    * @returns {Promise<void>}
    */
-  async build() {
+  async start() {
+    // load locales
+    loadLocales();
+
     if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
 
     console.clear();
@@ -248,7 +152,7 @@ class DiscordBot extends Client {
     await loadEvents(this, "src/events");
 
     // Load command modules
-    await this.loadCommands("src/commands");
+    await loadCommands(this, "src/commands");
 
     // Connect to the database
     await this.database.connect(this);

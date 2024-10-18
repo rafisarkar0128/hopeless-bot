@@ -1,20 +1,24 @@
 const { ContextMenuCommandBuilder, ApplicationCommandType } = require("discord.js");
 
-/** @type {import("@types/commands").ContextMenuStructure} */
+/** @type {import("./context.d.ts").ContextMenuStructure} */
 module.exports = {
-  data: new ContextMenuCommandBuilder().setType(
-    ApplicationCommandType.User || ApplicationCommandType.Message, // either message or user
-  ),
-  category: "NONE",
-  ephemeral: false,
-  cooldown: 0,
-  isDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: false,
-  isDevOnly: false,
-  isVoiceChannelOnly: false,
-  botPermissions: [],
-  userPermissions: [],
-  execute: (client, interaction, data) => {},
+  options: {
+    category: "none",
+    cooldown: 0,
+    premium: false,
+    guildOnly: false,
+    devOnly: false,
+    voiceChannelOnly: false,
+    botPermissions: [],
+    userPermissions: [],
+  },
+  context: {
+    data: new ContextMenuCommandBuilder().setType(
+      ApplicationCommandType.User || ApplicationCommandType.Message, // either message or user
+    ),
+    ephemeral: true,
+    global: true,
+    disabled: false,
+    execute: (client, interaction, data) => {},
+  },
 };

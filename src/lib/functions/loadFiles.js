@@ -5,6 +5,7 @@ const colors = require("colors");
 /**
  * Returns an array of files from given path filtered by provided extensions.
  * Remember path starts from your projects main folder through **process.cwd()**.
+ * So provide path from the base folder.
  * @type {import("./functions").LoadFiles}
  * @default loadFiles(path,ext)
  * @example const files = await loadFiles("src", [".js"]);
@@ -12,15 +13,12 @@ const colors = require("colors");
  * @example const files = await loadFiles("src/types", [".ts"]);
  * @example const files = await loadFiles("public", [".mp4", ".mkv", ".jpeg"]);
  */
-
 module.exports = async (path, ext) => {
   if (typeof path !== "string") {
-    throw new TypeError(colors.red("Value of path must be a string"));
+    throw new TypeError("Value of path must be a string");
   }
   if (!Array.isArray(ext)) {
-    throw new TypeError(
-      colors.red("Value of ext must be an array with proper file extensions"),
-    );
+    throw new TypeError("Value of ext must be an array");
   }
 
   function deleteCashedFile(file) {

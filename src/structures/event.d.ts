@@ -1,8 +1,6 @@
-// Typing for base structures located in ./src/structures
-
 import { DiscordBot } from "@lib/DiscordBot";
 
-// Discord.JS Event Names
+// discordjs event names
 export type DiscordEvents =
   | "applicationCommandPermissionsUpdate"
   | "autoModerationActionExecution"
@@ -84,6 +82,7 @@ export type DiscordEvents =
   | "webhooksUpdate"
   | "webhookUpdate";
 
+// lavalink-client event names
 export type LavalinkClientEvents =
   | "playerCreate"
   | "playerDestroy"
@@ -107,13 +106,13 @@ export type LavalinkClientEvents =
   | "error"
   | "resumed";
 
-//Event Module Structure
+// event module structure
 export interface EventStructure {
   name: DiscordEvents | LavalinkClientEvents;
   once?: boolean;
   rest?: boolean;
   ws?: boolean;
   lavalink?: boolean;
-  lavalink_node?: boolean;
+  lavalinkNode?: boolean;
   execute: (client: DiscordBot, ...args: any) => Promise<any>;
 }

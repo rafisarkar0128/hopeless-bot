@@ -1,12 +1,8 @@
 const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "interactionCreate",
-  once: false,
-  rest: false,
-  ws: false,
-  moonlink: false,
   /** @param {ChatInputCommandInteraction} interaction */
   execute: async (client, interaction) => {
     if (!interaction.isChatInputCommand()) return;

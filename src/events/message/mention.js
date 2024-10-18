@@ -1,12 +1,8 @@
 const { Message, EmbedBuilder } = require("discord.js");
 
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "messageCreate",
-  once: false,
-  rest: false,
-  ws: false,
-  moonlink: false,
   /** @param {Message} message */
   execute: async (client, message) => {
     if (message.author.bot) return;

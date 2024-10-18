@@ -1,0 +1,10 @@
+{
+  "type_errors": {
+    "string": "Value of {param} must be a string",
+    "object": "Value of {param} must be an object",
+    "array": "Value of {param} must be an array",
+    "number": "Value of {param} must be a number",
+    "boolean": "Value of {param} must be a boolean",
+    "other": "Value of {param} must be a {type}"
+  }
+}

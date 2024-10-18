@@ -2,13 +2,9 @@ const { Message } = require("discord.js");
 const { commandHandler, automodHandler, statsHandler } = require("@handlers/index");
 const { getSettings } = require("@root/src/database/schemas/guild");
 
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "messageCreate",
-  once: false,
-  rest: false,
-  ws: false,
-  moonlink: false,
   /** @param {Message} message */
   async execute(client, message) {
     const { config, commands, aliases } = client;

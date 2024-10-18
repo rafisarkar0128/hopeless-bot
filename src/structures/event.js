@@ -5,6 +5,6 @@ module.exports = {
   rest: false,
   ws: false,
   lavalink: false,
-  lavalink_node: false,
+  lavalinkNode: false,
   execute: async (client, ...args) => {},
 };

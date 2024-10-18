@@ -41,7 +41,7 @@ const client = new DiscordBot({
   restTimeOffset: 0,
 });
 
-client.build().catch((error) => {
+client.start().catch((error) => {
   throw error;
 });
 

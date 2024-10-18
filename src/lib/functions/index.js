@@ -2,4 +2,6 @@
 module.exports = {
   loadFiles: require("./loadFiles"),
   loadEvents: require("./loadEvents"),
+  loadLocales: require("./loadLocales"),
+  loadCommands: require("./loadCommands"),
 };

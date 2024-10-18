@@ -29,4 +29,8 @@ export type LoadFiles = (
   ext?: FileExtensions[] | string[],
 ) => Promise<string[]> | Promise<[]>;
 
+// function to load evenrs
 export type LoadEvents = (client: DiscordBot, dir: string) => Promise<void>;
+
+// function to load commands
+export type LoadCommands = (client: DiscordBot, dir: string) => Promise<void>;

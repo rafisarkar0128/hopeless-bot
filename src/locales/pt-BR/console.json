@@ -1,0 +1,16 @@
+{
+  "info": {
+    "welcome": "Bem-vindo ao projeto {color:start:cyan}{pkg:name}{color:end}{color:yellow:start}Javascript{color:end}",
+    "message": "Codificado com ❤️ por {color:start:magenta}{code:author}{color:end}"
+  },
+  "loaders": {
+    "event": {
+      "start": "Começou a carregar arquivos de eventos de {color:start:green}{dir}{color:end}",
+      "end": "Carregou com sucesso {color:start:yellow}{size}{color:end} arquivo(s) de evento(s)"
+    },
+    "command": {
+      "start": "Começou a carregar arquivos de comandos de {color:start:green}{dir}{color:end}",
+      "end": "Carregou com sucesso {color:start:yellow}{size}{color:end} arquivo(s) de comando(s)"
+    }
+  }
+}

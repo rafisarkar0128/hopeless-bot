@@ -1,6 +1,6 @@
 module.exports = {
   // basic settings
-  defualt_locale: "en_us",
+  default_locale: "en", // refer to the docs to get a list available languages
 
   // bot secrets
   bot_token: process.env.DISCORD_CLIENT_TOKEN,
