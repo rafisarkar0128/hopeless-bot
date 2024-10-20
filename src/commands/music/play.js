@@ -6,43 +6,49 @@ const {
   ChatInputCommandInteraction,
   Message,
 } = require("discord.js");
-
-/** @type {import("@types/commands").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("play")
-    .setDescription("play a song from youtube music")
-    .addStringOption((option) =>
-      option.setName("query").setDescription("song name or url").setRequired(true),
-    )
-    .setContexts(InteractionContextType.Guild)
-    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  ephemeral: true,
-  cooldown: 0,
-  category: "MUSIC",
-  usage: {
-    prefix: "<song|url>",
-    slash: "/play [query]: <song|url>",
+  options: {
+    category: "music",
+    cooldown: 0,
+    premium: false,
+    guildOnly: true,
+    devOnly: false,
+    voiceChannelOnly: true,
+    botPermissions: ["SendMessages", "Connect", "Speak", "EmbedLinks"],
+    userPermissions: ["SendMessages"],
   },
-  aliases: ["pl"],
-  minArgsCount: 0,
-  isPrefixDisabled: false,
-  isSlashDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: true,
-  isDevOnly: false,
-  isVoiceChannelOnly: true,
-  botPermissions: ["SendMessages", "Connect", "Speak", "EmbedLinks"],
-  userPermissions: [],
-  run: async (client, message, args) => {
-    const query = args.join(" ");
-    return play(client, message, query);
+  prefix: {
+    name: "play",
+    description: "",
+    aliases: ["pl", "add"],
+    usage: "<song|url>",
+    disabled: false,
+    minArgsCount: 0,
+    subcommands: [],
+    execute: async (client, message, args) => {
+      const query = args.join(" ");
+      return play(client, message, query);
+    },
   },
-  execute: async (client, interaction) => {
-    const query = interaction.options.getString("query", true);
-    await interaction.deferReply();
-    return play(client, interaction, query);
+  slash: {
+    data: new SlashCommandBuilder()
+      .setName("play")
+      .setDescription("play a song from youtube music")
+      .addStringOption((option) =>
+        option.setName("query").setDescription("song name or url").setRequired(true),
+      )
+      .setContexts(InteractionContextType.Guild)
+      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+    usage: "[query]: <song|url>",
+    ephemeral: true,
+    global: true,
+    disabled: false,
+    execute: async (client, interaction) => {
+      const query = interaction.options.getString("query", true);
+      await interaction.deferReply();
+      return play(client, interaction, query);
+    },
   },
 };
 

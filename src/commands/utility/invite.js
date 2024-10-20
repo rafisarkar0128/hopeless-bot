@@ -9,35 +9,43 @@ const {
   Message,
   EmbedBuilder,
 } = require("discord.js");
+const { t } = require("i18next");
 
-/** @type {import("@types/commands").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("invite")
-    .setDescription("returns a link button with bots invite url."),
-  ephemeral: true,
-  cooldown: 0,
-  category: "UTILITY",
-  usage: {
-    prefix: "",
-    slash: "/invite",
+  options: {
+    category: "utility",
+    cooldown: 0,
+    premium: false,
+    guildOnly: false,
+    devOnly: false,
+    voiceChannelOnly: false,
+    botPermissions: ["SendMessages", "SendMessagesInThreads"],
+    userPermissions: ["SendMessages", "SendMessagesInThreads"],
   },
-  aliases: ["invt"],
-  minArgsCount: 0,
-  isPrefixDisabled: false,
-  isSlashDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: false,
-  isDevOnly: false,
-  isVoiceChannelOnly: false,
-  botPermissions: [],
-  userPermissions: [],
-  run: (client, message) => {
-    return sendBotInvite(client, message);
+  prefix: {
+    name: "invite",
+    description: "returns a link button with bots invite url.",
+    aliases: [],
+    usage: "",
+    disabled: false,
+    minArgsCount: 0,
+    subcommands: [],
+    execute: async (client, message) => {
+      await sendBotInvite(client, message);
+    },
   },
-  execute: (client, interaction) => {
-    return sendBotInvite(client, interaction);
+  slash: {
+    data: new SlashCommandBuilder()
+      .setName("invite")
+      .setDescription("returns a link button with bots invite url."),
+    usage: "",
+    ephemeral: true,
+    global: true,
+    disabled: false,
+    execute: async (client, interaction) => {
+      await sendBotInvite(client, interaction);
+    },
   },
 };
 
@@ -48,13 +56,13 @@ module.exports = {
  */
 function sendBotInvite(client, ctx) {
   if (
-    client.config.bot.invite === "false" &&
+    client.config.allowedInvite === false &&
     !client.config.devs.includes(ctx.user ? ctx.user.id : ctx.author.id)
   ) {
     return ctx.reply({
       embeds: [
         new EmbedBuilder()
-          .setDescription("**Sorry. Invites has been disabled by the owner.**")
+          .setTitle(t("commands:invite.reply.disabled"))
           .setColor(client.colors.Wrong),
       ],
       ephemeral: true,
@@ -62,7 +70,7 @@ function sendBotInvite(client, ctx) {
   }
 
   const inviteLink = client.generateInvite({
-    permissions: BigInt(630567770521207),
+    permissions: BigInt(1758600129150711),
     scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
   });
   const button = new ButtonBuilder()
@@ -72,7 +80,7 @@ function sendBotInvite(client, ctx) {
     .setEmoji(resolvePartialEmoji("✉️"));
 
   return ctx.reply({
-    content: "Invite me by clicking the button.",
+    content: t("commands:invite.reply.content"),
     components: [new ActionRowBuilder().addComponents(button)],
   });
 }

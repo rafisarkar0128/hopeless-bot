@@ -9,11 +9,15 @@ const { t } = require("i18next");
  * @example await loadCommands(client, "src/commands");
  */
 module.exports = async (client, dir) => {
-  if (typeof dir !== "string") {
-    throw new TypeError(t("errors:type_errors.string").replace(/{param}/g, "dir"));
+  if (typeof client !== "object") {
+    throw new TypeError(t("errors:missing_parameter", { param: colors.bold("client") }));
   }
+  if (typeof dir !== "string") {
+    throw new TypeError(t("errors:type_errors.string"), { param: colors.bold("dir") });
+  }
+  client.logger.info(t("console:loaders.command.start", { dir: colors.green(dir) }));
 
-  const debug = client.config.console.debug.event;
+  const debug = client.config.console.debug.event_table;
   const tableData = [["Index".cyan, "Events".cyan, "File".cyan, "Status".cyan]];
   /**
    * @type {import("table").TableUserConfig}
@@ -21,7 +25,7 @@ module.exports = async (client, dir) => {
   const tableConfig = {
     columnDefault: {
       alignment: "center",
-      width: 30,
+      width: 26,
     },
     columns: [{ width: 5 }, {}, {}, { width: 6 }],
     border: {
@@ -56,63 +60,114 @@ module.exports = async (client, dir) => {
   const files = await loadFiles(dir, [".js"]);
   client.commands.clear();
 
-  let i = 0;
+  let i = 0,
+    l = 0;
   for (const file of files) {
     const fileName = file.replace(/\\/g, "/").split("/").pop();
 
-    try {
-      /** @type {import("../../types/commands").BaseCommandStructure} */
-      const command = require(file);
+    /** @type {import("@structures/command.d.ts").BaseCommandStructure} */
+    const command = require(file);
+    const { options, prefix, slash } = command;
+    const {
+      category,
+      cooldown,
+      premium,
+      guildOnly,
+      devOnly,
+      voiceChannelOnly,
+      botPermissions,
+      userPermissions,
+    } = options;
 
-      if (
-        command?.isDisabled ||
-        (command?.isPrefixDisabled && command?.isSlashDisabled)
-      ) {
-        continue;
+    try {
+      commandName =
+        command.prefix?.name || command.slash?.data?.name || command.context?.data?.name;
+
+      if (options.category) {
+        if (client.config.categories[category]?.enabled === false) continue;
       }
 
-      if (client.config.categories[command.category]?.enabled === false) continue;
+      if (prefix) {
+        if (prefix?.disabled) continue;
 
-      if (command?.aliases?.length) {
-        for (const alias of command.aliases) {
-          if (client.aliases.has(alias)) {
-            throw new Error(`alias ${colors.yellow(alias)} already exist`);
-          } else {
-            client.aliases.set(alias, command.data.name);
+        if (!prefix.name) throw new Error(t("errors:validations.command.name"));
+
+        if (!prefix?.description || prefix.description?.length <= 0) {
+          prefix.description = slash?.data.description;
+        }
+
+        if (prefix.aliases?.length) {
+          for (const alias of prefix.aliases) {
+            if (client.aliases.has(alias)) {
+              throw new Error(`alias ${colors.yellow(alias)} already exist`);
+            } else {
+              client.aliases.set(alias, prefix.name);
+            }
           }
         }
-      }
 
-      if (command?.isPrefixDisabled === false) {
-        client.commands.set(command.data.name, command);
-      }
-
-      if (command?.isSlashDisabled === false) {
-        client.slashCommands.set(command.data.name, command);
-      }
-
-      if (command?.data.type === (2 || 3)) {
-        client.contexts.set(command.data.name, command);
-      }
-
-      if (command.data.toJSON()) {
-        client.newCommands.push({
-          data: command.data.toJSON(),
-          global: command.isGlobal,
-          disabled: command?.isDisabled || command?.isSlashDisabled,
+        client.commands.set(prefix.name, {
+          category: category,
+          cooldown: cooldown,
+          premium: premium,
+          guildOnly: guildOnly,
+          devOnly: devOnly,
+          voiceChannelOnly: voiceChannelOnly,
+          botPermissions: botPermissions,
+          userPermissions: userPermissions,
+          name: prefix.name,
+          description: prefix.description,
+          aliases: prefix?.aliases,
+          usage: prefix?.usage,
+          disabled: prefix?.disabled,
+          minArgsCount: prefix?.minArgsCount,
+          subcommands: prefix?.subcommands,
+          execute: prefix.execute,
         });
       }
 
-      i++;
+      //
+      //if (
+      //  command?.isDisabled ||
+      //  (command?.isPrefixDisabled && command?.isSlashDisabled)
+      //) {
+      //  continue;
+      //}
+      //if (client.config.categories[command.options.category]?.enabled === false) continue;
+      //
+      //if (command?.aliases?.length) {
+      //}
+      //
+      //if (command?.isPrefixDisabled === false) {
+      //  client.commands.set(command.data.name, command);
+      //}
+      //
+      //if (command?.isSlashDisabled === false) {
+      //  client.slashCommands.set(command.data.name, command);
+      //}
+      //
+      //if (command?.data.type === (2 || 3)) {
+      //  client.contexts.set(command.data.name, command);
+      //}
+      //
+      //if (command.data.toJSON()) {
+      //  client.Commands.push({
+      //    data: command.data.toJSON(),
+      //    global: command.isGlobal,
+      //    disabled: command?.isDisabled || command?.isSlashDisabled,
+      //  });
+      //}
+
+      i++ && l++;
       tableData.push([
         `${colors.magenta(i)}`,
-        command.data.name.blue,
+        commandName.blue,
         fileName.green,
         "» 🌱 «",
       ]);
     } catch (error) {
       i++;
-      tableData.push([`${colors.magenta(i)}`, "unknown".blue, fileName.red, "» 🔴 «"]);
+      tableData.push([`${colors.magenta(i)}`, commandName.blue, fileName.red, "» 🔴 «"]);
       errors.push({ file: file, error: error });
     }
   }
@@ -135,5 +190,5 @@ module.exports = async (client, dir) => {
     );
   }
 
-  return client.logger.info(`loaded ${colors.yellow(i)} command modules`);
+  return client.logger.info(`loaded ${colors.yellow(l)} command modules`);
 };

@@ -1,7 +1,7 @@
 const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
-const { Manager } = require("moonlink.js");
+const { table } = require("table");
 const { AntiCrash } = require("@helpers/AntiCrash");
 const { loadEvents, loadLocales, loadCommands } = require("./functions/index");
 const colors = require("colors");
@@ -19,26 +19,28 @@ class DiscordBot extends Client {
     this.wait = require("timers/promises").setTimeout;
     this.database = require("@src/database/mongoose.js");
     this.pkg = require("@root/package.json");
+
+    // all global functions
     this.logger = new Logger(this);
     this.utils = new Utils(this);
-    this.syncCommands = require("@helpers/syncCommands");
+    this.addColors = this.syncCommands = require("@helpers/syncCommands");
 
     // client collections
 
     /**
      * types for event collection
-     * @type {Collection<string, import("@structures/event").EventStructure>}
+     * @type {Collection<string, import("@structures/event.d.ts").EventStructure>}
      */
     this.events = new Collection();
 
     /**
-     * types for
-     * @type {import("@types/types").NewCommand[]} */
-    this.newCommands = new Array();
+     *
+     * @type {import("../types/types.d.ts").NewCommand[]} */
+    this.Commands = new Array();
 
     /**
      * types for commands collection
-     * @type {Collection<string, import("@types/commands").CommandStructure>}
+     * @type {Collection<string, import("@structures/command.d.ts").PrefixCommandStructure>}
      */
     this.commands = new Collection();
 
@@ -50,60 +52,28 @@ class DiscordBot extends Client {
 
     /**
      * types for slash command collection
-     * @type {Collection<string, import("@structures/command").CommandStructure>}
+     * @type {Collection<string, import("@structures/command.d.ts").SlashCommandStructure>}
      */
     this.slashCommands = new Collection();
 
     /**
      * types for contextmenu collection
-     * @type {Collection<string, import("@types/commands").ContextMenuStructure>}
+     * @type {Collection<string, import("@structures/context.d.ts").ContextMenuStructure>}
      */
     this.contexts = new Collection();
 
     // Music Manager
     if (this.config.plugins.music.enabled) {
-      this.moonlink = new Manager({
-        nodes: this.config.plugins.music.lavalink_nodes,
-        options: {
-          clientName: `${this.pkg.name}@${this.pkg.version}`,
-        },
-        sendPayload: (guildId, payload) => {
-          this.guilds.cache.get(guildId)?.shard?.send(JSON.parse(payload));
-        },
-      });
     }
   }
 
   /**
-   * @return {Promise<string>}
-   */
-  async getLogbox() {
-    const boxen = (await import("boxen")).default;
-    const logbox = boxen(
-      [
-        `Welcome to ${colors.blue(this.pkg.name.toUpperCase())} js project`,
-        `Running on Node.JS ${colors.green(process.version)}`,
-        `Version ${colors.yellow(this.pkg.version)}`,
-        `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
-      ].join("\n"),
-      {
-        borderColor: "#00BFFF",
-        textAlignment: "center",
-        padding: {
-          left: 10,
-          right: 10,
-          top: 1,
-          bottom: 1,
-        },
-      },
-    );
-    return logbox;
-  }
-
-  /** A function to get the Bot logo
+   * A function to log basic info of the bot
    * @returns {string}
    */
-  getVanity() {
+  async logVanity() {
+    //this.addColors();
+
     // ansi colors with escape
     let esc = "\u001b[0m";
     let red = "\u001b[38;5;196m";
@@ -130,7 +100,63 @@ class DiscordBot extends Client {
       .replace(/y/g, yellow)
       .replace(/e/g, esc);
 
-    return vanity;
+    const tableData = [["Index".cyan, "Events".cyan, "File".cyan, "Status".cyan]];
+    /**
+     * @type {import("table").TableUserConfig}
+     */
+    const tableConfig = {
+      columnDefault: {
+        alignment: "center",
+        width: 26,
+      },
+      columns: [{ width: 5 }, {}, {}, { width: 6 }],
+      border: {
+        topBody: `─`.blue,
+        topJoin: `┬`.blue,
+        topLeft: `┌`.blue,
+        topRight: `┐`.blue,
+
+        bottomBody: `─`.blue,
+        bottomJoin: `┴`.blue,
+        bottomLeft: `└`.blue,
+        bottomRight: `┘`.blue,
+
+        bodyLeft: `│`.blue,
+        bodyRight: `│`.blue,
+        bodyJoin: `│`.blue,
+
+        joinBody: `─`.blue,
+        joinLeft: `├`.blue,
+        joinRight: `┤`.blue,
+        joinJoin: `┼`.blue,
+      },
+      drawHorizontalLine: (lineIndex, rowCount) => {
+        return lineIndex === 0 || lineIndex === 1 || lineIndex === rowCount;
+      },
+    };
+
+    const boxen = (await import("boxen")).default;
+    const logbox = boxen(
+      [
+        `Welcome to ${colors.blue(this.pkg.name)} js project`,
+        `Running on Node.JS ${colors.green(process.version)}`,
+        `Version ${colors.yellow(this.pkg.version)}`,
+        `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
+      ].join("\n"),
+      {
+        borderColor: "#00BFFF",
+        textAlignment: "center",
+        padding: {
+          left: 20,
+          right: 20,
+          top: 1,
+          bottom: 1,
+        },
+      },
+    );
+
+    console.log(vanity);
+    console.log(logbox);
   }
 
   /** a function to start everything
@@ -141,11 +167,9 @@ class DiscordBot extends Client {
     loadLocales();
 
     if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
-
     console.clear();
-    if (this.config.console.debug.mainLogo) {
-      console.log(this.getVanity());
-      console.log(await this.getLogbox());
+    if (this.config.console.debug.vanity) {
+      await this.logVanity();
     }
 
     // Load event modules

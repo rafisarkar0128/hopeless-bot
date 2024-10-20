@@ -32,13 +32,10 @@ const client = new DiscordBot({
     Partials.GuildScheduledEvent,
   ],
   allowedMentions: {
-    parse: ["users", "roles"],
+    parse: ["users", "roles", "everyone"],
     repliedUser: false,
   },
   failIfNotExists: true,
-  autoReconnect: true,
-  disabledEvents: ["TYPING_START"],
-  restTimeOffset: 0,
 });
 
 client.start().catch((error) => {

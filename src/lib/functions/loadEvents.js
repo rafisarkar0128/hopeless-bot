@@ -1,6 +1,8 @@
 const colors = require("colors");
 const { table } = require("table");
-const loadFiles = require("./loadFiles");
+const { t } = require("i18next");
+const loadFiles = require("./loadFiles.js");
+const { Events } = require("./validations/events.js");
 
 /**
  * A function to load event files
@@ -12,15 +14,17 @@ module.exports = async (client, dir) => {
     throw new TypeError("Value of dir must a string with valid path");
   }
 
-  const debug = client.config.console.debug.event;
-  const tableData = [["Index".cyan, "Events".cyan, "File".cyan, "Status".cyan]];
+  client.logger.info(t("console:loaders.event.start", { dir: colors.green(dir) }));
+
+  const debug = client.config.console.debug.event_table;
+  const tableData = [["Index".cyan, "Event".cyan, "File".cyan, "Status".cyan]];
   /**
    * @type {import("table").TableUserConfig}
    */
   const tableConfig = {
     columnDefault: {
       alignment: "center",
-      width: 30,
+      width: 26,
     },
     columns: [{ width: 5 }, {}, {}, { width: 6 }],
     border: {
@@ -55,15 +59,19 @@ module.exports = async (client, dir) => {
   const files = await loadFiles(dir, [".js"]);
   client.events.clear();
 
-  let i = 0;
+  let i = 0,
+    l = 0;
   for (const file of files) {
     const fileName = file.replace(/\\/g, "/").split("/").pop();
 
+    /**
+     * @type {import("@structures/event").EventStructure}
+     */
+    const event = require(file);
     try {
-      /**
-       * @type {import("@structures/event").EventStructure}
-       */
-      const event = require(file);
+      if (!Events.includes(event.name) || !event.name) {
+        throw new Error(t("errors:validations.event.name"));
+      }
       client.events.set(fileName, event);
 
       const execute = (...args) => event.execute(client, ...args);
@@ -76,7 +84,7 @@ module.exports = async (client, dir) => {
         : client;
       target[event.once ? "once" : "on"](event.name, execute);
 
-      i++;
+      i++ && l++;
       tableData.push([
         `${colors.magenta(i)}`,
         event.name.yellow,
@@ -85,7 +93,7 @@ module.exports = async (client, dir) => {
       ]);
     } catch (error) {
       i++;
-      tableData.push([`${colors.magenta(i)}`, "unknown".yellow, fileName.red, "» 🔴 «"]);
+      tableData.push([`${colors.magenta(i)}`, event.name.yellow, fileName.red, "» 🔴 «"]);
       errors.push({ file: file, error: error });
     }
   }
@@ -106,5 +114,5 @@ module.exports = async (client, dir) => {
     );
   }
 
-  return client.logger.info(`loaded ${colors.yellow(client.events.size)} event modules`);
+  return client.logger.info(t("console:loaders.event.end", { size: colors.yellow(l) }));
 };

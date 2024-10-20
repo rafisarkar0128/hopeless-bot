@@ -23,7 +23,7 @@ module.exports = {
   },
 
   music: {
-    enabled: true,
+    enabled: false,
     idle_time: 180000,
     max_search_results: 10,
     default_source: "YTM",

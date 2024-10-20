@@ -53,7 +53,7 @@ export type CommandOptions = {
 };
 
 // PrefixCommandStructure to use in CommandStructure
-export type PrefixCommandStructure = {
+export type PrefixObjectStructure = {
   name: string;
   description?: string;
   aliases?: string[];
@@ -65,7 +65,7 @@ export type PrefixCommandStructure = {
 };
 
 // SlashCommandStructure to use in CommandStructure
-export type SlashCommandStructure = {
+export type SlashObjectStructure = {
   data: APIApplicationCommand | SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
   ephemeral?: boolean;
   usage?: string;
@@ -75,11 +75,11 @@ export type SlashCommandStructure = {
     client: DiscordBot,
     interaction: ChatInputCommandInteraction,
     data: object,
-  ) => {};
+  ) => Promise<any>;
 };
 
 // ContextStructure to use in ContextMenuStructure
-export type ContextStructure = {
+export type ContextObjectStructure = {
   data: APIApplicationCommand | ContextMenuCommandBuilder;
   ephemeral?: boolean;
   global?: boolean;

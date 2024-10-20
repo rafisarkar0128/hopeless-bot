@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 
-/** @type {import("./command").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
   options: {
     category: "none",

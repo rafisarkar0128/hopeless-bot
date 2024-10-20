@@ -7,7 +7,7 @@ module.exports = {
   /** A function to handle prefix commands
    * @param {import("@lib/DiscordBot").DiscordBot} client
    * @param {import('discord.js').Message} message
-   * @param {import("@types/commands").CommandStructure} command
+   * @param {import("@structures/command").PrefixCommandStructure} command
    * @param {object} settings
    */
   handlePrefixCommand: async function (client, message, command, settings) {
@@ -39,7 +39,7 @@ module.exports = {
 
     //if () {}
 
-    if (!command.run) {
+    if (!command.execute) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -51,7 +51,7 @@ module.exports = {
       });
     }
 
-    if (command.isPrefixDisabled && !config.devs.includes(author.id)) {
+    if (command.disabled && !config.devs.includes(author.id)) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -62,7 +62,7 @@ module.exports = {
     }
 
     if (
-      (command.isDevOnly || command.category === "DEVELOPMENT") &&
+      (command.devOnly || command.category === "DEVELOPMENT") &&
       !config.devs.includes(author.id)
     ) {
       return message.reply({
@@ -74,7 +74,7 @@ module.exports = {
       });
     }
 
-    if (command.isGuildOnly && !message.inGuild()) {
+    if (command.guildOnly && !message.inGuild()) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -127,7 +127,7 @@ module.exports = {
       });
     }
 
-    if (command.isVoiceChannelOnly && !member.voice.channel) {
+    if (command.voiceChannelOnly && !member.voice.channel) {
       return message.reply({
         embeds: [
           new EmbedBuilder()
@@ -143,7 +143,7 @@ module.exports = {
     }
 
     try {
-      await command.run(client, message, args);
+      await command.execute(client, message, args);
     } catch (error) {
       const reply = await message.reply({
         content: `${author}`,

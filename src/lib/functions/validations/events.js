@@ -1,5 +1,6 @@
 module.exports = {
   Events: [
+    // Discord Events
     "applicationCommandPermissionsUpdate",
     "autoModerationActionExecution",
     "autoModerationRuleCreate",
@@ -79,5 +80,28 @@ module.exports = {
     "warn",
     "webhooksUpdate",
     "webhookUpdate",
+
+    // Music Events
+    "playerCreate",
+    "playerDestroy",
+    "playerDisconnect",
+    "playerMove",
+    "playerSocketClosed",
+    "trackStart",
+    "trackStuck",
+    "trackError",
+    "trackEnd",
+    "queueEnd",
+    "playerUpdate",
+    "create",
+    "error",
+    "raw",
+    "disconnect",
+    "connect",
+    "reconnecting",
+    "create",
+    "destroy",
+    "error",
+    "resumed",
   ],
 };

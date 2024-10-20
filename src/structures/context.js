@@ -1,6 +1,6 @@
 const { ContextMenuCommandBuilder, ApplicationCommandType } = require("discord.js");
 
-/** @type {import("./context.d.ts").ContextMenuStructure} */
+/** @type {import("@structures/context.d.ts").ContextMenuStructure} */
 module.exports = {
   options: {
     category: "none",

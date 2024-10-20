@@ -14,7 +14,7 @@ class Logger {
    * @param {String} content
    */
   info(content) {
-    return console.log(`[${this.dt}] [${colors.cyan("INFO")}] ${colors.blue(content)}`);
+    return console.log(`[${this.dt}] [${colors.cyan("INFO")}] ${content}`);
   }
 
   /**

@@ -1,10 +1,18 @@
 {
   "type_errors": {
-    "string": "Value of {param} must be a string",
-    "object": "Value of {param} must be an object",
-    "array": "Value of {param} must be an array",
-    "number": "Value of {param} must be a number",
-    "boolean": "Value of {param} must be a boolean",
-    "other": "Value of {param} must be a {type}"
+    "string": "Value of {{param}} must be a string",
+    "object": "Value of {{param}} must be an object",
+    "array": "Value of {{param}} must be an array",
+    "number": "Value of {{param}} must be a number",
+    "boolean": "Value of {{param}} must be a boolean",
+    "other": "Value of {{param}} must be a {{type}}"
+  },
+  "missing_parameter": "Couldn't find {{param}} parameter",
+  "missing_property": "Couldn't find {{property}} property",
+  "validations": {
+    "event": { "name": "Event name is either missing or incorrect" },
+    "command": {
+      "name": "Command name is missing. Put one to continue."
+    }
   }
 }

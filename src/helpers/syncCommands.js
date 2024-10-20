@@ -87,13 +87,11 @@ module.exports = async (client) => {
   const oldCommands = await fetchCommands(client);
 
   const oldSlashCommands = oldCommands.filter((c) => c.data.type === 1);
-  const newSlashCommands = client.newCommands.filter((c) => c.data.type === 1);
+  const newSlashCommands = client.Commands.filter((c) => c.data.type === 1);
   await syncCommands(oldSlashCommands, newSlashCommands);
 
   const oldContextMenuCommands = oldCommands.filter((c) => c.data.type === (2 || 3));
-  const newContextMenuCommands = client.newCommands.filter(
-    (c) => c.data.type === (2 || 3),
-  );
+  const newContextMenuCommands = client.Commands.filter((c) => c.data.type === (2 || 3));
   await syncCommands(oldContextMenuCommands, newContextMenuCommands);
 
   if (debug) {

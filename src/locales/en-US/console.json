@@ -1,16 +1,16 @@
 {
-  "info": {
-    "welcome": "Welcome to {color:start:cyan}{pkg:name}{color:end}{color:yellow:start}Javascript{color:end} project",
-    "message": "Coded with ❤️ by {color:start:magenta}{code:author}{color:end}"
+  "vanity": {
+    "welcome": "Welcome to {{name}} \u001b[33mJavascript\u001b[39m project",
+    "message": "Coded with ❤️ by {{author}}"
   },
   "loaders": {
     "event": {
-      "start": "Started to load event files from {color:start:green}{dir}{color:end}",
-      "end": "Successfully loaded {color:start:yellow}{size}{color:end} event file(s)"
+      "start": "Started to load event files from {{dir}}",
+      "end": "Successfully loaded {{size}} event modules"
     },
     "command": {
-      "start": "Started to load command files from {color:start:green}{dir}{color:end}",
-      "end": "Successfully loaded {color:start:yellow}{size}{color:end} command file(s)"
+      "start": "Started to load command files from {{dir}}",
+      "end": "Successfully loaded {{size}} command modules"
     }
   }
 }

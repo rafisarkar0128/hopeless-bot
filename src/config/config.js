@@ -24,6 +24,9 @@ module.exports = {
   // mongodb config
   mongo_uri: process.env.MONGO_URI,
 
+  // invite config
+  allowedInvite: false,
+
   // command settings
   commands: {
     prefix: {
@@ -48,10 +51,11 @@ module.exports = {
     // refer to https://moment.github.io/luxon/#/formatting?id=table-of-tokens for time formats;
     time_format: "dd/LL/yyyy - HH:mm:ss",
     debug: {
-      mainLogo: true,
-      event: true,
-      command: true,
+      vanity: true,
+      event_table: true,
+      command_table: true,
       sync: true,
+      sync_table: true,
     },
   },
   server_links: {
@@ -67,6 +71,7 @@ module.exports = {
     members: 10000,
   },
 
+  colors: require("./colors.json"),
   emojis: require("./emojis"),
   categories: require("./categories"),
   plugins: require("./plugins"),

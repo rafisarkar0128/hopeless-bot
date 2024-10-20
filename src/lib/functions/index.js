@@ -1,7 +1,7 @@
 //Exporting all the functions from single file for better accessibility
 module.exports = {
-  loadFiles: require("./loadFiles"),
-  loadEvents: require("./loadEvents"),
-  loadLocales: require("./loadLocales"),
-  loadCommands: require("./loadCommands"),
+  loadFiles: require("./loadFiles.js"),
+  loadEvents: require("./loadEvents.js"),
+  loadLocales: require("./loadLocales.js"),
+  loadCommands: require("./loadCommands.js"),
 };

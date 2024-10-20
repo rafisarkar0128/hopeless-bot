@@ -3,89 +3,94 @@ const {
   EmbedBuilder,
   Embed,
   ChatInputCommandInteraction,
+  Message,
 } = require("discord.js");
+const { t } = require("i18next");
 
-/** @type {import("@types/commands").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("🏓Pong! Replies with an embed containing ping information."),
-  ephemeral: true,
-  cooldown: 20,
-  category: "UTILITY",
-  usage: {
-    prefix: "",
-    slash: "/ping",
+  options: {
+    category: "utility",
+    cooldown: 0,
+    premium: false,
+    guildOnly: false,
+    devOnly: false,
+    voiceChannelOnly: false,
+    botPermissions: ["SendMessages", "ReadMessageHistory"],
+    userPermissions: ["SendMessages", "ReadMessageHistory"],
   },
-  aliases: ["latency"],
-  minArgsCount: 0,
-  isPrefixDisabled: false,
-  isSlashDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: false,
-  isDevOnly: false,
-  isVoiceChannelOnly: false,
-  botPermissions: [],
-  userPermissions: [],
-  run: async (client, message) => {
-    const waitEmbed = new EmbedBuilder()
-      .setColor(client.colors.Good)
-      .setTitle("**Please be patient and wait for the embed.**");
-    const reply = await message.reply({
-      embeds: [waitEmbed],
-    });
+  prefix: {
+    name: "ping",
+    description: "🏓 Pong! Replies with bot's response time.",
+    aliases: ["latency"],
+    usage: "",
+    disabled: false,
+    minArgsCount: 0,
+    subcommands: [],
+    execute: async (client, message) => {
+      const reply = await message.reply({
+        content: t("commands:ping.reply.content"),
+      });
+      const embed = await getPingEmbed(client, message, reply);
 
-    await reply.delete();
-
-    return message.reply({
-      content: "",
-      embeds: [await getPingEmbed(client, message, reply)],
-    });
+      await reply.delete();
+      message.reply({
+        embeds: [embed],
+      });
+    },
   },
-  execute: async (client, interaction) => {
-    const reply = await interaction.deferReply({
-      fetchReply: true,
-    });
+  slash: {
+    data: new SlashCommandBuilder()
+      .setName("ping")
+      .setDescription("🏓Pong! Replies with bot's response time."),
+    usage: "",
+    ephemeral: true,
+    global: true,
+    disabled: false,
+    execute: async (client, interaction) => {
+      const reply = await interaction.deferReply({
+        fetchReply: true,
+      });
 
-    return interaction.followUp({
-      embeds: [await getPingEmbed(client, interaction, reply)],
-    });
+      interaction.followUp({
+        embeds: [await getPingEmbed(client, interaction, reply)],
+      });
+    },
   },
 };
 
 /** Function to get ping embed
  * @param {import("@lib/DiscordBot").DiscordBot} client
  * @param {ChatInputCommandInteraction | Message} ctx
- * @param {} reply
+ * @param {Message} reply
  * @returns {Promise<Embed>}
  */
 async function getPingEmbed(client, ctx, reply) {
+  const response = reply.createdTimestamp - ctx.createdTimestamp;
+  const gateway = client.ws.ping;
+
   const days = Math.floor(client.uptime / 86400000);
   const hours = Math.floor(client.uptime / 3600000) % 24;
   const minutes = Math.floor(client.uptime / 60000) % 60;
   const seconds = Math.floor(client.uptime / 1000) % 60;
 
-  const clientPing = reply.createdTimestamp - ctx.createdTimestamp;
-  const wsPing = client.ws.ping;
-
+  const { Good, Standby, Wrong } = client.config.colors;
   const embed = new EmbedBuilder()
-    .setTitle("MY RUNTIME STATS")
-    .setColor(client.utils.getRandomColor())
+    .setColor(response <= 200 ? Good : response <= 400 ? Standby : Wrong)
     .setThumbnail(client.user.displayAvatarURL())
     .addFields([
       {
-        name: `📡 WS Ping`,
+        name: `📡 Gateway Ping`,
         value: `\`\`\`yml\n${
-          wsPing <= 200 ? "🟢" : wsPing <= 400 ? "🟡" : "🔴"
-        } ${wsPing}ms\`\`\``,
+          gateway <= 200 ? "🟢" : gateway <= 400 ? "🟡" : "🔴"
+        } ${gateway}ms\`\`\``,
         inline: true,
       },
       {
-        name: `🛰 BOT Ping`,
+        name: `🛰 Response Time`,
         value: `\`\`\`yml\n${
-          clientPing <= 200 ? "🟢" : clientPing <= 400 ? "🟡" : "🔴"
-        } ${clientPing}ms\`\`\``,
+          response <= 200 ? "🟢" : response <= 400 ? "🟡" : "🔴"
+        } ${response}ms\`\`\``,
         inline: true,
       },
       {
@@ -93,7 +98,13 @@ async function getPingEmbed(client, ctx, reply) {
         value: `\`\`\`m\n${days} Days : ${hours} Hrs : ${minutes} Mins : ${seconds} Secs\n\`\`\``,
         inline: false,
       },
-    ]);
+    ])
+    .setFooter({
+      text: t("default:embed.footer", {
+        username: client.user.username,
+        year: new Date().getFullYear(),
+      }),
+    });
 
   return embed;
 }
