@@ -37,7 +37,7 @@ module.exports = {
       }
 
       if (player.paused) {
-        await player.pause(false);
+        player.pause(false);
       }
 
       return message.reply({
@@ -72,7 +72,7 @@ module.exports = {
       }
 
       if (player.paused) {
-        await player.pause(false);
+        player.pause(false);
       }
 
       return interaction.reply({
