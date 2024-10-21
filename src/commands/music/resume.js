@@ -24,7 +24,7 @@ module.exports = {
     disabled: false,
     minArgsCount: 0,
     subcommands: [],
-    execute: (client, message, args, data) => {
+    execute: async (client, message) => {
       const player = client.riffy.get(message.guild.id);
 
       if (!player) {
@@ -37,7 +37,7 @@ module.exports = {
       }
 
       if (player.paused) {
-        player.play();
+        await player.pause(false);
       }
 
       return message.reply({
@@ -72,7 +72,7 @@ module.exports = {
       }
 
       if (player.paused) {
-        player.play();
+        await player.pause(false);
       }
 
       return interaction.reply({

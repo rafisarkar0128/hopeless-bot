@@ -56,7 +56,6 @@
     "dotenv": "^16.4.5",
     "glob": "^11.0.0",
     "i18next": "^23.16.0",
-    "lavalink-client": "^2.4.1",
     "luxon": "^3.5.0",
     "module-alias": "^2.2.3",
     "mongoose": "^8.5.2",
