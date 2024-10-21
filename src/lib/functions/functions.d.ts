@@ -34,3 +34,11 @@ export type LoadEvents = (client: DiscordBot, dir: string) => Promise<void>;
 
 // function to load commands
 export type LoadCommands = (client: DiscordBot, dir: string) => Promise<void>;
+
+// types for requesterTransformer function
+export interface Requester {
+  id: string;
+  username: string;
+  discriminator?: string;
+  avatarURL?: string;
+}

@@ -67,7 +67,7 @@ module.exports = async (client, dir) => {
 
     /** @type {import("@structures/command.d.ts").BaseCommandStructure} */
     const command = require(file);
-    const { options, prefix, slash } = command;
+    const { options, prefix, slash, context } = command;
     const {
       category,
       cooldown,
@@ -81,7 +81,10 @@ module.exports = async (client, dir) => {
 
     try {
       commandName =
-        command.prefix?.name || command.slash?.data?.name || command.context?.data?.name;
+        command.prefix?.name ||
+        command.slash?.data?.name ||
+        command.context?.data?.name ||
+        "undefined";
 
       if (options.category) {
         if (client.config.categories[category]?.enabled === false) continue;
@@ -90,7 +93,7 @@ module.exports = async (client, dir) => {
       if (prefix) {
         if (prefix?.disabled) continue;
 
-        if (!prefix.name) throw new Error(t("errors:validations.command.name"));
+        if (!prefix.name) throw new Error(t("errors:validations.command.prefix.name"));
 
         if (!prefix?.description || prefix.description?.length <= 0) {
           prefix.description = slash?.data.description;
@@ -123,6 +126,37 @@ module.exports = async (client, dir) => {
           minArgsCount: prefix?.minArgsCount,
           subcommands: prefix?.subcommands,
           execute: prefix.execute,
+        });
+      }
+
+      if (slash) {
+        if (slash.disabled) continue;
+
+        if (!slash.data) throw new Error("Missing command data");
+
+        if (!slash.execute) throw new Error("Missing execute function");
+
+        client.slashCommands.set(slash.data.name, {
+          category: category,
+          cooldown: cooldown,
+          premium: premium,
+          guildOnly: guildOnly,
+          devOnly: devOnly,
+          voiceChannelOnly: voiceChannelOnly,
+          botPermissions: botPermissions,
+          userPermissions: userPermissions,
+          data: slash.data,
+          ephemeral: slash.ephemeral,
+          usage: slash.usage,
+          global: slash.global,
+          disabled: slash.disabled,
+          execute: slash.execute,
+        });
+
+        client.Commands.push({
+          data: slash.data.toJSON(),
+          global: slash.global,
+          disabled: slash.disabled,
         });
       }
 

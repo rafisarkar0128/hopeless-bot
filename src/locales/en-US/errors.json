@@ -12,7 +12,15 @@
   "validations": {
     "event": { "name": "Event name is either missing or incorrect" },
     "command": {
-      "name": "Command name is missing. Put one to continue."
+      "prefix": {
+        "name": "Prefix command name is missing. Put one to continue."
+      },
+      "slash": {
+        "name": "Slash command name is missing. Put one to continue."
+      },
+      "context": {
+        "name": "ContextMenu command name is missing. Put one to continue."
+      }
     }
   }
 }

@@ -2,6 +2,7 @@ const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { table } = require("table");
+const { LavalinkPlayer } = require("./LavalinkPlayer.js");
 const { AntiCrash } = require("@helpers/AntiCrash");
 const { loadEvents, loadLocales, loadCommands } = require("./functions/index");
 const colors = require("colors");
@@ -64,6 +65,7 @@ class DiscordBot extends Client {
 
     // Music Manager
     if (this.config.plugins.music.enabled) {
+      this.lavalink = new LavalinkPlayer(this);
     }
   }
 

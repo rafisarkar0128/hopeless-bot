@@ -4,7 +4,7 @@ module.exports = {
   once: false,
   rest: false,
   ws: false,
-  lavalink: false,
-  lavalinkNode: false,
+  player: false,
+  node: false,
   execute: async (client, ...args) => {},
 };

@@ -112,7 +112,7 @@ export interface EventStructure {
   once?: boolean;
   rest?: boolean;
   ws?: boolean;
-  lavalink?: boolean;
-  lavalinkNode?: boolean;
+  player?: boolean;
+  node?: boolean;
   execute: (client: DiscordBot, ...args: any) => Promise<any>;
 }
