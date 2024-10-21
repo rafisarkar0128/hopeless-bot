@@ -24,7 +24,32 @@ module.exports = {
     disabled: false,
     minArgsCount: 0,
     subcommands: [],
-    execute: (client, message, args, data) => {},
+    execute: (client, message) => {
+      const player = client.riffy.get(message.guild.id);
+
+      if (!player) {
+        const nEmbed = new EmbedBuilder()
+          .setColor(client.colors.Wrong)
+          .setDescription("**There is no music player in this server.**");
+        return message.reply({
+          embeds: [nEmbed],
+        });
+      }
+
+      if (player.connected) {
+        player.destroy();
+      }
+
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(client.colors.Wrong)
+            .setDescription(
+              "**Destroyed the music player and disconnected from the voice channel.**",
+            ),
+        ],
+      });
+    },
   },
   slash: {
     data: new SlashCommandBuilder()
@@ -37,20 +62,18 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      const player = client.moonlink.players.get(interaction.guild.id);
+      const player = client.riffy.get(interaction.guild.id);
 
       if (!player) {
         const nEmbed = new EmbedBuilder()
           .setColor(client.colors.Wrong)
-          .setTitle("**There is no music player in this server.**");
+          .setDescription("**There is no music player in this server.**");
         return interaction.reply({
           embeds: [nEmbed],
         });
       }
 
       if (player.connected) {
-        player.stop();
-        player.disconnect();
         player.destroy();
       }
 
@@ -58,8 +81,8 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor(client.colors.Wrong)
-            .setTitle(
-              "**Stopped the music player and disconnected from the voice channel.**",
+            .setDescription(
+              "**Destroyed the music player and disconnected from the voice channel.**",
             ),
         ],
       });

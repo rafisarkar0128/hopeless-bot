@@ -84,10 +84,8 @@ module.exports = async (client, dir) => {
         ? client.rest
         : event.ws
         ? client.ws
-        : event.player
-        ? client.lavalink
-        : event.node
-        ? client.lavalink.nodeManager
+        : event.riffy
+        ? client.riffy
         : client;
       target[event.once ? "once" : "on"](event.name, execute);
 

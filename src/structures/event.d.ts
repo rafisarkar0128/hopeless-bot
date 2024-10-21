@@ -82,37 +82,30 @@ export type DiscordEvents =
   | "webhooksUpdate"
   | "webhookUpdate";
 
-// lavalink-client event names
-export type LavalinkClientEvents =
+// riffy event names
+export type RiffyEventNames =
+  | "nodeCreate"
+  | "nodeDisconnect"
+  | "nodeReconnect"
+  | "nodeError"
+  | "trackStart"
+  | "trackEnd"
+  | "trackError"
+  | "trackStuck"
+  | "socketClosed"
   | "playerCreate"
-  | "playerDestroy"
   | "playerDisconnect"
   | "playerMove"
-  | "playerSocketClosed"
-  | "trackStart"
-  | "trackStuck"
-  | "trackError"
-  | "trackEnd"
-  | "queueEnd"
   | "playerUpdate"
-  | "create"
-  | "error"
-  | "raw"
-  | "disconnect"
-  | "connect"
-  | "reconnecting"
-  | "create"
-  | "destroy"
-  | "error"
-  | "resumed";
+  | "queueEnd"
+  | "debug";
 
 // event module structure
 export interface EventStructure {
-  name: DiscordEvents | LavalinkClientEvents;
+  name: DiscordEvents | RiffyEventNames;
   once?: boolean;
   rest?: boolean;
   ws?: boolean;
-  player?: boolean;
-  node?: boolean;
+  riffy?: boolean;
   execute: (client: DiscordBot, ...args: any) => Promise<any>;
 }

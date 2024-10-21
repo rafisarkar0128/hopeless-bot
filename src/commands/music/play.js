@@ -30,7 +30,49 @@ module.exports = {
     subcommands: [],
     execute: async (client, message, args) => {
       const query = args.join(" ");
-      return play(client, message, query);
+
+      // Create a player.
+      const player = client.riffy.createConnection({
+        guildId: message.guild.id,
+        voiceChannel: message.member.voice.channel.id,
+        textChannel: message.channel.id,
+        deaf: true,
+      });
+
+      const resolve = await client.riffy.resolve({
+        query: query,
+        requester: message.author,
+      });
+      const { loadType, tracks, playlistInfo } = resolve;
+
+      /**
+       * Important: If you are using Lavalink V3, here are the changes you need to make:
+       *
+       * 1. Replace "playlist" with "PLAYLIST_LOADED"
+       * 2. Replace "search" with "SEARCH_RESULT"
+       * 3. Replace "track" with "TRACK_LOADED"
+       */
+
+      if (loadType === "playlist") {
+        for (const track of resolve.tracks) {
+          track.info.requester = message.author;
+          player.queue.add(track);
+        }
+
+        message.channel.send(
+          `Added: \`${tracks.length} tracks\` from \`${playlistInfo.name}\``,
+        );
+        if (!player.playing && !player.paused) return player.play();
+      } else if (loadType === "search" || loadType === "track") {
+        const track = tracks.shift();
+        track.info.requester = message.author;
+
+        player.queue.add(track);
+        message.reply(`Added: \`${track.info.title}\``);
+        if (!player.playing && !player.paused) return player.play();
+      } else {
+        return message.channel.send("There are no results found.");
+      }
     },
   },
   slash: {
@@ -60,14 +102,6 @@ module.exports = {
       //const src = (interaction.options).getString("source")
       const query = interaction.options.getString("query");
 
-      if (query === "nothing_found")
-        return interaction.followUp({ content: `No Tracks found`, ephemeral: true });
-      if (query === "join_vc")
-        return interaction.followUp({
-          content: `You joined a VC, but redo the Command please.`,
-          ephemeral: true,
-        });
-
       const fromAutoComplete =
         Number(query.replace("autocomplete_", "")) >= 0 &&
         autocompleteMap.has(`${interaction.user.id}_res`) &&
@@ -79,61 +113,47 @@ module.exports = {
         autocompleteMap.delete(`${interaction.user.id}_timeout`);
       }
 
-      const player =
-        client.lavalink.getPlayer(interaction.guildId) ||
-        client.lavalink.createPlayer({
-          guildId: interaction.guildId,
-          voiceChannelId: vc.id,
-          textChannelId: interaction.channelId,
-          selfDeaf: true,
-          selfMute: false,
-          volume: 100, // default volume
-          instaUpdateFiltersFix: true, // optional
-          applyVolumeAsFilter: true, // if true player.setVolume(54) -> player.filters.setVolume(0.54)
-          // node: "YOUR_NODE_ID",
-          // vcRegion: (interaction.member as GuildMember)?.voice.channel?.rtcRegion!
-        });
-
-      if (!player.connected) await player.connect();
-
-      if (player.voiceChannelId !== vc.id) {
-        return interaction.followUp({
-          ephemeral: true,
-          content: "You need to be in my Voice Channel",
-        });
-      }
-
-      const response =
-        fromAutoComplete ||
-        (await player.search({ query: query, source: "ytm" }, interaction.user));
-
-      if (!response || !response.tracks?.length)
-        return interaction.followUp({ content: `No Tracks found`, ephemeral: true });
-
-      await player.queue.add(
-        response.loadType === "playlist"
-          ? response.tracks
-          : response.tracks[
-              fromAutoComplete ? Number(query.replace("autocomplete_", "")) : 0
-            ],
-      );
-
-      await interaction.followUp({
-        content:
-          response.loadType === "playlist"
-            ? `✅ Added [${response.tracks.length}] Tracks${
-                response.playlist?.title
-                  ? ` - from the ${response.pluginInfo.type || "Playlist"} ${
-                      response.playlist.uri
-                        ? `[\`${response.playlist.title}\`](<${response.playlist.uri}>)`
-                        : `\`${response.playlist.title}\``
-                    }`
-                  : ""
-              } at \`#${player.queue.tracks.length - response.tracks.length}\``
-            : `✅ Added [\`${response.tracks[0].info.title}\`](<${response.tracks[0].info.uri}>) by \`${response.tracks[0].info.author}\` at \`#${player.queue.tracks.length}\``,
+      const player = client.riffy.createConnection({
+        guildId: interaction.guild.id,
+        voiceChannel: interaction.member.voice.channel.id,
+        textChannel: interaction.channel.id,
+        deaf: true,
       });
 
-      if (!player.playing) await player.play();
+      const resolve = await client.riffy.resolve({
+        query: query,
+        requester: interaction.user,
+      });
+      const { loadType, tracks, playlistInfo } = resolve;
+
+      /**
+       * Important: If you are using Lavalink V3, here are the changes you need to make:
+       *
+       * 1. Replace "playlist" with "PLAYLIST_LOADED"
+       * 2. Replace "search" with "SEARCH_RESULT"
+       * 3. Replace "track" with "TRACK_LOADED"
+       */
+
+      if (loadType === "playlist") {
+        for (const track of resolve.tracks) {
+          track.info.requester = message.author;
+          player.queue.add(track);
+        }
+
+        interaction.channel.send(
+          `Added: \`${tracks.length} tracks\` from \`${playlistInfo.name}\``,
+        );
+        if (!player.playing && !player.paused) return player.play();
+      } else if (loadType === "search" || loadType === "track") {
+        const track = tracks.shift();
+        track.info.requester = interaction.user;
+
+        player.queue.add(track);
+        interaction.followUp(`Added: \`${track.info.title}\``);
+        if (!player.playing && !player.paused) return player.play();
+      } else {
+        return interaction.followUp("There are no results found.");
+      }
     },
     autocomplete: async (client, interaction) => {
       if (!interaction.guildId) return;

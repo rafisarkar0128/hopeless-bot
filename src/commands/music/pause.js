@@ -22,10 +22,35 @@ module.exports = {
     description: "pause or stop the current music player",
     aliases: [],
     usage: "",
-    disabled: true,
+    disabled: false,
     minArgsCount: 0,
     subcommands: [],
-    execute: (client, message, args, data) => {},
+    execute: (client, message) => {
+      const player = client.riffy.get(message.guild.id);
+
+      if (!player) {
+        const nEmbed = new EmbedBuilder()
+          .setColor(client.colors.Wrong)
+          .setDescription("**There is no music player in this server.**");
+        return message.reply({
+          embeds: [nEmbed],
+        });
+      }
+
+      if (player.playing) {
+        player.pause();
+      }
+
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(client.colors.Wrong)
+            .setDescription(
+              "**Paused the music player. user `/resume` to resume the player**",
+            ),
+        ],
+      });
+    },
   },
   slash: {
     data: new SlashCommandBuilder()
@@ -38,12 +63,12 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      const player = client.moonlink.players.get(interaction.guild.id);
+      const player = client.riffy.get(interaction.guild.id);
 
       if (!player) {
         const nEmbed = new EmbedBuilder()
           .setColor(client.colors.Wrong)
-          .setTitle("**There is no music player in this server.**");
+          .setDescription("**There is no music player in this server.**");
         return interaction.reply({
           embeds: [nEmbed],
         });
@@ -57,7 +82,9 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor(client.colors.Wrong)
-            .setTitle("**Paused the music player. user `/resume` to resume the player**"),
+            .setDescription(
+              "**Paused the music player. user `/resume` to resume the player**",
+            ),
         ],
       });
     },

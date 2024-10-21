@@ -6,6 +6,7 @@ const { AntiCrash } = require("@helpers/AntiCrash");
 const { loadEvents, loadLocales, loadCommands, connectdb } = require("./functions/index");
 const colors = require("colors");
 const { t } = require("i18next");
+const { RiffyPlayer } = require("./RiffyPlayer.js");
 
 class DiscordBot extends Client {
   /** typingss for discord.js ClientOptions
@@ -65,7 +66,7 @@ class DiscordBot extends Client {
 
     // Music Manager
     if (this.config.plugins.music.enabled) {
-      //this.lavalink = new LavalinkPlayer(this);
+      this.riffy = new RiffyPlayer(this);
     }
   }
 
