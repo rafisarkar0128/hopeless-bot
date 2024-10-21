@@ -2,10 +2,10 @@ const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
 const { table } = require("table");
-const { LavalinkPlayer } = require("./LavalinkPlayer.js");
 const { AntiCrash } = require("@helpers/AntiCrash");
-const { loadEvents, loadLocales, loadCommands } = require("./functions/index");
+const { loadEvents, loadLocales, loadCommands, connectdb } = require("./functions/index");
 const colors = require("colors");
+const { t } = require("i18next");
 
 class DiscordBot extends Client {
   /** typingss for discord.js ClientOptions
@@ -65,7 +65,7 @@ class DiscordBot extends Client {
 
     // Music Manager
     if (this.config.plugins.music.enabled) {
-      this.lavalink = new LavalinkPlayer(this);
+      //this.lavalink = new LavalinkPlayer(this);
     }
   }
 
@@ -74,8 +74,6 @@ class DiscordBot extends Client {
    * @returns {string}
    */
   async logVanity() {
-    //this.addColors();
-
     // ansi colors with escape
     let esc = "\u001b[0m";
     let red = "\u001b[38;5;196m";
@@ -102,76 +100,76 @@ class DiscordBot extends Client {
       .replace(/y/g, yellow)
       .replace(/e/g, esc);
 
-    const tableData = [["Index".cyan, "Events".cyan, "File".cyan, "Status".cyan]];
     /**
      * @type {import("table").TableUserConfig}
      */
-    const tableConfig = {
+    const config = {
       columnDefault: {
         alignment: "center",
-        width: 26,
+        width: 72,
       },
-      columns: [{ width: 5 }, {}, {}, { width: 6 }],
       border: {
-        topBody: `─`.blue,
-        topJoin: `┬`.blue,
-        topLeft: `┌`.blue,
-        topRight: `┐`.blue,
+        topBody: `─`.cyan,
+        topJoin: `┬`.cyan,
+        topLeft: `┌`.cyan,
+        topRight: `┐`.cyan,
 
-        bottomBody: `─`.blue,
-        bottomJoin: `┴`.blue,
-        bottomLeft: `└`.blue,
-        bottomRight: `┘`.blue,
+        bottomBody: `─`.cyan,
+        bottomJoin: `┴`.cyan,
+        bottomLeft: `└`.cyan,
+        bottomRight: `┘`.cyan,
 
-        bodyLeft: `│`.blue,
-        bodyRight: `│`.blue,
-        bodyJoin: `│`.blue,
+        bodyLeft: `│`.cyan,
+        bodyRight: `│`.cyan,
+        bodyJoin: `│`.cyan,
 
-        joinBody: `─`.blue,
-        joinLeft: `├`.blue,
-        joinRight: `┤`.blue,
-        joinJoin: `┼`.blue,
+        joinBody: `─`.cyan,
+        joinLeft: `├`.cyan,
+        joinRight: `┤`.cyan,
+        joinJoin: `┼`.cyan,
       },
       drawHorizontalLine: (lineIndex, rowCount) => {
-        return lineIndex === 0 || lineIndex === 1 || lineIndex === rowCount;
+        return lineIndex === 0 || lineIndex === rowCount;
       },
     };
-
-    const boxen = (await import("boxen")).default;
-    const logbox = boxen(
+    const data = [
+      [""],
+      [t("console:vanity.welcome", { name: colors.blue(this.pkg.name) })],
       [
-        `Welcome to ${colors.blue(this.pkg.name)} js project`,
-        `Running on Node.JS ${colors.green(process.version)}`,
-        `Version ${colors.yellow(this.pkg.version)}`,
-        `Coded with 💖 by ${colors.cyan(this.pkg.author.name)}`,
-      ].join("\n"),
-      {
-        borderColor: "#00BFFF",
-        textAlignment: "center",
-        padding: {
-          left: 20,
-          right: 20,
-          top: 1,
-          bottom: 1,
-        },
-      },
-    );
+        t("console:vanity.node", {
+          v: colors.green(process.version),
+        }),
+      ],
+      [
+        t("console:vanity.version", {
+          v: colors.yellow(this.pkg.version),
+        }),
+      ],
+      [
+        t("console:vanity.message", {
+          author: colors.cyan(this.pkg.author.name),
+        }),
+      ],
+      [""],
+    ];
 
     console.log(vanity);
-    console.log(logbox);
+    console.log(table(data, config));
   }
 
   /** a function to start everything
    * @returns {Promise<void>}
    */
   async start() {
+    console.clear();
+
     // load locales
     loadLocales();
 
     if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
-    console.clear();
+
     if (this.config.console.debug.vanity) {
-      await this.logVanity();
+      this.logVanity();
     }
 
     // Load event modules
@@ -181,7 +179,7 @@ class DiscordBot extends Client {
     await loadCommands(this, "src/commands");
 
     // Connect to the database
-    await this.database.connect(this);
+    await connectdb(this);
 
     // Log into the client
     await this.login(this.config.bot_token);

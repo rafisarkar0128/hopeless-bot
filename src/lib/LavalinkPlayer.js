@@ -41,10 +41,18 @@ class LavalinkPlayer extends LavalinkManager {
 }
 
 /**
+ * types for requesterTransformer function
+ * @typedef {object} Requester
+ * @property {string} [id]
+ * @property {string} [username]
+ * @property {string} [discriminator]
+ * @property {string} [avatarURL]
+ */
+/**
  * A function to transform a requester into a standardized requester object
  * @param {any} requester The requester to transform.
  * Can be a string, a user, or an object with the keys `id`, `username`, and `avatarURL`.
- * @returns {import("./functions.d.ts").Requester} The transformed requester object.
+ * @returns {Requester} The transformed requester object.
  */
 function requesterTransformer(requester) {
   if (

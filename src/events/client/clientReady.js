@@ -8,7 +8,7 @@ module.exports = {
     client.logger.info(`${colors.green(client.user.tag)} is online`);
 
     // initializing lavalink-client
-    client.lavalink.init(client.user);
+    //client.lavalink.init(client.user);
 
     // Synchronizing Slash & ContextMenu Commands with discord
     await client.syncCommands(client);

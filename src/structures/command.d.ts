@@ -1,9 +1,24 @@
+// types for commands
 import {
+  APIApplicationCommand,
+  ChatInputCommandInteraction,
+  ContextMenuCommandBuilder,
+  Message,
+  MessageContextMenuCommandInteraction,
+  PermissionResolvable,
+  SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder,
+  UserContextMenuCommandInteraction,
+} from "discord.js";
+import {
+  CommandCategory,
   CommandOptions,
   PrefixObjectStructure,
   SlashObjectStructure,
   ContextObjectStructure,
+  SubCommand,
 } from "./shared.d.ts";
+import { DiscordBot } from "@lib/DiscordBot.js";
 
 // BaseCommandStructure to use in loadCommands and syncCommands function
 export interface BaseCommandStructure {

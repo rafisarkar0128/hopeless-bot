@@ -10,11 +10,16 @@ const { Events } = require("./validations/events.js");
  * @example await loadEvents(client, "src/events");
  */
 module.exports = async (client, dir) => {
+  if (typeof client !== "object") {
+    throw new TypeError(
+      t("errors:missing_parameter", { param: colors.yellow("client") }),
+    );
+  }
   if (typeof dir !== "string") {
-    throw new TypeError("Value of dir must a string with valid path");
+    throw new TypeError(t("errors:type_errors.string", { param: colors.yellow("dir") }));
   }
 
-  client.logger.info(t("console:loaders.event.start", { dir: colors.green(dir) }));
+  client.logger.info(t("console:loader.event.start", { d: colors.green(dir) }));
 
   const debug = client.config.console.debug.event_table;
   const tableData = [["Index".cyan, "Event".cyan, "File".cyan, "Status".cyan]];
@@ -86,7 +91,8 @@ module.exports = async (client, dir) => {
         : client;
       target[event.once ? "once" : "on"](event.name, execute);
 
-      i++ && l++;
+      i++;
+      l++;
       tableData.push([
         `${colors.magenta(i)}`,
         event.name.yellow,
@@ -95,7 +101,7 @@ module.exports = async (client, dir) => {
       ]);
     } catch (error) {
       i++;
-      tableData.push([`${colors.magenta(i)}`, event.name.yellow, fileName.red, "» 🔴 «"]);
+      tableData.push([`${colors.magenta(i)}`, event.name.red, fileName.red, "» 🔴 «"]);
       errors.push({ file: file, error: error });
     }
   }
@@ -103,18 +109,12 @@ module.exports = async (client, dir) => {
   if (debug) console.log(table(tableData, tableConfig));
 
   if (errors.length > 0) {
-    console.log(
-      colors.yellow(
-        "[AntiCrash] | [Event_Loader_Error_Logs] | [Start] : ===============",
-      ),
-    );
+    console.log(colors.yellow(t("errors:loader.event.start")));
     errors.forEach((e) => {
-      console.log(e.file.yellow, "\n", colors.red(e.error), "\n");
+      console.log(e.file.green, "\n", colors.red(e.error), "\n");
     });
-    console.log(
-      colors.yellow("[AntiCrash] | [Event_Loader_Error_Logs] | [End] : ==============="),
-    );
+    console.log(colors.yellow(t("errors:loader.event.end")));
   }
 
-  return client.logger.info(t("console:loaders.event.end", { size: colors.yellow(l) }));
+  return client.logger.info(t("console:loader.event.end", { l: colors.yellow(l) }));
 };

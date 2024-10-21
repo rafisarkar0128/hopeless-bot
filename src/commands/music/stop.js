@@ -21,7 +21,7 @@ module.exports = {
     description: "stop the bot from playing music",
     aliases: ["st"],
     usage: "",
-    disabled: true,
+    disabled: false,
     minArgsCount: 0,
     subcommands: [],
     execute: (client, message, args, data) => {},

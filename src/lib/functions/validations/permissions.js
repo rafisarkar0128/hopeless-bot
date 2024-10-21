@@ -1,45 +1,71 @@
 module.exports = {
   Permissions: [
-    "AddReactions",
-    "Administrator",
-    "Attachfiles",
-    "Banmembers",
-    "Changenickname",
-    "Connect",
-    "Createinstantinvite",
-    "Createprivatethreads",
-    "Createpublicthreads",
-    "Deafenmembers",
-    "Embedlinks",
-    "Kickmembers",
-    "Managechannels",
-    "Manageemojisandstickers",
-    "ManageEvents",
-    "Manageserver",
-    "Managemessages",
-    "Managenicknames",
-    "Manageroles",
-    "ManageThreads",
-    "Managewebhooks",
-    "Mentioneveryone",
+    // General Guild Permissions
+    "ViewChannel",
+    "ManageChannels",
+    "ManageRoles",
+    "CreateGuildExpressions",
+    "ManageGuildExpressions",
+    "ViewAuditLog",
+    "ViewGuildInsights",
+    "ManageWebhooks",
+    "ManageGuild",
+
+    // Member Permissions
+    "CreateInstantInvite",
+    "ChangeNickname",
+    "ManageNicknames",
+    "KickMembers",
+    "BanMembers",
     "ModerateMembers",
-    "Movemembers",
-    "Mutemembers",
-    "Priorityspeaker",
-    "Readmessagehistory",
-    "RequesttoSpeak",
-    "Sendmessages",
+
+    // Text Channel Permissions
+    "SendMessages",
     "SendMessagesInThreads",
-    "SendTTSmessages",
-    "Speak",
-    "Video",
-    "UseApplicationCommands",
-    "UseEmbeddedActivities",
+    "CreatePublicThreads",
+    "CreatePrivateThreads",
+    "EmbedLinks",
+    "AttachFiles",
+    "AddReactions",
     "UseExternalEmojis",
     "UseExternalStickers",
-    "Usevoiceactivity",
-    "Viewauditlog",
-    "Viewchannel",
-    "Viewserverinsights",
+    "MentionEveryone",
+    "ManageMessages",
+    "ManageThreads",
+    "ReadMessageHistory",
+    "SendTTSMessages",
+    "SendVoiceMessages",
+    "SendPolls",
+
+    // Voice Channel Permissions
+    "Connect",
+    "Speak",
+    "Stream",
+    "UseSoundboard",
+    "UseExternalSounds",
+    "UseVAD",
+    "PrioritySpeaker",
+    "MuteMembers",
+    "DeafenMembers",
+    "MoveMembers",
+    // "SetVoiceChannelStatus"
+
+    // App Permissions
+    "UseApplicationCommands",
+    "UseEmbeddedActivities",
+    "UseExternalApps",
+
+    // Stage Channel Permissions
+    "RequestToSpeak",
+
+    // Event Permissions
+    "CreateEvents",
+    "ManageEvents",
+
+    // Extra
+    "ViewCreatorMonetizationAnalytics",
+
+    // Advance Permissions
+    "Administrator",
   ],
 };

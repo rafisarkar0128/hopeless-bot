@@ -1,6 +1,7 @@
 const colors = require("colors");
 const { table } = require("table");
 const loadFiles = require("./loadFiles");
+const { Permissions } = require("./validations/permissions.js");
 const { t } = require("i18next");
 
 /**
@@ -10,15 +11,18 @@ const { t } = require("i18next");
  */
 module.exports = async (client, dir) => {
   if (typeof client !== "object") {
-    throw new TypeError(t("errors:missing_parameter", { param: colors.bold("client") }));
+    throw new TypeError(
+      t("errors:missing_parameter", { param: colors.yellow("client") }),
+    );
   }
   if (typeof dir !== "string") {
-    throw new TypeError(t("errors:type_errors.string"), { param: colors.bold("dir") });
+    throw new TypeError(t("errors:type_errors.string"), { param: colors.yellow("dir") });
   }
-  client.logger.info(t("console:loaders.command.start", { dir: colors.green(dir) }));
+
+  client.logger.info(t("console:loader.command.start", { d: colors.green(dir) }));
 
   const debug = client.config.console.debug.event_table;
-  const tableData = [["Index".cyan, "Events".cyan, "File".cyan, "Status".cyan]];
+  const tableData = [["Index".cyan, "Command".cyan, "File".cyan, "Status".cyan]];
   /**
    * @type {import("table").TableUserConfig}
    */
@@ -64,36 +68,49 @@ module.exports = async (client, dir) => {
     l = 0;
   for (const file of files) {
     const fileName = file.replace(/\\/g, "/").split("/").pop();
-
     /** @type {import("@structures/command.d.ts").BaseCommandStructure} */
     const command = require(file);
+    var commandName = fileName.slice(0, -3);
     const { options, prefix, slash, context } = command;
-    const {
-      category,
-      cooldown,
-      premium,
-      guildOnly,
-      devOnly,
-      voiceChannelOnly,
-      botPermissions,
-      userPermissions,
-    } = options;
+    const category = options?.category || "none";
+    const cooldown = options?.cooldown || 0;
+    const premium = options?.premium || false;
+    const guildOnly = options?.guildOnly || false;
+    const devOnly = options?.devOnly || false;
+    const voiceChannelOnly = options?.voiceChannelOnly || false;
+    const botPermissions = options?.botPermissions || [];
+    const userPermissions = options?.userPermissions || [];
 
     try {
-      commandName =
-        command.prefix?.name ||
-        command.slash?.data?.name ||
-        command.context?.data?.name ||
-        "undefined";
-
-      if (options.category) {
+      if (options.category !== "none") {
         if (client.config.categories[category]?.enabled === false) continue;
       }
 
-      if (prefix) {
-        if (prefix?.disabled) continue;
+      if (botPermissions?.length > 0) {
+        for (let p of botPermissions) {
+          if (!Permissions.includes(p)) {
+            throw new Error(
+              t("errors:validations.command.permission", { p: colors.yellow(p) }),
+            );
+          }
+        }
+      }
+      if (userPermissions?.length > 0) {
+        for (let p of userPermissions) {
+          if (!Permissions.includes(p)) {
+            throw new Error(
+              t("errors:validations.command.permission", { p: colors.yellow(p) }),
+            );
+          }
+        }
+      }
 
-        if (!prefix.name) throw new Error(t("errors:validations.command.prefix.name"));
+      if (prefix && !prefix?.disabled) {
+        if (!prefix.name)
+          throw new Error(
+            t("errors:validations.command.name", { type: colors.yellow("Prefix") }),
+          );
+        commandName = prefix.name;
 
         if (!prefix?.description || prefix.description?.length <= 0) {
           prefix.description = slash?.data.description;
@@ -101,10 +118,16 @@ module.exports = async (client, dir) => {
 
         if (prefix.aliases?.length) {
           for (const alias of prefix.aliases) {
-            if (client.aliases.has(alias)) {
-              throw new Error(`alias ${colors.yellow(alias)} already exist`);
-            } else {
+            let cmd = client.aliases.get(alias);
+            if (!client.aliases.has(alias)) {
               client.aliases.set(alias, prefix.name);
+            } else {
+              throw new Error(
+                t("errors:validations.command.alias", {
+                  alias: colors.yellow(alias),
+                  cmd: colors.yellow(cmd),
+                }),
+              );
             }
           }
         }
@@ -129,12 +152,19 @@ module.exports = async (client, dir) => {
         });
       }
 
-      if (slash) {
-        if (slash.disabled) continue;
+      if (slash && !slash?.disabled) {
+        if (!slash.data) {
+          throw new Error(
+            t("errors:validations.command.data", { type: colors.yellow("Slash") }),
+          );
+        }
+        commandName = slash.data.name;
 
-        if (!slash.data) throw new Error("Missing command data");
-
-        if (!slash.execute) throw new Error("Missing execute function");
+        if (!slash.execute) {
+          throw new Error(
+            t("errors:validations.command.function", { type: colors.yellow("Slash") }),
+          );
+        }
 
         client.slashCommands.set(slash.data.name, {
           category: category,
@@ -160,39 +190,53 @@ module.exports = async (client, dir) => {
         });
       }
 
-      //
-      //if (
-      //  command?.isDisabled ||
-      //  (command?.isPrefixDisabled && command?.isSlashDisabled)
-      //) {
-      //  continue;
-      //}
-      //if (client.config.categories[command.options.category]?.enabled === false) continue;
-      //
-      //if (command?.aliases?.length) {
-      //}
-      //
-      //if (command?.isPrefixDisabled === false) {
-      //  client.commands.set(command.data.name, command);
-      //}
-      //
-      //if (command?.isSlashDisabled === false) {
-      //  client.slashCommands.set(command.data.name, command);
-      //}
-      //
-      //if (command?.data.type === (2 || 3)) {
-      //  client.contexts.set(command.data.name, command);
-      //}
-      //
-      //if (command.data.toJSON()) {
-      //  client.Commands.push({
-      //    data: command.data.toJSON(),
-      //    global: command.isGlobal,
-      //    disabled: command?.isDisabled || command?.isSlashDisabled,
-      //  });
-      //}
+      if (context && !context?.disabled) {
+        if (context.disabled) continue;
 
-      i++ && l++;
+        if (!context.data) {
+          throw new Error(
+            t("errors:validations.command.data", { type: colors.yellow("ContextMenu") }),
+          );
+        }
+        commandName = context.data?.name;
+
+        if (!context.execute) {
+          throw new Error(
+            t("errors:validations.command.function", {
+              type: colors.yellow("ContextMenu"),
+            }),
+          );
+        }
+
+        client.contexts.set(context.data.name, {
+          category: category,
+          cooldown: cooldown,
+          premium: premium,
+          guildOnly: guildOnly,
+          devOnly: devOnly,
+          voiceChannelOnly: voiceChannelOnly,
+          botPermissions: botPermissions,
+          userPermissions: userPermissions,
+          data: context.data,
+          ephemeral: context.ephemeral,
+          global: context.global,
+          disabled: context.disabled,
+          execute: context.execute,
+        });
+
+        client.Commands.push({
+          data: context.data.toJSON(),
+          global: context.global,
+          disabled: context.disabled,
+        });
+      }
+
+      if ((prefix?.disabled && slash?.disabled) || context?.disabled) {
+        continue;
+      }
+
+      i++;
+      l++;
       tableData.push([
         `${colors.magenta(i)}`,
         commandName.blue,
@@ -201,7 +245,7 @@ module.exports = async (client, dir) => {
       ]);
     } catch (error) {
       i++;
-      tableData.push([`${colors.magenta(i)}`, commandName.blue, fileName.red, "» 🔴 «"]);
+      tableData.push([`${colors.magenta(i)}`, commandName.red, fileName.red, "» 🔴 «"]);
       errors.push({ file: file, error: error });
     }
   }
@@ -209,20 +253,12 @@ module.exports = async (client, dir) => {
   if (debug) console.log(table(tableData, tableConfig));
 
   if (errors.length > 0) {
-    console.log(
-      colors.yellow(
-        "[AntiCrash] | [Command_Loader_Error_Logs] | [Start] : ===============",
-      ),
-    );
+    console.log(colors.yellow(t("errors:loader.command.start")));
     errors.forEach((e) => {
-      console.log(colors.yellow(e.file), "\n", colors.red(e.error), "\n");
+      console.log(colors.green(e.file), "\n", colors.red(e.error), "\n");
     });
-    console.log(
-      colors.yellow(
-        "[AntiCrash] | [Command_Loader_Error_Logs] | [End] : ===============",
-      ),
-    );
+    console.log(colors.yellow(t("errors:loader.command.end")));
   }
 
-  return client.logger.info(`loaded ${colors.yellow(l)} command modules`);
+  return client.logger.info(t("console:loader.command.end", { l: colors.yellow(l) }));
 };

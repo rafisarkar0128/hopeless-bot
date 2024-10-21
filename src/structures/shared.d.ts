@@ -1,5 +1,4 @@
 // shared types to use in base structures
-
 import {
   APIApplicationCommand,
   ChatInputCommandInteraction,

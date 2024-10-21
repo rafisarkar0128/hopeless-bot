@@ -1,16 +1,21 @@
 {
   "vanity": {
     "welcome": "Welcome to {{name}} \u001b[33mJavascript\u001b[39m project",
-    "message": "Coded with ❤️ by {{author}}"
+    "node": "Running on Node.JS version {{v}}",
+    "version": "Package version {{v}}",
+    "message": "Coded by {{author}}"
   },
-  "loaders": {
+  "database": {
+    "connected": "{{db}} database connected successfully"
+  },
+  "loader": {
     "event": {
-      "start": "Started to load event files from {{dir}}",
-      "end": "Successfully loaded {{size}} event modules"
+      "start": "Started to load event modules from {{d}}",
+      "end": "Successfully loaded {{l}} event modules"
     },
     "command": {
-      "start": "Started to load command files from {{dir}}",
-      "end": "Successfully loaded {{size}} command modules"
+      "start": "Started to load command modules from {{d}}",
+      "end": "Successfully loaded {{l}} command modules"
     }
   }
 }

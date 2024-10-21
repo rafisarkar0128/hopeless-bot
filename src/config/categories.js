@@ -19,6 +19,11 @@ module.exports = {
     image: "https://wallpaperaccess.com/full/5680679.jpg",
     emoji: "🎨",
   },
+  config: {
+    name: "Config",
+    image: "",
+    emoji: "⚙️",
+  },
   economy: {
     name: "Economy",
     enabled: plugins.economy.enabled,

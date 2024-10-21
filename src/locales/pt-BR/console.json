@@ -1,7 +1,7 @@
 {
-  "info": {
-    "welcome": "Bem-vindo ao projeto {color:start:cyan}{pkg:name}{color:end}{color:yellow:start}Javascript{color:end}",
-    "message": "Codificado com ❤️ por {color:start:magenta}{code:author}{color:end}"
+  "vanity": {
+    "welcome": "Bem-vindo ao projeto {{name}} \u001b[33mJavascript\u001b[39m project",
+    "message": "Codificado com ❤️ por {{author}}"
   },
   "loaders": {
     "event": {
