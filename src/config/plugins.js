@@ -1,8 +1,4 @@
 module.exports = {
-  antiCrash: {
-    enabled: true,
-  },
-
   auto_moderation: {
     enabled: true,
   },
@@ -28,13 +24,14 @@ module.exports = {
     max_search_results: 10,
     search_engine: "ytmsearch",
     lavalink_nodes: [
-      // local hosted nodes
+      // locally hosted nodes
       {
         password: "youshallnotpass",
+        authorization: "youshallnotpass",
         host: "localhost",
         port: 2333,
         id: "Local Node",
-        requestSignalTimeoutMS: 3000,
+        requestSignalTimeoutMS: 10000,
         closeOnError: true,
         enablePingOnStatsCheck: true,
         retryDelay: 10e3,
@@ -42,37 +39,45 @@ module.exports = {
         retryAmount: 5,
       },
       // nodes from https://riffy.js.org/resources
-      {
-        host: "lava4.horizxon.studio",
-        port: 80,
-        password: "horizxon.studio",
-        secure: false,
-      },
+      //{
+      //  host: "lava1.horizxon.studio",
+      //  port: 80,
+      //  password: "horizxon.studio",
+      //  secure: false,
+      //},
+      //{
+      //  host: "lava4.horizxon.studio",
+      //  port: 80,
+      //  password: "horizxon.studio",
+      //  secure: false,
+      //},
       // nodes from https://lavalinks-list.vercel.app/non-ssl
       {
         password: "youshallnotpass",
+        authorization: "youshallnotpass",
         host: "node.lewdhutao.my.eu.org",
         port: 80,
         id: "LewdHuTao - Lavalink",
-        requestSignalTimeoutMS: 3000,
+        requestSignalTimeoutMS: 10000,
         closeOnError: true,
         enablePingOnStatsCheck: true,
         retryDelay: 10e3,
         secure: false,
         retryAmount: 5,
       },
-      {
-        password: "saher.inzeworld.com",
-        host: "lava.inzeworld.com",
-        port: 3128,
-        id: "INZEWORLD.COM (DE)",
-        requestSignalTimeoutMS: 3000,
-        closeOnError: true,
-        enablePingOnStatsCheck: true,
-        retryDelay: 10e3,
-        secure: false,
-        retryAmount: 5,
-      },
+      //{
+      //  password: "saher.inzeworld.com",
+      //  authorization: "saher.inzeworld.com",
+      //  host: "lava.inzeworld.com",
+      //  port: 3128,
+      //  id: "INZEWORLD.COM (DE)",
+      //  requestSignalTimeoutMS: 3000,
+      //  closeOnError: true,
+      //  enablePingOnStatsCheck: true,
+      //  retryDelay: 10e3,
+      //  secure: false,
+      //  retryAmount: 5,
+      //},
     ],
   },
 

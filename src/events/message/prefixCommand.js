@@ -1,6 +1,6 @@
 const { Message } = require("discord.js");
 const { commandHandler, automodHandler, statsHandler } = require("@handlers/index");
-const { getSettings } = require("@root/src/database/schemas/guild");
+const { getSettings } = require("@root/src/schemas/guild");
 
 /** @type {import("@structures/event").EventStructure} */
 module.exports = {

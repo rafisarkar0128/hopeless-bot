@@ -1,12 +1,8 @@
 const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
-const { table } = require("table");
 const { AntiCrash } = require("@helpers/AntiCrash");
-const { loadEvents, loadLocales, loadCommands, connectdb } = require("./functions/index");
-const colors = require("colors");
-const { t } = require("i18next");
-const { RiffyPlayer } = require("./RiffyPlayer.js");
+const { LavalinkPlayer } = require("./LavalinkPlayer.js");
 
 class DiscordBot extends Client {
   /** typingss for discord.js ClientOptions
@@ -17,145 +13,41 @@ class DiscordBot extends Client {
 
     // local stored data
     this.config = require(`@config/config.js`);
+    /** @deprecated will be removed in future updates */
     this.colors = require(`@config/colors.json`);
-    this.wait = require("timers/promises").setTimeout;
     this.database = require("@src/database/mongoose.js");
     this.pkg = require("@root/package.json");
 
     // all global functions
+    this.wait = require("timers/promises").setTimeout;
+    this.functions = require("./functions/index.js");
     this.logger = new Logger(this);
     this.utils = new Utils(this);
-    this.addColors = this.syncCommands = require("@helpers/syncCommands");
+    this.syncCommands = require("@helpers/syncCommands");
 
-    // client collections
-
-    /**
-     * types for event collection
-     * @type {Collection<string, import("@structures/event.d.ts").EventStructure>}
-     */
+    // client collections with types
+    /** @type {Collection<string, import("@structures/event.d.ts").EventStructure>} */
     this.events = new Collection();
 
-    /**
-     *
-     * @type {import("../types/types.d.ts").NewCommand[]} */
+    /** @type {import("../types/types.d.ts").NewCommand[]} */
     this.Commands = new Array();
 
-    /**
-     * types for commands collection
-     * @type {Collection<string, import("@structures/command.d.ts").PrefixCommandStructure>}
-     */
+    /** @type {Collection<string, import("@structures/command.d.ts").PrefixCommandStructure>} */
     this.commands = new Collection();
 
-    /**
-     * types for alias collection
-     * @type {Collection<string, string>}
-     */
+    /** @type {Collection<string, string>} */
     this.aliases = new Collection();
 
-    /**
-     * types for slash command collection
-     * @type {Collection<string, import("@structures/command.d.ts").SlashCommandStructure>}
-     */
+    /** @type {Collection<string, import("@structures/command.d.ts").SlashCommandStructure>} */
     this.slashCommands = new Collection();
 
-    /**
-     * types for contextmenu collection
-     * @type {Collection<string, import("@structures/context.d.ts").ContextMenuStructure>}
-     */
+    /** @type {Collection<string, import("@structures/context.d.ts").ContextMenuStructure>} */
     this.contexts = new Collection();
 
     // Music Manager
     if (this.config.plugins.music.enabled) {
-      this.riffy = new RiffyPlayer(this);
+      this.lavalink = new LavalinkPlayer(this);
     }
-  }
-
-  /**
-   * A function to log basic info of the bot
-   * @returns {string}
-   */
-  async logVanity() {
-    // ansi colors with escape
-    let esc = "\u001b[0m";
-    let red = "\u001b[38;5;196m";
-    let blue = "\u001b[38;5;45m";
-    let green = "\u001b[38;5;49m";
-    let yellow = "\u001b[38;5;11m";
-
-    let vanity = [
-      `y     __`,
-      `y  ."\`  \`".`,
-      `y /   /\\   \\`,
-      `y|    \\/    | b_                      _               _           _  g______`,
-      `y \\   ()   / b| |__   ___  _ __   ___| | ___  ___ ___| |__   ___ | |_g\\ \\ \\ \\ `,
-      `y  '.____.'  b| '_ \\ / _ \\| '_ \\ / _ \\ |/ _ \\/ __/ __| '_ \\ / _ \\| __|g\\ \\ \\ \\ `,
-      `y   {_.="}   b| | | | (_) | |_) |  __/ |  __/\\__ \\__ \\ |_) | (_) | |_  g) ) ) )`,
-      `y   {_.="}   b|_| |_|\\___/| .__/ \\___|_|\\___||___/___/_.__/ \\___/ \\__|g/ / / /`,
-      `y   \`-..-\`   r============b|_|r========================================g/_/_/_/`,
-    ].join("\n");
-
-    vanity = vanity
-      .replace(/r/g, red)
-      .replace(/g/g, green)
-      .replace(/b/g, blue)
-      .replace(/y/g, yellow)
-      .replace(/e/g, esc);
-
-    /**
-     * @type {import("table").TableUserConfig}
-     */
-    const config = {
-      columnDefault: {
-        alignment: "center",
-        width: 72,
-      },
-      border: {
-        topBody: `─`.cyan,
-        topJoin: `┬`.cyan,
-        topLeft: `┌`.cyan,
-        topRight: `┐`.cyan,
-
-        bottomBody: `─`.cyan,
-        bottomJoin: `┴`.cyan,
-        bottomLeft: `└`.cyan,
-        bottomRight: `┘`.cyan,
-
-        bodyLeft: `│`.cyan,
-        bodyRight: `│`.cyan,
-        bodyJoin: `│`.cyan,
-
-        joinBody: `─`.cyan,
-        joinLeft: `├`.cyan,
-        joinRight: `┤`.cyan,
-        joinJoin: `┼`.cyan,
-      },
-      drawHorizontalLine: (lineIndex, rowCount) => {
-        return lineIndex === 0 || lineIndex === rowCount;
-      },
-    };
-    const data = [
-      [""],
-      [t("console:vanity.welcome", { name: colors.blue(this.pkg.name) })],
-      [
-        t("console:vanity.node", {
-          v: colors.green(process.version),
-        }),
-      ],
-      [
-        t("console:vanity.version", {
-          v: colors.yellow(this.pkg.version),
-        }),
-      ],
-      [
-        t("console:vanity.message", {
-          author: colors.cyan(this.pkg.author.name),
-        }),
-      ],
-      [""],
-    ];
-
-    console.log(vanity);
-    console.log(table(data, config));
   }
 
   /** a function to start everything
@@ -164,25 +56,25 @@ class DiscordBot extends Client {
   async start() {
     console.clear();
 
+    // load the anticrash system
+    AntiCrash(this);
+
     // load locales
-    loadLocales();
+    this.functions.loadLocales(this);
 
-    if (this.config.plugins.antiCrash.enabled) AntiCrash(this);
+    // log the vanity
+    this.functions.logVanity(this);
 
-    if (this.config.console.debug.vanity) {
-      this.logVanity();
-    }
+    // load event modules
+    await this.functions.loadEvents(this, "src/events");
 
-    // Load event modules
-    await loadEvents(this, "src/events");
+    // load command modules
+    await this.functions.loadCommands(this, "src/commands");
 
-    // Load command modules
-    await loadCommands(this, "src/commands");
+    // connect to the database
+    await this.functions.connectdb(this);
 
-    // Connect to the database
-    await connectdb(this);
-
-    // Log into the client
+    // log into the client
     await this.login(this.config.bot_token);
   }
 }

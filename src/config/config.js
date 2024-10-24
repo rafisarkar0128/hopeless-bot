@@ -19,7 +19,7 @@ module.exports = {
   default_prefix: process.env.DEFAULT_PREFIX,
   owner_id: process.env.OWNER_ID,
   guild_id: process.env.SERVER_ID,
-  devs: process.env.DEVELOPER_IDS,
+  devs: process.env.DEVELOPER_IDS.split(", "),
 
   // mongodb config
   mongo_uri: process.env.MONGO_URI,
@@ -48,10 +48,8 @@ module.exports = {
     },
   },
   console: {
-    // refer to https://moment.github.io/luxon/#/formatting?id=table-of-tokens for time formats;
-    time_format: "dd/LL/yyyy - HH:mm:ss",
+    time_format: process.env.TIME_FORMAT,
     debug: {
-      vanity: true,
       event_table: true,
       command_table: true,
       sync: true,
@@ -69,6 +67,14 @@ module.exports = {
     guilds: 100,
     users: 10000,
     members: 10000,
+  },
+  icons: {
+    youtube: "https://i.imgur.com/xzVHhFY.png",
+    spotify: "https://i.imgur.com/qvdqtsc.png",
+    soundcloud: "https://i.imgur.com/MVnJ7mj.png",
+    applemusic: "https://i.imgur.com/Wi0oyYm.png",
+    deezer: "https://i.imgur.com/xyZ43FG.png",
+    jiosaavn: "https://i.imgur.com/N9Nt80h.png",
   },
 
   colors: require("./colors.json"),

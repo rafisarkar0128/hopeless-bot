@@ -1,6 +1,7 @@
 const { glob } = require("glob");
 const { join, extname, resolve } = require("path");
 const colors = require("colors");
+const { t } = require("i18next");
 
 /**
  * Returns an array of files from given path filtered by provided extensions.
@@ -15,17 +16,15 @@ const colors = require("colors");
  */
 module.exports = async (path, ext) => {
   if (typeof path !== "string") {
-    throw new TypeError("Value of path must be a string");
+    throw new TypeError(t("errors:type.string", { param: colors.yellow("path") }));
   }
   if (!Array.isArray(ext)) {
-    throw new TypeError("Value of ext must be an array");
+    throw new TypeError(t("errors:type.array", { param: colors.yellow("ext") }));
   }
 
   function deleteCashedFile(file) {
     const filePath = resolve(file);
-    if (require.cache[filePath]) {
-      delete require.cache[filePath];
-    }
+    delete require.cache[filePath];
   }
 
   const files = await glob(join(process.cwd(), path, "*/**"));

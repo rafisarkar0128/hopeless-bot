@@ -4,6 +4,7 @@ module.exports = {
   once: false,
   rest: false,
   ws: false,
-  riffy: false,
+  player: false,
+  node: false,
   execute: async (client, ...args) => {},
 };

@@ -16,7 +16,7 @@ module.exports = async (client, dir) => {
     );
   }
   if (typeof dir !== "string") {
-    throw new TypeError(t("errors:type_errors.string", { param: colors.yellow("dir") }));
+    throw new TypeError(t("errors:type.string", { param: colors.yellow("dir") }));
   }
 
   client.logger.info(t("console:loader.event.start", { d: colors.green(dir) }));
@@ -86,6 +86,10 @@ module.exports = async (client, dir) => {
         ? client.ws
         : event.riffy
         ? client.riffy
+        : event.player
+        ? client.lavalink
+        : event.node
+        ? client.lavalink.nodeManager
         : client;
       target[event.once ? "once" : "on"](event.name, execute);
 
@@ -93,13 +97,18 @@ module.exports = async (client, dir) => {
       l++;
       tableData.push([
         `${colors.magenta(i)}`,
-        event.name.yellow,
-        fileName.green,
+        colors.yellow(event.name),
+        colors.green(fileName),
         "» 🌱 «",
       ]);
     } catch (error) {
       i++;
-      tableData.push([`${colors.magenta(i)}`, event.name.red, fileName.red, "» 🔴 «"]);
+      tableData.push([
+        `${colors.magenta(i)}`,
+        colors.red(event.name),
+        colors.red(fileName),
+        "» 🔴 «",
+      ]);
       errors.push({ file: file, error: error });
     }
   }
@@ -109,7 +118,7 @@ module.exports = async (client, dir) => {
   if (errors.length > 0) {
     console.log(colors.yellow(t("errors:loader.event.start")));
     errors.forEach((e) => {
-      console.log(e.file.green, "\n", colors.red(e.error), "\n");
+      console.log(colors.green(e.file), "\n", colors.red(e.error), "\n");
     });
     console.log(colors.yellow(t("errors:loader.event.end")));
   }

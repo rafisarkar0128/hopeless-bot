@@ -1,7 +1,7 @@
 import { DiscordBot } from "@lib/DiscordBot";
 
 // discordjs event names
-export type DiscordEvents =
+export type DiscordEventNames =
   | "applicationCommandPermissionsUpdate"
   | "autoModerationActionExecution"
   | "autoModerationRuleCreate"
@@ -82,30 +82,37 @@ export type DiscordEvents =
   | "webhooksUpdate"
   | "webhookUpdate";
 
-// riffy event names
-export type RiffyEventNames =
-  | "nodeCreate"
-  | "nodeDisconnect"
-  | "nodeReconnect"
-  | "nodeError"
-  | "trackStart"
-  | "trackEnd"
-  | "trackError"
-  | "trackStuck"
-  | "socketClosed"
+// lavalink-client event names
+export type LavalinkEventNames =
   | "playerCreate"
+  | "playerDestroy"
   | "playerDisconnect"
   | "playerMove"
-  | "playerUpdate"
+  | "playerSocketClosed"
+  | "trackStart"
+  | "trackStuck"
+  | "trackError"
+  | "trackEnd"
   | "queueEnd"
-  | "debug";
+  | "playerUpdate"
+  | "create"
+  | "error"
+  | "raw"
+  | "disconnect"
+  | "connect"
+  | "reconnecting"
+  | "create"
+  | "destroy"
+  | "error"
+  | "resumed";
 
 // event module structure
 export interface EventStructure {
-  name: DiscordEvents | RiffyEventNames;
+  name: DiscordEventNames | LavalinkEventNames;
   once?: boolean;
   rest?: boolean;
   ws?: boolean;
-  riffy?: boolean;
+  player: boolean;
+  node: boolean;
   execute: (client: DiscordBot, ...args: any) => Promise<any>;
 }
