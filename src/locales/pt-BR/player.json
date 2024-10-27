@@ -1,0 +1,38 @@
+{
+  "errors": {
+    "no_player": "Não há player ativo nesta guilda.",
+    "no_channel": "Você precisa estar em um canal de voz para usar este comando.",
+    "queue_empty": "A fila está vazia.",
+    "no_previous": "Não há músicas anteriores na fila.",
+    "no_song": "Não há músicas na fila.",
+    "already_paused": "A música já está pausada."
+  },
+  "trackStart": {
+    "now_playing": "Tocando Agora",
+    "requested_by": "Solicitado por {user}",
+    "duration": "Duração",
+    "author": "Autor",
+    "not_connected_to_voice_channel": "Você não está conectado ao <#{channel}> para usar estes botões.",
+    "need_dj_role": "Você precisa ter o cargo de DJ para usar este comando.",
+    "previous_by": "Anterior por {user}",
+    "no_previous_song": "Não há música anterior.",
+    "paused_by": "Pausado por {user}",
+    "resumed_by": "Retomado por {user}",
+    "skipped_by": "Pulado por {user}",
+    "no_more_songs_in_queue": "Não há mais músicas na fila.",
+    "looping_by": "Loop ativado por {user}",
+    "looping_queue_by": "Loop da fila ativado por {user}",
+    "looping_off_by": "Loop desativado por {user}"
+  },
+  "setupStart": {
+    "now_playing": "Tocando Agora",
+    "description": "[{title}]({uri}) por {author} • `[{length}]` - Solicitado por <@{requester}>",
+    "error_searching": "Ocorreu um erro durante a pesquisa.",
+    "no_results": "Nenhum resultado encontrado.",
+    "nothing_playing": "Nada está tocando no momento",
+    "queue_too_long": "A fila está muito longa. O tamanho máximo é de {maxQueueSize} músicas.",
+    "playlist_too_long": "A playlist está muito longa. O tamanho máximo é de {maxPlaylistSize} músicas.",
+    "added_to_queue": "Adicionado [{title}]({uri}) à fila.",
+    "added_playlist_to_queue": "Adicionado [{length}] músicas da playlist à fila."
+  }
+}

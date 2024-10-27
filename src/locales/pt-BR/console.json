@@ -1,16 +1,21 @@
 {
   "vanity": {
-    "welcome": "Bem-vindo ao projeto {{name}} \u001b[33mJavascript\u001b[39m project",
-    "message": "Codificado com ❤️ por {{author}}"
+    "welcome": "Bem-vindo ao {{name}} \u001b[33mJavascript\u001b[39m projeto",
+    "node": "Executando na versão {{v}} do Node.JS",
+    "version": "Versão do pacote {{v}}",
+    "message": "Programado por {{author}}"
   },
-  "loaders": {
+  "database": {
+    "connected": "Banco de dados {{db}} conectado com sucesso"
+  },
+  "loader": {
     "event": {
-      "start": "Começou a carregar arquivos de eventos de {color:start:green}{dir}{color:end}",
-      "end": "Carregou com sucesso {color:start:yellow}{size}{color:end} arquivo(s) de evento(s)"
+      "start": "Começou a carregar módulos de eventos de {{d}}",
+      "end": "Carregou com sucesso {{l}} módulos de eventos"
     },
     "command": {
-      "start": "Começou a carregar arquivos de comandos de {color:start:green}{dir}{color:end}",
-      "end": "Carregou com sucesso {color:start:yellow}{size}{color:end} arquivo(s) de comando(s)"
+      "start": "Começou a carregar módulos de comandos de {{d}}",
+      "end": "Carregou com sucesso {{l}} módulos de comandos"
     }
   }
 }
