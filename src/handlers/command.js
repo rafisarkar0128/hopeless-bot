@@ -1,5 +1,5 @@
 const { EmbedBuilder, Embed } = require("discord.js");
-const { getSettings } = require("@root/src/database/schemas/guild");
+const { getSettings } = require("@root/src/schemas/guild");
 
 const cooldownCache = new Map();
 

@@ -20,7 +20,7 @@ module.exports = {
     disabled: false,
     minArgsCount: 0,
     subcommands: [],
-    execute: (client, message, args, data) => {},
+    execute: async (client, message, args, data) => {},
   },
   slash: {
     data: new SlashCommandBuilder(),
@@ -28,6 +28,6 @@ module.exports = {
     ephemeral: true,
     global: true,
     disabled: false,
-    execute: (client, interaction, data) => {},
+    execute: async (client, interaction, data) => {},
   },
 };

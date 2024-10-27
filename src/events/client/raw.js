@@ -4,6 +4,6 @@ module.exports = {
   once: false,
   execute: async (client, data) => {
     // sending raw voice data to the music player;
-    client.riffy.updateVoiceState(data);
+    client.lavalink.sendRawData(data);
   },
 };

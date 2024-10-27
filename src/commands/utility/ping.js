@@ -33,8 +33,8 @@ module.exports = {
       });
       const embed = await getPingEmbed(client, message, reply);
 
-      await reply.delete();
-      message.reply({
+      reply.edit({
+        content: "",
         embeds: [embed],
       });
     },

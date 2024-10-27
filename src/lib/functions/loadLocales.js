@@ -5,10 +5,11 @@ const resources = require("@src/locales/index.js");
 
 /**
  * A function to get default locale for global use
+ * @param {import("@lib/DiscordBot.js").DiscordBot} client
  * @returns {string}
  */
-function getDefaultLocale() {
-  let { default_locale } = require("@config/config");
+function getDefaultLocale(client) {
+  let { default_locale } = client.config;
   if (typeof default_locale !== "string") {
     throw new TypeError("Value of defaut_locale must a string");
   }
@@ -28,11 +29,12 @@ function getDefaultLocale() {
 
 /**
  * A function to load locales
+ * @param {import("@lib/DiscordBot.js").DiscordBot} client
  * @returns {void}
  */
-module.exports = async () => {
+module.exports = async (client) => {
   i18next.init({
-    fallbackLng: getDefaultLocale(),
+    fallbackLng: getDefaultLocale(client),
     defaultNS: "",
     interpolation: {
       escapeValue: false,

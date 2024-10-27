@@ -16,7 +16,7 @@ module.exports = async (client, dir) => {
     );
   }
   if (typeof dir !== "string") {
-    throw new TypeError(t("errors:type_errors.string"), { param: colors.yellow("dir") });
+    throw new TypeError(t("errors:type.string"), { param: colors.yellow("dir") });
   }
 
   client.logger.info(t("console:loader.command.start", { d: colors.green(dir) }));
@@ -239,13 +239,18 @@ module.exports = async (client, dir) => {
       l++;
       tableData.push([
         `${colors.magenta(i)}`,
-        commandName.blue,
-        fileName.green,
+        colors.blue(commandName),
+        colors.green(fileName),
         "» 🌱 «",
       ]);
     } catch (error) {
       i++;
-      tableData.push([`${colors.magenta(i)}`, commandName.red, fileName.red, "» 🔴 «"]);
+      tableData.push([
+        `${colors.magenta(i)}`,
+        colors.red(commandName),
+        colors.red(fileName),
+        "» 🔴 «",
+      ]);
       errors.push({ file: file, error: error });
     }
   }

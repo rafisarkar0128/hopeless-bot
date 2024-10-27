@@ -14,6 +14,6 @@ module.exports = async (client) => {
       t("console:database.connected", { db: colors.magenta("mongodb") }),
     );
   } catch (error) {
-    client.logger.error(error);
+    throw error;
   }
 };
