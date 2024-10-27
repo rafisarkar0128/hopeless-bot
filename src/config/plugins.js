@@ -38,19 +38,6 @@ module.exports = {
         secure: false,
         retryAmount: 5,
       },
-      // nodes from https://riffy.js.org/resources
-      //{
-      //  host: "lava1.horizxon.studio",
-      //  port: 80,
-      //  password: "horizxon.studio",
-      //  secure: false,
-      //},
-      //{
-      //  host: "lava4.horizxon.studio",
-      //  port: 80,
-      //  password: "horizxon.studio",
-      //  secure: false,
-      //},
       // nodes from https://lavalinks-list.vercel.app/non-ssl
       {
         password: "youshallnotpass",
@@ -65,19 +52,6 @@ module.exports = {
         secure: false,
         retryAmount: 5,
       },
-      //{
-      //  password: "saher.inzeworld.com",
-      //  authorization: "saher.inzeworld.com",
-      //  host: "lava.inzeworld.com",
-      //  port: 3128,
-      //  id: "INZEWORLD.COM (DE)",
-      //  requestSignalTimeoutMS: 3000,
-      //  closeOnError: true,
-      //  enablePingOnStatsCheck: true,
-      //  retryDelay: 10e3,
-      //  secure: false,
-      //  retryAmount: 5,
-      //},
     ],
   },
 

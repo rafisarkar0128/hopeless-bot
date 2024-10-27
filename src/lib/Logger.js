@@ -2,14 +2,18 @@ const colors = require("colors");
 const { DateTime } = require("luxon");
 
 class Logger {
-  /** @param {import("../lib/DiscordBot").DiscordBot} client */
+  /** @param {import("@lib/DiscordBot").DiscordBot} client */
   constructor(client) {
     this.client = client;
-    this.dt = colors.gray(
+    this.dt = colors.white(
       DateTime.now().toFormat(this.client.config.console.time_format),
     );
-    //this.origin = this.getLogOrigin(); //.split(/[\\/]/).pop();
   }
+
+  /**
+   * A function to get the file name
+   * @returns {string}
+   */
   //getLogOrigin() {
   //  let filename;
   //
@@ -17,6 +21,7 @@ class Logger {
   //  Error.prepareStackTrace = function (err, stack) {
   //    return stack;
   //  };
+  //
   //  try {
   //    let error = new Error();
   //    let callerfile;
@@ -25,7 +30,7 @@ class Logger {
   //    currentfile = error.stack.shift().getFileName();
   //
   //    while (error.stack.length) {
-  //      callerfile = err.stack.shift().getFileName();
+  //      callerfile = error.stack.shift().getFileName();
   //
   //      if (currentfile !== callerfile) {
   //        filename = callerfile;
@@ -35,19 +40,31 @@ class Logger {
   //  } catch (err) {}
   //
   //  //return filename;
-  //  return new Error("Testing");
+  //  return filename;
   //}
 
   /**
+   * @param {string} file
    * @param {String} content
+   * @returns {void}
    */
-  info(content) {
-    //console.log(colors.yellow(this.origin));
-    return console.log(`[${this.dt}] [${colors.cyan("INFO")}] ${content}`);
+  info(file, content) {
+    const filename = file.split(/[\\/]/g).pop();
+    const output =
+      this.dt +
+      ` [` +
+      `${filename.length > 25 ? filename.substring(0, 25) + "..." : filename}` +
+      " ".repeat(20 - (filename.length > 20 ? 20 : filename.length)) +
+      `] ` +
+      `[${colors.cyan("INFO")}] ` +
+      content;
+
+    // `${this.dt} [${colors.red(this.origin)}] [${colors.cyan("INFO")}] ${content}`,
+    console.log(output);
   }
 
   /**
-   * @param {String} content
+   * @param {string} content
    */
   warn(content) {
     return console.log(
@@ -57,7 +74,7 @@ class Logger {
 
   /**
    * @param {Error} content
-   * @param {String} origin
+   * @param {string} origin
    * @param {import("@types/utils").ErrorTypes} type
    */
   async error(content, type) {
@@ -67,7 +84,7 @@ class Logger {
   }
 
   /**
-   * @param {String} content
+   * @param {string} content
    */
   debug(content) {
     return console.log(
@@ -134,7 +151,7 @@ class UpdatedLogger {
 
   error(content) {
     const output =
-      new Date().toLocaleTimeString() +
+      new Date().toLocaleTimestring() +
       `  🛑  [` +
       `${this.origin.length > 25 ? this.origin.substring(0, 17) + "..." : this.origin}` +
       `] ` +
@@ -151,7 +168,7 @@ class UpdatedLogger {
 
   info(content) {
     const output =
-      new Date().toLocaleTimeString() +
+      new Date().toLocaleTimestring() +
       `  ✉️   [` +
       `${this.origin.length > 25 ? this.origin.substring(0, 17) + "..." : this.origin}` +
       `] ` +

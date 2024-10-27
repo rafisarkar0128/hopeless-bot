@@ -32,7 +32,7 @@ function getDefaultLocale(client) {
  * @param {import("@lib/DiscordBot.js").DiscordBot} client
  * @returns {void}
  */
-module.exports = async (client) => {
+async function loadLocales(client) {
   i18next.init({
     fallbackLng: getDefaultLocale(client),
     defaultNS: "",
@@ -41,4 +41,6 @@ module.exports = async (client) => {
     },
     resources,
   });
-};
+}
+
+module.exports = { loadLocales };

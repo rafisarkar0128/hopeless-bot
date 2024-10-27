@@ -27,15 +27,15 @@ module.exports = {
     userPermissions: [],
   },
   prefix: {
-    name: "errorlog",
-    description: "Config the error logging system for the bot",
-    aliases: ["errlog", "elog", "error", "logger"],
+    name: "logger",
+    description: "Setup remote logger for logging.",
+    aliases: ["log", "logg", "lg", "loger", "looger"],
     usage: "<subcommand> <options>",
-    disabled: true,
-    minArgsCount: 1,
+    disabled: false,
+    minArgsCount: 0,
     subcommands: [],
-    execute: (client, message, args, data) => {
-      return message.reply({
+    execute: async (client, message, args, data) => {
+      message.reply({
         embeds: [
           new EmbedBuilder()
             .setDescription("**This Command is Still in Development**")
@@ -46,20 +46,58 @@ module.exports = {
   },
   slash: {
     data: new SlashCommandBuilder()
-      .setName("errorlog")
-      .setDescription("Config the error logging system for the bot")
+      .setName("logger")
+      .setDescription("Setup remote logger for logging.")
       .setContexts(InteractionContextType.Guild)
       .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
       .addSubcommand((option) =>
         option
-          .setName("create")
-          .setDescription("Create a new error logging system")
+          .setName("setup")
+          .setDescription("Setupt remote logging system")
+          .addStringOption((option) =>
+            option
+              .setName("category")
+              .setDescription("Select a category")
+              .setRequired(true)
+              .setChoices([
+                {
+                  name: "general",
+                  value: "general",
+                },
+                {
+                  name: "error",
+                  value: "error",
+                },
+                {
+                  name: "join",
+                  value: "join",
+                },
+                {
+                  name: "leave",
+                  value: "leave",
+                },
+                {
+                  name: "command",
+                  value: "command",
+                },
+                {
+                  name: "music",
+                  value: "music",
+                },
+              ]),
+          )
           .addChannelOption((option) =>
             option
               .setName("channel")
               .setDescription("The channel to mark as log channel")
               .addChannelTypes(ChannelType.GuildText)
-              .setRequired(true),
+              .setRequired(false),
+          )
+          .addMentionableOption((option) =>
+            option
+              .setName("roles")
+              .setDescription("The roles to be mentioned when logger send a message.")
+              .setRequired(false),
           ),
       )
       .addSubcommand((option) =>
@@ -88,7 +126,7 @@ module.exports = {
       ),
     usage: "[subcommand | subcommandgroup]: <name> [options]?: <options>",
     ephemeral: true,
-    global: false,
+    global: true,
     disabled: false,
     execute: async (client, interaction, data) => {
       return interaction.reply({

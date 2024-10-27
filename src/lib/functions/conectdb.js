@@ -7,13 +7,16 @@ const { t } = require("i18next");
  * @param {import("@lib/DiscordBot.js").DiscordBot} client
  * @returns {Promise<void>}
  */
-module.exports = async (client) => {
+async function connectdb(client) {
   try {
     await connect(client.config.mongo_uri);
     client.logger.info(
-      t("console:database.connected", { db: colors.magenta("mongodb") }),
+      __filename,
+      t("default:database.connected", { db: colors.magenta("mongodb") }),
     );
   } catch (error) {
     throw error;
   }
-};
+}
+
+module.exports = { connectdb };

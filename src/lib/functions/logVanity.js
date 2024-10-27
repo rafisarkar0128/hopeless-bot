@@ -7,13 +7,13 @@ const { t } = require("i18next");
  * @param {import("@lib/DiscordBot.js").DiscordBot} client
  * @returns {void}
  */
-module.exports = async (client) => {
+async function logVanity(client) {
   // ansi colors with escape
   let esc = "\u001b[0m";
-  let red = "\u001b[38;5;196m";
-  let blue = "\u001b[38;5;45m";
-  let green = "\u001b[38;5;49m";
-  let yellow = "\u001b[38;5;11m";
+  let red = "\u001b[31m";
+  let blue = "\u001b[36m";
+  let green = "\u001b[32m";
+  let yellow = "\u001b[33m";
 
   let vanity = [
     `y     __`,
@@ -42,45 +42,31 @@ module.exports = async (client) => {
       alignment: "center",
       width: 72,
     },
-    border: {
-      topBody: `─`.cyan,
-      topJoin: `┬`.cyan,
-      topLeft: `┌`.cyan,
-      topRight: `┐`.cyan,
-
-      bottomBody: `─`.cyan,
-      bottomJoin: `┴`.cyan,
-      bottomLeft: `└`.cyan,
-      bottomRight: `┘`.cyan,
-
-      bodyLeft: `│`.cyan,
-      bodyRight: `│`.cyan,
-      bodyJoin: `│`.cyan,
-
-      joinBody: `─`.cyan,
-      joinLeft: `├`.cyan,
-      joinRight: `┤`.cyan,
-      joinJoin: `┼`.cyan,
-    },
+    border: client.utils.getTableBorder("cyan"),
     drawHorizontalLine: (lineIndex, rowCount) => {
       return lineIndex === 0 || lineIndex === rowCount;
     },
   };
   const data = [
     [""],
-    [t("console:vanity.welcome", { name: colors.blue(client.pkg.name) })],
     [
-      t("console:vanity.node", {
+      t("default:vanity.welcome", {
+        name: colors.blue(client.pkg.name),
+        lang: colors.yellow("Javascript"),
+      }),
+    ],
+    [
+      t("default:vanity.node", {
         v: colors.green(process.version),
       }),
     ],
     [
-      t("console:vanity.version", {
+      t("default:vanity.version", {
         v: colors.yellow(client.pkg.version),
       }),
     ],
     [
-      t("console:vanity.message", {
+      t("default:vanity.message", {
         author: colors.cyan(client.pkg.author.name),
       }),
     ],
@@ -89,4 +75,6 @@ module.exports = async (client) => {
 
   console.log(vanity);
   console.log(table(data, config));
-};
+}
+
+module.exports = { logVanity };

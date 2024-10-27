@@ -69,12 +69,6 @@ module.exports = {
       await interaction.deferReply();
 
       const vc = interaction.member?.voice?.channel;
-      if (!vc.joinable || !vc.speakable) {
-        return interaction.followUp({
-          ephemeral: true,
-          content: "I am not able to join your channel / speak in there.",
-        });
-      }
 
       const src = interaction.options.getString("source");
       const query = interaction.options.getString("query");

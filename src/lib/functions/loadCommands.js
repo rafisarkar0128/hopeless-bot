@@ -1,7 +1,8 @@
 const colors = require("colors");
 const { table } = require("table");
-const loadFiles = require("./loadFiles");
+const { loadFiles } = require("./loadFiles");
 const { Permissions } = require("./validations/permissions.js");
+const { Logger } = require("../updated_logger.js");
 const { t } = require("i18next");
 
 /**
@@ -9,7 +10,7 @@ const { t } = require("i18next");
  * @type {import("./functions").LoadCommands}
  * @example await loadCommands(client, "src/commands");
  */
-module.exports = async (client, dir) => {
+async function loadCommands(client, dir) {
   if (typeof client !== "object") {
     throw new TypeError(
       t("errors:missing_parameter", { param: colors.yellow("client") }),
@@ -19,7 +20,10 @@ module.exports = async (client, dir) => {
     throw new TypeError(t("errors:type.string"), { param: colors.yellow("dir") });
   }
 
-  client.logger.info(t("console:loader.command.start", { d: colors.green(dir) }));
+  client.logger.info(
+    __filename,
+    t("default:loader.start", { type: colors.blue("command"), dir: colors.green(dir) }),
+  );
 
   const debug = client.config.console.debug.event_table;
   const tableData = [["Index".cyan, "Command".cyan, "File".cyan, "Status".cyan]];
@@ -32,26 +36,7 @@ module.exports = async (client, dir) => {
       width: 26,
     },
     columns: [{ width: 5 }, {}, {}, { width: 6 }],
-    border: {
-      topBody: `─`.blue,
-      topJoin: `┬`.blue,
-      topLeft: `┌`.blue,
-      topRight: `┐`.blue,
-
-      bottomBody: `─`.blue,
-      bottomJoin: `┴`.blue,
-      bottomLeft: `└`.blue,
-      bottomRight: `┘`.blue,
-
-      bodyLeft: `│`.blue,
-      bodyRight: `│`.blue,
-      bodyJoin: `│`.blue,
-
-      joinBody: `─`.blue,
-      joinLeft: `├`.blue,
-      joinRight: `┤`.blue,
-      joinJoin: `┼`.blue,
-    },
+    border: client.utils.getTableBorder("blue"),
     drawHorizontalLine: (lineIndex, rowCount) => {
       return lineIndex === 0 || lineIndex === 1 || lineIndex === rowCount;
     },
@@ -67,10 +52,12 @@ module.exports = async (client, dir) => {
   let i = 0,
     l = 0;
   for (const file of files) {
-    const fileName = file.replace(/\\/g, "/").split("/").pop();
+    const fName = file.split(/[\\/]/g).pop(); //.replace(/\\/g, "/")
+    var cName = fName.slice(0, -3);
+
     /** @type {import("@structures/command.d.ts").BaseCommandStructure} */
     const command = require(file);
-    var commandName = fileName.slice(0, -3);
+
     const { options, prefix, slash, context } = command;
     const category = options?.category || "none";
     const cooldown = options?.cooldown || 0;
@@ -82,11 +69,11 @@ module.exports = async (client, dir) => {
     const userPermissions = options?.userPermissions || [];
 
     try {
-      if (options.category !== "none") {
+      if (category !== "none") {
         if (client.config.categories[category]?.enabled === false) continue;
       }
 
-      if (botPermissions?.length > 0) {
+      if (botPermissions.length > 0) {
         for (let p of botPermissions) {
           if (!Permissions.includes(p)) {
             throw new Error(
@@ -95,7 +82,8 @@ module.exports = async (client, dir) => {
           }
         }
       }
-      if (userPermissions?.length > 0) {
+
+      if (userPermissions.length > 0) {
         for (let p of userPermissions) {
           if (!Permissions.includes(p)) {
             throw new Error(
@@ -105,14 +93,16 @@ module.exports = async (client, dir) => {
         }
       }
 
-      if (prefix && !prefix?.disabled) {
-        if (!prefix.name)
+      if (prefix) {
+        if (!prefix.name) {
           throw new Error(
             t("errors:validations.command.name", { type: colors.yellow("Prefix") }),
           );
-        commandName = prefix.name;
+        }
 
-        if (!prefix?.description || prefix.description?.length <= 0) {
+        cName = prefix.name;
+
+        if (!prefix.description || prefix.description?.length <= 0) {
           prefix.description = slash?.data.description;
         }
 
@@ -132,6 +122,12 @@ module.exports = async (client, dir) => {
           }
         }
 
+        if (!prefix.execute) {
+          throw new Error(
+            t("errors:validations.command.function", { type: colors.yellow("Prefix") }),
+          );
+        }
+
         client.commands.set(prefix.name, {
           category: category,
           cooldown: cooldown,
@@ -143,22 +139,22 @@ module.exports = async (client, dir) => {
           userPermissions: userPermissions,
           name: prefix.name,
           description: prefix.description,
-          aliases: prefix?.aliases,
-          usage: prefix?.usage,
-          disabled: prefix?.disabled,
-          minArgsCount: prefix?.minArgsCount,
-          subcommands: prefix?.subcommands,
+          aliases: prefix.aliases || [],
+          usage: prefix.usage || "",
+          disabled: prefix.disabled || false,
+          minArgsCount: prefix?.minArgsCount || 0,
+          subcommands: prefix?.subcommands || [],
           execute: prefix.execute,
         });
       }
 
-      if (slash && !slash?.disabled) {
+      if (slash) {
         if (!slash.data) {
           throw new Error(
             t("errors:validations.command.data", { type: colors.yellow("Slash") }),
           );
         }
-        commandName = slash.data.name;
+        cName = slash.data.name;
 
         if (!slash.execute) {
           throw new Error(
@@ -198,7 +194,7 @@ module.exports = async (client, dir) => {
             t("errors:validations.command.data", { type: colors.yellow("ContextMenu") }),
           );
         }
-        commandName = context.data?.name;
+        cName = context.data?.name;
 
         if (!context.execute) {
           throw new Error(
@@ -239,16 +235,16 @@ module.exports = async (client, dir) => {
       l++;
       tableData.push([
         `${colors.magenta(i)}`,
-        colors.blue(commandName),
-        colors.green(fileName),
+        colors.blue(cName),
+        colors.green(fName),
         "» 🌱 «",
       ]);
     } catch (error) {
       i++;
       tableData.push([
         `${colors.magenta(i)}`,
-        colors.red(commandName),
-        colors.red(fileName),
+        colors.red(cName),
+        colors.red(fName),
         "» 🔴 «",
       ]);
       errors.push({ file: file, error: error });
@@ -265,5 +261,10 @@ module.exports = async (client, dir) => {
     console.log(colors.yellow(t("errors:loader.command.end")));
   }
 
-  return client.logger.info(t("console:loader.command.end", { l: colors.yellow(l) }));
-};
+  return client.logger.info(
+    __filename,
+    t("default:loader.end", { l: colors.magenta(l), type: colors.blue("command") }),
+  );
+}
+
+module.exports = { loadCommands };

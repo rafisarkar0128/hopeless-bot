@@ -5,6 +5,15 @@ const { getUser } = require("./user.js");
 
 const guildCache = new FixedSizeMap(config.cache_size.guilds);
 
+const GuildSchema = new Schema({
+  _id: String,
+  data: {
+    name: String,
+  },
+  prefix: String,
+  levels: {},
+});
+
 const schema = new Schema({
   _id: String,
   data: {
@@ -17,7 +26,7 @@ const schema = new Schema({
   },
   prefix: {
     type: String,
-    default: config.defaultPrefix,
+    default: config.default_prefix,
   },
   levels: {
     enabled: Boolean,
@@ -126,8 +135,8 @@ const Model = model("guild", schema);
  * @return {Promise<import("mongoose").Document<schema>>}
  */
 async function getSettings(guild) {
-  if (!guild) throw new Error("Guild is undefined");
-  if (!guild.id) throw new Error("Guild Id is undefined");
+  if (!guild) return;
+  if (!guild.id) return;
 
   const cachedData = guildCache.get(guild.id);
   if (cachedData) return cachedData;

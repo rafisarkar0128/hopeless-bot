@@ -14,7 +14,7 @@ const { t } = require("i18next");
  * @example const files = await loadFiles("src/types", [".ts"]);
  * @example const files = await loadFiles("public", [".mp4", ".mkv", ".jpeg"]);
  */
-module.exports = async (path, ext) => {
+async function loadFiles(path, ext) {
   if (typeof path !== "string") {
     throw new TypeError(t("errors:type.string", { param: colors.yellow("path") }));
   }
@@ -31,4 +31,6 @@ module.exports = async (path, ext) => {
   const Files = files.filter((file) => ext.includes(extname(file)));
   await Promise.all(Files.map(deleteCashedFile));
   return Files;
-};
+}
+
+module.exports = { loadFiles };

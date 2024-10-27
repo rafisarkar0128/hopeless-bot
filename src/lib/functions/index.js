@@ -1,9 +1,9 @@
 //Exporting all the functions from single file for better accessibility
 module.exports = {
-  connectdb: require("./conectdb.js"),
-  logVanity: require("./logVanity.js"),
-  loadFiles: require("./loadFiles.js"),
-  loadEvents: require("./loadEvents.js"),
-  loadLocales: require("./loadLocales.js"),
-  loadCommands: require("./loadCommands.js"),
+  connectdb: require("./conectdb.js").connectdb,
+  logVanity: require("./logVanity.js").logVanity,
+  loadFiles: require("./loadFiles.js").loadFiles,
+  loadEvents: require("./loadEvents.js").loadEvents,
+  loadLocales: require("./loadLocales.js").loadLocales,
+  loadCommands: require("./loadCommands.js").loadCommands,
 };

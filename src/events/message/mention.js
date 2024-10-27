@@ -1,4 +1,6 @@
 const { Message, EmbedBuilder } = require("discord.js");
+const { getSettings } = require("@schemas/guild.js");
+const { t } = require("i18next");
 
 /** @type {import("@structures/event").EventStructure} */
 module.exports = {
@@ -9,20 +11,25 @@ module.exports = {
 
     const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
     if (!message.content.match(prefixMention)) return;
+    const settings = await getSettings(message.guild);
+    const prefix = settings.prefix || client.config.default_prefix;
 
     const embed = new EmbedBuilder()
-      .setAuthor({
-        name: message.author.username,
-        iconURL: message.author.displayAvatarURL(),
-      })
-      .setTitle("Did you just mention me?")
+      .setTitle(t("events:messageCreate.prefix_mention.title"))
       .setDescription(
-        `I am ${client.user.username}, a bot developed by **<@${client.config.ownerId}>** to manage this server. For help use **\`/help\`**. For more information visit my website.`,
+        t("events:messageCreate.prefix_mention.description", {
+          username: client.user.username,
+          owner: `<@${client.config.owner_id}>`,
+          prefix: prefix,
+        }),
       )
       .setThumbnail(client.user.displayAvatarURL())
-      .setColor(client.utils.getRandomColor())
+      .setColor(client.config.colors.YellowGreen)
       .setFooter({
-        text: client.config.bot.footer,
+        text: t("default:embed.footer", {
+          username: client.user.username,
+          year: new Date().getFullYear(),
+        }),
       });
 
     return message.reply({

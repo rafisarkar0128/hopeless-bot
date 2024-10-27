@@ -1,6 +1,8 @@
 const { EmbedBuilder, WebhookClient, Colors } = require("discord.js");
 const { inspect } = require("util");
-const webhook = undefined;
+const webhook = new WebhookClient({
+  url: process.env.ERROR_WEBHOOK_URL,
+});
 
 class Logger {
   constructor() {

@@ -1,7 +1,7 @@
 const colors = require("colors");
 const { table } = require("table");
 const { t } = require("i18next");
-const loadFiles = require("./loadFiles.js");
+const { loadFiles } = require("./loadFiles.js");
 const { Events } = require("./validations/events.js");
 
 /**
@@ -9,20 +9,25 @@ const { Events } = require("./validations/events.js");
  * @type {import("./functions").LoadEvents}
  * @example await loadEvents(client, "src/events");
  */
-module.exports = async (client, dir) => {
+async function loadEvents(client, dir) {
   if (typeof client !== "object") {
     throw new TypeError(
       t("errors:missing_parameter", { param: colors.yellow("client") }),
     );
   }
+
   if (typeof dir !== "string") {
     throw new TypeError(t("errors:type.string", { param: colors.yellow("dir") }));
   }
 
-  client.logger.info(t("console:loader.event.start", { d: colors.green(dir) }));
+  client.logger.info(
+    __filename,
+    t("default:loader.start", { type: colors.yellow("event"), dir: colors.green(dir) }),
+  );
 
   const debug = client.config.console.debug.event_table;
   const tableData = [["Index".cyan, "Event".cyan, "File".cyan, "Status".cyan]];
+
   /**
    * @type {import("table").TableUserConfig}
    */
@@ -32,26 +37,7 @@ module.exports = async (client, dir) => {
       width: 26,
     },
     columns: [{ width: 5 }, {}, {}, { width: 6 }],
-    border: {
-      topBody: `─`.yellow,
-      topJoin: `┬`.yellow,
-      topLeft: `┌`.yellow,
-      topRight: `┐`.yellow,
-
-      bottomBody: `─`.yellow,
-      bottomJoin: `┴`.yellow,
-      bottomLeft: `└`.yellow,
-      bottomRight: `┘`.yellow,
-
-      bodyLeft: `│`.yellow,
-      bodyRight: `│`.yellow,
-      bodyJoin: `│`.yellow,
-
-      joinBody: `─`.yellow,
-      joinLeft: `├`.yellow,
-      joinRight: `┤`.yellow,
-      joinJoin: `┼`.yellow,
-    },
+    border: client.utils.getTableBorder("yellow"),
     drawHorizontalLine: (lineIndex, rowCount) => {
       return lineIndex === 0 || lineIndex === 1 || lineIndex === rowCount;
     },
@@ -67,7 +53,7 @@ module.exports = async (client, dir) => {
   let i = 0,
     l = 0;
   for (const file of files) {
-    const fileName = file.replace(/\\/g, "/").split("/").pop();
+    const fileName = file.split(/[\\/]/g).pop();
 
     /**
      * @type {import("@structures/event").EventStructure}
@@ -77,20 +63,19 @@ module.exports = async (client, dir) => {
       if (!Events.includes(event.name) || !event.name) {
         throw new Error(t("errors:validations.event.name"));
       }
-      client.events.set(fileName, event);
 
+      client.events.set(fileName, event);
       const execute = (...args) => event.execute(client, ...args);
       const target = event.rest
         ? client.rest
         : event.ws
         ? client.ws
-        : event.riffy
-        ? client.riffy
         : event.player
         ? client.lavalink
         : event.node
         ? client.lavalink.nodeManager
         : client;
+
       target[event.once ? "once" : "on"](event.name, execute);
 
       i++;
@@ -123,5 +108,10 @@ module.exports = async (client, dir) => {
     console.log(colors.yellow(t("errors:loader.event.end")));
   }
 
-  return client.logger.info(t("console:loader.event.end", { l: colors.yellow(l) }));
-};
+  client.logger.info(
+    __filename,
+    t("default:loader.end", { l: colors.magenta(l), type: colors.yellow("event") }),
+  );
+}
+
+module.exports = { loadEvents };

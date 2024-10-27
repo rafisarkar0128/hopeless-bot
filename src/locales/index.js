@@ -1,8 +1,8 @@
 module.exports = {
   "en-US": {
     default: require("./en-US/default.json"),
+    events: require("./en-US/events.json"),
     commands: require("./en-US/commands.json"),
-    console: require("./en-US/console.json"),
     errors: require("./en-US/errors.json"),
     handlers: require("./en-US/handlers.json"),
   },

@@ -18,13 +18,42 @@ module.exports = {
     userPermissions: ["SendMessages", "ModerateMembers"],
   },
   prefix: {
-    name: "",
-    description: "",
-    aliases: ["clear", "delete", "del", "clean"],
+    name: "purge",
+    description: "🧹 Delete bulk amount of messages",
+    aliases: ["clear", "delete", "del", "clean", "remove"],
     usage: "<suncommand> <options>",
-    disabled: true,
+    disabled: false,
     minArgsCount: 2,
-    subcommands: [],
+    subcommands: [
+      {
+        name: "any",
+        description: "Delete messages of any type",
+      },
+      {
+        name: "bots",
+        description: "Delete messages that were sent by bots",
+      },
+      {
+        name: "user",
+        description: "Delete messages that were sent by a user",
+      },
+      {
+        name: "after",
+        description: "Delete messages that were sent after a specific message (ID/Link)",
+      },
+      {
+        name: "embeds",
+        description: "Delete messages which contain embeds",
+      },
+      {
+        name: "files",
+        description: "Delete messages which contain files",
+      },
+      {
+        name: "commands",
+        description: "Delete messages which are Slash Commands",
+      },
+    ],
     execute: (client, message, args, data) => {},
   },
   slash: {

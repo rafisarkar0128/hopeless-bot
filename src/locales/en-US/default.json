@@ -1,7 +1,24 @@
 {
+  "vanity": {
+    "welcome": "Welcome to {{name}} {{lang}} project",
+    "node": "Running on Node.JS version {{v}}",
+    "version": "Package version {{v}}",
+    "message": "Coded by {{author}}"
+  },
+
+  "database": {
+    "connected": "{{db}} database connected successfully"
+  },
+
+  "loader": {
+    "start": "Started to load {{type}} modules from {{dir}}",
+    "end": "Successfully loaded {{l}} {{type}} modules"
+  },
+
   "bot": {
     "description": "A _Multipurpose_ Discord App for your every need with **Premium Services**. For more info head to {website}"
   },
+
   "embed": {
     "footer": "Powered by {{username}} | Copyright ©{{year}}"
   }

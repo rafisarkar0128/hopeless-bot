@@ -10,7 +10,7 @@ class Utils {
   }
 
   /** A function to send error to a discord channel
-   * @type {import("@types/utils").SendError}
+   * @type {import("../types/utils").SendError}
    * @example client.utils.sendError(error, type, data);
    */
   async sendError(error, type, data) {
@@ -57,7 +57,7 @@ class Utils {
   }
 
   /** Checks if a string contains a URL
-   * @type {import("@types/utils").ContainsLink}
+   * @type {import("../types/utils").ContainsLink}
    * @example client.utils.containsLink(text);
    */
   containsLink(text) {
@@ -67,7 +67,7 @@ class Utils {
   }
 
   /** Checks if a string is a valid discord invite
-   * @type {import("@types/utils").ContainsDiscordInvite}
+   * @type {import("../types/utils").ContainsDiscordInvite}
    * @example client.utils.containsDiscordInvite(text);
    */
   containsDiscordInvite(text) {
@@ -76,8 +76,23 @@ class Utils {
     );
   }
 
+  /**
+   * A funtion to get table border in provided color
+   * @type {import("../types/utils.d.ts").GetTableBorder}
+   */
+  getTableBorder(color) {
+    const border = this.client.config.console.default_table_border;
+    var newBorder = new Object();
+
+    Object.keys(border).forEach((key) => {
+      newBorder[key] = colors[color](border[key]);
+    });
+
+    return newBorder;
+  }
+
   /** Returns a random number below a max
-   * @type {import("@types/utils").GetRandomInt}
+   * @type {import("../types/utils").GetRandomInt}
    * @example client.utils.getRandomInt(max);
    */
   getRandomInt(max) {
@@ -85,17 +100,20 @@ class Utils {
   }
 
   /** Return a random color from colors.json
-   * @type {import("@types/utils").GetRandomColor}
+   * @type {import("../types/utils").GetRandomColor}
    * @example client.utils.getRandomColor();
    */
   getRandomColor() {
-    return this.client.colors.array[
-      Math.floor(Math.random() * this.client.colors.array.length)
-    ];
+    let colorsArray = new Array();
+    Object.values(this.client.config.colors).forEach((code) => {
+      colorsArray.push(code);
+    });
+
+    return colorsArray[Math.floor(Math.random() * colorsArray.length)];
   }
 
   /** Checks if a string is a valid Hex color
-   * @type {import("@types/utils").IsHex}
+   * @type {import("../types/utils").IsHex}
    * @example client.utils.isHex(text)
    */
   isHex(text) {
@@ -103,7 +121,7 @@ class Utils {
   }
 
   /** Checks if a string is a valid Hex color
-   * @type {import("@types/utils").IsValidColor}
+   * @type {import("../types/utils").IsValidColor}
    * @example client.utils.isValidColor(text);
    */
   isValidColor(text) {
@@ -113,7 +131,7 @@ class Utils {
   }
 
   /** Returns hour difference between two dates
-   * @type {import("@types/utils").DiffHours}
+   * @type {import("../types/utils").DiffHours}
    * @example client.utils.dissHours(Date2, Date1);
    */
   diffHours(dt2, dt1) {
@@ -123,7 +141,7 @@ class Utils {
   }
 
   /** Returns remaining time in days, hours, minutes and seconds
-   * @type {import("@types/utils").Timeformat}
+   * @type {import("../types/utils").Timeformat}
    * @example client.utils.timeFormat(timeInMillis);
    */
   timeFormat(timeInMillis) {
@@ -140,7 +158,7 @@ class Utils {
   }
 
   /** Converts duration to milliseconds
-   * @type {import("@types/utils").DurationToMillis}
+   * @type {import("../types/utils").DurationToMillis}
    * @example client.utils.durationToMillis(duration);
    */
   durationToMillis(duration) {
@@ -153,7 +171,7 @@ class Utils {
   }
 
   /** Returns time remaining until provided date
-   * @type {import("@types/utils").GetRemainingTime}
+   * @type {import("../types/utils").GetRemainingTime}
    * @example client.utils.getRemainingTime(timeUntil);
    */
   getRemainingTime(timeUntil) {
@@ -163,12 +181,12 @@ class Utils {
   }
 
   /** Takes a single or array of permissions and returns a formated string
-   * @type {import("@types/utils").ParsePermissions}
+   * @type {import("../types/utils").ParsePermissions}
    * @example client.utils.parsePermissions(permissions)
    */
-  parsePermissions(permissions) {
-    const permissionWord = ` permission${permissions.length > 1 ? "s" : ""}`;
-    return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
+  parsePermissions(p) {
+    const word = ` permission${p.length > 1 ? "s" : ""}`;
+    return `${p.map((p) => `**\`${p}\`**`).join(", ")} ${word}`;
   }
 }
 

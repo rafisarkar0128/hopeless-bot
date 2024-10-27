@@ -19,7 +19,7 @@ module.exports = {
   prefix: {
     name: "resume",
     description: "resume or start the current music player",
-    aliases: ["play", "start"],
+    aliases: ["start"],
     usage: "",
     disabled: false,
     minArgsCount: 0,

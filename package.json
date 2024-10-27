@@ -11,7 +11,7 @@
     "@structures": "src/structures/",
     "@handlers": "src/handlers/",
     "@helpers": "src/helpers/",
-    "@schemas": "src/database/schemas/",
+    "@schemas": "src/schemas/",
     "@commands": "src/commands/",
     "@assets": "src/assets/",
     "@events": "src/events/"

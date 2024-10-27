@@ -22,3 +22,25 @@ export type DiffHours = (dt2: Date, dt1: Date) => Date;
 export type Timeformat = (timeInSeconds: number) => string;
 export type DurationToMillis = (duration: string) => number;
 export type ParsePermissions = (permissions: PermissionResolvable[]) => string;
+
+export type Color =
+  | "black"
+  | "red"
+  | "green"
+  | "yellow"
+  | "blue"
+  | "magenta"
+  | "cyan"
+  | "white"
+  | "gray"
+  | "grey"
+  | "bgBlack"
+  | "bgRed"
+  | "bgGreen"
+  | "bgYellow"
+  | "bgBlue"
+  | "bgMagenta"
+  | "bgCyan"
+  | "bgWhite";
+
+export type GetTableBorder = (color: Color) => object;
