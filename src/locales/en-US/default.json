@@ -11,8 +11,14 @@
   },
 
   "loader": {
-    "start": "Started to load {{type}} modules from {{dir}}",
-    "end": "Successfully loaded {{l}} {{type}} modules"
+    "event": {
+      "start": "Started to load event modules from {{dir}}",
+      "end": "Successfully loaded {{l}} event modules"
+    },
+    "command": {
+      "start": "Started to load command modules from {{dir}}",
+      "end": "Successfully loaded {{l}} command modules"
+    }
   },
 
   "bot": {

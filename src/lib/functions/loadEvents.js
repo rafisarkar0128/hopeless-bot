@@ -22,7 +22,7 @@ async function loadEvents(client, dir) {
 
   client.logger.info(
     __filename,
-    t("default:loader.start", { type: colors.yellow("event"), dir: colors.green(dir) }),
+    t("default:loader.event.start", { dir: colors.green(dir) }),
   );
 
   const debug = client.config.console.debug.event_table;
@@ -108,10 +108,7 @@ async function loadEvents(client, dir) {
     console.log(colors.yellow(t("errors:loader.event.end")));
   }
 
-  client.logger.info(
-    __filename,
-    t("default:loader.end", { l: colors.magenta(l), type: colors.yellow("event") }),
-  );
+  client.logger.info(__filename, t("default:loader.event.end", { l: colors.yellow(l) }));
 }
 
 module.exports = { loadEvents };

@@ -8,8 +8,8 @@ module.exports = {
   },
   "pt-BR": {
     default: require("./pt-BR/default.json"),
+    events: require("./pt-BR/events.json"),
     commands: require("./pt-BR/commands.json"),
-    console: require("./pt-BR/console.json"),
     errors: require("./pt-BR/errors.json"),
     handlers: require("./pt-BR/handlers.json"),
   },

@@ -22,7 +22,7 @@ async function loadCommands(client, dir) {
 
   client.logger.info(
     __filename,
-    t("default:loader.start", { type: colors.blue("command"), dir: colors.green(dir) }),
+    t("default:loader.command.start", { dir: colors.green(dir) }),
   );
 
   const debug = client.config.console.debug.event_table;
@@ -263,7 +263,7 @@ async function loadCommands(client, dir) {
 
   return client.logger.info(
     __filename,
-    t("default:loader.end", { l: colors.magenta(l), type: colors.blue("command") }),
+    t("default:loader.command.end", { l: colors.yellow(l) }),
   );
 }
 

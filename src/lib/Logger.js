@@ -1,47 +1,37 @@
 const colors = require("colors");
 const { DateTime } = require("luxon");
+const winston = require("winston");
 
 class Logger {
   /** @param {import("@lib/DiscordBot").DiscordBot} client */
   constructor(client) {
     this.client = client;
-    this.dt = colors.white(
+
+    // date time string
+    this.dt = colors.gray(
       DateTime.now().toFormat(this.client.config.console.time_format),
     );
-  }
 
-  /**
-   * A function to get the file name
-   * @returns {string}
-   */
-  //getLogOrigin() {
-  //  let filename;
-  //
-  //  let _pst = Error.prepareStackTrace;
-  //  Error.prepareStackTrace = function (err, stack) {
-  //    return stack;
-  //  };
-  //
-  //  try {
-  //    let error = new Error();
-  //    let callerfile;
-  //    let currentfile;
-  //
-  //    currentfile = error.stack.shift().getFileName();
-  //
-  //    while (error.stack.length) {
-  //      callerfile = error.stack.shift().getFileName();
-  //
-  //      if (currentfile !== callerfile) {
-  //        filename = callerfile;
-  //        break;
-  //      }
-  //    }
-  //  } catch (err) {}
-  //
-  //  //return filename;
-  //  return filename;
-  //}
+    // logger to save logs
+    this.logger = winston.createLogger({
+      level: "silly",
+      format: winston.format.combine(
+        winston.format.uncolorize(),
+        winston.format.timestamp({
+          format: "DD/MM/YYYY hh:mm:ss A Z",
+        }),
+        winston.format.json({
+          space: 2,
+        }),
+      ),
+      transports: [
+        new winston.transports.File({
+          filename: DateTime.now().toFormat("dd-MM-yyyy") + ".log",
+          dirname: process.cwd() + "/" + "logs",
+        }),
+      ],
+    });
+  }
 
   /**
    * @param {string} file
@@ -59,7 +49,7 @@ class Logger {
       `[${colors.cyan("INFO")}] ` +
       content;
 
-    // `${this.dt} [${colors.red(this.origin)}] [${colors.cyan("INFO")}] ${content}`,
+    this.logger.log("info", content);
     console.log(output);
   }
 

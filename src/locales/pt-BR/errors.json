@@ -7,8 +7,10 @@
     "boolean": "O valor de {{param}} deve ser um booleano.",
     "other": "O valor de {{param}} deve ser um {{type}}."
   },
+
   "missing_parameter": "Não foi possível encontrar o parâmetro {{param}}.",
   "missing_property": "Não foi possível encontrar a propriedade {{property}}.",
+
   "validations": {
     "event": { "name": "O nome do evento está ausente ou incorreto." },
     "command": {
@@ -19,6 +21,7 @@
       "permission": "{{p}} não é uma permissão válida."
     }
   },
+
   "loader": {
     "event": {
       "start": "[AntiCrash] | [Logs de Erro do Carregador de Eventos] | [Início] : ===============",
