@@ -7,7 +7,8 @@ module.exports = {
     handlers: require("./en-US/handlers.json"),
   },
   "pt-BR": {
-    //commands: require("./en-US/commands.json"),
+    default: require("./pt-BR/default.json"),
+    commands: require("./pt-BR/commands.json"),
     console: require("./pt-BR/console.json"),
     errors: require("./pt-BR/errors.json"),
     handlers: require("./pt-BR/handlers.json"),
