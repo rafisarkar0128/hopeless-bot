@@ -81,14 +81,13 @@ class Utils {
    * @type {import("../types/utils.d.ts").GetTableBorder}
    */
   getTableBorder(color) {
-    const border = this.client.config.console.default_table_border;
-    var newBorder = new Object();
+    var border = new Object();
 
-    Object.keys(border).forEach((key) => {
-      newBorder[key] = colors[color](border[key]);
+    Object.keys(this.client.config.table.border).forEach((key) => {
+      border[key] = colors[color](this.client.config.table.border[key]);
     });
 
-    return newBorder;
+    return border;
   }
 
   /** Returns a random number below a max

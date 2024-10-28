@@ -70,7 +70,7 @@ export interface SlashCommandStructure {
   minArgsCount?: number;
   subcommands: SubCommand[];
   execute: (client: DiscordBot, message: Message, args: string[], data: object) => {};
-  data: APIApplicationCommand | ContextMenuCommandBuilder;
+  data: APIApplicationCommand;
   ephemeral?: boolean;
   global?: boolean;
   disabled?: boolean;

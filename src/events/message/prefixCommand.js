@@ -14,7 +14,7 @@ module.exports = {
   execute: async (client, message) => {
     const { config, commands, aliases } = client;
     const { timeFormat, parsePermissions } = client.utils;
-    if (!client.config.commands.prefix.enabled) return;
+    if (!client.config.command.prefix.enabled) return;
 
     const { author, member, guild, channel, content } = message;
     if (author.bot) return;

@@ -15,7 +15,6 @@ class DiscordBot extends Client {
     this.config = require(`@config/config.js`);
     /** @deprecated will be removed in future updates */
     this.colors = require(`@config/colors.json`);
-    this.database = require("@src/database/mongoose.js");
     this.pkg = require("@root/package.json");
 
     // all global functions
@@ -28,9 +27,6 @@ class DiscordBot extends Client {
     // client collections with types
     /** @type {Collection<string, import("@structures/event.d.ts").EventStructure>} */
     this.events = new Collection();
-
-    /** @type {import("../types/types.d.ts").NewCommand[]} */
-    this.Commands = new Array();
 
     /** @type {Collection<string, import("@structures/command.d.ts").PrefixCommandStructure>} */
     this.commands = new Collection();

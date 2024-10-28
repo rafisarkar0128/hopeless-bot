@@ -5,7 +5,7 @@ module.exports = {
   name: "ready",
   once: true,
   execute: async (client) => {
-    client.logger.info(`${colors.green(client.user.tag)} is online`);
+    client.logger.info(__filename, `${colors.green(client.user.tag)} is online`);
 
     // initializing music player
     client.lavalink.init(client.user);

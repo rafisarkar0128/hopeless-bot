@@ -5,7 +5,6 @@ const colors = require("colors");
  * @returns {Promise<import("@types/commands").OldCommand[]>}
  */
 async function fetchCommands(client) {
-  const debug = client.config.console.debug.sync;
   const ApplicationCommands = new Array();
   let i = 0,
     g = 0;
@@ -27,21 +26,18 @@ async function fetchCommands(client) {
     });
   } catch (error) {
     console.log(
-      colors.yellow("[AntiCrash] | [Fetch_Error_Logs] | [Start]  : ==============="),
+      colors.yellow("[AntiCrash] | [Fetch Error Logs] | [Start]  : ==============="),
     );
     console.log(colors.red(error));
     console.log(
-      colors.yellow("[AntiCrash] | [Fetch_Error_Logs] | [End] : ==============="),
+      colors.yellow("[AntiCrash] | [Fetch Error Logs] | [End] : ==============="),
     );
   }
 
-  if (debug) {
-    console.log(
-      `[${colors.cyan("INFO")}] ${colors.magenta("fetched")} ${colors.blue(
-        `${colors.yellow(i + g)} application command(s)`,
-      )}`,
-    );
-  }
+  client.logger.info(
+    __filename,
+    colors.magenta("fetched") + ` ${colors.yellow(i + g)} application command(s)`,
+  );
 
   return ApplicationCommands;
 }

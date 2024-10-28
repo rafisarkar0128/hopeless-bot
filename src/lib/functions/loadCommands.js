@@ -25,7 +25,6 @@ async function loadCommands(client, dir) {
     t("default:loader.command.start", { dir: colors.green(dir) }),
   );
 
-  const debug = client.config.console.debug.event_table;
   const tableData = [["Index".cyan, "Command".cyan, "File".cyan, "Status".cyan]];
   /**
    * @type {import("table").TableUserConfig}
@@ -52,8 +51,8 @@ async function loadCommands(client, dir) {
   let i = 0,
     l = 0;
   for (const file of files) {
-    const fName = file.split(/[\\/]/g).pop(); //.replace(/\\/g, "/")
-    var cName = fName.slice(0, -3);
+    const filename = file.split(/[\\/]/g).pop();
+    var cname = filename.slice(0, -3);
 
     /** @type {import("@structures/command.d.ts").BaseCommandStructure} */
     const command = require(file);
@@ -100,7 +99,7 @@ async function loadCommands(client, dir) {
           );
         }
 
-        cName = prefix.name;
+        cname = prefix.name;
 
         if (!prefix.description || prefix.description?.length <= 0) {
           prefix.description = slash?.data.description;
@@ -154,7 +153,7 @@ async function loadCommands(client, dir) {
             t("errors:validations.command.data", { type: colors.yellow("Slash") }),
           );
         }
-        cName = slash.data.name;
+        cname = slash.data.name;
 
         if (!slash.execute) {
           throw new Error(
@@ -171,18 +170,12 @@ async function loadCommands(client, dir) {
           voiceChannelOnly: voiceChannelOnly,
           botPermissions: botPermissions,
           userPermissions: userPermissions,
-          data: slash.data,
+          data: slash.data.toJSON(),
           ephemeral: slash.ephemeral,
           usage: slash.usage,
           global: slash.global,
           disabled: slash.disabled,
           execute: slash.execute,
-        });
-
-        client.Commands.push({
-          data: slash.data.toJSON(),
-          global: slash.global,
-          disabled: slash.disabled,
         });
       }
 
@@ -194,7 +187,7 @@ async function loadCommands(client, dir) {
             t("errors:validations.command.data", { type: colors.yellow("ContextMenu") }),
           );
         }
-        cName = context.data?.name;
+        cname = context.data?.name;
 
         if (!context.execute) {
           throw new Error(
@@ -213,17 +206,11 @@ async function loadCommands(client, dir) {
           voiceChannelOnly: voiceChannelOnly,
           botPermissions: botPermissions,
           userPermissions: userPermissions,
-          data: context.data,
+          data: context.data.toJSON(),
           ephemeral: context.ephemeral,
           global: context.global,
           disabled: context.disabled,
           execute: context.execute,
-        });
-
-        client.Commands.push({
-          data: context.data.toJSON(),
-          global: context.global,
-          disabled: context.disabled,
         });
       }
 
@@ -235,23 +222,23 @@ async function loadCommands(client, dir) {
       l++;
       tableData.push([
         `${colors.magenta(i)}`,
-        colors.blue(cName),
-        colors.green(fName),
+        colors.blue(cname),
+        colors.green(filename),
         "» 🌱 «",
       ]);
     } catch (error) {
       i++;
       tableData.push([
         `${colors.magenta(i)}`,
-        colors.red(cName),
-        colors.red(fName),
+        colors.red(cname),
+        colors.red(filename),
         "» 🔴 «",
       ]);
       errors.push({ file: file, error: error });
     }
   }
 
-  if (debug) console.log(table(tableData, tableConfig));
+  if (client.config.table.command) console.log(table(tableData, tableConfig));
 
   if (errors.length > 0) {
     console.log(colors.yellow(t("errors:loader.command.start")));
@@ -261,7 +248,7 @@ async function loadCommands(client, dir) {
     console.log(colors.yellow(t("errors:loader.command.end")));
   }
 
-  return client.logger.info(
+  client.logger.info(
     __filename,
     t("default:loader.command.end", { l: colors.yellow(l) }),
   );

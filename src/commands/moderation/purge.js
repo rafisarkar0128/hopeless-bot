@@ -22,7 +22,7 @@ module.exports = {
     description: "🧹 Delete bulk amount of messages",
     aliases: ["clear", "delete", "del", "clean", "remove"],
     usage: "<suncommand> <options>",
-    disabled: false,
+    disabled: true,
     minArgsCount: 2,
     subcommands: [
       {

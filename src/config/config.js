@@ -1,6 +1,7 @@
 module.exports = {
-  // Locale settings
+  // Basic settings
   default_locale: process.env.DEFAULT_LOCALE,
+  time_format: process.env.TIME_FORMAT,
 
   // Bot secrets
   bot_token: process.env.DISCORD_CLIENT_TOKEN,
@@ -28,7 +29,7 @@ module.exports = {
   allowedInvite: false,
 
   // Command settings. Set true to enable & false to disable
-  commands: {
+  command: {
     prefix: {
       enabled: true,
     },
@@ -41,38 +42,31 @@ module.exports = {
       global: true,
     },
     buttons: {
-      enabled: false,
+      enabled: true,
     },
     modals: {
-      enabled: false,
+      enabled: true,
     },
   },
 
-  console: {
-    time_format: process.env.TIME_FORMAT,
+  table: {
     // Set true to enable & false to disable
-    debug: {
-      event_table: true,
-      command_table: true,
-      sync: true,
-      sync_table: true,
-    },
+    sync: true,
+    event: false,
+    command: false,
     // Table border styles
-    default_table_border: {
+    border: {
       topBody: `─`,
       topJoin: `┬`,
       topLeft: `┌`,
       topRight: `┐`,
-
       bottomBody: `─`,
       bottomJoin: `┴`,
       bottomLeft: `└`,
       bottomRight: `┘`,
-
       bodyLeft: `│`,
       bodyRight: `│`,
       bodyJoin: `│`,
-
       joinBody: `─`,
       joinLeft: `├`,
       joinRight: `┤`,

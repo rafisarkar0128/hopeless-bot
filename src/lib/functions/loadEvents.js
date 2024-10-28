@@ -25,7 +25,6 @@ async function loadEvents(client, dir) {
     t("default:loader.event.start", { dir: colors.green(dir) }),
   );
 
-  const debug = client.config.console.debug.event_table;
   const tableData = [["Index".cyan, "Event".cyan, "File".cyan, "Status".cyan]];
 
   /**
@@ -53,7 +52,7 @@ async function loadEvents(client, dir) {
   let i = 0,
     l = 0;
   for (const file of files) {
-    const fileName = file.split(/[\\/]/g).pop();
+    const filename = file.split(/[\\/]/g).pop();
 
     /**
      * @type {import("@structures/event").EventStructure}
@@ -64,7 +63,7 @@ async function loadEvents(client, dir) {
         throw new Error(t("errors:validations.event.name"));
       }
 
-      client.events.set(fileName, event);
+      client.events.set(filename, event);
       const execute = (...args) => event.execute(client, ...args);
       const target = event.rest
         ? client.rest
@@ -83,7 +82,7 @@ async function loadEvents(client, dir) {
       tableData.push([
         `${colors.magenta(i)}`,
         colors.yellow(event.name),
-        colors.green(fileName),
+        colors.green(filename),
         "» 🌱 «",
       ]);
     } catch (error) {
@@ -91,14 +90,14 @@ async function loadEvents(client, dir) {
       tableData.push([
         `${colors.magenta(i)}`,
         colors.red(event.name),
-        colors.red(fileName),
+        colors.red(filename),
         "» 🔴 «",
       ]);
       errors.push({ file: file, error: error });
     }
   }
 
-  if (debug) console.log(table(tableData, tableConfig));
+  if (client.config.table.event) console.log(table(tableData, tableConfig));
 
   if (errors.length > 0) {
     console.log(colors.yellow(t("errors:loader.event.start")));

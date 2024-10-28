@@ -9,7 +9,7 @@ class Logger {
 
     // date time string
     this.dt = colors.gray(
-      DateTime.now().toFormat(this.client.config.console.time_format),
+      DateTime.now().toFormat(this.client.config.time_format ?? "dd/MM/yyyy h:mm:ss a"),
     );
 
     // logger to save logs
@@ -43,7 +43,9 @@ class Logger {
     const output =
       this.dt +
       ` [` +
-      `${filename.length > 25 ? filename.substring(0, 25) + "..." : filename}` +
+      colors.yellow(
+        `${filename.length > 20 ? filename.substring(0, 17) + "..." : filename}`,
+      ) +
       " ".repeat(20 - (filename.length > 20 ? 20 : filename.length)) +
       `] ` +
       `[${colors.cyan("INFO")}] ` +
