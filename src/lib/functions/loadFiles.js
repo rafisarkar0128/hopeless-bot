@@ -27,7 +27,7 @@ async function loadFiles(path, ext) {
     delete require.cache[filePath];
   }
 
-  const files = await glob(join(process.cwd(), path, "*/**"));
+  const files = await glob(join(process.cwd(), path, "*/**").replace(/\\/g, "/"));
   const Files = files.filter((file) => ext.includes(extname(file)));
   await Promise.all(Files.map(deleteCashedFile));
   return Files;
