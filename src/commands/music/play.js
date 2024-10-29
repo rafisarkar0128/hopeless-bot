@@ -1,12 +1,8 @@
 const {
   SlashCommandBuilder,
-  EmbedBuilder,
   ApplicationIntegrationType,
   InteractionContextType,
-  ChatInputCommandInteraction,
-  Message,
 } = require("discord.js");
-const autocompleteMap = new Map();
 
 /** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
@@ -22,14 +18,68 @@ module.exports = {
   },
   prefix: {
     name: "play",
-    description: "",
+    description: "play a song from youtube music",
     aliases: ["pl", "add"],
     usage: "<song|url>",
-    disabled: true,
+    disabled: false,
     minArgsCount: 0,
     subcommands: [],
     execute: async (client, message, args) => {
+      var src = "ytm";
+      if (client.config.plugins.music.sources.includes(args[0])) {
+        src = args.shift();
+      }
+
       const query = args.join(" ");
+      const vc = message.member?.voice?.channel;
+
+      const player =
+        client.lavalink.getPlayer(message.guildId) ||
+        client.lavalink.createPlayer({
+          guildId: message.guildId,
+          voiceChannelId: vc.id,
+          textChannelId: message.channelId,
+          selfDeaf: true,
+          selfMute: false,
+          volume: 50,
+          instaUpdateFiltersFix: true,
+          applyVolumeAsFilter: false,
+        });
+
+      if (!player.connected) await player.connect();
+
+      if (player.voiceChannelId !== vc.id) {
+        return interaction.followUp({
+          ephemeral: true,
+          content: "You need to be in my Voice Channel",
+        });
+      }
+
+      const response = await player.search({ query: query, source: src }, message.author);
+
+      if (!response || !response.tracks?.length)
+        return message.reply({ content: `No Tracks found` });
+
+      await player.queue.add(
+        response.loadType === "playlist" ? response.tracks : response.tracks[0],
+      );
+
+      await message.reply({
+        content:
+          response.loadType === "playlist"
+            ? `✅ Added [${response.tracks.length}] Tracks${
+                response.playlist?.title
+                  ? ` - from the ${response.pluginInfo.type || "Playlist"} ${
+                      response.playlist.uri
+                        ? `[\`${response.playlist.title}\`](<${response.playlist.uri}>)`
+                        : `\`${response.playlist.title}\``
+                    }`
+                  : ""
+              } at \`#${player.queue.tracks.length - response.tracks.length}\``
+            : `✅ Added [\`${response.tracks[0].info.title}\`](<${response.tracks[0].info.uri}>) by \`${response.tracks[0].info.author}\` at \`#${player.queue.tracks.length}\``,
+      });
+
+      if (!player.playing) await player.play();
     },
   },
   slash: {
@@ -37,10 +87,12 @@ module.exports = {
       .setName("play")
       .setDescription("play a song from youtube music")
       .addStringOption((option) =>
+        option.setName("query").setDescription("Song name or url").setRequired(true),
+      )
+      .addStringOption((option) =>
         option
           .setName("source")
           .setDescription("Select a source")
-          .setRequired(true)
           .addChoices([
             {
               name: "Youtube",
@@ -56,9 +108,6 @@ module.exports = {
             },
           ]),
       )
-      .addStringOption((option) =>
-        option.setName("query").setDescription("Song name or url").setRequired(true),
-      )
       .setContexts(InteractionContextType.Guild)
       .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
     usage: "[query]: <song|url>",
@@ -69,28 +118,8 @@ module.exports = {
       await interaction.deferReply();
 
       const vc = interaction.member?.voice?.channel;
-
-      const src = interaction.options.getString("source");
+      const src = interaction.options.getString("source", true) ?? "ytm";
       const query = interaction.options.getString("query");
-
-      if (query === "nothing_found")
-        return interaction.followUp({ content: `No Tracks found`, ephemeral: true });
-      if (query === "join_vc")
-        return interaction.followUp({
-          content: `You joined a VC, but redo the Command please.`,
-          ephemeral: true,
-        });
-
-      const fromAutoComplete =
-        Number(query.replace("autocomplete_", "")) >= 0 &&
-        autocompleteMap.has(`${interaction.user.id}_res`) &&
-        autocompleteMap.get(`${interaction.user.id}_res`);
-      if (autocompleteMap.has(`${interaction.user.id}_res`)) {
-        if (autocompleteMap.has(`${interaction.user.id}_timeout`))
-          clearTimeout(autocompleteMap.get(`${interaction.user.id}_timeout`));
-        autocompleteMap.delete(`${interaction.user.id}_res`);
-        autocompleteMap.delete(`${interaction.user.id}_timeout`);
-      }
 
       const player =
         client.lavalink.getPlayer(interaction.guildId) ||
@@ -100,11 +129,9 @@ module.exports = {
           textChannelId: interaction.channelId,
           selfDeaf: true,
           selfMute: false,
-          volume: 50, // default volume
-          instaUpdateFiltersFix: true, // optional
-          applyVolumeAsFilter: false, // if true player.setVolume(54) -> player.filters.setVolume(0.54)
-          // node: "YOUR_NODE_ID",
-          // vcRegion: (interaction.member as GuildMember)?.voice.channel?.rtcRegion!
+          volume: 50,
+          instaUpdateFiltersFix: true,
+          applyVolumeAsFilter: false,
         });
 
       if (!player.connected) await player.connect();
@@ -116,19 +143,16 @@ module.exports = {
         });
       }
 
-      const response =
-        fromAutoComplete ||
-        (await player.search({ query: query, source: src }, interaction.user));
+      const response = await player.search(
+        { query: query, source: src },
+        interaction.user,
+      );
 
       if (!response || !response.tracks?.length)
         return interaction.followUp({ content: `No Tracks found`, ephemeral: true });
 
       await player.queue.add(
-        response.loadType === "playlist"
-          ? response.tracks
-          : response.tracks[
-              fromAutoComplete ? Number(query.replace("autocomplete_", "")) : 0
-            ],
+        response.loadType === "playlist" ? response.tracks : response.tracks[0],
       );
 
       await interaction.followUp({

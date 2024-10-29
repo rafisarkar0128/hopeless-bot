@@ -22,7 +22,8 @@ module.exports = {
     enabled: true,
     idle_time: 180000,
     max_search_results: 10,
-    search_engine: "ytmsearch",
+    default_source: "ytm",
+    sources: ["ytmsearch", "ytm", "ytsearch", "yt", "spotifysearch", "spotify"],
     lavalink_nodes: [
       // locally hosted nodes
       {

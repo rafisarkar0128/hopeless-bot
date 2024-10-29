@@ -1,13 +1,12 @@
 const {
   EmbedBuilder,
-  AttachmentBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   GuildMember,
-  PermissionFlagsBits,
+  Message,
+  Embed,
 } = require("discord.js");
-const { Classic } = require("musicard");
 
 //import { trackStart } from '../../utils/SetupSystem';
 
@@ -33,64 +32,13 @@ module.exports = {
     const channel = client.channels.cache.get(player.textChannelId);
     if (!channel) return;
 
-    const embed = new EmbedBuilder()
-      .setAuthor({
-        name: "Now Playing",
-        iconURL:
-          client.config.icons[track.info.sourceName] ??
-          client.user?.displayAvatarURL({ extension: "png" }),
-      })
-      .setColor(client.config.colors.Good)
-      .setDescription(`**[${track.info.title}](${track.info.uri})**`)
-      .setFooter({
-        text: `Requested by ${track.requester.username}`,
-        iconURL: track.requester.avatarURL,
-      })
-      .setThumbnail(track.info.artworkUrl)
-      .addFields(
-        {
-          name: "Duration",
-          value: track.info.isStream
-            ? "LIVE"
-            : client.lavalink.formatTime(track.info.duration),
-          inline: true,
-        },
-        {
-          name: "Author",
-          value: track.info.author,
-          inline: true,
-        },
-      )
-      .setTimestamp();
-    await channel.send({
+    const embed = createEmbed(client, player, track);
+    const message = await channel.send({
       embeds: [embed],
-    });
-
-    const musicard = await Classic({
-      thumbnailImage: track.info.artworkUrl,
-      backgroundImage:
-        "https://cdn.discordapp.com/banners/1294407042588479542/5aacdea8e433658cfe3913d6370dc237.webp?size=4096",
-      backgroundColor: client.config.colors.Normal, //"#070707",
-      progress: 0,
-      progressColor: client.config.colors.Normal, //"#FF7A00",
-      progressBarColor: client.config.colors.Transparent, //"#5F2D00",
-      name: track.info.title,
-      nameColor: client.config.colors.Normal, //"#FF7A00",
-      author: track.info.author,
-      authorColor: client.config.colors.Normal, //"#696969",
-      startTime: "0:00",
-      endTime: client.lavalink.formatTime(track.info.duration),
-      timeColor: client.config.colors.Normal, //"#FF7A00",
-    });
-
-    const imageAttachment = new AttachmentBuilder(musicard, {
-      name: "Classic.png",
-    });
-
-    await channel.send({
       components: [createButtonRow(client, player)],
-      files: [imageAttachment],
     });
+
+    createCollector(client, message, player, track, embed);
 
     //this.client.utils.updateStatus(this.client, guild.id);
 
@@ -110,10 +58,50 @@ module.exports = {
     //	});
     //
     //	player.set('messageId', message.id);
-    //	createCollector(message, player, track, embed, this.client, locale);
     //}
   },
 };
+
+/**
+ * A function to both create and update the old music embed
+ * @param {import("@lib/DiscordBot.js").DiscordBot} client
+ * @param {import("lavalink-client").Player} player
+ * @param {import("lavalink-client").Track} track
+ * @returns {Embed}
+ */
+function createEmbed(client, player, track) {
+  const embed = new EmbedBuilder()
+    .setAuthor({
+      name: "Now Playing",
+      iconURL:
+        client.config.icons[track.info.sourceName] ??
+        client.user?.displayAvatarURL({ extension: "png" }),
+    })
+    .setColor(client.config.colors.Good)
+    .setDescription(`**[${track.info.title}](${track.info.uri})**`)
+    .setFooter({
+      text: `Requested by ${track.requester.username}`,
+      iconURL: track.requester.avatarURL,
+    })
+    .setThumbnail(track.info.artworkUrl)
+    .addFields(
+      {
+        name: "Duration",
+        value: track.info.isStream
+          ? "LIVE"
+          : client.lavalink.formatTime(track.info.duration),
+        inline: true,
+      },
+      {
+        name: "Author",
+        value: track.info.author,
+        inline: true,
+      },
+    )
+    .setTimestamp();
+
+  return embed;
+}
 
 /**
  * A funtion to create buttons for the player
@@ -165,150 +153,139 @@ function createButtonRow(client, player) {
   );
 }
 
-/*
-function createCollector(
-	message: any,
-	player: Player,
-	_track: Track,
-	embed: any,
-	client: Lavamusic,
-	locale: string,
-): void {
-	const collector = message.createMessageComponentCollector({
-		filter: async (b: ButtonInteraction) => {
-			if (b.member instanceof GuildMember) {
-				const isSameVoiceChannel = b.guild?.members.me?.voice.channelId === b.member.voice.channelId;
-				if (isSameVoiceChannel) return true;
-			}
-			await b.reply({
-				content: T(locale, 'player.trackStart.not_connected_to_voice_channel', {
-					channel: b.guild?.members.me?.voice.channelId ?? 'None',
-				}),
-				ephemeral: true,
-			});
-			return false;
-		},
-	});
+/**
+ * A function to create a message componnent collector for music buttons
+ * @param {import("@lib/DiscordBot.js").DiscordBot} client
+ * @param {Message} message
+ * @param {import("lavalink-client").Player} player
+ * @param {import("lavalink-client").Track} track
+ * @param {EmbedBuilder} embed
+ * @returns {void}
+ */
+function createCollector(client, message, player, track, embed) {
+  const collector = message.createMessageComponentCollector({
+    filter: async (b) => {
+      if (b.member instanceof GuildMember) {
+        const isSameVoiceChannel =
+          b.guild?.members.me?.voice.channelId === b.member.voice.channelId;
+        if (isSameVoiceChannel) return true;
+      }
+      await b.reply({
+        content: `You are not connected to <#${
+          b.guild?.members.me?.voice.channelId ?? "None"
+        }> to use these buttons.`,
+        ephemeral: true,
+      });
+      return false;
+    },
+  });
 
-	collector.on('collect', async (interaction: ButtonInteraction<'cached'>) => {
-		if (!(await checkDj(client, interaction))) {
-			await interaction.reply({
-				content: T(locale, 'player.trackStart.need_dj_role'),
-				ephemeral: true,
-			});
-			return;
-		}
+  collector.on("collect", async (interaction) => {
+    //if (!(await checkDj(client, interaction))) {
+    //  await interaction.reply({
+    //    content: T(locale, "player.trackStart.need_dj_role"),
+    //    ephemeral: true,
+    //  });
+    //  return;
+    //}
 
-		const editMessage = async (text: string): Promise<void> => {
-			if (message) {
-				await message.edit({
-					embeds: [
-						embed.setFooter({
-							text,
-							iconURL: interaction.user.avatarURL({}),
-						}),
-					],
-					components: [createButtonRow(player, client)],
-				});
-			}
-		};
-		switch (interaction.customId) {
-			case 'previous':
-				if (player.queue.previous) {
-					await interaction.deferUpdate();
-					const previousTrack = player.queue.previous[0];
-					player.play({
-						track: previousTrack,
-					});
-					await editMessage(
-						T(locale, 'player.trackStart.previous_by', {
-							user: interaction.user.tag,
-						}),
-					);
-				} else {
-					await interaction.reply({
-						content: T(locale, 'player.trackStart.no_previous_song'),
-						ephemeral: true,
-					});
-				}
-				break;
-			case 'resume':
-				if (player.paused) {
-					player.resume();
-					await interaction.deferUpdate();
-					await editMessage(
-						T(locale, 'player.trackStart.resumed_by', {
-							user: interaction.user.tag,
-						}),
-					);
-				} else {
-					player.pause();
-					await interaction.deferUpdate();
-					await editMessage(
-						T(locale, 'player.trackStart.paused_by', {
-							user: interaction.user.tag,
-						}),
-					);
-				}
-				break;
-			case 'stop': {
-				player.stopPlaying(true, false);
-				await interaction.deferUpdate();
-				break;
-			}
-			case 'skip':
-				if (player.queue.tracks.length > 0) {
-					await interaction.deferUpdate();
-					player.skip();
-					await editMessage(
-						T(locale, 'player.trackStart.skipped_by', {
-							user: interaction.user.tag,
-						}),
-					);
-				} else {
-					await interaction.reply({
-						content: T(locale, 'player.trackStart.no_more_songs_in_queue'),
-						ephemeral: true,
-					});
-				}
-				break;
-			case 'loop': {
-				await interaction.deferUpdate();
-				switch (player.repeatMode) {
-					case 'off': {
-						player.setRepeatMode('track');
-						await editMessage(
-							T(locale, 'player.trackStart.looping_by', {
-								user: interaction.user.tag,
-							}),
-						);
-						break;
-					}
-					case 'track': {
-						player.setRepeatMode('queue');
-						await editMessage(
-							T(locale, 'player.trackStart.looping_queue_by', {
-								user: interaction.user.tag,
-							}),
-						);
-						break;
-					}
-					case 'queue': {
-						player.setRepeatMode('off');
-						await editMessage(
-							T(locale, 'player.trackStart.looping_off_by', {
-								user: interaction.user.tag,
-							}),
-						);
-						break;
-					}
-				}
-				break;
-			}
-		}
-	});
+    const editMessage = async (text) => {
+      if (message) {
+        await message.edit({
+          embeds: [
+            embed.setFooter({
+              text,
+              iconURL: interaction.user.avatarURL({}),
+            }),
+          ],
+          components: [createButtonRow(client, player)],
+        });
+      }
+    };
+
+    switch (interaction.customId) {
+      case "previous":
+        {
+          if (player.queue.previous) {
+            await interaction.deferUpdate();
+            const previousTrack = player.queue.previous[0];
+            player.play({
+              track: previousTrack,
+            });
+            await editMessage(`Previous by ${interaction.user.tag}`);
+          } else {
+            await interaction.reply({
+              content: "There is no previous song.",
+              ephemeral: true,
+            });
+          }
+        }
+        break;
+      case "resume":
+        {
+          if (player.paused) {
+            player.resume();
+            await interaction.deferUpdate();
+            await editMessage(`Resumed by ${interaction.user.tag}`);
+          } else {
+            player.pause();
+            await interaction.deferUpdate();
+            await editMessage(`Paused by ${interaction.user.tag}`);
+          }
+        }
+        break;
+      case "stop": {
+        player.stopPlaying(true, false);
+        await interaction.deferUpdate();
+        break;
+      }
+      case "skip":
+        {
+          if (player.queue.tracks.length > 0) {
+            await interaction.deferUpdate();
+            player.skip();
+            await editMessage(`Skipped by ${interaction.user.tag}`);
+          } else {
+            await interaction.reply({
+              content: "There is no more song in the queue.",
+              ephemeral: true,
+            });
+          }
+        }
+        break;
+      case "loop": {
+        await interaction.deferUpdate();
+        switch (player.repeatMode) {
+          case "off": {
+            player.setRepeatMode("track");
+            await editMessage(`Looping by ${interaction.user.tag}`);
+            break;
+          }
+          case "track": {
+            player.setRepeatMode("queue");
+            await editMessage(`Looping Queue by ${interaction.user.tag}`);
+            break;
+          }
+          case "queue": {
+            player.setRepeatMode("off");
+            await editMessage(`Looping Off by ${interaction.user.tag}`);
+            break;
+          }
+        }
+        break;
+      }
+    }
+  });
 }
 
+/*
+    "requested_by": "Requested by {user}",
+    "duration": "Duration",
+    "author": "Author",
+    "need_dj_role": "You need to have the DJ role to use this command.",
+		*/
+
+/*
 export async function checkDj(
 	client: Lavamusic,
 	interaction:
@@ -330,5 +307,5 @@ export async function checkDj(
 	}
 	return true;
 }
-/*
+
 */

@@ -52,8 +52,8 @@ module.exports = {
   table: {
     // Set true to enable & false to disable
     sync: true,
-    event: true,
-    command: true,
+    event: false,
+    command: false,
     // Table border styles
     border: {
       topBody: `─`,
