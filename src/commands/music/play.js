@@ -118,7 +118,7 @@ module.exports = {
       await interaction.deferReply();
 
       const vc = interaction.member?.voice?.channel;
-      const src = interaction.options.getString("source", true) ?? "ytm";
+      const src = interaction.options.getString("source") ?? "ytm";
       const query = interaction.options.getString("query");
 
       const player =

@@ -15,9 +15,9 @@ module.exports = {
     const prefix = settings.prefix || client.config.default_prefix;
 
     const embed = new EmbedBuilder()
-      .setTitle(t("events:messageCreate.prefix_mention.title"))
+      .setTitle(t("events:prefix_mention.title"))
       .setDescription(
-        t("events:messageCreate.prefix_mention.description", {
+        t("events:prefix_mention.description", {
           username: client.user.username,
           owner: `<@${client.config.owner_id}>`,
           prefix: prefix,
