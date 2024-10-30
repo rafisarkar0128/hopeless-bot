@@ -1,8 +1,5 @@
-// types for functions that will be used in DiscordBot class
-
 import { DiscordBot } from "@lib/DiscordBot";
 
-// some extension exaple
 type FileExtensions =
   | ".js"
   | ".jsx"
@@ -23,14 +20,13 @@ type FileExtensions =
   | ".mkv"
   | ".ogg";
 
-// function to load files recursively
 export type LoadFiles = (
   path: string,
   ext?: FileExtensions[] | string[],
 ) => Promise<string[]> | Promise<[]>;
-
-// function to load evenrs
 export type LoadEvents = (client: DiscordBot, dir: string) => Promise<void>;
-
-// function to load commands
 export type LoadCommands = (client: DiscordBot, dir: string) => Promise<void>;
+export type LoadLocales = (client: DiscordBot) => void;
+export type GetDefaultLocale = (client: DiscordBot) => string;
+export type LogVanity = (client: DiscordBot) => void;
+export type ConnectDB = (client: DiscordBot) => void;

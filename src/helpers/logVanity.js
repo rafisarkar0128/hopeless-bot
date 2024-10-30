@@ -4,10 +4,9 @@ const { t } = require("i18next");
 
 /**
  * A function to log get vanity
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @returns {void}
+ * @type {import("./helpers.d.ts").LogVanity}
  */
-async function logVanity(client) {
+function logVanity(client) {
   // ansi colors with escape
   let esc = "\u001b[0m";
   let red = "\u001b[31m";

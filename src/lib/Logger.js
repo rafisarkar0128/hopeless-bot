@@ -51,7 +51,6 @@ class Logger {
       `[${colors.cyan("INFO")}] ` +
       content;
 
-    this.logger.log("info", content);
     console.log(output);
   }
 

@@ -6,7 +6,7 @@ const { Events } = require("./validations/events.js");
 
 /**
  * A function to load event files
- * @type {import("./functions").LoadEvents}
+ * @type {import("./helpers.d.ts").LoadEvents}
  * @example await loadEvents(client, "src/events");
  */
 async function loadEvents(client, dir) {

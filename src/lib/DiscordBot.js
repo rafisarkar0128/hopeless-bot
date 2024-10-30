@@ -1,7 +1,6 @@
 const { Client, Collection } = require("discord.js");
 const { Logger } = require("@lib/Logger.js");
 const { Utils } = require("@lib/Utils.js");
-const { AntiCrash } = require("@helpers/AntiCrash");
 const { LavalinkPlayer } = require("./LavalinkPlayer.js");
 
 class DiscordBot extends Client {
@@ -19,7 +18,7 @@ class DiscordBot extends Client {
 
     // all global functions
     this.wait = require("timers/promises").setTimeout;
-    this.functions = require("./functions/index.js");
+    this.helpers = require("@helpers/index.js");
     this.logger = new Logger(this);
     this.utils = new Utils(this);
     this.syncCommands = require("@helpers/syncCommands");
@@ -53,22 +52,22 @@ class DiscordBot extends Client {
     console.clear();
 
     // load the anticrash system
-    AntiCrash(this);
+    this.helpers.antiCrash(this);
 
     // load locales
-    this.functions.loadLocales(this);
+    this.helpers.loadLocales(this);
 
     // log the vanity
-    this.functions.logVanity(this);
+    this.helpers.logVanity(this);
 
     // load event modules
-    await this.functions.loadEvents(this, "src/events");
+    await this.helpers.loadEvents(this, "src/events");
 
     // load command modules
-    await this.functions.loadCommands(this, "src/commands");
+    await this.helpers.loadCommands(this, "src/commands");
 
     // connect to the database
-    await this.functions.connectdb(this);
+    await this.helpers.connectdb(this);
 
     // log into the client
     await this.login(this.config.bot_token);

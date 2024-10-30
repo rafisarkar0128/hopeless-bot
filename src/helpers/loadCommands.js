@@ -2,12 +2,12 @@ const colors = require("colors");
 const { table } = require("table");
 const { loadFiles } = require("./loadFiles");
 const { Permissions } = require("./validations/permissions.js");
-const { Logger } = require("../updated_logger.js");
+const { Logger } = require("../lib/updated_logger.js");
 const { t } = require("i18next");
 
 /**
  * A function to load command modules
- * @type {import("./functions").LoadCommands}
+ * @type {import("./helpers").LoadCommands}
  * @example await loadCommands(client, "src/commands");
  */
 async function loadCommands(client, dir) {

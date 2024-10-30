@@ -7,7 +7,7 @@ const { t } = require("i18next");
  * Returns an array of files from given path filtered by provided extensions.
  * Remember path starts from your projects main folder through **process.cwd()**.
  * So provide path from the base folder.
- * @type {import("./functions").LoadFiles}
+ * @type {import("./helpers.d.ts").LoadFiles}
  * @default loadFiles(path,ext)
  * @example const files = await loadFiles("src", [".js"]);
  * @example const files = await loadFiles("src/commands", [".js"]);

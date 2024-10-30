@@ -5,34 +5,34 @@ const resources = require("@src/locales/index.js");
 
 /**
  * A function to get default locale for global use
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @returns {string}
+ * @type {import("./helpers.d.ts").GetDefaultLocale}
  */
 function getDefaultLocale(client) {
   let { default_locale } = client.config;
   if (typeof default_locale !== "string") {
-    throw new TypeError("Value of defaut_locale must a string");
+    default_locale = "en-US";
+    return default_locale;
   }
 
-  const localeFolders = fs.readdirSync(path.join(__dirname, "..", "..", "locales"));
+  const localeFolders = fs.readdirSync(path.join(process.cwd(), "src", "locales"));
   if (!Array.isArray(localeFolders)) {
     throw new Error(
-      "Couldn't load locales. Please make sure the path to locale files is valid",
+      "Couldn't load locales. Please make sure locale files exist within src folder.",
     );
   }
 
-  if (default_locale.length <= 0) default_locale = "en-US";
-  if (!localeFolders.includes(default_locale)) default_locale = "en-US";
+  if (default_locale.length <= 0 || !localeFolders.includes(default_locale)) {
+    default_locale = "en-US";
+  }
 
   return default_locale;
 }
 
 /**
  * A function to load locales
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @returns {void}
+ * @type {import("./helpers.d.ts").LoadLocales}
  */
-async function loadLocales(client) {
+function loadLocales(client) {
   i18next.init({
     fallbackLng: getDefaultLocale(client),
     defaultNS: "",

@@ -4,8 +4,7 @@ const { t } = require("i18next");
 
 /**
  * A function to connect to mongobd throuigh mongoose
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @returns {Promise<void>}
+ * @type {import("./helpers.d.ts").ConnectDB}
  */
 async function connectdb(client) {
   try {

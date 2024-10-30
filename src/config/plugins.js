@@ -25,7 +25,7 @@ module.exports = {
     default_source: "ytm",
     sources: ["ytmsearch", "ytm", "ytsearch", "yt", "spotifysearch", "spotify"],
     lavalink_nodes: [
-      // locally hosted nodes
+      // locally hosted node
       {
         password: "youshallnotpass",
         authorization: "youshallnotpass",

@@ -13,11 +13,11 @@
   "loader": {
     "event": {
       "start": "Started to load event modules from {{dir}}",
-      "end": "Successfully loaded {{l}} event modules"
+      "end": "Loaded {{l}} event modules successfully"
     },
     "command": {
       "start": "Started to load command modules from {{dir}}",
-      "end": "Successfully loaded {{l}} command modules"
+      "end": "Loaded {{l}} command modules successfully"
     }
   },
 
