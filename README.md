@@ -1,5 +1,7 @@
+# ‼️On Hold For Next Few Months‼️
+
 > [!IMPORTANT]
-> I am going to rebuild the whole project. From now there won't be any new commits on this branch untill the rebuilding process is completed in the rebuild branch. Also the code in this branch has some major bugs that needs attention. So, to prevent yourself from the hassle don't use this to run your bot atleast for the time bieng. Please be patient and wait for the rebuild. I can promise you that the new version will be faster and more understandable. Thanks for staying with me. Untill next time goodbye (_Only for a few weeks_).
+> I am going to rebuild the whole project. From now there won't be any new commits on this branch untill the rebuilding process is completed in the rebuild branch. Also the code in this branch has some major bugs that needs attention. Thanks for staying with me. Untill next time goodbye.
 
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
