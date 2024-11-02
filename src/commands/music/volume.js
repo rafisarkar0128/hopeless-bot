@@ -1,8 +1,4 @@
-const {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-  Message,
-} = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 /** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
@@ -25,13 +21,30 @@ module.exports = {
     minArgsCount: 1,
     subcommands: [],
     execute: async (client, message, args) => {
-      const volume = Math.floor(args[0]);
+      const volume = Math.floor(args.shift());
       if (typeof volume !== "number") {
         return message.reply({
           content: "**Please provide a valid value between 1 - 100 to change the volume.",
         });
       }
-      return setVolume(client, message, volume);
+
+      const player = client.lavalink.players.get(message.guild.id);
+      if (!player) {
+        return message.reply({
+          content: "**Couldn't find any player for this guild**",
+        });
+      }
+
+      if (1 > volume || volume > 100) {
+        return message.reply({
+          content: "**please! provide a volume value between 1 to 100.**",
+        });
+      }
+
+      player.setVolume(volume);
+      return message.reply({
+        content: `🔉 volume set to **${volume}**`,
+      });
     },
   },
   slash: {
@@ -46,50 +59,32 @@ module.exports = {
           .setMaxValue(100)
           .setRequired(true),
       ),
-    usage: "[value]: <number>",
+    usage: "[volume]: <number>",
     ephemeral: true,
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
       const volume = interaction.options.getInteger("volume", true);
-      return setVolume(client, interaction, volume);
+      const player = client.lavalink.players.get(interaction.guild.id);
+      if (!player) {
+        return interaction.followUp({
+          content: "**Couldn't find any player for this guild**",
+          ephemeral: true,
+        });
+      }
+
+      if (1 > volume || volume > 100) {
+        return interaction.followUp({
+          content: "**please! provide a volume value between 1 to 100.**",
+          ephemeral: true,
+        });
+      }
+
+      player.setVolume(volume);
+      return interaction.followUp({
+        content: `🔉 volume set to **${volume}**`,
+        ephemeral: true,
+      });
     },
   },
 };
-
-/**
- * types for parameters
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @param {ChatInputCommandInteraction | Message} ctx
- * @param {number} volume
- * @returns {void}
- */
-function setVolume(client, ctx, volume) {
-  if (!volume) {
-    return ctx.reply({
-      content: "**Please provide a value between 1 and 100 to change the volume.**",
-      ephemeral: true,
-    });
-  }
-
-  const player = client.riffy.players.get(ctx.guild.id);
-  if (!player) {
-    return ctx.reply({
-      content: "**Couldn't find any player for this guild**",
-      ephemeral: true,
-    });
-  }
-
-  if (1 > volume || volume > 100) {
-    return ctx.reply({
-      content: "**please! provide a volume value between 1 to 100.**",
-      ephemeral: true,
-    });
-  }
-
-  player.setVolume(volume);
-  return ctx.reply({
-    content: `🔉 volume set to **${volume}**`,
-    ephemeral: true,
-  });
-}

@@ -62,18 +62,19 @@ export interface PrefixCommandStructure {
 
 // SlashCommandStructure to use in slash command collection
 export interface SlashCommandStructure {
-  name: string;
-  description?: string;
-  aliases?: string[];
-  usage?: string;
-  disabled?: boolean;
-  minArgsCount?: number;
-  subcommands: SubCommand[];
-  execute: (client: DiscordBot, message: Message, args: string[], data: object) => {};
+  category?: CommandCategory;
+  cooldown?: number;
+  premium?: boolean;
+  guildOnly?: boolean;
+  devOnly?: boolean;
+  voiceChannelOnly?: boolean;
+  botPermissions?: PermissionResolvable[];
+  userPermissions?: PermissionResolvable[];
   data: APIApplicationCommand;
   ephemeral?: boolean;
-  global?: boolean;
+  usage?: string;
   disabled?: boolean;
+  global?: boolean;
   execute: (
     client: DiscordBot,
     interaction: MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction,

@@ -25,11 +25,12 @@ module.exports = {
     minArgsCount: 0,
     subcommands: [],
     execute: (client, message) => {
-      const player = client.riffy.get(message.guild.id);
+      const { Wrong } = client.config.colors;
 
+      const player = client.lavalink.players.get(message.guild.id);
       if (!player) {
         const nEmbed = new EmbedBuilder()
-          .setColor(client.colors.Wrong)
+          .setColor(Wrong)
           .setDescription("**There is no music player in this server.**");
         return message.reply({
           embeds: [nEmbed],
@@ -37,13 +38,13 @@ module.exports = {
       }
 
       if (player.connected) {
-        player.destroy();
+        player.destroy("Command Issued", true);
       }
 
       return message.reply({
         embeds: [
           new EmbedBuilder()
-            .setColor(client.colors.Wrong)
+            .setColor(Wrong)
             .setDescription(
               "**Destroyed the music player and disconnected from the voice channel.**",
             ),
@@ -62,25 +63,26 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      const player = client.riffy.get(interaction.guild.id);
+      const { Wrong } = client.config.colors;
 
+      const player = client.lavalink.players.get(interaction.guild.id);
       if (!player) {
         const nEmbed = new EmbedBuilder()
-          .setColor(client.colors.Wrong)
+          .setColor(Wrong)
           .setDescription("**There is no music player in this server.**");
-        return interaction.reply({
+        return interaction.followUp({
           embeds: [nEmbed],
         });
       }
 
       if (player.connected) {
-        player.destroy();
+        player.destroy("Command Issued", true);
       }
 
-      return interaction.reply({
+      return interaction.followUp({
         embeds: [
           new EmbedBuilder()
-            .setColor(client.colors.Wrong)
+            .setColor(Wrong)
             .setDescription(
               "**Destroyed the music player and disconnected from the voice channel.**",
             ),

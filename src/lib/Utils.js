@@ -25,7 +25,7 @@ class Utils {
       : undefined;
 
     const embed = new EmbedBuilder()
-      .setColor(this.client.colors.Wrong)
+      .setColor(this.client.config.colors.Wrong)
       .setTitle(`**An Error Occoured**`)
       .setDescription(
         `\`\`\`\n${

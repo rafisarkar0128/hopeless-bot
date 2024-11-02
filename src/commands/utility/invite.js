@@ -3,10 +3,7 @@ const {
   ButtonBuilder,
   ActionRowBuilder,
   ButtonStyle,
-  resolvePartialEmoji,
   OAuth2Scopes,
-  ChatInputCommandInteraction,
-  Message,
   EmbedBuilder,
 } = require("discord.js");
 const { t } = require("i18next");
@@ -32,7 +29,24 @@ module.exports = {
     minArgsCount: 0,
     subcommands: [],
     execute: async (client, message) => {
-      await sendBotInvite(client, message);
+      const { allowedInvite, devs, colors } = client.config;
+      if (allowedInvite === false && !devs.includes(message.author.id)) {
+        message.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle(t("commands:invite.reply.disabled"))
+              .setColor(colors.Wrong),
+          ],
+          ephemeral: true,
+        });
+        return;
+      }
+
+      const actionRow = new ActionRowBuilder().addComponents(getInviteButton(client));
+      message.reply({
+        content: t("commands:invite.reply.content"),
+        components: [actionRow],
+      });
     },
   },
   slash: {
@@ -44,31 +58,33 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      await sendBotInvite(client, interaction);
+      const { allowedInvite, devs, colors } = client.config;
+      if (allowedInvite === false && !devs.includes(interaction.user.id)) {
+        interaction.followUp({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle(t("commands:invite.reply.disabled"))
+              .setColor(colors.Wrong),
+          ],
+          ephemeral: true,
+        });
+        return;
+      }
+
+      const actionRow = new ActionRowBuilder().addComponents(getInviteButton(client));
+      interaction.followUp({
+        content: t("commands:invite.reply.content"),
+        components: [actionRow],
+      });
     },
   },
 };
 
 /**
  * @param {import("@lib/DiscordBot").DiscordBot} client
- * @param {ChatInputCommandInteraction | Message} ctx
- * @returns {Promise<void>}
+ * @returns {ButtonBuilder}
  */
-function sendBotInvite(client, ctx) {
-  if (
-    client.config.allowedInvite === false &&
-    !client.config.devs.includes(ctx.user ? ctx.user.id : ctx.author.id)
-  ) {
-    return ctx.reply({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle(t("commands:invite.reply.disabled"))
-          .setColor(client.colors.Wrong),
-      ],
-      ephemeral: true,
-    });
-  }
-
+function getInviteButton(client) {
   const inviteLink = client.generateInvite({
     permissions: BigInt(1758600129150711),
     scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
@@ -77,10 +93,7 @@ function sendBotInvite(client, ctx) {
     .setLabel("Invite Link")
     .setStyle(ButtonStyle.Link)
     .setURL(inviteLink)
-    .setEmoji(resolvePartialEmoji("✉️"));
+    .setEmoji("✉️");
 
-  return ctx.reply({
-    content: t("commands:invite.reply.content"),
-    components: [new ActionRowBuilder().addComponents(button)],
-  });
+  return button;
 }

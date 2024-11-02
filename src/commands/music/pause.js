@@ -26,11 +26,12 @@ module.exports = {
     minArgsCount: 0,
     subcommands: [],
     execute: (client, message) => {
-      const player = client.riffy.get(message.guild.id);
+      const { Wrong } = client.config.colors;
 
+      const player = client.lavalink.players.get(message.guild.id);
       if (!player) {
         const nEmbed = new EmbedBuilder()
-          .setColor(client.colors.Wrong)
+          .setColor(Wrong)
           .setDescription("**There is no music player in this server.**");
         return message.reply({
           embeds: [nEmbed],
@@ -44,7 +45,7 @@ module.exports = {
       return message.reply({
         embeds: [
           new EmbedBuilder()
-            .setColor(client.colors.Wrong)
+            .setColor(Wrong)
             .setDescription(
               "**Paused the music player. user `/resume` to resume the player**",
             ),
@@ -63,11 +64,11 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      const player = client.riffy.get(interaction.guild.id);
-
+      const { Wrong } = client.config.colors;
+      const player = client.lavalink.players.get(interaction.guild.id);
       if (!player) {
         const nEmbed = new EmbedBuilder()
-          .setColor(client.colors.Wrong)
+          .setColor(Wrong)
           .setDescription("**There is no music player in this server.**");
         return interaction.reply({
           embeds: [nEmbed],
@@ -78,14 +79,15 @@ module.exports = {
         player.pause();
       }
 
-      return interaction.reply({
+      interaction.followUp({
         embeds: [
           new EmbedBuilder()
-            .setColor(client.colors.Wrong)
+            .setColor(Wrong)
             .setDescription(
               "**Paused the music player. user `/resume` to resume the player**",
             ),
         ],
+        ephemeral: true,
       });
     },
   },

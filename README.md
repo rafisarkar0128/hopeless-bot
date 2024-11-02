@@ -1,5 +1,7 @@
+# ‼️On Hold For Next Few Months‼️
+
 > [!IMPORTANT]
-> This is **_rebuild_** branch. Its more like the new base for rebuilding the bot with new structure and classes with advance feature and some of the old lagacy features as well with updated code. _Just remeber this_ that the code here will be changed or get updated without any notice. So, keep that in mind when using it to run your bot. Anyway best regards for using the code in this repo. Motivate me by simply giving a star. Wait for _a few weeks_ for the rebuild to be completed. Untill then goodbye.
+> This is **_rebuild_** branch. Its more like the new base for rebuilding the bot with new structure and classes with advance feature and some of the old lagacy features from [Node](https://github.com/theassassin0128/Node) as well with updated code. _Just remeber this_ that the code here will be changed or get updated without any notice. So, keep that in mind when using it to run your bot. Untill then goodbye.
 
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
@@ -25,12 +27,12 @@
 ## 📊 Road Map
 
 - [x] **Basic Bot**
-- [x] **Advance Bot**
+- [ ] **Advance Bot**
 - [ ] **Documentation**
 - [ ] **Moderation Bot**
-- [x] **Music Bot** _(missing some key features)_
+- [x] **Music Bot** _(basic version)_
 - [ ] **Web based Dashboard**
-- [ ] **Website**
+- [x] **Website** _(simple)_
 
 ## 💡 Features
 
@@ -39,7 +41,7 @@
 1. **Advance command and Event Handler**
 1. **Advance command synchronizer**
 1. **Error logging system**
-1. **Validator. (Still in development)**
+1. **Validator. (for event names & command permissions)**
 
 ## ❗Prerequisites❗
 

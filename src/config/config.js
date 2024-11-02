@@ -74,8 +74,11 @@ module.exports = {
     },
   },
 
-  server_links: {
-    supportServer: "https://discord.gg/E6H9VvBdTk",
+  links: {
+    website: "https://theassassin0128.github.io/hopeless-bot",
+    invite: "https://discord.com/oauth2/authorize?client_id=1272259032098275358",
+    server: "https://discord.gg/E6H9VvBdTk",
+    github: "https://github.com/theassassin0128/hopeless-bot#readme",
   },
 
   image_links: {

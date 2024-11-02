@@ -31,11 +31,9 @@ module.exports = {
       const reply = await message.reply({
         content: t("commands:ping.reply.content"),
       });
-      const embed = await getPingEmbed(client, message, reply);
-
       reply.edit({
         content: "",
-        embeds: [embed],
+        embeds: [await getPingEmbed(client, message, reply)],
       });
     },
   },
@@ -48,10 +46,7 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      const reply = await interaction.deferReply({
-        fetchReply: true,
-      });
-
+      const reply = await interaction.fetchReply();
       interaction.followUp({
         embeds: [await getPingEmbed(client, interaction, reply)],
       });

@@ -12,8 +12,6 @@ class DiscordBot extends Client {
 
     // local stored data
     this.config = require(`@config/config.js`);
-    /** @deprecated will be removed in future updates */
-    this.colors = require(`@config/colors.json`);
     this.pkg = require("@root/package.json");
 
     // all global functions

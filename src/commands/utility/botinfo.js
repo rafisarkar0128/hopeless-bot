@@ -40,8 +40,6 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      await interaction.deferReply();
-
       const days = Math.floor(client.uptime / 86400000);
       const hours = Math.floor(client.uptime / 3600000) % 24;
       const minutes = Math.floor(client.uptime / 60000) % 60;
@@ -60,8 +58,6 @@ module.exports = {
       const imageAttachment = new AttachmentBuilder(profileBuffer, {
         name: "profile.png",
       });
-
-      const me = await interaction.guild.members.fetch(client.user.id);
 
       const embed = new EmbedBuilder()
         .setColor(client.utils.getRandomColor())
@@ -114,22 +110,22 @@ module.exports = {
       const githubButton = new ButtonBuilder()
         .setLabel("GitHub")
         .setStyle(ButtonStyle.Link)
-        .setURL("https://github.com/theassassin0128/Hopeless-Bot#readme");
+        .setURL(client.config.links.github);
 
       const discordButton = new ButtonBuilder()
         .setLabel("Support")
         .setStyle(ButtonStyle.Link)
-        .setURL("https://discord.gg/E6H9VvBdTk");
+        .setURL(client.config.links.server);
 
       const inviteButton = new ButtonBuilder()
         .setLabel("Invite Me")
         .setStyle(ButtonStyle.Link)
-        .setURL("https://discord.com/oauth2/authorize?client_id=1272259032098275358");
+        .setURL(client.config.links.invite);
 
       const websiteButton = new ButtonBuilder()
         .setLabel("Website")
         .setStyle(ButtonStyle.Link)
-        .setURL("https://theassassin0128.github.io/Hopeless-Bot");
+        .setURL(client.config.links.website);
 
       const actionRow = new ActionRowBuilder()
         .addComponents(githubButton)

@@ -1,8 +1,4 @@
-const {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-  Message,
-} = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 /** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
@@ -25,7 +21,33 @@ module.exports = {
     minArgsCount: 0,
     subcommands: [],
     execute: async (client, message) => {
-      return skipSong(client, message);
+      const player = client.lavalink.players.get(message.guild.id);
+      if (!player) {
+        message.reply({
+          content: "**Couldn't find any player for this guild**",
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (!player.playing && player.queue.length === 0) {
+        message.reply({
+          content: "**There is no music playing right now**",
+        });
+        return;
+      }
+
+      if (player.queue.tracks.length <= 0) {
+        message.reply({
+          content: "There are no songs in the queue.",
+        });
+        return;
+      }
+
+      player.skip();
+      message.reply({
+        content: "**skipped the current song.**",
+      });
     },
   },
   slash: {
@@ -37,35 +59,34 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      return skipSong(client, interaction);
+      const player = client.lavalink.players.get(interaction.guild.id);
+      if (!player) {
+        interaction.followUp({
+          content: "**Couldn't find any player for this guild**",
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (!player.playing && player.queue.length === 0) {
+        interaction.followUp({
+          content: "**There is no music playing right now**",
+        });
+        return;
+      }
+
+      if (player.queue.tracks.length <= 0) {
+        interaction.followUp({
+          content: "There are no songs in the queue.",
+        });
+        return;
+      }
+
+      player.skip();
+      interaction.followUp({
+        content: "**skipped the current song.**",
+        ephemeral: true,
+      });
     },
   },
 };
-
-/**
- * types for parameters
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @param {ChatInputCommandInteraction | Message} ctx
- * @returns {void}
- */
-function skipSong(client, ctx) {
-  const player = client.riffy.players.get(ctx.guild.id);
-  if (!player) {
-    return ctx.reply({
-      content: "**Couldn't find any player for this guild**",
-      ephemeral: true,
-    });
-  }
-
-  if (!player.playing && player.queue.length === 0) {
-    return ctx.reply({
-      content: "**There is no music playing right now**",
-    });
-  }
-
-  player.stop();
-  return ctx.reply({
-    content: "**skipped the current song.**",
-    ephemeral: true,
-  });
-}

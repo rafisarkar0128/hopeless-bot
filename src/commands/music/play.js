@@ -26,8 +26,8 @@ module.exports = {
     subcommands: [],
     execute: async (client, message, args) => {
       var src = "ytm";
-      if (client.config.plugins.music.sources.includes(args[0])) {
-        src = args.shift();
+      if (client.config.plugins.music.sources.includes(args[0].toLowerCase())) {
+        src = args.shift().toLowerCase();
       }
 
       const query = args.join(" ");
@@ -115,8 +115,6 @@ module.exports = {
     global: true,
     disabled: false,
     execute: async (client, interaction) => {
-      await interaction.deferReply();
-
       const vc = interaction.member?.voice?.channel;
       const src = interaction.options.getString("source") ?? "ytm";
       const query = interaction.options.getString("query");
@@ -170,76 +168,9 @@ module.exports = {
             : `✅ Added [\`${response.tracks[0].info.title}\`](<${response.tracks[0].info.uri}>) by \`${response.tracks[0].info.author}\` at \`#${player.queue.tracks.length}\``,
       });
 
-      if (!player.playing) await player.play();
-    },
-    autocomplete: async (client, interaction) => {
-      if (!interaction.guildId) return;
-      const vcId = interaction.member?.voice?.channelId;
-      if (!vcId)
-        return interaction.respond([{ name: `Join a voice Channel`, value: "join_vc" }]);
-
-      const focussedQuery = interaction.options.getFocused();
-      const player =
-        client.lavalink.getPlayer(interaction.guildId) ||
-        (await client.lavalink.createPlayer({
-          guildId: interaction.guildId,
-          voiceChannelId: vcId,
-          textChannelId: interaction.channelId, // in what guild + channel(s)
-          selfDeaf: true,
-          selfMute: false,
-          volume: client.defaultVolume,
-          instaUpdateFiltersFix: true, // configuration(s)
-        }));
-
-      if (!player.connected) await player.connect();
-
-      if (player.voiceChannelId !== vcId)
-        return interaction.respond([
-          { name: `You need to be in my Voice Channel`, value: "join_vc" },
-        ]);
-
-      if (!focussedQuery.trim().length)
-        return await interaction.respond([
-          { name: `No Tracks found (enter a query)`, value: "nothing_found" },
-        ]);
-
-      const res = await player.search(
-        { query: focussedQuery, source: interaction.options.getString("source") },
-        interaction.user,
-      );
-
-      if (!res.tracks.length)
-        return await interaction.respond([
-          { name: `No Tracks found`, value: "nothing_found" },
-        ]);
-      // handle the res
-      if (autocompleteMap.has(`${interaction.user.id}_timeout`))
-        clearTimeout(autocompleteMap.get(`${interaction.user.id}_timeout`));
-      autocompleteMap.set(`${interaction.user.id}_res`, res);
-      autocompleteMap.set(
-        `${interaction.user.id}_timeout`,
-        setTimeout(() => {
-          autocompleteMap.delete(`${interaction.user.id}_res`);
-          autocompleteMap.delete(`${interaction.user.id}_timeout`);
-        }, 25000),
-      );
-      await interaction.respond(
-        res.loadType === "playlist"
-          ? [
-              {
-                name: `Playlist [${res.tracks.length} Tracks] - ${res.playlist?.title}`,
-                value: `autocomplete_0`,
-              },
-            ]
-          : res.tracks
-              .map((t, i) => ({
-                name: `[${formatMS_HHMMSS(t.info.duration)}] ${t.info.title} (by ${
-                  t.info.author || "Unknown-Author"
-                })`.substring(0, 100),
-                value: `autocomplete_${i}`,
-              }))
-              .slice(0, 25),
-      );
+      if (!player.playing) {
+        await player.play();
+      }
     },
   },
 };
