@@ -27,10 +27,9 @@ module.exports = {
     lavalink_nodes: [
       // locally hosted node
       {
-        password: "youshallnotpass",
         authorization: "youshallnotpass",
         host: "localhost",
-        port: 2333,
+        port: 6969,
         id: "Local Node",
         requestSignalTimeoutMS: 10000,
         closeOnError: true,
@@ -41,7 +40,6 @@ module.exports = {
       },
       // nodes from https://lavalinks-list.vercel.app/non-ssl
       {
-        password: "youshallnotpass",
         authorization: "youshallnotpass",
         host: "node.lewdhutao.my.eu.org",
         port: 80,
