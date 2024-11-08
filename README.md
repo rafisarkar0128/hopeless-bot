@@ -89,26 +89,26 @@ Before starting with the **SETUP**, you need to have the following:
 
 ### **Need help with setup?**
 
-Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help in the `#support` channel!
+Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help!
 
 ## Customization
 
 [`config.js`](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config/config.js) is a config module dedicated for bot's config and other stuff. Change the values according to your need.
 
 > [!IMPORTANT]
-> Use hex color code for Embed colors. I recommend using hex colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/colors.json) through `client.config.colors.(Color)`
+> Use hex color code for Embed colors. I recommend using hex colors from [colors.json](https://github.com/theassassin0128/Hopeless-Bot/tree/main/src/config/colors.json) through `client.config.colors.<color>`
 
 ## Commands
 
 Written below are some public commands of the bot.
 
-| Slash       | Prefix      | description                             |
-| ----------- | ----------- | --------------------------------------- |
-| /botinfo    | ?botinfo    | View bot's status & runtime status      |
-| /invite     | ?invite     | Get a button with embeded invite-link.  |
-| /ping       | ?ping       | View bot's ping, response & uptime      |
-| /serverinfo | ?serverinfo | View information about a discord server |
-| /memberinfo | ?memberinfo | View information of a discord user      |
+| Slash           | Prefix          | description                             |
+| --------------- | --------------- | --------------------------------------- |
+| [x] /botinfo    | [ ] ?botinfo    | View bot's status & runtime status      |
+| [x] /invite     | [x] ?invite     | Get a button with embeded invite-link.  |
+| [x] /ping       | [x] ?ping       | View bot's ping, response & uptime      |
+| [x] /serverinfo | [x] ?serverinfo | View information about a discord server |
+| [x] /memberinfo | [x] ?memberinfo | View information of a discord user      |
 
 ## 🔗 Useful Links
 
@@ -137,12 +137,12 @@ Distributed under the MIT license. See ![LICENSE](https://img.shields.io/github/
 
 ## 🫡 Credit
 
-- [@lyxcode](https://www.youtube.com/@Lyx) Has some good content on YouTube about discord bots.
-- [@discord-js-bot](https://github.com/saiteja-madha/discord-js-bot) Took inspiration and tried to improve this project.
-- [@PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES) Got idea to use [colors](https://www.npmjs.com/package/colors) in `console.log()`.
-- [@lavamusic](https://github.com/appujet/lavamusic) The README.md looks quite good. See the Similarity.
-- [@UnderCtrl](https://www.youtube.com/@UnderCtrl) Got the initial idea for SyncCommand feature
-- [@Bord-Pi](https://github.com/thomasbnt/Bord-Pi) Solved some problems of SyncCommand feature from [A post on CodeDev](https://dev.to/mrrobot/creating-a-discord-bot-with-slash-commands-51fa)
+- [lyxcode](https://www.youtube.com/@Lyx)
+- [discord-js-bot](https://github.com/saiteja-madha/discord-js-bot)
+- [PCBBD-UTILITES](https://github.com/pcbuilderbd/PCBBD-UTILITIES)
+- [lavamusic](https://github.com/appujet/lavamusic)
+- [UnderCtrl](https://www.youtube.com/@UnderCtrl)
+- [Bord-Pi](https://github.com/thomasbnt/Bord-Pi) From a post on [CodeDev](https://dev.to/mrrobot/creating-a-discord-bot-with-slash-commands-51fa)
 
 [version-shield]: https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge
 [version-shield-link]: https://github.com/theassassin0128/Hopeless-Bot/tree/main/package.json
