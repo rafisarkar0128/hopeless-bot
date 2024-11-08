@@ -1,7 +1,7 @@
 # ‼️On Hold For Next Few Months‼️
 
 > [!IMPORTANT]
-> This is **_rebuild_** branch. Its more like the new base for rebuilding the bot with new structure and classes with advance feature and some of the old lagacy features from [Node](https://github.com/theassassin0128/Node) as well with updated code. _Just remeber this_ that the code here will be changed or get updated without any notice. So, keep that in mind when using it to run your bot. Untill then goodbye.
+> This is **_rebuild_** branch. Its more like the new version of the bot with new structure and classes to implement advance and some of the old lagacy features from [Node](https://github.com/theassassin0128/Node) as well as updated the old code for performance. _Just keep this in mind,_ the code here will be changed or get updated without any notice. Untill next time, **Goodbye**.
 
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 
@@ -102,13 +102,13 @@ Join our [Discord Server](https://discord.gg/E6H9VvBdTk) and ask for help!
 
 Written below are some public commands of the bot.
 
-| Slash           | Prefix          | description                             |
-| --------------- | --------------- | --------------------------------------- |
-| [x] /botinfo    | [ ] ?botinfo    | View bot's status & runtime status      |
-| [x] /invite     | [x] ?invite     | Get a button with embeded invite-link.  |
-| [x] /ping       | [x] ?ping       | View bot's ping, response & uptime      |
-| [x] /serverinfo | [x] ?serverinfo | View information about a discord server |
-| [x] /memberinfo | [x] ?memberinfo | View information of a discord user      |
+| Slash          | Prefix         | description                            |
+| -------------- | -------------- | -------------------------------------- |
+| ✅ /botinfo    | ❌ ?botinfo    | View bot's status & runtime status      |
+| ✅ /invite     | ✅ ?invite     | Get a button with embeded invite-link.  |
+| ✅ /ping       | ✅ ?ping       | View bot's ping, response & uptime      |
+| ✅ /serverinfo | ✅ ?serverinfo | View information about a discord server |
+| ✅ /memberinfo | ✅ ?memberinfo | View information of a discord user      |
 
 ## 🔗 Useful Links
 
