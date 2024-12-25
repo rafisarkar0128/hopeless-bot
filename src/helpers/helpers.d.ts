@@ -18,7 +18,8 @@ type FileExtensions =
   | ".mp4"
   | ".mp3"
   | ".mkv"
-  | ".ogg";
+  | ".ogg"
+  | ".webp";
 
 export type LoadFiles = (
   path: string,

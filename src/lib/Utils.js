@@ -15,8 +15,8 @@ class Utils {
    */
   async sendError(error, type, data) {
     if (!error) return;
-    if (!this.client.database) {
-    }
+    if (!this.client.database) return;
+
     const errStack = error?.stack ? error.stack : error;
     const webhookClient = process.env.ERROR_WEBHOOK_URL
       ? new WebhookClient({
@@ -26,7 +26,7 @@ class Utils {
 
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.Wrong)
-      .setTitle(`**An Error Occoured**`)
+      .setTitle(`**An Error Occurred**`)
       .setDescription(
         `\`\`\`\n${
           errStack.length > 4000 ? errStack.substring(0, 4000) + "..." : errStack
@@ -77,11 +77,12 @@ class Utils {
   }
 
   /**
-   * A funtion to get table border in provided color
+   * A function to get table border in provided color
    * @type {import("../types/utils.d.ts").GetTableBorder}
+   * @example client.utils.getTableBorder(color);
    */
   getTableBorder(color) {
-    var border = new Object();
+    const border = {};
 
     Object.keys(this.client.config.table.border).forEach((key) => {
       border[key] = colors[color](this.client.config.table.border[key]);
@@ -103,39 +104,32 @@ class Utils {
    * @example client.utils.getRandomColor();
    */
   getRandomColor() {
-    let colorsArray = new Array();
-    Object.values(this.client.config.colors).forEach((code) => {
-      colorsArray.push(code);
-    });
-
+    const colorsArray = Object.values(this.client.config.colors);
     return colorsArray[Math.floor(Math.random() * colorsArray.length)];
   }
 
   /** Checks if a string is a valid Hex color
    * @type {import("../types/utils").IsHex}
-   * @example client.utils.isHex(text)
+   * @example client.utils.isHex(text);
    */
   isHex(text) {
     return /^#[0-9A-F]{6}$/i.test(text);
   }
 
-  /** Checks if a string is a valid Hex color
+  /** Checks if a string is a valid color
    * @type {import("../types/utils").IsValidColor}
    * @example client.utils.isValidColor(text);
    */
   isValidColor(text) {
-    if (this.client.colors.indexOf(text) > -1) {
-      return true;
-    } else return false;
+    return this.client.colors.includes(text);
   }
 
   /** Returns hour difference between two dates
    * @type {import("../types/utils").DiffHours}
-   * @example client.utils.dissHours(Date2, Date1);
+   * @example client.utils.diffHours(Date2, Date1);
    */
   diffHours(dt2, dt1) {
-    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
-    diff /= 60 * 60;
+    const diff = (dt2.getTime() - dt1.getTime()) / 1000 / 60 / 60;
     return Math.abs(Math.round(diff));
   }
 
@@ -175,17 +169,16 @@ class Utils {
    */
   getRemainingTime(timeUntil) {
     const seconds = Math.abs((timeUntil - new Date()) / 1000);
-    const time = Utils.timeformat(seconds);
-    return time;
+    return this.timeFormat(seconds * 1000);
   }
 
-  /** Takes a single or array of permissions and returns a formated string
+  /** Takes a single or array of permissions and returns a formatted string
    * @type {import("../types/utils").ParsePermissions}
-   * @example client.utils.parsePermissions(permissions)
+   * @example client.utils.parsePermissions(permissions);
    */
   parsePermissions(p) {
     const word = ` permission${p.length > 1 ? "s" : ""}`;
-    return `${p.map((p) => `**\`${p}\`**`).join(", ")} ${word}`;
+    return `${p.map((perm) => `**\`${perm}\`**`).join(", ")}${word}`;
   }
 }
 

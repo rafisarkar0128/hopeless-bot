@@ -1,4 +1,4 @@
-/** A fucntion to check for changes in Application Command Data
+/** A function to check for changes in Application Command Data
  * @param {import("@types/types").OldCommand} OldCommand
  * @param {import("@types/types").NewCommand} NewCommand
  * @returns {boolean}
@@ -35,7 +35,7 @@ function checkForChange(OldCommand, NewCommand) {
     if (oldCommand.options || newCommand.options) {
       if (oldCommand.options.length !== newCommand.options.length) return true;
 
-      if (checkForChangesinOptions(oldCommand.options, newCommand.options)) {
+      if (checkForChangesInOptions(oldCommand.options, newCommand.options)) {
         return true;
       }
     }
@@ -95,12 +95,12 @@ function checkForChange(OldCommand, NewCommand) {
   return false;
 }
 
-/** A function to check for changes in options;
+/** A function to check for changes in options
  * @param {import("discord.js").ApplicationCommandOption[]} oldOptions
  * @param {import("discord.js").APIApplicationCommandOption[]} newOptions
  * @returns {boolean}
  */
-function checkForChangesinOptions(oldOptions, newOptions) {
+function checkForChangesInOptions(oldOptions, newOptions) {
   for (const newOption of newOptions) {
     const oldOption = oldOptions.find((option) => option.name === newOption.name);
 
@@ -175,7 +175,7 @@ function checkForChangesinOptions(oldOptions, newOptions) {
     }
 
     if (oldOption.options || newOption.options) {
-      if (checkForChangesinOptions(oldOption.options, newOption.options)) return true;
+      if (checkForChangesInOptions(oldOption.options, newOption.options)) return true;
     }
   }
 

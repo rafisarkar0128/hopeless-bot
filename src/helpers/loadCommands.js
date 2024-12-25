@@ -2,7 +2,6 @@ const colors = require("colors");
 const { table } = require("table");
 const { loadFiles } = require("./loadFiles");
 const { Permissions } = require("./validations/permissions.js");
-const { Logger } = require("../lib/updated_logger.js");
 const { t } = require("i18next");
 
 /**
@@ -25,7 +24,14 @@ async function loadCommands(client, dir) {
     t("default:loader.command.start", { dir: colors.green(dir) }),
   );
 
-  const tableData = [["Index".cyan, "Command".cyan, "File".cyan, "Status".cyan]];
+  const tableData = [
+    [
+      colors.cyan("Index"),
+      colors.cyan("Command"),
+      colors.cyan("File"),
+      colors.cyan("Status"),
+    ],
+  ];
   /**
    * @type {import("table").TableUserConfig}
    */

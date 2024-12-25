@@ -43,4 +43,4 @@ function loadLocales(client) {
   });
 }
 
-module.exports = { loadLocales };
+module.exports = { loadLocales, getDefaultLocale };

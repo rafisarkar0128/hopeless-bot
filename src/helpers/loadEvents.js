@@ -25,7 +25,14 @@ async function loadEvents(client, dir) {
     t("default:loader.event.start", { dir: colors.green(dir) }),
   );
 
-  const tableData = [["Index".cyan, "Event".cyan, "File".cyan, "Status".cyan]];
+  const tableData = [
+    [
+      colors.cyan("Index"),
+      colors.cyan("Event"),
+      colors.cyan("File"),
+      colors.cyan("Status"),
+    ],
+  ];
 
   /**
    * @type {import("table").TableUserConfig}

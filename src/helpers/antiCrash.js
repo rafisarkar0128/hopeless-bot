@@ -2,6 +2,7 @@ const colors = require("colors");
 
 /** @param {import("@lib/DiscordBot").DiscordBot} client */
 function antiCrash(client) {
+  // Handle beforeExit event
   process.on("beforeExit", async (code) => {
     console.log(
       colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="),
@@ -12,24 +13,27 @@ function antiCrash(client) {
     );
   });
 
+  // Handle exit event
   process.on("exit", async (code) => {
     console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [Start] : ==============="));
     client.logger.error(code);
     console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));
   });
 
+  // Handle unhandledRejection event
   process.on("unhandledRejection", async (reason, promise) => {
     console.log(
       colors.yellow(
-        "[AntiCrash] | [UnhandledRejection_Logs] | [start] : ===============",
+        "[AntiCrash] | [UnhandledRejection_Logs] | [Start] : ===============",
       ),
     );
     await client.logger.error(reason, "unhandledRejection");
     console.log(
-      colors.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [end] : ==============="),
+      colors.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [End] : ==============="),
     );
   });
 
+  // Handle rejectionHandled event
   process.on("rejectionHandled", async (promise) => {
     console.log(
       colors.yellow("[AntiCrash] | [RejectionHandled_Logs] | [Start] : ==============="),
@@ -40,6 +44,7 @@ function antiCrash(client) {
     );
   });
 
+  // Handle uncaughtException event
   process.on("uncaughtException", async (error, origin) => {
     console.log(
       colors.yellow("[AntiCrash] | [UncaughtException_Logs] | [Start] : ==============="),
@@ -50,6 +55,7 @@ function antiCrash(client) {
     );
   });
 
+  // Handle warning event
   process.on("warning", async (warning) => {
     console.log(
       colors.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="),

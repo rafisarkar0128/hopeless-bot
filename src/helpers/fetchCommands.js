@@ -1,6 +1,6 @@
 const colors = require("colors");
 
-/** A fucntion to fetch Application Commands
+/** A function to fetch Application Commands
  * @param {import("@lib/DiscordBot").DiscordBot} client
  * @returns {Promise<import("@types/commands").OldCommand[]>}
  */
@@ -28,7 +28,7 @@ async function fetchCommands(client) {
     console.log(
       colors.yellow("[AntiCrash] | [Fetch Error Logs] | [Start]  : ==============="),
     );
-    console.log(colors.red(error));
+    console.log(colors.red(`Error fetching commands: ${error}`));
     console.log(
       colors.yellow("[AntiCrash] | [Fetch Error Logs] | [End] : ==============="),
     );

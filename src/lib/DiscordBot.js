@@ -10,18 +10,18 @@ class DiscordBot extends Client {
   constructor(options) {
     super(options);
 
-    // local stored data
+    // Load configuration and package information
     this.config = require(`@config/config.js`);
     this.pkg = require("@root/package.json");
 
-    // all global functions
+    // Initialize global functions and utilities
     this.wait = require("timers/promises").setTimeout;
     this.helpers = require("@helpers/index.js");
     this.logger = new Logger(this);
     this.utils = new Utils(this);
     this.syncCommands = require("@helpers/syncCommands");
 
-    // client collections with types
+    // Initialize client collections with types
     /** @type {Collection<string, import("@structures/event.d.ts").EventStructure>} */
     this.events = new Collection();
 
@@ -37,7 +37,7 @@ class DiscordBot extends Client {
     /** @type {Collection<string, import("@structures/context.d.ts").ContextMenuStructure>} */
     this.contexts = new Collection();
 
-    // Music Manager
+    // Initialize Music Manager if enabled
     if (this.config.plugins.music.enabled) {
       this.lavalink = new LavalinkPlayer(this);
     }
@@ -49,25 +49,25 @@ class DiscordBot extends Client {
   async start() {
     console.clear();
 
-    // load the anticrash system
+    // Load the anticrash system
     this.helpers.antiCrash(this);
 
-    // load locales
+    // Load locales
     this.helpers.loadLocales(this);
 
-    // log the vanity
+    // Log the vanity
     this.helpers.logVanity(this);
 
-    // load event modules
+    // Load event modules
     await this.helpers.loadEvents(this, "src/events");
 
-    // load command modules
+    // Load command modules
     await this.helpers.loadCommands(this, "src/commands");
 
-    // connect to the database
+    // Connect to the database
     await this.helpers.connectdb(this);
 
-    // log into the client
+    // Log into the client
     await this.login(this.config.bot_token);
   }
 }

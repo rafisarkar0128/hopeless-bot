@@ -3,7 +3,7 @@ const colors = require("colors");
 const { t } = require("i18next");
 
 /**
- * A function to connect to mongobd throuigh mongoose
+ * A function to connect to mongodb through mongoose
  * @type {import("./helpers.d.ts").ConnectDB}
  */
 async function connectdb(client) {

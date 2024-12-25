@@ -2,7 +2,7 @@ const colors = require("colors");
 const { fetchCommands } = require("./fetchCommands.js");
 const { checkForChange } = require("./checkForChanges.js");
 
-/** A fucntion to synchronize Application Commands
+/** A function to synchronize Application Commands
  * @param {import("@lib/DiscordBot.js").DiscordBot} client
  * @param {import("@types/types").NewCommand[]} newCommands
  * @returns {Promise<void>}
@@ -12,7 +12,7 @@ module.exports = async (client) => {
 
   /**
    * @param {import("@types/types").OldCommand[]} oldCommands
-   * @param {} newCommands
+   * @param {import("@types/types").NewCommand[]} newCommands
    */
   const syncCommands = async (oldCommands, newCommands) => {
     const commandsToAdd = newCommands.filter(

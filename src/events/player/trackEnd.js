@@ -2,6 +2,7 @@
 module.exports = {
   name: "trackEnd",
   once: false,
+  player: true,
   /**
    * types for parameters
    * @param {import("lavalink-client").Player} player
@@ -10,21 +11,22 @@ module.exports = {
    * @returns {Promise<void>}
    */
   execute: async (client, player, track, payload) => {
-    const guild = this.client.guilds.cache.get(player.guildId);
+    const guild = client.guilds.cache.get(player.guildId);
     if (!guild) return;
-
-    const messageId = player.get("messageId");
-    if (!messageId) return;
 
     const channel = guild.channels.cache.get(player.textChannelId);
     if (!channel) return;
 
+    const messageId = player.get("messageId");
+    if (!messageId) return;
+
     const message = await channel.messages.fetch(messageId).catch(() => {
       null;
     });
+
     if (!message) return;
 
-    message.delete().catch(() => {
+    message.delete().catch((err) => {
       null;
     });
   },

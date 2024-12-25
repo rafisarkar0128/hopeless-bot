@@ -1,10 +1,10 @@
-require("dotenv").config();
-require("module-alias/register");
+require("dotenv").config(); // Load environment variables from .env file
+require("module-alias/register"); // Register module aliases
 
 const { GatewayIntentBits, Partials } = require("discord.js");
 const { DiscordBot } = require("@lib/DiscordBot.js");
 
-// initializing the client
+// Initializing the client with necessary intents and partials
 const client = new DiscordBot({
   intents: [
     GatewayIntentBits.Guilds,
@@ -38,9 +38,10 @@ const client = new DiscordBot({
   failIfNotExists: true,
 });
 
+// Start the bot and handle any errors
 client.start().catch((error) => {
   throw error;
 });
 
-// exporting the client for other use
+// Exporting the client for other use
 module.exports = client;

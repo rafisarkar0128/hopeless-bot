@@ -41,7 +41,8 @@ class LavalinkPlayer extends LavalinkManager {
 
   /**
    * A function to return end time of a song
-   * @param {number} number in milli secons
+   * @param {number} number in milliseconds
+   * @returns {string} formatted time string
    */
   formatTime(number) {
     const h = Math.floor(number / 3600000) % 24;

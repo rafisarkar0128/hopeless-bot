@@ -5,12 +5,13 @@ module.exports = {
   name: "ready",
   once: true,
   execute: async (client) => {
+    // Log that the bot is online
     client.logger.info(__filename, `${colors.green(client.user.tag)} is online`);
 
-    // initializing music player
+    // Initialize the music player
     client.lavalink.init(client.user);
 
-    // Synchronizing Slash & ContextMenu Commands with discord
+    // Synchronize Slash & ContextMenu Commands with Discord
     await client.syncCommands(client);
   },
 };

@@ -1,155 +1,151 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hopeless Bot</title>
-    <link href="./style.css" rel="stylesheet" , type="text/css" />
-    <link href="./assets/html_tag.png" rel="icon" type="image/x-icon" />
-  </head>
 
-  <body>
-    <div id="top">
-      <h1 id="title">Welcome to Hopeless Bot Website</h1>
-      <img
-        src="https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot?style=for-the-badge"
-      />
-      <a href="https://github.com/theassassin0128/Hopeless-Bot/graphs/contributors">
-        <img
-          src="https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot.svg?style=for-the-badge"
-        />
-      </a>
-      <a href="https://github.com/theassassin0128/Hopeless-Bot/network/members">
-        <img
-          src="https://img.shields.io/github/forks/theassassin0128/Hopeless-Bot.svg?style=for-the-badge"
-        />
-      </a>
-      <a href="https://github.com/theassassin0128/Hopeless-Bot/stargazers">
-        <img
-          src="https://img.shields.io/github/stars/theassassin0128/Hopeless-Bot.svg?style=for-the-badge"
-        />
-      </a>
-      <a href="https://github.com/theassassin0128/Hopeless-Bot/issues">
-        <img
-          src="https://img.shields.io/github/issues/theassassin0128/Hopeless-Bot.svg?style=for-the-badge"
-        />
-      </a>
-      <a href="https://github.com/theassassin0128/Hopeless-Bot/blob/master/LICENSE">
-        <img
-          src="https://img.shields.io/github/license/theassassin0128/Hopeless-Bot.svg?style=for-the-badge"
-        />
-      </a>
-      <a href="https://discord.gg/E6H9VvBdTk">
-        <img
-          src="https://img.shields.io/discord/1054284394791178291.svg?style=for-the-badge&logo=discord&colorB=7289DA"
-        />
-      </a>
-      <a
-        href="https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/codeql.yml"
-      >
-        <img
-          src="https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/codeql.yml?style=for-the-badge&label=CodeQL"
-        />
-      </a>
-      <a
-        href="https://github.com/theassassin0128/Hopeless-Bot/actions/workflows/dependency-review.yml"
-      >
-        <img
-          src="https://img.shields.io/github/actions/workflow/status/theassassin0128/Hopeless-Bot/dependency-review.yml?style=for-the-badge&label=Dependency%20Review"
-        />
-      </a>
-    </div>
-    <div id="bot">
-      <img
-        src="https://cdn.discordapp.com/avatars/1272259032098275358/d8837049ef1c007784c53de792af6052.png?size=4096"
-        id="bot"
-      />
-      <h1 id="bot">Hopeless Bot</h1>
-      <p id="bot_bio">
-        <b>Hopeless Bot</b> is a multipurpose discord Bot. Specially made for
-        <u>Moderation</u> & <u>Server-Management</u>. It was made with
-        <a href=" https://github.com/discordjs/discord.js">discord.js</a>
-        a powerful
-        <a href="https://nodejs.org"><b>Node.JS</b></a>
-        module that allows you to easily interact with the
-        <a href="https://discord.com/developers/docs/intro">Discord API</a>.
-        <br />
-        <br />
-        <a
-          href="https://discord.com/oauth2/authorize?client_id=1272259032098275358"
-          class="link"
-          id="invite"
-        >
-          ✉️ Invite Hopeless Bot
-        </a>
-        •
-        <a href="https://discord.gg/E6H9VvBdTk" class="link" id="server">
-          🆘 Support Server
-        </a>
-        •
-        <a
-          href="https://github.com/theassassin0128/Hopeless-Bot"
-          class="link"
-          id="github"
-        >
-          📒 GitHub Repository </a
-        >•
-        <a
-          href="https://github.com/theassassin0128/Hopeless-Bot/issues"
-          class="link"
-          id="issues"
-        >
-          📝 Bug & Request Feature
-        </a>
-      </p>
-    </div>
-    <div id="user">
-      <a href="https://discord.com/users/720186844540567583">
-        <img
-          src="https://cdn.discordapp.com/avatars/720186844540567583/c6e5873e728dd1ab9916c749ca37726b.webp?size=4096"
-          id="user"
-        />
-      </a>
-      <h1 id="username">@theassassin0128</h1>
-      <p id="user_bio">
-        <b>Hello, erveryone!</b> Thanks for visiting the website. Hope you like this page.
-        I am by no means a web developer. I am just a hobbist wanting to create a simple
-        website for my discord bot which I am developing as hobby. Help me improve this
-        page by contributing on github.
-      </p>
-      <br />
-      <div id="social_links_1">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./assets/html_tag.png" rel="icon" type="image/x-icon">
+  <title>Hopeless Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: sandybrown;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1,
+    h2 {
+      color: slateblue;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin: 5px 0;
+    }
+
+    .section {
+      background-color: palegoldenrod;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="section">
+    <h1>Hopeless Bot</h1>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot"><img
+        src="https://img.shields.io/github/package-json/v/theassassin0128/Hopeless-Bot" alt="Version"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/graphs/contributors"><img
+        src="https://img.shields.io/github/contributors/theassassin0128/Hopeless-Bot" alt="Contributors"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/network/members"><img
+        src="https://img.shields.io/github/forks/theassassin0128/Hopeless-Bot" alt="Forks"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/stargazers"><img
+        src="https://img.shields.io/github/stars/theassassin0128/Hopeless-Bot" alt="Stars"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/issues"><img
+        src="https://img.shields.io/github/issues/theassassin0128/Hopeless-Bot" alt="Issues"></a>
+    <a href="https://discord.gg/E6H9VvBdTk"><img
+        src="https://img.shields.io/discord/1054284394791178291?logo=discord&colorB=7289DA" alt=" Support
+        Server"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/blob/main/LICENSE"><img
+        src="https://img.shields.io/github/license/theassassin0128/Hopeless-Bot" alt="License"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/actions?query=workflow%3ACodeQL"><img
+        src="https://github.com/theassassin0128/Hopeless-Bot/workflows/CodeQL/badge.svg" alt="CodeQL"></a>
+    <a href="https://github.com/theassassin0128/Hopeless-Bot/actions?query=workflow%3A%22Dependency+Review%22"><img
+        src="https://github.com/theassassin0128/Hopeless-Bot/workflows/Dependency%20Review/badge.svg" alt="Dependency
+        Review"></a>
+    <a href="https://www.codefactor.io/repository/github/theassassin0128/Hopeless-Bot"><img
+        src="https://img.shields.io/codefactor/grade/github/theassassin0128/Hopeless-Bot?logo=codefactor&logoColor=%23F44A6A"
+        alt="CodeFactor"></a>
+    <h2>General Information:</h2>
+    <ul>
+      <li><strong>Name:</strong> Hopeless Bot</li>
+      <li><strong>Version:</strong> 2.2.1</li>
+      <li><strong>Description:</strong> A Discord bot for your every need.</li>
+      <li><strong>Main Entry Point:</strong> <code>src/index.js</code></li>
+      <li><strong>Author:</strong> theassassin0128 (GitHub: <a
+          href="https://github.com/theassassin0128">theassassin0128</a>)</li>
+      <li><strong>License:</strong> MIT</li>
+    </ul>
+  </div>
+  <div class="section">
+    <h2>Module Aliases:</h2>
+    <p>The project uses module aliases for easier imports:</p>
+    <ul>
+      <li><code>@root</code>: <code>.</code></li>
+      <li><code>@src</code>: <code>src/</code></li>
+      <li><code>@lib</code>: <code>src/lib/</code></li>
+      <li><code>@config</code>: <code>src/config/</code></li>
+      <li><code>@structures</code>: <code>src/structures/</code></li>
+      <li><code>@handlers</code>: <code>src/handlers/</code></li>
+      <li><code>@helpers</code>: <code>src/helpers/</code></li>
+      <li><code>@schemas</code>: <code>src/schemas/</code></li>
+      <li><code>@commands</code>: <code>src/commands/</code></li>
+      <li><code>@assets</code>: <code>src/assets/</code></li>
+      <li><code>@events</code>: <code>src/events/</code></li>
+    </ul>
+  </div>
+  <div class="section">
+    <h2>Node.js Engine Requirement:</h2>
+    <p>Requires Node.js version 20 or higher.</p>
+  </div>
+  <div class="section">
+    <h2>Scripts:</h2>
+    <ul>
+      <li><strong>test:</strong> Placeholder for running tests.</li>
+      <li><strong>dev:</strong> Runs the bot in development mode using <code>nodemon</code>.</li>
+      <li><strong>trace:</strong> Runs the bot with trace warnings enabled.</li>
+      <li><strong>start:</strong> Starts the bot.</li>
+      <li><strong>destroyGlobal:</strong> Runs a script to destroy global commands.</li>
+      <li><strong>destroyGuild:</strong> Runs a script to destroy guild-specific commands.</li>
+      <li><strong>lavalink:</strong> Starts Lavalink server.</li>
+      <li><strong>docker-up-lavalink:</strong> Starts Lavalink server using Docker.</li>
+      <li><strong>docker-kill-lavalink:</strong> Stops the Lavalink server running in Docker.</li>
+    </ul>
+  </div>
+  <div class="section">
+    <h2>Links:</h2>
+    <ul>
+      <li>
         <a href="https://discord.com/users/720186844540567583">
           <img
-            alt="Static Badge"
             src="https://img.shields.io/badge/Discord-%40theassassin0128-blue?style=flat-square&logo=discord&colorB=7289DA"
-          />
+            alt="Discord Badge">
         </a>
+      </li>
+      <li>
         <a href="https://instagram.com/rafisarkar0128">
-          <img
-            alt="Static Badge"
-            src="https://img.shields.io/badge/Instagram-rafisarkar0128-blue?style=flat-square&logo=instagram&colorB=e1306c"
-          />
+          <img alt="Instagram Badge"
+            src="https://img.shields.io/badge/Instagram-rafisarkar0128-blue?style=flat-square&logo=instagram&colorB=e1306c">
         </a>
+      </li>
+      <li>
         <a href="https://facebook.com/rafisarkar0128">
-          <img
-            alt="Static Badge"
-            src="https://img.shields.io/badge/FaceBook-rafisarkar0128-blue?style=flat-square&logo=facebook&logoColor=blue"
-          />
+          <img alt="Facebook Badge"
+            src="https://img.shields.io/badge/FaceBook-rafisarkar0128-blue?style=flat-square&logo=facebook&logoColor=blue">
         </a>
+      </li>
+      <li>
         <a href="https://github.com/theassassin0128">
-          <img
-            alt="Static Badge"
-            src="https://img.shields.io/badge/GitHub-theassassin0128-blue?style=flat-square&logo=github&colorB=white"
-          />
+          <img alt="GitHub Badge"
+            src="https://img.shields.io/badge/GitHub-theassassin0128-blue?style=flat-square&logo=github&colorB=white">
         </a>
+      </li>
+      <li>
         <a href="https://www.reddit.com/user/theassassin0128">
-          <img
-            alt="Static Badge"
-            src="https://img.shields.io/badge/Reddit-theassassin0128-red?style=flat-square&logo=reddit&colorB=red"
-          />
+          <img alt="Reddit Badge"
+            src="https://img.shields.io/badge/Reddit-theassassin0128-red?style=flat-square&logo=reddit&colorB=red">
         </a>
-      </div>
-    </div>
-  </body>
+      </li>
+    </ul>
+  </div>
+</body>
+
 </html>

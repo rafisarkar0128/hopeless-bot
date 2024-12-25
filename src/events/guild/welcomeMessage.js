@@ -1,5 +1,5 @@
 const { GuildMember } = require("discord.js");
-const { WelcomeLeave } = require("canvafy");
+//const { WelcomeLeave } = require("canvafy");
 const welcomeSchema = require("@src/schemas/welcome.js");
 
 function getRandomColor() {
@@ -20,6 +20,7 @@ module.exports = {
    * @returns
    */
   execute: async (client, member) => {
+    /*
     const data = await welcomeSchema.findOne({
       guildid: member.guild.id,
     });
@@ -52,5 +53,6 @@ module.exports = {
         },
       ],
     });
+    */
   },
 };

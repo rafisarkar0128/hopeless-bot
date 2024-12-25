@@ -8,29 +8,10 @@ class Logger {
     this.client = client;
 
     // date time string
-    this.dt = colors.gray(
-      DateTime.now().toFormat(this.client.config.time_format ?? "dd/MM/yyyy h:mm:ss a"),
-    );
-
-    // logger to save logs
-    this.logger = winston.createLogger({
-      level: "silly",
-      format: winston.format.combine(
-        winston.format.uncolorize(),
-        winston.format.timestamp({
-          format: "DD/MM/YYYY hh:mm:ss A Z",
-        }),
-        winston.format.json({
-          space: 2,
-        }),
-      ),
-      transports: [
-        new winston.transports.File({
-          filename: DateTime.now().toFormat("dd-MM-yyyy") + ".log",
-          dirname: process.cwd() + "/" + "logs",
-        }),
-      ],
-    });
+    this.dt = () =>
+      colors.gray(
+        DateTime.now().toFormat(this.client.config.time_format ?? "dd/MM/yyyy h:mm:ss a"),
+      );
   }
 
   /**
@@ -41,8 +22,8 @@ class Logger {
   info(file, content) {
     const filename = file.split(/[\\/]/g).pop();
     const output =
-      this.dt +
-      ` [` +
+      this.dt() +
+      ` ✉️  [` +
       colors.yellow(
         `${filename.length > 20 ? filename.substring(0, 17) + "..." : filename}`,
       ) +
@@ -59,7 +40,7 @@ class Logger {
    */
   warn(content) {
     return console.log(
-      `[${this.dt}] [${colors.yellow("WARN")}] ${colors.yellow(`${content}`)}`,
+      `[${this.dt()}] ⚠️  [${colors.yellow("WARN")}] ${colors.yellow(`${content}`)}`,
     );
   }
 
@@ -70,7 +51,7 @@ class Logger {
    */
   async error(content, type) {
     const error = content.stack ? content.stack : content;
-    console.log(`[${this.dt}] [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
+    console.log(`[${this.dt()}] 🛑  [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
     return this.client.utils.sendError(content, type);
   }
 
@@ -79,7 +60,7 @@ class Logger {
    */
   debug(content) {
     return console.log(
-      `[${this.dt}] [${colors.green("DEBUG")}] ${colors.green(content)}`,
+      `[${this.dt()}] 🐛  [${colors.green("DEBUG")}] ${colors.green(content)}`,
     );
   }
 
