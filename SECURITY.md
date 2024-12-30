@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The versions written below are the only supported versions.
+The versions listed below are the only supported versions.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,5 +11,4 @@ The versions written below are the only supported versions.
 
 ## Reporting a Vulnerability
 
-This project is a solo one. So, only I am working on this project alone.
-If you find any `Vulnerability` report it in issues.
+This project is maintained by a single developer. If you discover any vulnerabilities, please report them by creating an issue in the repository.

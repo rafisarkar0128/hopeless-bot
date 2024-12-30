@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-# ‼️ On Hold For Next Few Months ‼️
-=======
 # ‼️On Hold For Next Few Months‼️
-
-> [!IMPORTANT]
-> I am going to rebuild the whole project. From now there won't be any new commits on this branch untill the rebuilding process is completed in the rebuild branch. Also the code in this branch has some major bugs that needs attention. Thanks for staying with me. Untill next time goodbye.
->>>>>>> main
-
-> **IMPORTANT**: This is the **_rebuild_** branch. It represents a new version of the bot with a new structure and classes to implement advanced and some legacy features from [Node](https://github.com/theassassin0128/Node). The code here may change or get updated without notice. Until next time, **Goodbye**.
 
 ![Hopeless Bot](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient)
 

@@ -36,7 +36,6 @@ module.exports = {
         name: "profile.png",
       });
 
-<<<<<<< HEAD
       const embed = new EmbedBuilder()
         .setAuthor({
           name: `${member.user.username}`,
@@ -70,43 +69,7 @@ module.exports = {
             ].join("\n"),
           },
         )
-        .setColor(member.roles.color.hexColor || client.utils.getRandomColor());
-=======
-    const embed = new EmbedBuilder()
-      .setAuthor({
-        name: `${member.user.username}`,
-        iconURL: `${member.user.displayAvatarURL({ size: 2048 })}`,
-      })
-      .setThumbnail(member.displayAvatarURL({ size: 4096 }))
-      .setImage("attachment://profile.png")
-      .addFields(
-        {
-          name: "**General Information**",
-          value: [
-            `**name** : ${member.user.username}`,
-            `**id** : \`${member.id}\``,
-            `**nickname** : ${member.displayName || None}`,
-            `**bot?** : ${member.user.bot ? "Yes" : "No"} `,
-            `**joined** : on ${DateTime.fromMillis(member.joinedTimestamp).toFormat(
-              "FFF",
-            )}`,
-            `** - ${DateTime.fromMillis(member.joinedTimestamp).toRelative({})}**`,
-            `**created** : on ${DateTime.fromMillis(
-              member.user.createdTimestamp,
-            ).toFormat("FFF")}`,
-            `** - ${DateTime.fromMillis(member.user.createdTimestamp).toRelative()}**`,
-          ].join("\n"),
-        },
-        {
-          name: `Role Information`,
-          value: [
-            `**Roles** : Total - ${member.roles.cache.size - 1}`,
-            `${member.roles.cache.map((r) => `<@&${r.id}>`).join(", ")}`,
-          ].join("\n"),
-        },
-      )
-      .setColor(member.roles.color?.hexColor || client.utils.getRandomColor());
->>>>>>> main
+        .setColor(member.roles.color?.hexColor || client.utils.getRandomColor());
 
       interaction.followUp({
         embeds: [embed],
