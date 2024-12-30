@@ -22,6 +22,10 @@ const client = new DiscordBot({
     GatewayIntentBits.DirectMessageTyping,
     GatewayIntentBits.GuildScheduledEvents,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildPresences, 
+    GatewayIntentBits.GuildModeration,  
+    GatewayIntentBits.AutoModerationConfiguration,
+    GatewayIntentBits.AutoModerationExecution, 
   ],
   partials: [
     Partials.Channel,
@@ -30,6 +34,7 @@ const client = new DiscordBot({
     Partials.Reaction,
     Partials.User,
     Partials.GuildScheduledEvent,
+    Partials.ThreadMember, 
   ],
   allowedMentions: {
     parse: ["users", "roles", "everyone"],
