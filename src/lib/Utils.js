@@ -9,34 +9,14 @@ class Utils {
     this.client = client;
   }
 
-  /** Returns an array of files from given direcotry filtered by provided extension
-   * @type {import("@types/utils").LoadFiles}
-   * @example const file = await client.utils.loadFiles("src", ".js");
-   */
-  async loadFiles(dirname, ext) {
-    const deleteCashedFile = (file) => {
-      const filePath = path.resolve(file);
-      if (require.cache[filePath]) {
-        delete require.cache[filePath];
-      }
-    };
-
-    const files = await glob(
-      path.join(`${process.cwd()}`, "src", dirname, `**/*`).replace(/\\/g, "/"),
-    );
-    const Files = files.filter((file) => path.extname(file) === ext);
-    await Promise.all(Files.map(deleteCashedFile));
-    return Files;
-  }
-
   /** A function to send error to a discord channel
-   * @type {import("@types/utils").SendError}
+   * @type {import("../types/utils").SendError}
    * @example client.utils.sendError(error, type, data);
    */
   async sendError(error, type, data) {
     if (!error) return;
-    if (!this.client.database) {
-    }
+    if (!this.client.database) return;
+
     const errStack = error?.stack ? error.stack : error;
     const webhookClient = process.env.ERROR_WEBHOOK_URL
       ? new WebhookClient({
@@ -45,8 +25,8 @@ class Utils {
       : undefined;
 
     const embed = new EmbedBuilder()
-      .setColor(this.client.colors.Wrong)
-      .setTitle(`**An Error Occoured**`)
+      .setColor(this.client.config.colors.Wrong)
+      .setTitle(`**An Error Occurred**`)
       .setDescription(
         `\`\`\`\n${
           errStack.length > 4000 ? errStack.substring(0, 4000) + "..." : errStack
@@ -77,7 +57,7 @@ class Utils {
   }
 
   /** Checks if a string contains a URL
-   * @type {import("@types/utils").ContainsLink}
+   * @type {import("../types/utils").ContainsLink}
    * @example client.utils.containsLink(text);
    */
   containsLink(text) {
@@ -87,7 +67,7 @@ class Utils {
   }
 
   /** Checks if a string is a valid discord invite
-   * @type {import("@types/utils").ContainsDiscordInvite}
+   * @type {import("../types/utils").ContainsDiscordInvite}
    * @example client.utils.containsDiscordInvite(text);
    */
   containsDiscordInvite(text) {
@@ -96,8 +76,23 @@ class Utils {
     );
   }
 
+  /**
+   * A function to get table border in provided color
+   * @type {import("../types/utils.d.ts").GetTableBorder}
+   * @example client.utils.getTableBorder(color);
+   */
+  getTableBorder(color) {
+    const border = {};
+
+    Object.keys(this.client.config.table.border).forEach((key) => {
+      border[key] = colors[color](this.client.config.table.border[key]);
+    });
+
+    return border;
+  }
+
   /** Returns a random number below a max
-   * @type {import("@types/utils").GetRandomInt}
+   * @type {import("../types/utils").GetRandomInt}
    * @example client.utils.getRandomInt(max);
    */
   getRandomInt(max) {
@@ -105,45 +100,41 @@ class Utils {
   }
 
   /** Return a random color from colors.json
-   * @type {import("@types/utils").GetRandomColor}
+   * @type {import("../types/utils").GetRandomColor}
    * @example client.utils.getRandomColor();
    */
   getRandomColor() {
-    return this.client.colors.array[
-      Math.floor(Math.random() * this.client.colors.array.length)
-    ];
+    const colorsArray = Object.values(this.client.config.colors);
+    return colorsArray[Math.floor(Math.random() * colorsArray.length)];
   }
 
   /** Checks if a string is a valid Hex color
-   * @type {import("@types/utils").IsHex}
-   * @example client.utils.isHex(text)
+   * @type {import("../types/utils").IsHex}
+   * @example client.utils.isHex(text);
    */
   isHex(text) {
     return /^#[0-9A-F]{6}$/i.test(text);
   }
 
-  /** Checks if a string is a valid Hex color
-   * @type {import("@types/utils").IsValidColor}
+  /** Checks if a string is a valid color
+   * @type {import("../types/utils").IsValidColor}
    * @example client.utils.isValidColor(text);
    */
   isValidColor(text) {
-    if (this.client.colors.indexOf(text) > -1) {
-      return true;
-    } else return false;
+    return this.client.colors.includes(text);
   }
 
   /** Returns hour difference between two dates
-   * @type {import("@types/utils").DiffHours}
-   * @example client.utils.dissHours(Date2, Date1);
+   * @type {import("../types/utils").DiffHours}
+   * @example client.utils.diffHours(Date2, Date1);
    */
   diffHours(dt2, dt1) {
-    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
-    diff /= 60 * 60;
+    const diff = (dt2.getTime() - dt1.getTime()) / 1000 / 60 / 60;
     return Math.abs(Math.round(diff));
   }
 
   /** Returns remaining time in days, hours, minutes and seconds
-   * @type {import("@types/utils").Timeformat}
+   * @type {import("../types/utils").Timeformat}
    * @example client.utils.timeFormat(timeInMillis);
    */
   timeFormat(timeInMillis) {
@@ -160,7 +151,7 @@ class Utils {
   }
 
   /** Converts duration to milliseconds
-   * @type {import("@types/utils").DurationToMillis}
+   * @type {import("../types/utils").DurationToMillis}
    * @example client.utils.durationToMillis(duration);
    */
   durationToMillis(duration) {
@@ -173,22 +164,21 @@ class Utils {
   }
 
   /** Returns time remaining until provided date
-   * @type {import("@types/utils").GetRemainingTime}
+   * @type {import("../types/utils").GetRemainingTime}
    * @example client.utils.getRemainingTime(timeUntil);
    */
   getRemainingTime(timeUntil) {
     const seconds = Math.abs((timeUntil - new Date()) / 1000);
-    const time = Utils.timeformat(seconds);
-    return time;
+    return this.timeFormat(seconds * 1000);
   }
 
-  /** Takes a single or array of permissions and returns a formated string
-   * @type {import("@types/utils").ParsePermissions}
-   * @example client.utils.parsePermissions(permissions)
+  /** Takes a single or array of permissions and returns a formatted string
+   * @type {import("../types/utils").ParsePermissions}
+   * @example client.utils.parsePermissions(permissions);
    */
-  parsePermissions(permissions) {
-    const permissionWord = ` permission${permissions.length > 1 ? "s" : ""}`;
-    return `${permissions.map((p) => `\`${p}\``).join(", ")} ${permissionWord}`;
+  parsePermissions(p) {
+    const word = ` permission${p.length > 1 ? "s" : ""}`;
+    return `${p.map((perm) => `**\`${perm}\`**`).join(", ")}${word}`;
   }
 }
 

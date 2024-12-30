@@ -1,25 +1,3 @@
-// File Exentions
-export type FileExtensions =
-  | ".js"
-  | ".jsx"
-  | ".json"
-  | ".cjs"
-  | ".cts"
-  | ".mjs"
-  | ".mts"
-  | ".ts "
-  | ".tsx"
-  | ".jpg"
-  | ".png"
-  | ".jpeg"
-  | ".gif"
-  | ".mp4"
-  | ".mp3"
-  | ".mkv";
-
-// Function loadFiles()
-export type LoadFiles = (dirname: string, ext: FileExtensions) => Promise<string[]>;
-
 // Error Types
 export type ErrorTypes =
   | "error"
@@ -44,3 +22,25 @@ export type DiffHours = (dt2: Date, dt1: Date) => Date;
 export type Timeformat = (timeInSeconds: number) => string;
 export type DurationToMillis = (duration: string) => number;
 export type ParsePermissions = (permissions: PermissionResolvable[]) => string;
+
+export type Color =
+  | "black"
+  | "red"
+  | "green"
+  | "yellow"
+  | "blue"
+  | "magenta"
+  | "cyan"
+  | "white"
+  | "gray"
+  | "grey"
+  | "bgBlack"
+  | "bgRed"
+  | "bgGreen"
+  | "bgYellow"
+  | "bgBlue"
+  | "bgMagenta"
+  | "bgCyan"
+  | "bgWhite";
+
+export type GetTableBorder = (color: Color) => object;

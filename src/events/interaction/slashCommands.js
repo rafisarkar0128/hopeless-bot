@@ -1,141 +1,162 @@
 const { ChatInputCommandInteraction, EmbedBuilder } = require("discord.js");
+const { getSettings } = require("@schemas/guild");
+const { t } = require("i18next");
+const cooldownCache = new Map();
 
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "interactionCreate",
-  once: false,
-  rest: false,
-  ws: false,
-  moonlink: false,
   /** @param {ChatInputCommandInteraction} interaction */
   execute: async (client, interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    const { config, colors, utils } = client;
+    const { config, slashCommands, aliases } = client;
     const { commandName, user, member, guild } = interaction;
+    const { timeFormat, parsePermissions } = client.utils;
+
+    if (!config.command.slash.enabled) return;
+
+    const settings = await getSettings(guild);
+    const command = slashCommands.get(commandName);
+
+    if (!command) {
+      interaction.reply({
+        content: "This command isn't available.",
+        ephemeral: true,
+      });
+      await client.application.commands.delete(interaction.id);
+      return;
+    }
+
+    await interaction.deferReply({
+      ephemeral: command.ephemeral ?? true,
+    });
+
+    const rEmbed = new EmbedBuilder().setColor(config.colors.Wrong);
+    const errEmbed = new EmbedBuilder().setColor(config.colors.Standby);
 
     try {
-      const command = client.slashCommands.get(commandName);
+      if (command?.devOnly || command?.category === "DEVELOPMENT") {
+        if (!config.devs.includes(user.id)) {
+          await interaction.followUp({
+            embeds: [rEmbed.setDescription(t("events:dev_only"))],
+            ephemeral: true,
+          });
+          return;
+        }
+      }
 
-      const mEmbed = new EmbedBuilder()
-        .setTitle("**This command isn't available. Try again later.**")
-        .setColor(colors.Wrong);
-      if (!command || !command.execute) {
-        return interaction.reply({
-          embeds: [mEmbed],
+      if (command?.guildOnly && !interaction.inGuild()) {
+        await interaction.followUp({
+          embeds: [rEmbed.setDescription(t("events:guild_only"))],
           ephemeral: true,
         });
+        return;
       }
 
-      const dEmbed = new EmbedBuilder()
-        .setTitle("**This command is disabled by the __Owner__ or __Devs__**.")
-        .setColor(colors.Wrong);
-      if (command.disabled && !config.devs.includes(user.id)) {
-        return interaction.reply({
-          embeds: [dEmbed],
-          ephemeral: true,
-        });
+      if (command?.cooldown > 0) {
+        const rTime = getRemainingTime(command, user.id);
+        if (rTime > 0 && !config.devs.includes(user.id)) {
+          await interaction.followUp({
+            embeds: [
+              rEmbed.setDescription(
+                t("events:cooldown", { t: timeFormat(rTime * 1000) }),
+              ),
+            ],
+            ephemeral: true,
+          });
+          return;
+        }
       }
 
-      const dvEmbed = new EmbedBuilder()
-        .setTitle(`**Only the owner or developers are allowed to use this command.**`)
-        .setColor(colors.Wrong);
-      if (
-        (command.devOnly || command.category === "DEVELOPMENT") &&
-        !config.devs.includes(user.id)
-      ) {
-        return interaction.reply({
-          embeds: [dvEmbed],
-          ephemeral: true,
-        });
+      if (guild || interaction.inGuild()) {
+        if (!member.permissions.has(command?.userPermissions)) {
+          await interaction.followUp({
+            embeds: [
+              rEmbed.setDescription(
+                t("events:missing_user_permissions", {
+                  p: parsePermissions(command.userPermissions),
+                }),
+              ),
+            ],
+            ephemeral: true,
+          });
+          return;
+        }
+
+        if (!guild.members.me.permissions.has(command?.botPermissions)) {
+          await interaction.followUp({
+            embeds: [
+              rEmbed.setDescription(
+                t("events:missing_bot_permissions", {
+                  p: parsePermissions(command.botPermissions),
+                }),
+              ),
+            ],
+            ephemeral: true,
+          });
+          return;
+        }
+
+        if (command?.voiceChannelOnly) {
+          const vc = member.voice?.channel;
+          if (!vc) {
+            await interaction.followUp({
+              embeds: [rEmbed.setDescription(t("events:voice_channel_only"))],
+              ephemeral: true,
+            });
+            return;
+          }
+
+          if (!vc.joinable || !vc.speakable) {
+            await interaction.followUp({
+              embeds: [rEmbed.setDescription(t("events:missing_vc_permissions"))],
+              ephemeral: true,
+            });
+            return;
+          }
+        }
       }
 
-      const gEmbed = new EmbedBuilder()
-        .setTitle(`**This command can only be used in a __Guild (Discord Server)__**`)
-        .setColor(colors.Wrong);
-      if (command.guildOnly && !interaction.inGuild()) {
-        return interaction.reply({
-          embeds: [gEmbed],
-          ephemeral: true,
-        });
-      }
-
-      //const timestamps = client.cooldowns.get(command.data.name);
-      //const cooldown = (command.cooldown || 3) * 1000;
-      //const remainingTime = utils.getRemainingTime(timestamps, cooldown, user.id);
-      //const cdEmbed = new EmbedBuilder()
-      //  .setTitle(`**Chill! Embed in on cooldown wait for \`${remainingTime}\` seconds**`)
-      //  .setColor(colors.Wrong);
-      //if (remainingTime && !config.devs.includes(user.id)) {
-      //  return interaction.reply({
-      //    embeds: [cdEmbed],
-      //    ephemeral: true,
-      //  });
-      //}
-
-      const uPermission = new EmbedBuilder()
-        .setTitle(
-          `**You need \`${utils.parsePermissions(
-            command.userPermissions,
-          )}\` to use this command.**`,
-        )
-        .setColor(colors.Wrong);
-      if (member && !member.permissions.has(command?.userPermissions)) {
-        return interaction.reply({
-          embeds: [uPermission],
-          ephemeral: true,
-        });
-      }
-
-      const bPermission = new EmbedBuilder()
-        .setTitle(
-          `**I need ${utils.parsePermissions(
-            command.botPermissions,
-          )} to execute this command.**`,
-        )
-        .setColor(colors.Wrong);
-      if (member && !guild.members.me.permissions.has(command?.botPermissions)) {
-        return interaction.reply({
-          embeds: [bPermission],
-          ephemeral: true,
-        });
-      }
-
-      const vcEmbed = new EmbedBuilder()
-        .setColor(client.colors.Wrong)
-        .setTitle("**You must have to be in a voice channel to use this command.**");
-      if (command.inVoiceChannel && !member.voice.channel) {
-        return interaction.reply({
-          embed: [vcEmbed],
-        });
-      }
-
-      return command.execute(client, interaction);
+      await command.execute(client, interaction, settings);
     } catch (error) {
-      const eEmbed = new EmbedBuilder()
-        .setColor(colors.StandBy)
-        .setTitle(`** An error has occurred! Try again later!**`);
-
-      if (interaction.isRepliable() || !interaction.replied) {
-        interaction.reply({
-          content: `${interaction.user}`,
-          embeds: [eEmbed],
-          ephemeral: true,
-        });
-      }
-
-      if (interaction.replied || interaction.deferred) {
-        const message = await interaction.editReply({
-          content: `${interaction.user}`,
-          embeds: [eEmbed],
-        });
-
-        setTimeout(() => {
-          message.delete();
-        }, 9000);
-      }
+      await interaction.followUp({
+        content: `<@${user.id}>`,
+        embeds: [errEmbed.setTitle(t("events:error"))],
+        fetchReply: true,
+      });
 
       throw error;
+    } finally {
+      if (command.cooldown > 0) setCooldown(command, user.id);
     }
   },
 };
+
+/**
+ * @param {object} command
+ * @param {string} userId
+ * @returns {void}
+ */
+function setCooldown(command, userId) {
+  const key = command.name + "-" + userId;
+  cooldownCache.set(key, Date.now());
+}
+
+/**
+ * @param {object} command
+ * @param {string} userId
+ * @returns {number}
+ */
+function getRemainingTime(command, userId) {
+  const key = command.name + "-" + userId;
+  if (cooldownCache.has(key)) {
+    const remaining = (Date.now() - cooldownCache.get(key)) * 0.001;
+    if (remaining > command.cooldown) {
+      cooldownCache.delete(key);
+      return 0;
+    }
+    return command.cooldown - remaining;
+  }
+  return 0;
+}

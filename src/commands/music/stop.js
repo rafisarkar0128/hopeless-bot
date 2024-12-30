@@ -4,60 +4,90 @@ const {
   InteractionContextType,
   ApplicationIntegrationType,
 } = require("discord.js");
-
-/** @type {import("@types/commands").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("stop")
-    .setDescription("stop the bot from playing music")
-    .setContexts(InteractionContextType.Guild)
-    .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
-  ephemeral: true,
-  cooldown: 0,
-  category: "MUSIC",
-
-  usage: {
-    prefix: "<options>",
-    slash: "/stop <option>",
+  options: {
+    category: "music",
+    cooldown: 0,
+    premium: false,
+    guildOnly: true,
+    devOnly: false,
+    voiceChannelOnly: true,
+    botPermissions: ["SendMessages", "ReadMessageHistory"],
+    userPermissions: ["SendMessages"],
   },
-  aliases: ["st"],
-  minArgsCount: 0,
-  isPrefixDisabled: false,
-  isSlashDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: false,
-  isDevOnly: false,
-  isVoiceChannelOnly: false,
-  botPermissions: [],
-  userPermissions: [],
-  //run: async (client, message, args) => {},
-  execute: async (client, interaction) => {
-    const player = client.moonlink.players.get(interaction.guild.id);
+  prefix: {
+    name: "stop",
+    description: "stop the bot from playing music",
+    aliases: ["st"],
+    usage: "",
+    disabled: false,
+    minArgsCount: 0,
+    subcommands: [],
+    execute: (client, message) => {
+      const { Wrong } = client.config.colors;
 
-    if (!player) {
-      const nEmbed = new EmbedBuilder()
-        .setColor(client.colors.Wrong)
-        .setTitle("**There is no music player in this server.**");
-      return interaction.reply({
-        embeds: [nEmbed],
+      const player = client.lavalink.players.get(message.guild.id);
+      if (!player) {
+        const nEmbed = new EmbedBuilder()
+          .setColor(Wrong)
+          .setDescription("**There is no music player in this server.**");
+        return message.reply({
+          embeds: [nEmbed],
+        });
+      }
+
+      if (player.connected) {
+        player.destroy("Command Issued", true);
+      }
+
+      return message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Wrong)
+            .setDescription(
+              "**Destroyed the music player and disconnected from the voice channel.**",
+            ),
+        ],
       });
-    }
+    },
+  },
+  slash: {
+    data: new SlashCommandBuilder()
+      .setName("stop")
+      .setDescription("stop the bot from playing music")
+      .setContexts(InteractionContextType.Guild)
+      .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
+    usage: "",
+    ephemeral: true,
+    global: true,
+    disabled: false,
+    execute: async (client, interaction) => {
+      const { Wrong } = client.config.colors;
 
-    if (player.connected) {
-      player.stop();
-      player.disconnect();
-      player.destroy();
-    }
+      const player = client.lavalink.players.get(interaction.guild.id);
+      if (!player) {
+        const nEmbed = new EmbedBuilder()
+          .setColor(Wrong)
+          .setDescription("**There is no music player in this server.**");
+        return interaction.followUp({
+          embeds: [nEmbed],
+        });
+      }
 
-    return interaction.reply({
-      embeds: [
-        new EmbedBuilder()
-          .setColor(client.colors.Wrong)
-          .setTitle(
-            "**Stopped the music player and disconnected from the voice channel.**",
-          ),
-      ],
-    });
+      if (player.connected) {
+        player.destroy("Command Issued", true);
+      }
+
+      return interaction.followUp({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Wrong)
+            .setDescription(
+              "**Destroyed the music player and disconnected from the voice channel.**",
+            ),
+        ],
+      });
+    },
   },
 };

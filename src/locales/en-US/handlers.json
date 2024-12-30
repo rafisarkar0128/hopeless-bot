@@ -1,0 +1,17 @@
+{
+  "command": {
+    "no_permission": {
+      "title": "Missing Permissions",
+      "description": {
+        "bot": "I need {permissions} to execute this command.",
+        "user": "You must have these {permissions} to be able use this command."
+      }
+    },
+    "no_run_function": "The prefix version of this command isn't completed yet. Use the slash version instead.",
+    "command_disabled": "This command is disabled by the _bot owner_ or _developers_.",
+    "dev_command": "This command is only accessible to _the bot owner_ & _developers_.",
+    "guild_only": "This command can only be used in a guild _(Discord Server)_.",
+    "cooldown": "Chill! Command in on cooldown wait for `{cooldown}` to use the command again.",
+    "voice_channel_only": "You must be in a voice channel to use this command."
+  }
+}

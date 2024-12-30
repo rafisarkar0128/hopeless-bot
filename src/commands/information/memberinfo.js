@@ -6,78 +6,91 @@ const {
   Message,
   Embed,
   Attachment,
+  GuildMember,
 } = require("discord.js");
 const { profileImage } = require("discord-arts");
 const { DateTime } = require("luxon");
+const { t } = require("i18next");
 
-/** @type {import("@types/commands").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("memberinfo")
-    .setDescription("📖 View your or any member's information.")
-    .addUserOption((option) =>
-      option
-        .setName("member")
-        .setDescription("Select a member or leave empty to view your own info.")
-        .setRequired(false),
-    ),
-  ephemeral: true,
-  cooldown: 25,
-  category: "INFORMATION",
-  usage: {
-    prefix: "[<GuildMember|InteractionUser>]",
-    slash: "/memberinfo [member] <GuildMember|InteractionUser>",
+  options: {
+    category: "information",
+    cooldown: 20,
+    premium: false,
+    guildOnly: true,
+    devOnly: false,
+    voiceChannelOnly: false,
+    botPermissions: ["SendMessages", "ReadMessageHistory"],
+    userPermissions: ["SendMessages"],
   },
-  aliases: ["userinfo", "infouser", "uinfo", "minfo", "user", "member"],
-  minArgsCount: 1,
-  isPrefixDisabled: false,
-  isSlashDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: true,
-  isDevOnly: false,
-  isVoiceChannelOnly: false,
-  botPermissions: [],
-  userPermissions: [],
-  run: async (client, message, args) => {
-    const waitEmbed = new EmbedBuilder()
-      .setColor(client.colors.Good)
-      .setTitle("**Please be patient and wait for the embed.**");
-    const reply = await message.reply({
-      embeds: [waitEmbed],
-    });
+  prefix: {
+    name: "memberinfo",
+    description: "📖 View your or any member's information.",
+    aliases: ["userinfo", "infouser", "uinfo", "minfo", "user", "member"],
+    usage: "<GuildMember|InteractionUser>",
+    disabled: false,
+    minArgsCount: 1,
+    subcommands: [],
+    execute: async (client, message, args) => {
+      const waitEmbed = new EmbedBuilder()
+        .setColor(client.colors.Good)
+        .setTitle("**Please be patient and wait for the embed.**");
+      const reply = await message.reply({
+        embeds: [waitEmbed],
+      });
 
-    var member = message.member;
-    const patternMatch = args[0].match(/(\d{17,20})/);
-    if (patternMatch) {
-      const id = patternMatch[1];
-      member = await message.guild.members.fetch(id);
-    }
+      var member = message.member;
+      const patternMatch = args[0].match(/(\d{17,20})/);
+      if (patternMatch) {
+        const id = patternMatch[1];
+        member = await message.guild.members.fetch(id);
+      }
 
-    const { embed, imageAttachment } = await getMemberEmbed(client, message, member);
-    return reply.edit({
-      embeds: [embed],
-      files: [imageAttachment],
-    });
+      const { embed, imageAttachment } = await getMemberEmbed(client, message, member);
+      return reply.edit({
+        embeds: [embed],
+        files: [imageAttachment],
+      });
+    },
   },
-  execute: async (client, interaction) => {
-    await interaction.deferReply();
+  slash: {
+    data: new SlashCommandBuilder()
+      .setName("memberinfo")
+      .setDescription("📖 View your or any member's information.")
+      .addUserOption((option) =>
+        option
+          .setName("member")
+          .setDescription("Select a member or leave empty to view your own info.")
+          .setRequired(false),
+      ),
+    usage: "[member] <GuildMember|InteractionUser>",
+    ephemeral: false,
+    global: true,
+    disabled: false,
+    execute: async (client, interaction) => {
+      await interaction.deferReply();
 
-    const member = interaction.options.getMember("member") || interaction.member;
-    const { embed, imageAttachment } = await getMemberEmbed(client, interaction, member);
+      const member = interaction.options.getMember("member") || interaction.member;
+      const { embed, imageAttachment } = await getMemberEmbed(
+        client,
+        interaction,
+        member,
+      );
 
-    return interaction.followUp({
-      embeds: [embed],
-      files: [imageAttachment],
-    });
+      return interaction.followUp({
+        embeds: [embed],
+        files: [imageAttachment],
+      });
+    },
   },
 };
 
 /** Function to get memberinfo Embed and image attachment
  * @param {import("@lib/DiscordBot").DiscordBot} client
  * @param {ChatInputCommandInteraction | Message} ctx
- * @param {import("discord.js").GuildMember} member
- * @returns {Promise<Embed, Attachment>}
+ * @param {GuildMember} member
+ * @returns {Promise<{embed: Embed,imageAttachment: Attachment}>}
  */
 async function getMemberEmbed(client, ctx, member) {
   const banner = (await member.user.fetch()).bannerURL({
@@ -181,7 +194,10 @@ async function getMemberEmbed(client, ctx, member) {
       },
     )
     .setFooter({
-      text: client.config.bot.footer,
+      text: t("default:embed.footer", {
+        username: client.user.username,
+        year: new Date().getFullYear(),
+      }),
     });
 
   return { embed, imageAttachment };

@@ -1,0 +1,40 @@
+{
+  "ping": {
+    "description": "🏓 Pong! Responde com o tempo de resposta do bot.",
+    "reply": {
+      "content": "⏱️ Aguarde um momento..."
+    }
+  },
+  "invite": {
+    "description": "Retorna um botão com o link de convite do bot.",
+    "reply": {
+      "content": "**Me convide clicando no botão.**",
+      "disabled": "**Desculpe. Os convites foram desativados pelo proprietário.**"
+    }
+  },
+  "botinfo": {
+    "description": "📖 Veja as informações do bot.",
+    "reply": {}
+  },
+  "serverinfo": {
+    "description": "📖 Veja as informações do servidor.",
+    "reply": {
+      "embed": {}
+    }
+  },
+  "roles": {
+    "description": "Obtenha a lista de cargos do servidor.",
+    "reply": {}
+  },
+  "roleinfo": {
+    "description": "📖 Veja as informações de qualquer cargo.",
+    "reply": {}
+  },
+  "memberinfo": {
+    "description": "📖 Veja suas informações ou de qualquer membro."
+  },
+  "emit": {
+    "description": "Emitir um Evento",
+    "reply": "Emitiu o {{event}} selecionado com sucesso."
+  }
+}

@@ -1,12 +1,9 @@
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "raw",
   once: false,
-  rest: false,
-  ws: false,
-  moonlink: false,
   execute: async (client, data) => {
-    // Updating the Moonlink.js package with the necessary data
-    client.moonlink.packetUpdate(data);
+    // sending raw voice data to the music player;
+    client.lavalink.sendRawData(data);
   },
 };

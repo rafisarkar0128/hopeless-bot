@@ -1,0 +1,32 @@
+{
+  "type": {
+    "string": "Value of {{param}} must be a string",
+    "object": "Value of {{param}} must be an object",
+    "array": "Value of {{param}} must be an array",
+    "number": "Value of {{param}} must be a number",
+    "boolean": "Value of {{param}} must be a boolean",
+    "other": "Value of {{param}} must be a {{type}}"
+  },
+  "missing_parameter": "Couldn't find {{param}} parameter",
+  "missing_property": "Couldn't find {{property}} property",
+  "validations": {
+    "event": { "name": "Event name is either missing or incorrect" },
+    "command": {
+      "name": "{{type}} command name is missing",
+      "alias": "alias {{alias}} already exist for {{cmd}} command",
+      "data": "{{type}} command data is missing",
+      "function": "{{type}} command execute function is missing",
+      "permission": "{{p}} is not a valid permission"
+    }
+  },
+  "loader": {
+    "event": {
+      "start": "[AntiCrash] | [Event Loader Error Logs] | [Start] : ===============",
+      "end": "[AntiCrash] | [Event Loader Error Logs] | [End] : ==============="
+    },
+    "command": {
+      "start": "[AntiCrash] | [Command Loader Error Logs] | [Start] : ===============",
+      "end": "[AntiCrash] | [Command Loader Error Logs] | [End] : ==============="
+    }
+  }
+}

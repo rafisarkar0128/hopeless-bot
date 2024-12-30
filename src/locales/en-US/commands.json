@@ -1,0 +1,40 @@
+{
+  "ping": {
+    "description": "🏓 Pong! Replies with bot's response time.",
+    "reply": {
+      "content": "⏱️ Hold on a moment..."
+    }
+  },
+  "invite": {
+    "description": "returns a link button with bots invite url.",
+    "reply": {
+      "content": "**Invite me by clicking the button.**",
+      "disabled": "**Sorry. Invites has been disabled by the owner.**"
+    }
+  },
+  "botinfo": {
+    "description": "📖 View bot's information.",
+    "reply": {}
+  },
+  "serverinfo": {
+    "description": "📖 View the server information.",
+    "reply": {
+      "embed": {}
+    }
+  },
+  "roles": {
+    "description": "Get the role list of a server.",
+    "reply": {}
+  },
+  "roleinfo": {
+    "description": "📖 View any role's information.",
+    "reply": {}
+  },
+  "memberinfo": {
+    "description": "📖 View your or any member's information."
+  },
+  "emit": {
+    "description": "Emit an Event",
+    "reply": "Emitted the selected {{event}} successfully."
+  }
+}

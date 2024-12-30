@@ -1,0 +1,31 @@
+{
+  "vanity": {
+    "welcome": "Welcome to {{name}} {{lang}} project",
+    "node": "Running on Node.JS version {{v}}",
+    "version": "Package version {{v}}",
+    "message": "Coded by {{author}}"
+  },
+
+  "database": {
+    "connected": "{{db}} database connected successfully"
+  },
+
+  "loader": {
+    "event": {
+      "start": "Started to load event modules from {{dir}}",
+      "end": "Loaded {{l}} event modules successfully"
+    },
+    "command": {
+      "start": "Started to load command modules from {{dir}}",
+      "end": "Loaded {{l}} command modules successfully"
+    }
+  },
+
+  "bot": {
+    "description": "A _Multipurpose_ Discord App for your every need with **Premium Services**. For more info head to {website}"
+  },
+
+  "embed": {
+    "footer": "Powered by {{username}} | Copyright ©{{year}}"
+  }
+}

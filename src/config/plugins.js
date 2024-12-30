@@ -1,8 +1,4 @@
 module.exports = {
-  antiCrash: {
-    enabled: true,
-  },
-
   auto_moderation: {
     enabled: true,
   },
@@ -26,37 +22,34 @@ module.exports = {
     enabled: true,
     idle_time: 180000,
     max_search_results: 10,
-    default_source: "YTM",
+    default_source: "ytm",
+    sources: ["ytmsearch", "ytm", "ytsearch", "yt", "spotifysearch", "spotify"],
     lavalink_nodes: [
-      // local hosted nodes
+      // locally hosted node
       {
+        authorization: "youshallnotpass",
         host: "localhost",
-        port: 2333,
-        password: "youshallnotpass",
+        port: 6969,
+        id: "Local Node",
+        requestSignalTimeoutMS: 10000,
+        closeOnError: true,
+        enablePingOnStatsCheck: true,
+        retryDelay: 10e3,
         secure: false,
-        identifier: "Local Node",
+        retryAmount: 5,
       },
       // nodes from https://lavalinks-list.vercel.app/non-ssl
       {
-        identifier: "LewdHuTao - Lavalink",
-        password: "youshallnotpass",
+        authorization: "youshallnotpass",
         host: "node.lewdhutao.my.eu.org",
         port: 80,
+        id: "LewdHuTao - Lavalink",
+        requestSignalTimeoutMS: 10000,
+        closeOnError: true,
+        enablePingOnStatsCheck: true,
+        retryDelay: 10e3,
         secure: false,
-      },
-      {
-        identifier: "INZEWORLD.COM (DE)",
-        password: "saher.inzeworld.com",
-        host: "lava.inzeworld.com",
-        port: 3128,
-        secure: false,
-      },
-      {
-        identifier: "Koi Node V4",
-        password: "fypmoon.org",
-        host: "nodev4.fypmoon.org",
-        port: 1118,
-        secure: false,
+        retryAmount: 5,
       },
     ],
   },

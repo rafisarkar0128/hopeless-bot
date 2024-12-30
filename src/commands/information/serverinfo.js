@@ -7,41 +7,50 @@ const {
   Embed,
 } = require("discord.js");
 const { DateTime } = require("luxon");
+const { t } = require("i18next");
 
-/** @type {import("@types/commands").CommandStructure} */
+/** @type {import("@structures/command.d.ts").CommandStructure} */
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("serverinfo")
-    .setDescription("📖 View the server information."),
-  ephemeral: false,
-  cooldown: 0,
-  category: "INFORMATION",
-  usage: {
-    prefix: "",
-    slash: "/serverinfo",
+  options: {
+    category: "information",
+    cooldown: 15,
+    premium: false,
+    guildOnly: true,
+    devOnly: false,
+    voiceChannelOnly: false,
+    botPermissions: [],
+    userPermissions: [],
   },
-  aliases: ["server"],
-  minArgsCount: 0,
-  isPrefixDisabled: false,
-  isSlashDisabled: false,
-  isPremium: false,
-  isGlobal: true,
-  isGuildOnly: true,
-  isDevOnly: false,
-  isVoiceChannelOnly: false,
-  botPermissions: [],
-  userPermissions: [],
-  run: async (client, message) => {
-    return message.reply({
-      embeds: [await getGuildEmbed(client, message)],
-    });
+  prefix: {
+    name: "serverinfo",
+    description: "📖 View the server information.",
+    aliases: ["server"],
+    usage: "",
+    disabled: false,
+    minArgsCount: 0,
+    subcommands: [],
+    execute: async (client, message) => {
+      const embed = await getGuildEmbed(client, message);
+      message.reply({
+        embeds: [embed],
+      });
+    },
   },
-  execute: async (client, interaction) => {
-    await interaction.deferReply();
-    const embed = await getGuildEmbed(client, interaction);
-    return interaction.followUp({
-      embeds: [embed],
-    });
+  slash: {
+    data: new SlashCommandBuilder()
+      .setName("serverinfo")
+      .setDescription("📖 View the server information."),
+    usage: "",
+    ephemeral: false,
+    global: true,
+    disabled: false,
+    execute: async (client, interaction) => {
+      await interaction.deferReply();
+      const embed = await getGuildEmbed(client, interaction);
+      interaction.followUp({
+        embeds: [embed],
+      });
+    },
   },
 };
 
@@ -137,7 +146,10 @@ async function getGuildEmbed(client, ctx) {
       },
     )
     .setFooter({
-      text: client.config.bot.footer,
+      text: t("default:embed.footer", {
+        username: client.user.username,
+        year: new Date().getFullYear(),
+      }),
     });
 
   return embed;

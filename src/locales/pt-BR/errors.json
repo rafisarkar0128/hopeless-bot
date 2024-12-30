@@ -1,0 +1,35 @@
+{
+  "type_errors": {
+    "string": "O valor de {{param}} deve ser uma string.",
+    "object": "O valor de {{param}} deve ser um objeto.",
+    "array": "O valor de {{param}} deve ser um array.",
+    "number": "O valor de {{param}} deve ser um número.",
+    "boolean": "O valor de {{param}} deve ser um booleano.",
+    "other": "O valor de {{param}} deve ser um {{type}}."
+  },
+
+  "missing_parameter": "Não foi possível encontrar o parâmetro {{param}}.",
+  "missing_property": "Não foi possível encontrar a propriedade {{property}}.",
+
+  "validations": {
+    "event": { "name": "O nome do evento está ausente ou incorreto." },
+    "command": {
+      "name": "O nome do comando {{type}} está ausente.",
+      "alias": "O alias {{alias}} já existe para o comando {{cmd}}.",
+      "data": "Os dados do comando {{type}} estão ausentes.",
+      "function": "A função de execução do comando {{type}} está ausente.",
+      "permission": "{{p}} não é uma permissão válida."
+    }
+  },
+
+  "loader": {
+    "event": {
+      "start": "[AntiCrash] | [Logs de Erro do Carregador de Eventos] | [Início] : ===============",
+      "end": "[AntiCrash] | [Logs de Erro do Carregador de Eventos] | [Fim] : ==============="
+    },
+    "command": {
+      "start": "[AntiCrash] | [Logs de Erro do Carregador de Comandos] | [Início] : ===============",
+      "end": "[AntiCrash] | [Logs de Erro do Carregador de Comandos] | [Fim] : ==============="
+    }
+  }
+}

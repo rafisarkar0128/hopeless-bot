@@ -1,12 +1,9 @@
 const { ActivityType } = require("discord.js");
 
-/** @type {import("@types/events").EventStructure} */
+/** @type {import("@structures/event").EventStructure} */
 module.exports = {
   name: "ready",
   once: true,
-  rest: false,
-  ws: false,
-  moonlink: false,
   execute: async (client) => {
     const activities = [
       {
@@ -36,6 +33,6 @@ module.exports = {
       client.user.setActivity(activities[i]);
       i++;
       if (i >= activities.length) i = 0;
-    }, 60e3);
+    }, 36e4);
   },
 };

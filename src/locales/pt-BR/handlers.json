@@ -1,0 +1,20 @@
+{ 
+  "commandHandler": {
+    "no_permission": {
+      "title": "Permissões Ausentes",
+      "description": {
+        "bot": "Eu preciso de {permissions} para executar este comando.",
+        "user": "Você precisa ter estas {permissions} para poder usar este comando."
+      }
+    },
+    "no_run_function": "A versão de prefixo deste comando ainda não está completa. Tente a versão slash em vez disso.",
+    "command_disabled": "Este comando está desativado pelo dono do bot ou desenvolvedores.",
+    "dev_command": "Este comando é acessível apenas ao dono do bot e desenvolvedores.",
+    "guild_only": "Este comando só pode ser usado em um Servidor do Discord.",
+    "cooldown": "Calma! Comando em espera, aguarde `{cooldown}` segundos.",
+    "in_voice_channel": "Você precisa estar em um canal de voz para usar este comando."
+  },
+  "embeds": {
+    "footer": "Copyright © 2023 - {new:date:year} | @{bot:tag}"
+  }
+}

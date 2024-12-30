@@ -9,13 +9,13 @@
       "@src/*": ["./src/*"],
       "@lib/*": ["./src/lib/*"],
       "@config/*": ["./src/config/*"],
-      "@types/*": ["./src/types/*"],
+      "@structures/*": ["./src/structures/*"],
       "@handlers/*": ["./src/handlers/*"],
       "@commands/*": ["./src/commands/*"],
       "@assets/*": ["./src/assets/*"],
       "@events/*": ["./src/events/*"],
       "@helpers/*": ["./src/helpers/*"],
-      "@schemas/*": ["./src/database/schemas/*"]
+      "@schemas/*": ["src/schemas/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"]

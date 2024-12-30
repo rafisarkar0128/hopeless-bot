@@ -1,0 +1,20 @@
+{
+  "prefix_mention": {
+    "title": "Did you just mention me?",
+    "description": "I am **{{username}}**, a bot developed by **{{owner}}** to manage & moderate discord servers. For more information or help use **`{{prefix}}help`** | **`/help`**."
+  },
+  "missing_access": {
+    "title": "**Missing Permissions**",
+    "description": "I don't have **`SendMessages`** permission in {{channel}}."
+  },
+
+  "disabled": "This command is **disabled** by the bot owner or developers.",
+  "dev_only": "This command is only **accessible** to the bot owner & developers.",
+  "guild_only": "This command can only be used in a **Guild** _(Discord Server)_.",
+  "cooldown": "**Chill!** Command in on cooldown wait for **`{{t}}`** to use it again.",
+  "missing_user_permissions": "You need {{p}} to use this command.",
+  "missing_bot_permissions": "I need {{p}} to execute this command.",
+  "voice_channel_only": "You must have to be in a **Voice Channel** to use this command.",
+  "missing_vc_permissions": "I am not able to **join** your channel or **speak** in there.",
+  "error": "An error occurred while trying to execute the command."
+}

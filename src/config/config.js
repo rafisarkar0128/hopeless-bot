@@ -1,84 +1,108 @@
-const {
-  DISCORD_CLIENT_TOKEN,
-  DISCORD_CLIENT_ID,
-  DISCORD_CLIENT_SECRET,
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET,
-  MYANIMELIST_CLIENT_ID,
-  MYANIMELIST_CLIENT_SECRET,
-  DEFAULT_PREFIX,
-  OWNER_ID,
-  SERVER_ID,
-  DEVELOPER_IDS,
-} = process.env;
-
 module.exports = {
-  // basic settings
-  defualt_locale: "en_us",
+  // Basic settings
+  default_locale: process.env.DEFAULT_LOCALE,
+  time_format: process.env.TIME_FORMAT,
 
-  // bot secrets
-  bot_token: DISCORD_CLIENT_TOKEN,
-  bot_id: DISCORD_CLIENT_ID,
-  bot_secret: DISCORD_CLIENT_SECRET,
+  // Bot secrets
+  bot_token: process.env.DISCORD_CLIENT_TOKEN,
+  bot_id: process.env.DISCORD_CLIENT_ID,
+  bot_secret: process.env.DISCORD_CLIENT_SECRET,
 
-  // spotify secrets
-  spotify_client_id: SPOTIFY_CLIENT_ID,
-  spotify_client_iecret: SPOTIFY_CLIENT_SECRET,
+  // Spotify secrets
+  spotify_client_id: process.env.SPOTIFY_CLIENT_ID,
+  spotify_client_iecret: process.env.SPOTIFY_CLIENT_SECRET,
 
-  // myanimelist secrets
-  myanimelist_client_d: MYANIMELIST_CLIENT_ID,
-  myanimelist_client_secret: MYANIMELIST_CLIENT_SECRET,
+  // Myanimelist secrets
+  myanimelist_client_d: process.env.MYANIMELIST_CLIENT_ID,
+  myanimelist_client_secret: process.env.MYANIMELIST_CLIENT_SECRET,
 
-  // bot configs
-  default_prefix: DEFAULT_PREFIX,
-  owner_id: OWNER_ID,
-  guild_id: SERVER_ID,
-  devs: DEVELOPER_IDS,
+  // Bot configs
+  default_prefix: process.env.DEFAULT_PREFIX,
+  owner_id: process.env.OWNER_ID,
+  guild_id: process.env.SERVER_ID,
+  devs: process.env.DEVELOPER_IDS.split(", "),
 
-  // mongodb config
+  // Mongodb config
   mongo_uri: process.env.MONGO_URI,
 
-  // command settings
-  commands: {
+  // Invite config
+  allowedInvite: false,
+
+  // Command settings. Set true to enable & false to disable
+  command: {
     prefix: {
       enabled: true,
     },
     slash: {
       enabled: true,
+      global: true,
     },
     context: {
       enabled: true,
+      global: true,
     },
     buttons: {
-      enabled: false,
+      enabled: true,
     },
     modals: {
-      enabled: false,
+      enabled: true,
     },
   },
-  console: {
-    // refer to https://moment.github.io/luxon/#/formatting?id=table-of-tokens for time formats;
-    time_format: "dd/LL/yyyy - HH:mm:ss",
-    debug: {
-      mainLogo: true,
-      event: false,
-      command: false,
-      sync: true,
+
+  table: {
+    // Set true to enable & false to disable
+    sync: true,
+    event: false,
+    command: false,
+    // Table border styles
+    border: {
+      topBody: `─`,
+      topJoin: `┬`,
+      topLeft: `┌`,
+      topRight: `┐`,
+      bottomBody: `─`,
+      bottomJoin: `┴`,
+      bottomLeft: `└`,
+      bottomRight: `┘`,
+      bodyLeft: `│`,
+      bodyRight: `│`,
+      bodyJoin: `│`,
+      joinBody: `─`,
+      joinLeft: `├`,
+      joinRight: `┤`,
+      joinJoin: `┼`,
     },
   },
-  server_links: {
-    supportServer: "https://discord.gg/E6H9VvBdTk",
+
+  links: {
+    website: "https://theassassin0128.github.io/hopeless-bot",
+    invite: "https://discord.com/oauth2/authorize?client_id=1272259032098275358",
+    server: "https://discord.gg/E6H9VvBdTk",
+    github: "https://github.com/theassassin0128/hopeless-bot#readme",
   },
+
   image_links: {
     glitch:
       "https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png",
   },
+
   cache_size: {
     guilds: 100,
     users: 10000,
     members: 10000,
   },
 
+  icons: {
+    youtube: "https://i.imgur.com/xzVHhFY.png",
+    spotify: "https://i.imgur.com/qvdqtsc.png",
+    soundcloud: "https://i.imgur.com/MVnJ7mj.png",
+    applemusic: "https://i.imgur.com/Wi0oyYm.png",
+    deezer: "https://i.imgur.com/xyZ43FG.png",
+    jiosaavn: "https://i.imgur.com/N9Nt80h.png",
+  },
+
+  // For embeds colors. Can be used anywhere
+  colors: require("./colors.json"),
   emojis: require("./emojis"),
   categories: require("./categories"),
   plugins: require("./plugins"),
