@@ -1,4 +1,6 @@
-# ‼️Dropped‼️
+# ‼️REBUILD PHASE‼️
+
+This project will be rebuild as a music bot using lavalink.
 
 ![Hopeless Bot](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=HOPELESS%20BOT&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient)
 
