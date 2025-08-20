@@ -57,7 +57,7 @@
     "ascii-table": "^0.0.9",
     "chokidar": "^4.0.3",
     "colors": "^1.4.0",
-    "discord-arts": "^0.6.2",
+    "discord-arts": "^0.7.1",
     "discord.js": "^14.21.0",
     "dotenv": "^16.6.1",
     "fixedsize-map": "^1.1.0",
