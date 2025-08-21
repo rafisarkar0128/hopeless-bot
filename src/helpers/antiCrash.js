@@ -1,67 +1,82 @@
-const colors = require("colors");
+const chalk = require("chalk");
 
-/** @param {import("@lib/DiscordBot").DiscordBot} client */
+/**
+ * A function to handle crashes
+ * @param {import("@lib/DiscordClient").DiscordClient} client
+ * @returns {Promise<void>}
+ */
 function antiCrash(client) {
-  // Handle beforeExit event
-  process.on("beforeExit", async (code) => {
-    console.log(
-      colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="),
-    );
-    client.logger.error(code);
-    console.log(
-      colors.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ==============="),
-    );
-  });
+  client.logger.info("AntiCrash system has been loaded.");
 
-  // Handle exit event
-  process.on("exit", async (code) => {
-    console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [Start] : ==============="));
-    client.logger.error(code);
-    console.log(colors.yellow("[AntiCrash] | [Exit_Logs] | [End] : ==============="));
-  });
+  /**
+   * A function to handle exit from terminal
+   * @returns {Promise<void>}
+   */
+  async function handleExit() {
+    client.logger.start("disconnecting from discord.");
+    await client.destroy();
+    client.logger.success("disconnected successfully.");
+    process.exit(0);
+  }
+
+  process.on("SIGINT", handleExit);
+  process.on("SIGTERM", handleExit);
+  process.on("SIGQUIT", handleExit);
+
+  // Handle beforeExit event (Only for Debug)
+  // process.on("beforeExit", (code) => {
+  //   console.log(
+  //     chalk.yellow(
+  //       "[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="
+  //     )
+  //   );
+  //   client.logger.log(code);
+  //   console.log(
+  //     chalk.yellow("[AntiCrash] | [BeforeExit_Logs] | [End] : ===============")
+  //   );
+  // });
+
+  // Handle exit event (Only for Debug)
+  // process.on("exit", (code) => {
+  //   console.log(
+  //     chalk.yellow("[AntiCrash] | [Exit_Logs] | [Start] : ===============")
+  //   );
+  //   client.logger.log(code);
+  //   console.log(
+  //     chalk.yellow("[AntiCrash] | [Exit_Logs] | [End] : ===============")
+  //   );
+  // });
 
   // Handle unhandledRejection event
-  process.on("unhandledRejection", async (reason, promise) => {
+  process.on("unhandledRejection", (reason) => {
     console.log(
-      colors.yellow(
-        "[AntiCrash] | [UnhandledRejection_Logs] | [Start] : ===============",
-      ),
+      chalk.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [Start] : ===============")
     );
-    await client.logger.error(reason, "unhandledRejection");
+    client.logger.error(reason);
     console.log(
-      colors.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [End] : ==============="),
+      chalk.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [End]   : ===============")
     );
   });
 
   // Handle rejectionHandled event
-  process.on("rejectionHandled", async (promise) => {
-    console.log(
-      colors.yellow("[AntiCrash] | [RejectionHandled_Logs] | [Start] : ==============="),
-    );
-    await client.logger.error(promise, "rejectionHandled");
-    console.log(
-      colors.yellow("[AntiCrash] | [RejectionHandled_Logs] | [End] : ==============="),
-    );
+  process.on("rejectionHandled", (promise) => {
+    console.log(chalk.yellow("[AntiCrash] | [RejectionHandled_Logs] | [Start] : ==============="));
+    client.logger.error(promise);
+    console.log(chalk.yellow("[AntiCrash] | [RejectionHandled_Logs] | [End]   : ==============="));
   });
 
   // Handle uncaughtException event
-  process.on("uncaughtException", async (error, origin) => {
-    console.log(
-      colors.yellow("[AntiCrash] | [UncaughtException_Logs] | [Start] : ==============="),
-    );
-    await client.logger.error(error, "uncaughtException");
-    console.log(
-      colors.yellow("[AntiCrash] | [UncaughtException_Logs] | [End] : ==============="),
-    );
+  process.on("uncaughtException", (error) => {
+    console.log(chalk.yellow("[AntiCrash] | [UncaughtException_Logs] | [Start] : ==============="));
+    client.logger.error(error);
+    console.log(chalk.yellow("[AntiCrash] | [UncaughtException_Logs] | [End]   : ==============="));
   });
 
   // Handle warning event
-  process.on("warning", async (warning) => {
-    console.log(
-      colors.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="),
-    );
+  process.on("warning", (warning) => {
+    console.log(chalk.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="));
     client.logger.warn(warning);
-    console.log(colors.yellow("[AntiCrash] | [Warning_Logs] | [End] : ==============="));
+    console.log(chalk.yellow("[AntiCrash] | [Warning_Logs] | [End]   : ==============="));
   });
 }
 

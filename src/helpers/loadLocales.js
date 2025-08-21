@@ -1,46 +1,38 @@
-const fs = require("fs");
-const path = require("path");
+const { readdirSync, lstatSync } = require("fs");
+const { join } = require("path");
 const i18next = require("i18next");
-const resources = require("@src/locales/index.js");
+const Backend = require("i18next-fs-backend");
 
 /**
- * A function to get default locale for global use
- * @type {import("./helpers.d.ts").GetDefaultLocale}
+ * A function to load languages
+ * @param {import("@src/lib").DiscordClient} client
+ * @returns {Promise<void>}
+ * @example
+ * await client.helpers.loadLocales(client);
  */
-function getDefaultLocale(client) {
-  let { default_locale } = client.config;
-  if (typeof default_locale !== "string") {
-    default_locale = "en-US";
-    return default_locale;
-  }
-
-  const localeFolders = fs.readdirSync(path.join(process.cwd(), "src", "locales"));
-  if (!Array.isArray(localeFolders)) {
-    throw new Error(
-      "Couldn't load locales. Please make sure locale files exist within src folder.",
-    );
-  }
-
-  if (default_locale.length <= 0 || !localeFolders.includes(default_locale)) {
-    default_locale = "en-US";
-  }
-
-  return default_locale;
-}
-
-/**
- * A function to load locales
- * @type {import("./helpers.d.ts").LoadLocales}
- */
-function loadLocales(client) {
-  i18next.init({
-    fallbackLng: getDefaultLocale(client),
-    defaultNS: "",
-    interpolation: {
-      escapeValue: false,
+async function loadLocales(client) {
+  // initializing i18next with i18next-fs-backend
+  await i18next.use(Backend).init({
+    initAsync: false,
+    load: "currentOnly",
+    ns: ["commands", "context", "embeds", "misc", "handlers", "player"],
+    defaultNS: false,
+    fallbackNS: false,
+    fallbackLng: ["en-US"],
+    lng: client.config.defaultLocale ?? "en-US",
+    interpolation: { escapeValue: false },
+    preload: readdirSync(join(__dirname, "../locales")).filter((file) => {
+      const isDirectory = lstatSync(join(__dirname, "../locales", file)).isDirectory();
+      const langFiles = readdirSync(join(__dirname, "../locales", file));
+      if (isDirectory && langFiles.length > 0) return true;
+    }),
+    backend: {
+      loadPath: join(__dirname, "../locales/{{lng}}/{{ns}}.json"),
+      addPath: join(__dirname, "../locales/{{lng}}/{{ns}}.missing.json"),
     },
-    resources,
   });
+
+  client.logger.info("Loaded locales successfully.");
 }
 
-module.exports = { loadLocales, getDefaultLocale };
+module.exports = { loadLocales };

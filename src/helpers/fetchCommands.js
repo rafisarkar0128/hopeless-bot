@@ -1,43 +1,39 @@
-const colors = require("colors");
+/**
+ * @typedef {Object} OldCommand
+ * @property {boolean} global
+ * @property {import("discord.js").ApplicationCommand} data
+ */
 
-/** A function to fetch Application Commands
- * @param {import("@lib/DiscordBot").DiscordBot} client
- * @returns {Promise<import("@types/commands").OldCommand[]>}
+/**
+ * A function to fetch Application Commands
+ * @param {import("@src/lib").DiscordClient} client
+ * @returns {Promise<OldCommand[]>}
  */
 async function fetchCommands(client) {
-  const ApplicationCommands = new Array();
-  let i = 0,
-    g = 0;
+  const ApplicationCommands = [];
 
   try {
+    if (!client || !client.isReady()) {
+      throw new Error("Client is missing or not online.");
+    }
+
     const globalCommands = await client.application.commands.fetch({
       withLocalizations: true,
     });
     globalCommands.forEach((command) => {
-      ApplicationCommands.push({ data: command, global: true }) && i++;
+      ApplicationCommands.push({ data: command, global: true });
     });
 
     const guildCommands = await client.application.commands.fetch({
-      guildId: client.config.guild_id,
+      guildId: client.config.bot.guildId,
       withLocalizations: true,
     });
     guildCommands.forEach((command) => {
-      ApplicationCommands.push({ data: command, global: false }) && g++;
+      ApplicationCommands.push({ data: command, global: false });
     });
   } catch (error) {
-    console.log(
-      colors.yellow("[AntiCrash] | [Fetch Error Logs] | [Start]  : ==============="),
-    );
-    console.log(colors.red(`Error fetching commands: ${error}`));
-    console.log(
-      colors.yellow("[AntiCrash] | [Fetch Error Logs] | [End] : ==============="),
-    );
+    client.logger.error(error);
   }
-
-  client.logger.info(
-    __filename,
-    colors.magenta("fetched") + ` ${colors.yellow(i + g)} application command(s)`,
-  );
 
   return ApplicationCommands;
 }
