@@ -9,7 +9,7 @@ const { ActivityType } = require("discord.js");
 class Event extends BaseEvent {
   constructor() {
     super({
-      name: "ready",
+      name: "clientReady",
       once: true,
     });
   }
