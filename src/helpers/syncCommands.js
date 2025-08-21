@@ -1,120 +1,124 @@
-const colors = require("colors");
+const chalk = require("chalk");
 const { fetchCommands } = require("./fetchCommands.js");
-const { checkForChange } = require("./checkForChanges.js");
+const { checkForChanges } = require("./checkForChanges.js");
 
-/** A function to synchronize Application Commands
- * @param {import("@lib/DiscordBot.js").DiscordBot} client
- * @param {import("@types/types").NewCommand[]} newCommands
+/**
+ * A function to synchronize Application Commands
+ * @param {import("@src/lib").DiscordClient} client
  * @returns {Promise<void>}
  */
-module.exports = async (client) => {
-  client.logger.info(__filename, colors.yellow("synchronizing application commands"));
+async function syncCommands(client) {
+  const { guildId, showSyncLogs } = client.config.bot;
+  const oldCommands = await fetchCommands(client);
 
-  /**
-   * @param {import("@types/types").OldCommand[]} oldCommands
-   * @param {import("@types/types").NewCommand[]} newCommands
-   */
-  const syncCommands = async (oldCommands, newCommands) => {
-    const commandsToAdd = newCommands.filter(
-      (command) => !oldCommands.some((c) => c.data.name === command.data.name),
-    );
+  // This section is for the very first time when the commands are not registered
+  // or when the bot's commands are removed from discord
+  if (oldCommands.length <= 0) {
+    const guildCommands = [];
+    const globalCommands = [];
+
+    client.commands.forEach((command) => {
+      if (showSyncLogs) {
+        client.logger.info(
+          `${chalk.greenBright("ADDED")} command ${chalk.yellowBright(command.data.name)}`
+        );
+      }
+
+      if (command.global) globalCommands.push(command.data.toJSON());
+      else guildCommands.push(command.data.toJSON());
+    });
+
+    if (guildCommands.length > 0) {
+      await client.application.commands.set(guildCommands, guildId);
+    }
+
+    if (globalCommands.length > 0) {
+      await client.application.commands.set(globalCommands);
+    }
+  }
+
+  // This section is for the rest of the time when the commands are already registered
+  // and we need to check for changes
+  else {
+    // Checking for new commands and pushing them to discord
+    const commandsToAdd = client.commands
+      .filter((command) => !oldCommands.some((c) => c.data.name === command.data.name))
+      .map((c) => c);
+
     for (const command of commandsToAdd) {
-      const { data, global, disabled } = command;
       try {
-        if (disabled) continue;
-        await client.application.commands.create(data, global ? "" : guildId);
-        console.log(`[${colors.green("ADDED")}] ${colors.magenta(command.data.name)}`);
+        if (command.global) {
+          await client.application.commands.create(command.data);
+        } else {
+          await client.application.commands.create(command.data, guildId);
+        }
+
+        if (showSyncLogs) {
+          client.logger.info(
+            `[${chalk.greenBright("ADDED")}]: command ${chalk.cyanBright(command.data.name)}`
+          );
+        }
       } catch (error) {
-        errors.push(error);
+        client.logger.error(error);
       }
     }
 
-    const commandsToDelete = oldCommands.filter(
-      (command) => !newCommands.some((c) => c.data.name === command.data.name),
-    );
+    // Checking old commands and deleting them if the file is removed or command is disabled
+    const commandsToDelete = oldCommands
+      .filter((command) => !client.commands.some((c) => c.data.name === command.data.name))
+      .map((c) => c);
+
     for (const command of commandsToDelete) {
       try {
         await command.data.delete();
-        console.log(`[${colors.red("DELETED")}] ${colors.magenta(command.data.name)}`);
+
+        if (showSyncLogs) {
+          client.logger.info(
+            `[${chalk.redBright("DELETED")}]: command ${chalk.cyanBright(command.data.name)}`
+          );
+        }
       } catch (error) {
-        errors.push(error);
+        client.logger.error(error);
       }
     }
 
-    const commandsToModify = newCommands.filter((command) =>
-      oldCommands.some((c) => c.data.name === command.data.name),
-    );
+    // Checking for changes in commands and pushing the changes to discord
+    const commandsToModify = client.commands
+      .filter((command) => oldCommands.some((c) => c.data.name === command.data.name))
+      .map((c) => c);
+
     for (const newCommand of commandsToModify) {
       try {
         const oldCommand = oldCommands.find((c) => c.data.name === newCommand.data.name);
-        const { data, global, disabled } = newCommand;
-        if (disabled) {
+        let isChanged = false;
+
+        // Check if the command is global or not
+        if (oldCommand.global !== newCommand.global) isChanged = true;
+        // Check if the command has been modified or not
+        else if (checkForChanges(oldCommand, newCommand)) isChanged = true;
+
+        if (isChanged) {
           await oldCommand.data.delete();
 
-          console.log(`[${colors.red("DELETED")}] ${colors.magenta(data.name)}`);
+          if (newCommand.global) {
+            await client.application.commands.create(newCommand.data);
+          } else {
+            await client.application.commands.create(newCommand.data, guildId);
+          }
 
-          continue;
-        }
-
-        if (oldCommand.global !== global) {
-          await oldCommand.data.delete();
-          await client.application.commands.create(data, global ? "" : guildId);
-
-          console.log(`[${colors.yellow("MODIFIED")}] ${colors.magenta(data.name)}`);
-
-          continue;
-        }
-
-        if (checkForChange(oldCommand, newCommand)) {
-          await client.application.commands.create(data, global ? "" : guildId);
-
-          console.log(`[${colors.yellow("MODIFIED")}] ${colors.magenta(data.name)}`);
-
-          continue;
+          if (showSyncLogs) {
+            client.logger.info(
+              `[${chalk.yellowBright("MODIFIED")}]: command ${chalk.cyanBright(newCommand.data.name)}`
+            );
+          }
         }
       } catch (error) {
-        errors.push(error);
+        client.logger.error(error);
       }
     }
-  };
-
-  const errors = new Array();
-  const guildId = client.config.guild_id;
-  const oldCommands = await fetchCommands(client);
-
-  const oldSlashCommands = oldCommands.filter((c) => c.data.type === 1);
-  const newSlashCommands = new Array();
-  client.slashCommands.forEach((c) => {
-    newSlashCommands.push(c);
-  });
-  await syncCommands(oldSlashCommands, newSlashCommands);
-
-  const oldContextMenuCommands = oldCommands.filter((c) => c.data.type === (2 || 3));
-  const newContextMenuCommands = new Array();
-  client.contexts.forEach((c) => {
-    newContextMenuCommands.push(c);
-  });
-  await syncCommands(oldContextMenuCommands, newContextMenuCommands);
-
-  console.log(
-    `[${colors.cyan("INFO")}] ${colors.green("all application commands are in sync")}`,
-  );
-
-  if (errors.length > 0) {
-    console.log(
-      colors.yellow(
-        "[AntiCrash] | [Synchronization_Error_Logs] | [Start] : ===============",
-      ),
-    );
-    for (const error of errors) {
-      console.log(colors.red(error));
-    }
-    console.log(
-      colors.yellow(
-        "[AntiCrash] | [Synchronization_Error_Logs] | [End] : ===============",
-      ),
-    );
   }
 
-  client.logger.info(__filename, colors.yellow("synchronization completed"));
-};
+  client.logger.info("All application commands are in sync");
+}
+
+module.exports = { syncCommands };

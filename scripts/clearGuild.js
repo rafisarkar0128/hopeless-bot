@@ -9,13 +9,13 @@ const rest = new REST({ version: 10 }).setToken(token);
 
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
 
 const warningMsg = [
   "----------------------------------- !!! WARNING !!! -----------------------------------",
   "This script will delete every guild slash & context menu command of your discord bot.",
-  "Do you want to continue? (y/n): "
+  "Do you want to continue? (y/n): ",
 ].join("\n");
 
 console.clear();
@@ -37,21 +37,15 @@ rl.question(warningMsg, async function (name) {
 
 async function deleteCommands() {
   const guild = await rest.get(Routes.guild(serverId));
-  const commands = await rest.get(
-    Routes.applicationGuildCommands(clientId, serverId)
-  );
+  const commands = await rest.get(Routes.applicationGuildCommands(clientId, serverId));
 
   if (commands?.length === 0) {
-    console.log(
-      `\n❗ Couldn't fing any guild command in ${chalk.yellow(guild.name)}.`
-    );
+    console.log(`\n❗ Couldn't fing any guild command in ${chalk.yellow(guild.name)}.`);
     process.exit(0);
   }
 
   console.log(
-    `\n✅ Found ${chalk.cyan(commands.length)} guild commands in ${chalk.yellow(
-      guild.name
-    )}.\n`
+    `\n✅ Found ${chalk.cyan(commands.length)} guild commands in ${chalk.yellow(guild.name)}.\n`
   );
 
   let i = 0;
@@ -62,14 +56,12 @@ async function deleteCommands() {
         i >= 100 ? ""
         : i >= 10 ? " "
         : "  "
-      }${chalk.magenta(
-        i
-      )} | 🔥 ${chalk.red("deleted")} - ${command.id} - ${chalk.cyan(command.name)} `
+      }${chalk.magenta(i)} | 🔥 ${chalk.red("deleted")} - ${command.id} - ${chalk.cyan(command.name)} `
     );
   }
 
   await rest.put(Routes.applicationGuildCommands(clientId, serverId), {
-    body: []
+    body: [],
   });
   console.log(`\n✅ Deleted all commands in ${chalk.yellow(guild.name)}.`);
   process.exit(0);

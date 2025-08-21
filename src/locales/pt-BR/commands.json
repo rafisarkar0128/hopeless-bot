@@ -1,40 +1,115 @@
 {
+  "default": {},
+
   "ping": {
     "description": "🏓 Pong! Responde com o tempo de resposta do bot.",
-    "reply": {
-      "content": "⏱️ Aguarde um momento..."
-    }
+    "reply": "⏱️ Aguarde um momento..."
   },
+
   "invite": {
-    "description": "Retorna um botão com o link de convite do bot.",
-    "reply": {
-      "content": "**Me convide clicando no botão.**",
-      "disabled": "**Desculpe. Os convites foram desativados pelo proprietário.**"
-    }
+    "description": "retorna um botão de link com o URL de convite do bot.",
+    "disabled": "Desculpe. Convites foram desativados pelo proprietário.",
+    "reply": "Me convide clicando no botão."
   },
+
+  "language": {
+    "description": "🌐 | Altere seu idioma para o bot.",
+    "options": { "language": "Selecione um idioma." },
+    "notAvailable": "😓 | O idioma selecionado não está disponível no momento.",
+    "reply": "😀 | Você selecionou `{{language}}` como seu idioma padrão para este servidor."
+  },
+
   "botinfo": {
     "description": "📖 Veja as informações do bot.",
     "reply": {}
   },
+
+  "logger": {
+    "noChannel": "⚠ Para criar um sistema de registro, um canal de texto deve ser fornecido.",
+    "created": "✅ Sistema de registro criado com sucesso.",
+    "updated": "✅ Dados do logger atualizados com sucesso.",
+    "noLogger": "❌ Desculpe, não há sistema de registro.",
+    "destroy": "✅ Sistema de registro excluído com sucesso.",
+    "description": "Abaixo estão as estatísticas de todos os sistemas de registro."
+  },
+
+  "reload": {
+    "owner": "Desculpe, você não é o proprietário desta aplicação. Portanto, você não pode usar este comando.",
+    "reply": "Recarregados {{t}} arquivos."
+  },
+
   "serverinfo": {
     "description": "📖 Veja as informações do servidor.",
     "reply": {
       "embed": {}
     }
   },
+
   "roles": {
-    "description": "Obtenha a lista de cargos do servidor.",
+    "description": "Obtenha a lista de cargos de um servidor.",
     "reply": {}
   },
+
   "roleinfo": {
     "description": "📖 Veja as informações de qualquer cargo.",
     "reply": {}
   },
+
   "memberinfo": {
-    "description": "📖 Veja suas informações ou de qualquer membro."
+    "description": "📖 Veja suas informações ou as informações de qualquer membro."
   },
+
   "emit": {
     "description": "Emitir um Evento",
-    "reply": "Emitiu o {{event}} selecionado com sucesso."
+    "reply": "Evento {{event}} emitido com sucesso."
+  },
+
+  "play": {
+    "description": "▶  tocar uma música ou faixa de fontes disponíveis",
+    "joinVc": "😑 Entre no canal de voz {{vc}} para usar o comando.",
+    "loadFailed": "❌ Falha ao carregar a faixa solicitada.",
+    "emptyQueue": "❗ Nenhum resultado encontrado para a consulta.",
+    "track": "✅ Adicionado {{title}} por {{author}} à fila na posição {{position}}",
+    "playlist": "✅ Adicionadas {{size}} faixas da playlist {{title}} à fila."
+  },
+
+  "player": {
+    "description": "💿 Controles do player para reprodução de música",
+    "noPlayer": "Não há nenhum player de música ativo neste servidor.",
+
+    "pause": {
+      "description": "⏸ pausar o player de música.",
+      "reply": "Player de música pausado.",
+      "alreadyPaused": "O player já está pausado. Para retomar, use `/player resume`."
+    },
+
+    "resume": {
+      "description": "▶  retomar o player de música",
+      "reply": "Música retomada.",
+      "alreadyPlaying": "O player já está retomado e tocando. Para pausar, use `/player pause`."
+    },
+
+    "skip": {
+      "description": "⏭ Pular a faixa que está tocando",
+      "noTrack": "Não há faixas na fila.",
+      "reply": "Faixa atual pulada."
+    },
+
+    "previous": {
+      "description": "⏮ Reproduzir a faixa anterior",
+      "noTrack": "Não há faixas anteriores.",
+      "reply": "Reproduzindo a faixa anterior."
+    },
+
+    "stop": {
+      "description": "⏹ Parar e destruir o player de música",
+      "reply": "Player de música destruído e desconectado do canal de voz."
+    },
+
+    "volume": {
+      "description": "🔊 Definir volume para o player de música",
+      "validValue": "Por favor! forneça um valor entre 1 e 100.",
+      "reply": "🔊 Volume definido para **{{volume}}**"
+    }
   }
 }

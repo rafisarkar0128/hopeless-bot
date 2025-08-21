@@ -1,0 +1,14 @@
+{
+  "default": {
+    "footer": "Powered by {{username}} | Copyright ©{{year}}"
+  },
+
+  "bot": {
+    "description": "A _Multipurpose_ Discord App for your every need with **Premium Services**. For more info head to {{website}}"
+  },
+
+  "mention": {
+    "title": "Did you just mention me?",
+    "description": "I am {{user}}, a discord bot developed by {{owner}}. **{{prefix}}** is my default prefix. For more information or help use **{{prefix}}help** | **/help**."
+  }
+}

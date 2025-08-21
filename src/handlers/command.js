@@ -1,5 +1,5 @@
-const { EmbedBuilder, Embed } = require("discord.js");
-const { getSettings } = require("@root/src/schemas/guild");
+// const { EmbedBuilder, Embed } = require("discord.js");
+// const { getSettings } = require("@root/src/schemas/guild");
 
 module.exports = {
   /**
@@ -36,9 +36,7 @@ module.exports = {
     if (interaction.member && command.userPermissions?.length > 0) {
       if (!interaction.member.permissions.has(command.userPermissions)) {
         return interaction.reply({
-          content: `You need ${parsePermissions(
-            command.userPermissions,
-          )} for this command`,
+          content: `You need ${parsePermissions(command.userPermissions)} for this command`,
           ephemeral: true,
         });
       }
@@ -59,9 +57,7 @@ module.exports = {
       const remaining = getRemainingCooldown(interaction.user.id, command);
       if (remaining > 0) {
         return interaction.reply({
-          content: `You are on cooldown. You can again use the command in \`${timeformat(
-            remaining,
-          )}\``,
+          content: `You are on cooldown. You can again use the command in \`${timeformat(remaining)}\``,
           ephemeral: true,
         });
       }
@@ -85,9 +81,7 @@ module.exports = {
   getSlashUsage(command) {
     let desc = "";
     if (command.slashCommand.options.find((o) => o.type === "SUB_COMMAND")) {
-      const subcommands = command.slashCommand.options.filter(
-        (opt) => opt.type === "SUB_COMMAND",
-      );
+      const subcommands = command.slashCommand.options.filter((opt) => opt.type === "SUB_COMMAND");
       subcommands.forEach((sub) => {
         desc += `\`/${command.name} ${sub.name}\`\n❯ ${sub.description}\n\n`;
       });

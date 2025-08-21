@@ -15,12 +15,7 @@ module.exports = {
     guildOnly: true,
     devOnly: true,
     voiceChannelOnly: false,
-    botPermissions: [
-      "SendMessages",
-      "ReadMessageHistory",
-      "ManageGuild",
-      "ManageGuildExpressions",
-    ],
+    botPermissions: ["SendMessages", "ReadMessageHistory", "ManageGuild", "ManageGuildExpressions"],
     userPermissions: ["SendMessages"],
   },
   prefix: {
@@ -41,23 +36,19 @@ module.exports = {
       .setContexts(InteractionContextType.Guild)
       .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
       .addStringOption((option) =>
-        option
-          .setName("event")
-          .setDescription("The event to emit")
-          .setRequired(true)
-          .setChoices(
-            {
-              name: "guildMemberAdd",
-              value: "guildMemberAdd",
-            },
-            {
-              name: "guildMemberRemove",
-              value: "guildMemberRemove",
-            },
-          ),
+        option.setName("event").setDescription("The event to emit").setRequired(true).setChoices(
+          {
+            name: "guildMemberAdd",
+            value: "guildMemberAdd",
+          },
+          {
+            name: "guildMemberRemove",
+            value: "guildMemberRemove",
+          }
+        )
       )
       .addUserOption((option) =>
-        option.setName("member").setDescription("Select a member.").setRequired(false),
+        option.setName("member").setDescription("Select a member.").setRequired(false)
       ),
     usage: "[event]: <Event>",
     ephemeral: true,

@@ -1,263 +1,108 @@
-const colors = require("colors");
+const chalk = require("chalk");
 const { table } = require("table");
 const { loadFiles } = require("./loadFiles");
-const { Permissions } = require("./validations/permissions.js");
-const { t } = require("i18next");
+const { Collection } = require("discord.js");
 
 /**
  * A function to load command modules
- * @type {import("./helpers").LoadCommands}
- * @example await loadCommands(client, "src/commands");
+ * @param {import("@src/lib").DiscordClient} client
+ * @returns {Promise<void>}
  */
-async function loadCommands(client, dir) {
+async function loadCommands(client) {
   if (typeof client !== "object") {
-    throw new TypeError(
-      t("errors:missing_parameter", { param: colors.yellow("client") }),
-    );
-  }
-  if (typeof dir !== "string") {
-    throw new TypeError(t("errors:type.string"), { param: colors.yellow("dir") });
+    throw new TypeError(`Parameter (${chalk.yellow("client")}) must be an object.`);
   }
 
-  client.logger.info(
-    __filename,
-    t("default:loader.command.start", { dir: colors.green(dir) }),
-  );
-
-  const tableData = [
-    [
-      colors.cyan("Index"),
-      colors.cyan("Command"),
-      colors.cyan("File"),
-      colors.cyan("Status"),
-    ],
-  ];
+  const tableData = [["Command", "Status"]];
   /**
+   * Typings for table config.
    * @type {import("table").TableUserConfig}
    */
   const tableConfig = {
     columnDefault: {
       alignment: "center",
-      width: 26,
     },
-    columns: [{ width: 5 }, {}, {}, { width: 6 }],
     border: client.utils.getTableBorder("blue"),
     drawHorizontalLine: (lineIndex, rowCount) => {
       return lineIndex === 0 || lineIndex === 1 || lineIndex === rowCount;
     },
+    columns: [{ alignment: "left" }, { width: 6 }],
   };
 
-  /**
-   * @type {Array<{file: string, error: Error}>}
-   */
-  const errors = new Array();
-  const files = await loadFiles(dir, [".js"]);
+  const { Categories, Permissions } = client.resources;
+  const { bot } = client.config;
+  const commandFiles = await loadFiles("src/commands", [".js"]);
+
   client.commands.clear();
+  client.cooldowns.clear();
+  let i = 0;
 
-  let i = 0,
-    l = 0;
-  for (const file of files) {
-    const filename = file.split(/[\\/]/g).pop();
-    var cname = filename.slice(0, -3);
-
-    /** @type {import("@structures/command.d.ts").BaseCommandStructure} */
-    const command = require(file);
-
-    const { options, prefix, slash, context } = command;
-    const category = options?.category || "none";
-    const cooldown = options?.cooldown || 0;
-    const premium = options?.premium || false;
-    const guildOnly = options?.guildOnly || false;
-    const devOnly = options?.devOnly || false;
-    const voiceChannelOnly = options?.voiceChannelOnly || false;
-    const botPermissions = options?.botPermissions || [];
-    const userPermissions = options?.userPermissions || [];
-
+  for (const file of commandFiles) {
+    const filePath = `${chalk.yellow("filePath")} => ${chalk.yellow(file)}`;
     try {
-      if (category !== "none") {
-        if (client.config.categories[category]?.enabled === false) continue;
+      const Command = require(file);
+      /**
+       * Base Command as a type for auto completion
+       * @type {import("@root/src/structures/BaseCommand.js")}
+       */
+      const cmd = new Command();
+
+      if (cmd.disabled) continue;
+      if (Categories[cmd.category]?.enabled === false) continue;
+
+      if (cmd.category && !Object.keys(Categories).includes(cmd.category)) {
+        throw new Error(`"${cmd.category}" is not a valid command category.`);
       }
 
-      if (botPermissions.length > 0) {
-        for (let p of botPermissions) {
-          if (!Permissions.includes(p)) {
-            throw new Error(
-              t("errors:validations.command.permission", { p: colors.yellow(p) }),
-            );
-          }
+      if (cmd.cooldown && typeof cmd.cooldown !== "number") {
+        throw new TypeError(`Command coodown must be a number.`);
+      }
+
+      if (cmd.cooldown > 0) {
+        client.cooldowns.set(cmd.data.name, new Collection());
+      }
+
+      if (!Array.isArray(cmd.permissions.bot)) {
+        throw new TypeError(`Command permissions for bot must be an array of strings.`);
+      }
+
+      for (const p of cmd.permissions.bot) {
+        if (!Permissions.includes(p)) {
+          throw new RangeError(`"${p}" is not a valid bot permission.`);
         }
       }
 
-      if (userPermissions.length > 0) {
-        for (let p of userPermissions) {
-          if (!Permissions.includes(p)) {
-            throw new Error(
-              t("errors:validations.command.permission", { p: colors.yellow(p) }),
-            );
-          }
+      if (!Array.isArray(cmd.permissions.user)) {
+        throw new TypeError(`Command permissions for user must be an array of strings.`);
+      }
+
+      for (const p of cmd.permissions.user) {
+        if (!Permissions.includes(p)) {
+          throw new RangeError(`"${p}" is not a valid user permission.`);
         }
       }
 
-      if (prefix) {
-        if (!prefix.name) {
-          throw new Error(
-            t("errors:validations.command.name", { type: colors.yellow("Prefix") }),
-          );
-        }
-
-        cname = prefix.name;
-
-        if (!prefix.description || prefix.description?.length <= 0) {
-          prefix.description = slash?.data.description;
-        }
-
-        if (prefix.aliases?.length) {
-          for (const alias of prefix.aliases) {
-            let cmd = client.aliases.get(alias);
-            if (!client.aliases.has(alias)) {
-              client.aliases.set(alias, prefix.name);
-            } else {
-              throw new Error(
-                t("errors:validations.command.alias", {
-                  alias: colors.yellow(alias),
-                  cmd: colors.yellow(cmd),
-                }),
-              );
-            }
-          }
-        }
-
-        if (!prefix.execute) {
-          throw new Error(
-            t("errors:validations.command.function", { type: colors.yellow("Prefix") }),
-          );
-        }
-
-        client.commands.set(prefix.name, {
-          category: category,
-          cooldown: cooldown,
-          premium: premium,
-          guildOnly: guildOnly,
-          devOnly: devOnly,
-          voiceChannelOnly: voiceChannelOnly,
-          botPermissions: botPermissions,
-          userPermissions: userPermissions,
-          name: prefix.name,
-          description: prefix.description,
-          aliases: prefix.aliases || [],
-          usage: prefix.usage || "",
-          disabled: prefix.disabled || false,
-          minArgsCount: prefix?.minArgsCount || 0,
-          subcommands: prefix?.subcommands || [],
-          execute: prefix.execute,
-        });
+      if (!cmd.execute || typeof cmd.execute !== "function") {
+        throw new Error(`Execute function is missing.`);
       }
 
-      if (slash) {
-        if (!slash.data) {
-          throw new Error(
-            t("errors:validations.command.data", { type: colors.yellow("Slash") }),
-          );
-        }
-        cname = slash.data.name;
-
-        if (!slash.execute) {
-          throw new Error(
-            t("errors:validations.command.function", { type: colors.yellow("Slash") }),
-          );
-        }
-
-        client.slashCommands.set(slash.data.name, {
-          category: category,
-          cooldown: cooldown,
-          premium: premium,
-          guildOnly: guildOnly,
-          devOnly: devOnly,
-          voiceChannelOnly: voiceChannelOnly,
-          botPermissions: botPermissions,
-          userPermissions: userPermissions,
-          data: slash.data.toJSON(),
-          ephemeral: slash.ephemeral,
-          usage: slash.usage,
-          global: slash.global,
-          disabled: slash.disabled,
-          execute: slash.execute,
-        });
-      }
-
-      if (context && !context?.disabled) {
-        if (context.disabled) continue;
-
-        if (!context.data) {
-          throw new Error(
-            t("errors:validations.command.data", { type: colors.yellow("ContextMenu") }),
-          );
-        }
-        cname = context.data?.name;
-
-        if (!context.execute) {
-          throw new Error(
-            t("errors:validations.command.function", {
-              type: colors.yellow("ContextMenu"),
-            }),
-          );
-        }
-
-        client.contexts.set(context.data.name, {
-          category: category,
-          cooldown: cooldown,
-          premium: premium,
-          guildOnly: guildOnly,
-          devOnly: devOnly,
-          voiceChannelOnly: voiceChannelOnly,
-          botPermissions: botPermissions,
-          userPermissions: userPermissions,
-          data: context.data.toJSON(),
-          ephemeral: context.ephemeral,
-          global: context.global,
-          disabled: context.disabled,
-          execute: context.execute,
-        });
-      }
-
-      if ((prefix?.disabled && slash?.disabled) || context?.disabled) {
-        continue;
-      }
+      if (!bot.global && cmd.global) cmd.global = bot.global;
 
       i++;
-      l++;
-      tableData.push([
-        `${colors.magenta(i)}`,
-        colors.blue(cname),
-        colors.green(filename),
-        "» 🌱 «",
-      ]);
+      client.commands.set(cmd.data.name, cmd);
+      client.applicationCommands.push(cmd.data?.toJSON());
+      tableData.push([chalk.blue(cmd.name), "» 🌱 «"]);
     } catch (error) {
-      i++;
-      tableData.push([
-        `${colors.magenta(i)}`,
-        colors.red(cname),
-        colors.red(filename),
-        "» 🔴 «",
-      ]);
-      errors.push({ file: file, error: error });
+      client.logger.error(error);
+      console.log(filePath);
+      tableData.push([chalk.red(file.split(/[\\|/]/g).pop()), "» 🔴 «"]);
     }
   }
 
-  if (client.config.table.command) console.log(table(tableData, tableConfig));
-
-  if (errors.length > 0) {
-    console.log(colors.yellow(t("errors:loader.command.start")));
-    errors.forEach((e) => {
-      console.log(colors.green(e.file), "\n", colors.red(e.error), "\n");
-    });
-    console.log(colors.yellow(t("errors:loader.command.end")));
+  if (client.config.showTable.command) {
+    console.log(table(tableData, tableConfig));
   }
-
-  client.logger.info(
-    __filename,
-    t("default:loader.command.end", { l: colors.yellow(l) }),
-  );
+  client.logger.info(`Loaded ${chalk.yellow(i)} commands successfully.`);
 }
 
 module.exports = { loadCommands };

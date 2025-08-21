@@ -1,0 +1,23 @@
+{
+  "error": "Ocorreu um erro ao tentar executar o comando. Tente novamente mais tarde.",
+
+  "memberinfo": {
+    "username": "📛 Nome de usuário",
+    "nickname": "🔰 Apelido",
+    "id": "🆔 ID do usuário",
+    "position": "📍 Posição de ingresso",
+    "boost": "🚀 Aumento do servidor",
+    "creation": "📆 Criado em",
+    "join": "📆 Ingressou em",
+    "roles": "🎖 Funções [ {{count}} ] (mostra as 5 principais)"
+  },
+
+  "messageinfo": {
+    "click": "Clique aqui para a mensagem",
+    "author": "📝 Autor",
+    "id": "🆔 ID da mensagem",
+    "creation": "📆 Criado em",
+    "edit": "📆 Editado em",
+    "edited": "Não Editado"
+  }
+}

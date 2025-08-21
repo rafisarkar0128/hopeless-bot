@@ -1,20 +1,27 @@
-{ 
-  "commandHandler": {
-    "no_permission": {
-      "title": "Permissões Ausentes",
-      "description": {
-        "bot": "Eu preciso de {permissions} para executar este comando.",
-        "user": "Você precisa ter estas {permissions} para poder usar este comando."
-      }
-    },
-    "no_run_function": "A versão de prefixo deste comando ainda não está completa. Tente a versão slash em vez disso.",
-    "command_disabled": "Este comando está desativado pelo dono do bot ou desenvolvedores.",
-    "dev_command": "Este comando é acessível apenas ao dono do bot e desenvolvedores.",
-    "guild_only": "Este comando só pode ser usado em um Servidor do Discord.",
-    "cooldown": "Calma! Comando em espera, aguarde `{cooldown}` segundos.",
-    "in_voice_channel": "Você precisa estar em um canal de voz para usar este comando."
+{
+  "commands": {
+    "guildOnly": "❌ Comandos de corte só funcionam em guildas.",
+    "notFound": "Este comando não está disponível no momento.",
+    "disabled": "Este comando foi **desabilitado** pelos desenvolvedores.",
+    "devOnly": "Este comando só está **acessível** aos desenvolvedores.",
+    "cooldown": "Aguarde, você está em um tempo de espera. Você pode usá-lo novamente {{t}}.",
+    "botPermission": "Preciso de {{p}} para executar este comando.",
+    "userPermission": "Você precisa de {{p}} para usar este comando.",
+    "voiceChannelOnly": "Entre em um **Canal de Voz** antes de usar este comando.",
+    "missingVCPermission": "Não consigo **entrar** no seu canal de voz ou **falar** nele.",
+    "error": "Ocorreu um erro ao tentar executar o comando. Tente novamente mais tarde."
   },
-  "embeds": {
-    "footer": "Copyright © 2023 - {new:date:year} | @{bot:tag}"
-  }
+
+  "context": {
+    "guildOnly": "❌ Os comandos do menu de contexto funcionam apenas em guildas.",
+    "notFound": "Este comando do menu de contexto não está disponível no momento.",
+    "disabled": "Este comando do menu de contexto foi **desabilitado** pelos desenvolvedores.",
+    "devOnly": "Este comando do menu de contexto é **acessível** apenas aos desenvolvedores.",
+    "cooldown": "Aguarde, você está em um tempo de espera. Você pode usá-lo novamente {{t}}.",
+    "botPermission": "Preciso de {{p}} para executar este comando do menu de contexto.",
+    "userPermission": "Você precisa de {{p}} para usar este comando do menu de contexto.",
+    "error": "Ocorreu um erro ao tentar executar o comando do menu de contexto. Tente novamente mais tarde."
+  },
+
+  "autocomplete": {}
 }
