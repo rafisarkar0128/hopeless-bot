@@ -7,15 +7,7 @@
     "paths": {
       "@root/*": ["./*"],
       "@src/*": ["./src/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@config/*": ["./src/config/*"],
-      "@structures/*": ["./src/structures/*"],
-      "@handlers/*": ["./src/handlers/*"],
-      "@commands/*": ["./src/commands/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@events/*": ["./src/events/*"],
-      "@helpers/*": ["./src/helpers/*"],
-      "@schemas/*": ["src/schemas/*"]
+      "@database/*": ["./src/database/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"]

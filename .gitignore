@@ -1,6 +1,3 @@
-# VS Code setting files
-.vscode
-
 # To ignore packages
 node_modules
 **/node_modules
@@ -16,6 +13,7 @@ yarn.lock
 
 # All secrets are stored here
 .env
+lavalinkNodes.js
 
 # Log files
 logs

@@ -1,120 +1,82 @@
-const colors = require("colors");
+const chalk = require("chalk");
 const { table } = require("table");
-const { t } = require("i18next");
 const { loadFiles } = require("./loadFiles.js");
-const { Events } = require("./validations/events.js");
 
 /**
  * A function to load event files
- * @type {import("./helpers.d.ts").LoadEvents}
- * @example await loadEvents(client, "src/events");
+ * @param {import("@src/lib").DiscordClient} client
+ * @returns {Promise<void>}
+ * @example await client.loadEvents();
  */
-async function loadEvents(client, dir) {
+async function loadEvents(client) {
   if (typeof client !== "object") {
-    throw new TypeError(
-      t("errors:missing_parameter", { param: colors.yellow("client") }),
-    );
+    throw new TypeError(`Parameter (${chalk.yellow("client")}) must be an object.`);
   }
 
-  if (typeof dir !== "string") {
-    throw new TypeError(t("errors:type.string", { param: colors.yellow("dir") }));
-  }
-
-  client.logger.info(
-    __filename,
-    t("default:loader.event.start", { dir: colors.green(dir) }),
-  );
-
-  const tableData = [
-    [
-      colors.cyan("Index"),
-      colors.cyan("Event"),
-      colors.cyan("File"),
-      colors.cyan("Status"),
-    ],
-  ];
-
+  const tableData = [["Event", "Status"]];
   /**
+   * Typings for table config.
    * @type {import("table").TableUserConfig}
    */
   const tableConfig = {
     columnDefault: {
       alignment: "center",
-      width: 26,
     },
-    columns: [{ width: 5 }, {}, {}, { width: 6 }],
     border: client.utils.getTableBorder("yellow"),
     drawHorizontalLine: (lineIndex, rowCount) => {
       return lineIndex === 0 || lineIndex === 1 || lineIndex === rowCount;
     },
+    columns: [{ alignment: "left" }, { width: 6 }],
   };
+  const { Events } = client.resources;
+  const files = await loadFiles("src/events", [".js"]);
+  let i = 0;
 
-  /**
-   * @type {Array<{file: string, error: Error}>}
-   */
-  const errors = new Array();
-  const files = await loadFiles(dir, [".js"]);
-  client.events.clear();
-
-  let i = 0,
-    l = 0;
   for (const file of files) {
-    const filename = file.split(/[\\/]/g).pop();
-
-    /**
-     * @type {import("@structures/event").EventStructure}
-     */
-    const event = require(file);
+    const filePath = `${chalk.yellow("filePath")} => ${chalk.yellow(file)}`;
     try {
-      if (!Events.includes(event.name) || !event.name) {
-        throw new Error(t("errors:validations.event.name"));
+      const { Event } = require(file);
+      /**
+       * BaseEvent structure for auto completion
+       * @type {import("@src/structures").BaseEvent}
+       */
+      const event = new Event();
+
+      // skipping disabled events.
+      if (event.disabled) continue;
+
+      // checking for event name and type
+      if (!event.name || typeof event.name !== "string") {
+        throw new TypeError(`Event name must be a string.`);
       }
 
-      client.events.set(filename, event);
-      const execute = (...args) => event.execute(client, ...args);
-      const target = event.rest
-        ? client.rest
-        : event.ws
-        ? client.ws
-        : event.player
-        ? client.lavalink
-        : event.node
-        ? client.lavalink.nodeManager
-        : client;
+      // checking name's validity
+      if (!Events.includes(event.name)) {
+        throw new Error(`"${event.name}" is not valid event name.`);
+      }
 
+      const target =
+        event.rest ? client.rest
+        : event.ws ? client.ws
+        : event.lavalink ? client.lavalink
+        : event.node ? client.lavalink.nodeManager
+        : client;
+      const execute = (...args) => event.execute(client, ...args);
       target[event.once ? "once" : "on"](event.name, execute);
 
       i++;
-      l++;
-      tableData.push([
-        `${colors.magenta(i)}`,
-        colors.yellow(event.name),
-        colors.green(filename),
-        "» 🌱 «",
-      ]);
+      tableData.push([chalk.yellow(event.name), "» 🌱 «"]);
     } catch (error) {
-      i++;
-      tableData.push([
-        `${colors.magenta(i)}`,
-        colors.red(event.name),
-        colors.red(filename),
-        "» 🔴 «",
-      ]);
-      errors.push({ file: file, error: error });
+      client.logger.error(error);
+      console.log(filePath);
+      tableData.push([chalk.red(file.split(/[\\|/]/g).pop()), "» 🔴 «"]);
     }
   }
 
-  if (client.config.table.event) console.log(table(tableData, tableConfig));
-
-  if (errors.length > 0) {
-    console.log(colors.yellow(t("errors:loader.event.start")));
-    errors.forEach((e) => {
-      console.log(colors.green(e.file), "\n", colors.red(e.error), "\n");
-    });
-    console.log(colors.yellow(t("errors:loader.event.end")));
+  if (client.config.showTable.event) {
+    console.log(table(tableData, tableConfig));
   }
-
-  client.logger.info(__filename, t("default:loader.event.end", { l: colors.yellow(l) }));
+  client.logger.info(`Loaded ${chalk.yellow(i)} events successfully.`);
 }
 
 module.exports = { loadEvents };

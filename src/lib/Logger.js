@@ -1,205 +1,210 @@
-const colors = require("colors");
+const chalk = require("chalk");
 const { DateTime } = require("luxon");
-const winston = require("winston");
+const { basename } = require("path");
+const { format } = require("util");
+const figures = require("figures").default;
 
+/**
+ * A utility class for managing client console logs.
+ * @abstract
+ */
 class Logger {
-  /** @param {import("@lib/DiscordBot").DiscordBot} client */
-  constructor(client) {
-    this.client = client;
+  /**
+   * A function to pad end of strings with spaces.
+   * @private
+   * @param {string|any} str
+   * @param {number} targetLength
+   * @returns {string}
+   */
+  _padEnd(str, targetLength) {
+    str = String(str);
+    targetLength = parseInt(targetLength, 10) || 0;
 
-    // date time string
-    this.dt = () =>
-      colors.gray(
-        DateTime.now().toFormat(this.client.config.time_format ?? "dd/MM/yyyy h:mm:ss a"),
-      );
+    if (str.length >= targetLength) {
+      return str;
+    }
+    if (String.prototype.padEnd) {
+      return str.padEnd(targetLength);
+    }
+
+    targetLength -= str.length;
+    return str + " ".repeat(targetLength);
   }
 
   /**
-   * @param {string} file
-   * @param {String} content
+   * Arrayify a string.
+   * @private
+   * @param {string|string[]|any} x
+   * @returns {string[]}
+   */
+  _arrayify(x) {
+    return Array.isArray(x) ? x : [x];
+  }
+
+  /**
+   * A function to format anything to string
+   * @private
+   * @param {any} str
+   * @returns {string}
+   */
+  _formatMessage(str) {
+    return format(...this._arrayify(str));
+  }
+
+  /**
+   * Get the date of the log message.
+   * @private
+   * @returns {string}
+   */
+  get _dateTime() {
+    return chalk.grey(DateTime.now().toFormat("[dd/MM/yyyy] [hh:mm:ss a]"));
+  }
+
+  /**
+   * Get the origin of the log.
+   * @private
+   * @returns {string}
+   */
+  get _filename() {
+    const _ = Error.prepareStackTrace;
+    Error.prepareStackTrace = (error, stack) => stack;
+    const { stack } = new Error();
+    Error.prepareStackTrace = _;
+
+    const callers = stack.map((x) => x.getFileName());
+    const FilePath = callers.find((x) => x !== callers[0]);
+    let file = FilePath ? basename(FilePath) : "anonymous";
+    file = file.length > 20 ? file.substring(0, 17) + "..." : file;
+
+    return chalk.grey(`[${chalk.cyan(this._padEnd(file, 20))}]`);
+  }
+
+  /**
+   * A function to build the log message
+   * @private
+   * @param {string} type
+   * @param {...any} args
+   * @returns {string}
+   */
+  _buildLog(typeString, ...args) {
+    const meta = [];
+    let msg = "";
+
+    meta.push(this._dateTime);
+    meta.push(this._filename);
+    meta.push(chalk.grey(`[${typeString}]`));
+    meta.push(chalk.grey(figures.pointer));
+
+    if (args.length === 1 && typeof args[0] === "object" && args[0] !== null) {
+      if (args[0] instanceof Error) {
+        msg = args[0];
+      } else {
+        msg = this._formatMessage(args);
+      }
+    } else {
+      msg = this._formatMessage(args);
+    }
+
+    if (msg instanceof Error && msg.stack) {
+      const [name, ...rest] = msg.stack.split("\n");
+      meta.push(name);
+      meta.push(chalk.grey(rest.map((l) => l.replace(/^/, "\n")).join("")));
+    } else {
+      meta.push(msg);
+    }
+
+    return meta.join(" ");
+  }
+
+  /**
+   * For logging information type messages
+   * @param {String|String[]} content - can be modified with colors
    * @returns {void}
    */
-  info(file, content) {
-    const filename = file.split(/[\\/]/g).pop();
-    const output =
-      this.dt() +
-      ` ✉️  [` +
-      colors.yellow(
-        `${filename.length > 20 ? filename.substring(0, 17) + "..." : filename}`,
-      ) +
-      " ".repeat(20 - (filename.length > 20 ? 20 : filename.length)) +
-      `] ` +
-      `[${colors.cyan("INFO")}] ` +
-      content;
-
-    console.log(output);
+  info(...content) {
+    const typeString = chalk.blue(this._padEnd("INFO", 7));
+    console.log(this._buildLog(typeString, ...content));
   }
 
   /**
-   * @param {string} content
+   * For logging warning type messages
+   * @param {string|string[]|any} content - defaults to yellow but can be modified with colors
+   * @returns {void}
    */
-  warn(content) {
-    return console.log(
-      `[${this.dt()}] ⚠️  [${colors.yellow("WARN")}] ${colors.yellow(`${content}`)}`,
-    );
+  warn(...content) {
+    const typeString = chalk.yellow(this._padEnd("WARNING", 7));
+    console.log(this._buildLog(typeString, ...content));
   }
 
   /**
-   * @param {Error} content
-   * @param {string} origin
-   * @param {import("@types/utils").ErrorTypes} type
+   * For logging error type messages
+   * @param {Error|string} content - defaults to red but can be modified with colors
+   * @return {void}
    */
-  async error(content, type) {
-    const error = content.stack ? content.stack : content;
-    console.log(`[${this.dt()}] 🛑  [${colors.red("ERROR")}] ${colors.red(`${error}`)}`);
-    return this.client.utils.sendError(content, type);
+  error(...content) {
+    const typeString = chalk.red(this._padEnd("ERROR", 7));
+    console.log(this._buildLog(typeString, ...content));
   }
 
   /**
-   * @param {string} content
+   * For logging debug type messages
+   * @param {string|string[]|any} content - defaults to green but can be modified with colors
+   * @return {void}
    */
-  debug(content) {
-    return console.log(
-      `[${this.dt()}] 🐛  [${colors.green("DEBUG")}] ${colors.green(content)}`,
-    );
+  debug(...content) {
+    const typeString = chalk.magenta(this._padEnd("DEBUG", 7));
+    console.log(this._buildLog(typeString, ...content));
   }
 
   /**
-   * @param  {string} content
+   * For logging success type messages to test if the code is working as expected
+   * @param {string|string[]|any} content - Can be modified with colors
+   * @return {void}
    */
-  write(message) {
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-    return process.stdout.write(message);
+  success(...content) {
+    const typeString = chalk.green(this._padEnd("SUCCESS", 7));
+    console.log(this._buildLog(typeString, ...content));
   }
 
   /**
-   * @param  {string} content
+   * For logging anything
+   * @param {string|string[]|any} content - Can be modified with colors
+   * @return {void}
    */
-  log(message) {
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-    return console.log(message);
+  log(...content) {
+    const typeString = chalk.white(this._padEnd("LOG", 7));
+    console.log(this._buildLog(typeString, ...content));
+  }
+
+  /**
+   * For logging pause type messages
+   * @param {string|string[]|any} content - Can be modified with colors
+   * @return {void}
+   */
+  pause(...content) {
+    const typeString = chalk.yellow(this._padEnd("PAUSE", 7));
+    console.log(this._buildLog(typeString, ...content));
+  }
+
+  /**
+   * For logging start type messages
+   * @param {string|string[]|any} content - Can be modified with colors
+   * @return {void}
+   */
+  start(...content) {
+    const typeString = chalk.green(this._padEnd("START", 7));
+    console.log(this._buildLog(typeString, ...content));
+  }
+
+  /**
+   * For logging star (special) type messages
+   * @param {string|string[]|any} content - Can be modified with colors
+   * @return {void}
+   */
+  star(...content) {
+    const typeString = chalk.yellow(this._padEnd("STAR", 7));
+    console.log(this._buildLog(typeString, ...content));
   }
 }
 
 module.exports = { Logger };
-
-const { EmbedBuilder, WebhookClient, Colors } = require("discord.js");
-const { inspect } = require("util");
-const webhook = undefined;
-
-class UpdatedLogger {
-  constructor() {
-    this.origin = this._getLogOrigin().split(/[\\/]/).pop();
-  }
-  _getLogOrigin() {
-    let filename;
-
-    let _pst = Error.prepareStackTrace;
-    Error.prepareStackTrace = function (err, stack) {
-      return stack;
-    };
-    try {
-      let err = new Error();
-      let callerfile;
-      let currentfile;
-
-      currentfile = err.stack.shift().getFileName();
-
-      while (err.stack.length) {
-        callerfile = err.stack.shift().getFileName();
-
-        if (currentfile !== callerfile) {
-          filename = callerfile;
-          break;
-        }
-      }
-    } catch (err) {}
-    Error.prepareStackTrace = _pst;
-
-    return filename;
-  }
-
-  error(content) {
-    const output =
-      new Date().toLocaleTimestring() +
-      `  🛑  [` +
-      `${this.origin.length > 25 ? this.origin.substring(0, 17) + "..." : this.origin}` +
-      `] ` +
-      " ".repeat(20 - (this.origin.length > 20 ? 20 : this.origin.length)) +
-      "| " +
-      content;
-    if (webhook) {
-      webhook.send({
-        content: `> \`\`\`${output}\`\`\``,
-      });
-    }
-    console.log(output);
-  }
-
-  info(content) {
-    const output =
-      new Date().toLocaleTimestring() +
-      `  ✉️   [` +
-      `${this.origin.length > 25 ? this.origin.substring(0, 17) + "..." : this.origin}` +
-      `] ` +
-      " ".repeat(20 - (this.origin.length > 20 ? 20 : this.origin.length)) +
-      "| " +
-      content;
-    if (webhook) {
-      webhook.send({
-        content: `> \`\`\`${output}\`\`\``,
-      });
-    }
-    console.log(output);
-  }
-  warn(content) {
-    const output =
-      new Date().toLocaleTimeString() +
-      `  ⚠️   [` +
-      `${this.origin.length > 25 ? this.origin.substring(0, 17) + "..." : this.origin}` +
-      `] ` +
-      " ".repeat(20 - (this.origin.length > 20 ? 20 : this.origin.length)) +
-      "| " +
-      content;
-    if (webhook) {
-      webhook.send({
-        content: `> \`\`\`${output}\`\`\``,
-      });
-    }
-    console.log(output);
-  }
-
-  success(content) {
-    const output =
-      new Date().toLocaleTimeString() +
-      `  ✅  [` +
-      `${this.origin.length > 25 ? this.origin.substring(0, 17) + "..." : this.origin}` +
-      `] ` +
-      " ".repeat(20 - (this.origin.length > 20 ? 20 : this.origin.length)) +
-      "| " +
-      content;
-    if (webhook) {
-      webhook.send({
-        content: `> \`\`\`${output}\`\`\``,
-      });
-    }
-    console.log(output);
-  }
-  custom(content) {
-    console.log(
-      new Date().toLocaleTimeString() +
-        `  🛑  [` +
-        `${
-          this.origin.length > 20 ? this.origin.substring(0, 17) + "..." : this.origin
-        }` +
-        `] ` +
-        " ".repeat(20 - (this.origin.length > 20 ? 20 : this.origin.length)) +
-        "| " +
-        content,
-    );
-  }
-}
-
-// logger.success(colors.cyan(`</> • ${colors.yellow(i)} Events has been loaded.`));

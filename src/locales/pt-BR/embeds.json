@@ -1,0 +1,14 @@
+{
+  "default": {
+    "footer": "Desenvolvido por {{username}} | Copyright ©{{year}}"
+  },
+
+  "bot": {
+    "description": "Um aplicativo _Multipurpose_ do Discord para todas as suas necessidades com **Serviços Premium**. Para mais informações, acesse {{website}}"
+  },
+
+  "mention": {
+    "title": "Você acabou de me mencionar?",
+    "description": "Eu sou {{user}}, um bot do Discord desenvolvido por {{owner}} para gerenciar e moderar servidores do Discord. Para mais informações ou ajuda, use **`/help`**."
+  }
+}
