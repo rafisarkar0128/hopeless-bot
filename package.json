@@ -50,7 +50,7 @@
   "homepage": "https://github.com/theassassin0128/hopeless-bot#readme",
   "devDependencies": {
     "axios": "^1.11.0",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
