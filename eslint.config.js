@@ -9,9 +9,9 @@ module.exports = defineConfig([
   {
     files: ["**/*.{js,mjs,cjs}"],
     plugins: { js },
-    extends: ["js/recommended"]
+    extends: ["js/recommended"],
   },
   {
-    rules: { "no-unused-vars": "off", "no-undef": "error" }
-  }
+    rules: { "no-unused-vars": "off", "no-undef": "error" },
+  },
 ]);

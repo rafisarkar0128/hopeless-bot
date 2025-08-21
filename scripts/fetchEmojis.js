@@ -10,9 +10,7 @@ async function fetchAndSaveEmojis() {
   const data = await rest.get(`/applications/${app.id}/emojis`);
 
   if (!Array.isArray(data.items)) {
-    return console.log(
-      chalk.redBright(`Unable to fetch emojis from ${app.name}`)
-    );
+    return console.log(chalk.redBright(`Unable to fetch emojis from ${app.name}`));
   }
 
   let emojis = new Object();
@@ -21,11 +19,7 @@ async function fetchAndSaveEmojis() {
     emojis[emoji.name] = `<${isAnimated}:${emoji.name}:${emoji.id}>`;
   }
 
-  fs.writeFileSync(
-    "./scripts/emojis.json",
-    JSON.stringify(emojis),
-    console.error
-  );
+  fs.writeFileSync("./scripts/emojis.json", JSON.stringify(emojis), console.error);
 
   const slash = process.platform === "win32" ? "\\" : "/";
 

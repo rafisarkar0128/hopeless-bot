@@ -4,11 +4,11 @@
 
 The versions listed below are the only supported versions.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| ^2.0.3  | :white_check_mark: |
-| <2.0.0  | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| ^2.2.1  | ✅        |
+| <2.0.0  | ❌        |
 
 ## Reporting a Vulnerability
 
-This project is maintained by a single developer. If you discover any vulnerabilities, please report them by creating an issue in the repository.
+This project is maintained by a single developer. If you discover any vulnerabilities, please report them by [creating an issue](https://github.com/rafisarkar0128/hopeless-bot/issues) in the repository.
