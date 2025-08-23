@@ -6,7 +6,7 @@ const { ApplicationCommandType, Locale } = require("discord.js");
  * @param {import("@types/index").CommandStructure} NewCommand
  * @returns {boolean}
  */
-function checkForChanges(OldCommand, NewCommand) {
+function checkForChangesInCommand(OldCommand, NewCommand) {
   const oldCommand = OldCommand.data;
   const newCommand = NewCommand.data.toJSON();
 
@@ -213,7 +213,7 @@ function checkForChangesInLocalizations(oldLocalizations = {}, newLocalizations 
 }
 
 module.exports = {
-  checkForChanges,
+  checkForChangesInCommand,
   checkForChangesInLocalizations,
   checkForChangesInChoices,
   checkForChangesInOptions,

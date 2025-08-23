@@ -1,3 +1,5 @@
+const config = require("@src/config.js");
+
 /**
  * @typedef {"admin"|"config"|"development"|"general"|"information"|"utility"} CoreCategories
  * @typedef {"automod"|"moderation"|"suggestion"|"ticket"} ManagementCategories
@@ -6,9 +8,17 @@
  */
 
 /**
- * @typedef {Object} CommandDescription The command description object.
- * @property {string} content Description of the command (1-100 characters for slash command).
+ * @typedef {Object} CommandParameters The command parameters object.
+ * @property {string} name The name of the parameter.
+ * @property {string} description The description of the parameter.
+ * @property {boolean} [required] Whether the parameter is required or not.
+ */
 
+/**
+ * @typedef {Object} CommandDetails The command details object.
+ * @property {string} [usage] The usage of the command.
+ * @property {string[]} [examples] examples for this command.
+ * @property {Array<CommandParameters>} [params] The parameters for this command.
  */
 
 /**
@@ -29,14 +39,13 @@
  */
 
 /**
- * @typedef {Object} CommandOptions Command options to pass to the base command class
- * @property {import("discord.js").APIApplicationCommand} data The slash command data
- * @property {string} [usage] usage for this command.
- * @property {string[]} [examples] examples for this command.
+ * @typedef {Object} CommandOptions Options for the command.
  * @property {CommandCategories} [category] The category this command belongs to.
  * @property {number} [cooldown] Command cooldown amount in seconds
- * @property {boolean} [global] Whether this command is a global command or not (mainly for slash commands).
- * @property {boolean} [disabled] Whether this command is disabled or not
+ * @property {boolean} [global] Whether this command is a global command
+ * or not (mainly for slash commands).
+ * @property {{slash?: boolean, prefix?: boolean}|boolean} [disabled] Whether the prefix, slash,
+ * or the whole command is disabled or not
  * @property {boolean} [guildOnly] Whether this command could be used outside of guilds (servers).
  * @property {boolean} [testOnly]  Whether this command is a test only command.
  * Means it will only be able to run in test server or by verified testers.
@@ -48,134 +57,128 @@
  */
 
 /**
+ * @typedef {Object} PrefixCommandOptions Options for prefix commands.
+ * @property {string[]} [aliases] The aliases for the command.
+ * @property {number} [minArgsCount] Minimum number of arguments required to run this command.
+ * @property {CommandDetails} [details] The details for this command.
+ */
+
+/**
+ * @typedef {Object} SlashCommandOptions Options for slash commands.
+ * @property {boolean} [ephemeral] Whether the command is ephemeral or not.
+ * @property {CommandDetails} [details] The details for this command.
+ */
+
+/**
+ * @typedef {Object} CommandMetadata Command Metadata to pass to the base command class
+ * @property {import("discord.js").SlashCommandBuilder} data The slash command data
+ * @property {CommandOptions} options Options for the command.
+ * @property {PrefixCommandOptions} prefixOptions Options for prefix commands.
+ * @property {SlashCommandOptions} slashOptions Options for slash commands.
+ */
+
+/**
  * Base command class
  * @abstract
  */
 class BaseCommand {
   /**
    * typings for parameters
-   * @param {import("@src/lib").DiscordClient} client
-   * @param {CommandOptions} options
+   * @param {CommandMetadata} metadata
    */
-  constructor(options) {
+  constructor(metadata) {
     /**
      * The slash command data
      * @type {import("discord.js").SlashCommandBuilder}
      */
-    this.data = options.data ?? null;
+    this.data = metadata.data ?? null;
 
     /**
-     * The command usage string.
-     * @type {string}
+     * The command options
+     * @type {CommandOptions}
      */
-    this.usage = options.usage ?? "No usage provided";
+    this.options = {};
 
-    /**
-     * The command usage examples.
-     * @type {string[]}
-     */
-    this.examples = options.examples ?? ["No examples provided"];
+    this.options.category = metadata.options.category ?? "general";
+    this.options.cooldown = metadata.options.cooldown ?? config.bot.defaultCooldown;
+    this.options.global = metadata.options.global ?? config.bot.global;
+    this.options.disabled = metadata.options.disabled ?? { slash: false, prefix: false };
+    this.options.guildOnly = metadata.options.guildOnly ?? false;
+    this.options.testOnly = metadata.options.testOnly ?? false;
+    this.options.premium = metadata.options.premium ?? false;
+    this.options.vote = metadata.options.vote ?? false;
+    this.options.nsfw = metadata.options.nsfw ?? false;
 
-    if (this.usage.length === 0) {
-      this.usage = "No usage provided";
-    }
-
-    if (Array.isArray(this.examples) && this.examples.length === 0) {
-      this.examples.push("No description provided");
-    }
-
-    /**
-     * The category this command belongs to.
-     * @type {CommandCategories}
-     */
-    this.category = options.category ?? "general";
-
-    /**
-     * Command cooldown amount in seconds
-     * @type {number}
-     */
-    this.cooldown = options.cooldown ?? this.client.config.bot.defaultCooldown;
-
-    /**
-     * Whether this command is a global command or not.
-     * @type {boolean}
-     */
-    this.global = options.global ?? this.client.config.bot.global;
-
-    /**
-     * Whether this command is disabled or not
-     * @type {boolean}
-     */
-    this.disabled = options.disabled ?? false;
-
-    /**
-     * Whether this command is a test only command.
-     * Means it will only be able to run in test server or by verified testers.
-     * @type {boolean}
-     */
-    this.testOnly = options.testOnly ?? false;
-
-    /**
-     * Whether this command could be used outside of guilds (servers).
-     * @type {boolean}
-     */
-    this.guildOnly = options.guildOnly ?? false;
-
-    /**
-     * Whether this command is a premium command or not.
-     * @type {boolean}
-     */
-    this.premium = options.premium ?? false;
-
-    /**
-     * Whether this command requires users to vote before use.
-     * @type {boolean}
-     */
-    this.vote = options.vote ?? false;
-
-    /**
-     * Whether this command is age restricted or not.
-     * @type {boolean}
-     */
-    this.nsfw = options.nsfw;
-
-    /**
-     * Player settings if its a music related command.
-     * @type {Partial<PlayerOptionsObject>}
-     */
-    this.player = {
-      voice: options.player?.voice ?? false,
-      dj: options.player?.dj ?? false,
-      active: options.player?.active ?? false,
-      playing: options.player?.playing ?? false,
-      djPerm: options.player?.djPerm ?? null,
+    this.options.player = {
+      voice: metadata.options.player?.voice ?? false,
+      dj: metadata.options.player?.dj ?? false,
+      active: metadata.options.player?.active ?? false,
+      playing: metadata.options.player?.playing ?? false,
+      djPerm: metadata.options.player?.djPerm ?? null,
     };
 
-    /**
-     * Permission settings for the command.
-     * @type {Partial<CommandPermissions>}
-     */
-    this.permissions = {
-      dev: options.permissions?.dev ?? false,
-      bot: options.permissions?.bot ?? [],
-      user: options.permissions?.user ?? [],
+    this.options.permissions = {
+      dev: metadata.options.permissions.dev ?? false,
+      bot: metadata.options.permissions.bot ?? [
+        "SendMessages",
+        "ViewChannel",
+        "EmbedLinks",
+        "ReadMessageHistory",
+      ],
+      user: metadata.options.permissions.user ?? [],
     };
 
-    if (Array.isArray(this.permissions.bot)) {
-      this.permissions.bot = this.permissions.bot.concat([
+    // Ensure bot permissions always include required defaults
+    if (Array.isArray(this.options.permissions?.bot)) {
+      this.options.permissions.bot = this.options.permissions.bot.concat([
         "SendMessages",
         "ViewChannel",
         "EmbedLinks",
         "ReadMessageHistory",
       ]);
     }
+
+    /**
+     * The command prefix options
+     * @type {PrefixCommandOptions}
+     */
+    this.prefixOptions = {
+      aliases: metadata.prefixOptions.aliases ?? [],
+      minArgsCount: metadata.prefixOptions.minArgsCount ?? 0,
+      details: {
+        usage: metadata.prefixOptions.details.usage ?? "No usage provided",
+        examples: metadata.prefixOptions.details.examples ?? ["No examples provided"],
+        params: metadata.prefixOptions.details.params ?? [],
+      },
+    };
+
+    /**
+     * The command slash options
+     * @type {SlashCommandOptions}
+     */
+    this.slashOptions = {
+      ephemeral: metadata.slashOptions.ephemeral ?? false,
+      details: {
+        usage: metadata.slashOptions.details.usage ?? "No usage provided",
+        examples: metadata.slashOptions.details.examples ?? ["No examples provided"],
+        params: metadata.slashOptions.details.params ?? [],
+      },
+    };
   }
 
   /**
-   * Default execute function for commands
+   * Default execute function for prefix commands
    * @returns {Promise<void>}
    */
-  async execute() {
+  async executePrefix() {
+    return await Promise.resolve();
+  }
+
+  /**
+   * Default execute function for slash commands
+   * @returns {Promise<void>}
+   */
+  async executeSlash() {
     return await Promise.resolve();
   }
 

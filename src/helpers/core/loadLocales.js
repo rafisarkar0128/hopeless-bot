@@ -21,14 +21,14 @@ async function loadLocales(client) {
     fallbackLng: ["en-US"],
     lng: client.config.defaultLocale ?? "en-US",
     interpolation: { escapeValue: false },
-    preload: readdirSync(join(__dirname, "../locales")).filter((file) => {
-      const isDirectory = lstatSync(join(__dirname, "../locales", file)).isDirectory();
-      const langFiles = readdirSync(join(__dirname, "../locales", file));
+    preload: readdirSync(join(process.cwd(), "src", "locales")).filter((file) => {
+      const isDirectory = lstatSync(join(process.cwd(), "src", "locales", file)).isDirectory();
+      const langFiles = readdirSync(join(process.cwd(), "src", "locales", file));
       if (isDirectory && langFiles.length > 0) return true;
     }),
     backend: {
-      loadPath: join(__dirname, "../locales/{{lng}}/{{ns}}.json"),
-      addPath: join(__dirname, "../locales/{{lng}}/{{ns}}.missing.json"),
+      loadPath: join(process.cwd(), "src", "locales", "{{lng}}/{{ns}}.json"),
+      addPath: join(process.cwd(), "src", "locales", "{{lng}}/{{ns}}.missing.json"),
     },
   });
 

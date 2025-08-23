@@ -1,14 +1,11 @@
+const { handleAutoplay } = require("./lavalink/handleAutoplay");
+const { handleSlash } = require("./command/handleSlash");
+const { handleAutocomplete } = require("./command/handleAutocomplete");
+const { handlePrefix } = require("./command/handlePrefix");
+
 module.exports = {
-  //automodHandler: require("./automod"),
-  commandHandler: require("./command"),
-  //contextHandler: require("./context"),
-  //counterHandler: require("./counter"),
-  //greetingHandler: require("./greeting"),
-  //inviteHandler: require("./invite"),
-  //presenceHandler: require("./presence"),
-  //reactionRoleHandler: require("./reactionRoles"),
-  //statsHandler: require("./stats"),
-  //suggestionHandler: require("./suggestion"),
-  //ticketHandler: require("./ticket"),
-  //translationHandler: require("./translation"),
+  handleAutoplay,
+  handleSlash,
+  handleAutocomplete,
+  handlePrefix,
 };

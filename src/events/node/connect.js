@@ -5,7 +5,7 @@ const chalk = require("chalk");
  * A new Event extended from BaseEvent
  * @extends {BaseEvent}
  */
-class Event extends BaseEvent {
+module.exports = class Event extends BaseEvent {
   constructor() {
     super({
       name: "connect",
@@ -22,6 +22,4 @@ class Event extends BaseEvent {
   async execute(client, node) {
     client.logger.success(`Lavalink node (${chalk.magenta(node.id)}) connected.`);
   }
-}
-
-module.exports = { Event };
+};

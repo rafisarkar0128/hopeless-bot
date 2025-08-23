@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 const { table } = require("table");
-const { loadFiles } = require("./loadFiles.js");
+const { loadFiles } = require("@utils/index.js");
 
 /**
  * A function to load event files
@@ -35,7 +35,7 @@ async function loadEvents(client) {
   for (const file of files) {
     const filePath = `${chalk.yellow("filePath")} => ${chalk.yellow(file)}`;
     try {
-      const { Event } = require(file);
+      const Event = require(file);
       /**
        * BaseEvent structure for auto completion
        * @type {import("@src/structures").BaseEvent}
