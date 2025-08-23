@@ -1,10 +1,6 @@
 const { BaseEvent } = require("@src/structures");
 
-/**
- * A new Event extended from BaseEvent
- * @extends {BaseEvent}
- */
-class Event extends BaseEvent {
+module.exports = class Event extends BaseEvent {
   constructor() {
     super({
       name: "",
@@ -19,12 +15,10 @@ class Event extends BaseEvent {
 
   /**
    * Execute function for this event
-   * @param {import("@structures/BotClient.js")} client
+   * @param {import("@lib/index").DiscordClient} client
    * @returns {Promise<void>}
    */
   async execute(client) {
     return client.logger.info(`${this.name} works fine!`);
   }
-}
-
-module.exports = { Event };
+};

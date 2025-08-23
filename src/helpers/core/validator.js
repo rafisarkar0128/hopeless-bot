@@ -2,7 +2,7 @@ const chalk = require("chalk");
 
 /**
  * A function to validate the whole configuration.
- * @param {import("@lib/DiscordClient").DiscordClient} client
+ * @param {import("@src/lib").DiscordClient} client
  * @returns {void}
  */
 function validateConfig(client) {

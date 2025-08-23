@@ -1,8 +1,4 @@
 const chalk = require("chalk");
-const Buttons = require("./Buttons.js");
-const Invites = require("./Invites.js");
-const Logs = require("./Logs.js");
-const { makeCache } = require("./functions/makeCache.js");
 const { t } = require("i18next");
 
 /**
@@ -13,33 +9,9 @@ class Utils {
   constructor(client) {
     /**
      * Base Client property for this class
-     * @type {import("@structures/BotClient.js")}
+     * @type {import("@lib/index").DiscordClient}
      */
     this.client = client;
-
-    /**
-     * A class dedicated to button related utilities
-     * @type {Buttons}
-     */
-    this.buttons = new Buttons(client);
-
-    /**
-     * A class dedicated to invite related utilities
-     * @type {Invites}
-     */
-    this.invites = new Invites(client);
-
-    /**
-     * A class dedicated to error handling
-     * @type {Logs}
-     */
-    this.logs = new Logs(client);
-
-    /**
-     * A function to create a cache factory
-     * @type {typeof makeCache}
-     */
-    this.makeCache = makeCache(client.config.cacheSettings);
   }
 
   /**

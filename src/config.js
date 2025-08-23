@@ -5,9 +5,9 @@ module.exports = {
   // default language
   defaultLocale: process.env.DEFAULT_LOCALE ?? "en-US",
   // Available languages for the bot
-  availableLocales: readdirSync(join(__dirname, "locales")).filter((file) => {
-    const isDirectory = lstatSync(join(__dirname, "locales", file)).isDirectory();
-    const langFiles = readdirSync(join(__dirname, "locales", file));
+  availableLocales: readdirSync(join(process.cwd(), "src", "locales")).filter((file) => {
+    const isDirectory = lstatSync(join(process.cwd(), "src", "locales", file)).isDirectory();
+    const langFiles = readdirSync(join(process.cwd(), "src", "locales", file));
     if (isDirectory && langFiles.length > 0) return true;
   }),
 

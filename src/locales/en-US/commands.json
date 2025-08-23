@@ -123,6 +123,7 @@
   "pause": { "description": "Pauses the current track" },
   "ping": {
     "description": "🏓 Pong! Replies with bot's response time.",
+    "pinging": "🔄 Pinging...",
     "gatewayPing": "📡 Gateway Ping",
     "responseTime": "🛰 Response Time",
     "uptime": "⏰ Uptime"

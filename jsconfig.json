@@ -7,7 +7,13 @@
     "paths": {
       "@root/*": ["./*"],
       "@src/*": ["./src/*"],
-      "@database/*": ["./src/database/*"]
+      "@lib/*": ["./src/lib/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@database/*": ["./src/database/*"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@handlers/*": ["./src/handlers/*"],
+      "@resources/*": ["./src/resources/*"],
+      "@structures/*": ["./src/structures/*"]
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"]

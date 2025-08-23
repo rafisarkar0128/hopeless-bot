@@ -2,7 +2,7 @@ const chalk = require("chalk");
 
 /**
  * A function to handle crashes
- * @param {import("@lib/DiscordClient").DiscordClient} client
+ * @param {import("@src/lib").DiscordClient} client
  * @returns {Promise<void>}
  */
 function antiCrash(client) {

@@ -1,6 +1,6 @@
 const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const { Logger } = require("./Logger.js");
-const { Utils } = require("@root/src/utils/Utils.js");
+const { Utils } = require("@utils/index");
 const { LavalinkClient } = require("./LavalinkClient.js");
 const { DatabaseManager } = require("@src/database/DatabaseManager.js");
 const Genius = require("genius-lyrics");
@@ -52,37 +52,37 @@ class DiscordClient extends Client {
 
     /**
      * Collection of colors for embeds
-     * @type {import("@src/resources/colors.js")}
+     * @type {import("@resources/colors.js")}
      */
-    this.color = require("@src/resources/colors.js");
+    this.color = require("@resources/colors.js");
 
     /**
      * Collection of emojies to use with messages
-     * @type {import("@src/resources/emojis.js")}
+     * @type {import("@resources/emojis.js")}
      */
-    this.emoji = require("@src/resources/emojis.js");
+    this.emoji = require("@resources/emojis.js");
 
     /**
-     * Resources to use for various perposes
-     * @type {import("@src/resources")}
+     * Resources to use for various purposes
+     * @type {import("@resources/index.js")}
      */
-    this.resources = require("@src/resources");
+    this.resources = require("@resources/index.js");
 
     /**
      * The helpers for the client
-     * @type {import("@src/helpers")}
+     * @type {import("@helpers/index.js")}
      */
-    this.helpers = require("@src/helpers");
+    this.helpers = require("@helpers/index.js");
 
     /**
      * The handlers for this bot
-     * @type {import("@src/handlers")}
+     * @type {import("@handlers/index.js")}
      */
-    this.handlers = require("@src/handlers");
+    this.handlers = require("@handlers/index.js");
 
     /**
      * A collection to store all the commands
-     * @type {Collection<string, import("../structures/BaseCommand.js")>}
+     * @type {Collection<string, import("@structures/index.js").BaseCommand>}
      */
     this.commands = new Collection();
 
@@ -91,12 +91,6 @@ class DiscordClient extends Client {
      * @type {Collection<string, string>}
      */
     this.aliases = new Collection();
-
-    /**
-     * A collection to store all the contextmenu commands
-     * @type {Collection<string, import("../structures/BaseCommand.js")>}
-     */
-    this.contextMenus = new Collection();
 
     /**
      * A collection to store cooldown data
@@ -156,7 +150,7 @@ class DiscordClient extends Client {
    */
   async start() {
     // load necessary modules
-    this.helpers.logVanity(this);
+    this.helpers.loadWelcome(this);
     this.helpers.antiCrash(this);
 
     // validate the config file
@@ -165,7 +159,7 @@ class DiscordClient extends Client {
     // load locales, events & commands
     await this.helpers.loadLocales(this);
     await this.helpers.loadEvents(this);
-    // await this.helpers.loadCommands(this);
+    await this.helpers.loadCommands(this);
 
     // Log into the client
     this.login(this.config.bot.token);

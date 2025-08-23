@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 const { fetchCommands } = require("./fetchCommands.js");
-const { checkForChanges } = require("./checkForChanges.js");
+const { checkForChangesInCommand } = require("./checkForChanges.js");
 
 /**
  * A function to synchronize Application Commands
@@ -93,9 +93,14 @@ async function syncCommands(client) {
         let isChanged = false;
 
         // Check if the command is global or not
-        if (oldCommand.global !== newCommand.global) isChanged = true;
+        if (oldCommand.global !== newCommand.global) {
+          isChanged = true;
+        }
+
         // Check if the command has been modified or not
-        else if (checkForChanges(oldCommand, newCommand)) isChanged = true;
+        else if (checkForChangesInCommand(oldCommand, newCommand)) {
+          isChanged = true;
+        }
 
         if (isChanged) {
           await oldCommand.data.delete();

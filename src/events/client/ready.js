@@ -6,7 +6,7 @@ const { ActivityType } = require("discord.js");
  * A new Event extended from BaseEvent
  * @extends {BaseEvent}
  */
-class Event extends BaseEvent {
+module.exports = class Event extends BaseEvent {
   constructor() {
     super({
       name: "clientReady",
@@ -53,6 +53,4 @@ class Event extends BaseEvent {
       if (i >= activities.length) i = 0;
     }, 300000);
   }
-}
-
-module.exports = { Event };
+};

@@ -1,6 +1,6 @@
 {
   "name": "hopeless-bot",
-  "version": "3.0.1-rebuild-1",
+  "version": "3.0.2-rebuild",
   "description": "A discord music bot build with lavalink.",
   "main": "src/index.js",
   "scripts": {
@@ -76,7 +76,12 @@
   "_moduleAliases": {
     "@root": ".",
     "@src": "src/",
+    "@lib": "src/lib/",
     "@database": "src/database/",
-    "@handlers": "src/handlers/"
+    "@utils": "src/utils/",
+    "@handlers": "src/handlers/",
+    "@helpers": "src/helpers/",
+    "@resources": "src/resources/",
+    "@structures": "src/structures/"
   }
 }

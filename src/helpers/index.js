@@ -1,32 +1,28 @@
-const { logVanity } = require("./logVanity.js");
-const { loadFiles } = require("./loadFiles.js");
-const { antiCrash } = require("./antiCrash.js");
-const { loadEvents } = require("./loadEvents.js");
-const { loadLocales } = require("./loadLocales.js");
-const { loadCommands } = require("./loadCommands.js");
-const { validateConfig } = require("./validator.js");
-const { getCooldown } = require("./getCooldown.js");
-const { fetchCommands } = require("./fetchCommands.js");
+const { loadWelcome } = require("./core/loadWelcome.js");
+const { antiCrash } = require("./core/antiCrash.js");
+const { loadEvents } = require("./core/loadEvents.js");
+const { loadLocales } = require("./core/loadLocales.js");
+const { loadCommands } = require("./core/loadCommands.js");
+const { validateConfig } = require("./core/validator.js");
+const { fetchCommands } = require("./discord/fetchCommands.js");
 const {
-  checkForChanges,
+  checkForChangesInCommand,
   checkForChangesInOptions,
   checkForChangesInChoices,
   checkForChangesInLocalizations,
-} = require("./checkForChanges.js");
-const { syncCommands } = require("./syncCommands.js");
+} = require("./discord/checkForChanges.js");
+const { syncCommands } = require("./discord/syncCommands.js");
 
 //Exporting all the functions from single file for better accessibility
 module.exports = {
-  logVanity,
-  loadFiles,
+  loadWelcome,
   antiCrash,
   loadEvents,
   loadLocales,
   loadCommands,
   validateConfig,
-  getCooldown,
   fetchCommands,
-  checkForChanges,
+  checkForChangesInCommand,
   checkForChangesInOptions,
   checkForChangesInChoices,
   checkForChangesInLocalizations,
