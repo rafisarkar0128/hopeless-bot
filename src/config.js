@@ -11,10 +11,10 @@ module.exports = {
     if (isDirectory && langFiles.length > 0) return true;
   }),
 
-  // wether to show table or not.
+  // whether to show table or not.
   showTable: {
-    event: false, // event loader table
-    command: false, // command loader table
+    event: process.env.SHOW_TABLE_EVENT === "true", // event loader table
+    command: process.env.SHOW_TABLE_COMMAND === "true", // command loader table
   },
 
   // Bot settings
@@ -44,6 +44,8 @@ module.exports = {
     defaultCooldown: 5,
     // Command syncronization logs
     showSyncLogs: true,
+    // debug mode to log more information
+    debug: process.env.DEBUG === "true",
   },
 
   // Your genius API credentials. Get it from https://genius.com/developers

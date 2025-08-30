@@ -8,7 +8,7 @@ module.exports = class Event extends BaseEvent {
       rest: false,
       ws: false,
       node: false,
-      lavalink: false,
+      player: false,
       disabled: false,
     });
   }

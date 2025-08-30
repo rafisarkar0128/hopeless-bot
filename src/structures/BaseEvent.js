@@ -16,7 +16,7 @@
  * @property {?boolean} [rest] Whether this is a rest (discord api) event or not.
  * @property {?boolean} [ws] Whether this is a ws (websocket) event or not.
  * @property {?boolean} [node] Whether this is a node (lavalink node) event or not.
- * @property {?boolean} [lavalink] Whether this is a lavalink (player) event or not.
+ * @property {?boolean} [player] Whether this is a player (lavalink player) event or not.
  * @property {boolean} [disabled] Wether this event is disabled or not.
  */
 
@@ -64,7 +64,7 @@ class BaseEvent {
      * Whether this is a lavalink (player) event or not.
      * @type {boolean}
      */
-    this.lavalink = options.lavalink ?? false;
+    this.player = options.player ?? false;
 
     /**
      * Wether this event is disabled or not.
