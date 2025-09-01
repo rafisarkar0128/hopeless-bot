@@ -63,7 +63,7 @@ async function loadEvents(client) {
         "EVENT FILES\nHere is the list of all event files loaded into the bot."
       ),
     },
-    spanningCells: [{ col: 0, row: files.length + 1, colSpan: 4 }],
+    spanningCells: [{ col: 0, row: files.length + 1, colSpan: 4, alignment: "center" }],
   };
 
   for (const file of files) {
@@ -83,7 +83,7 @@ async function loadEvents(client) {
           tableData.push([
             chalk.gray(event.name || fileName),
             chalk.gray("N/A"),
-            chalk.bgYellow.black(" DISABLED "),
+            chalk.bold.gray(" DISABLED "),
             chalk.gray("N/A"),
           ]);
         }
@@ -149,10 +149,7 @@ async function loadEvents(client) {
   }
 
   // Enhanced final log message with colors
-  const statusMessage =
-    errorCount > 0 ? chalk.red("with errors")
-    : disabledCount > 0 ? chalk.yellow("with disabled events")
-    : chalk.green("successfully");
+  const statusMessage = errorCount > 0 ? chalk.red("with errors") : chalk.green("successfully");
 
   client.logger.info(
     `Loaded ${chalk.yellow(i)} events ${statusMessage}. ` +

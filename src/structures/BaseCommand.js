@@ -11,6 +11,7 @@ const config = require("@src/config.js");
  * @typedef {Object} CommandParameters The command parameters object.
  * @property {string} name The name of the parameter.
  * @property {string} description The description of the parameter.
+ * @property {string} type The type of the parameter.
  * @property {boolean} [required] Whether the parameter is required or not.
  */
 
@@ -60,13 +61,11 @@ const config = require("@src/config.js");
  * @typedef {Object} PrefixCommandOptions Options for prefix commands.
  * @property {string[]} [aliases] The aliases for the command.
  * @property {number} [minArgsCount] Minimum number of arguments required to run this command.
- * @property {CommandDetails} [details] The details for this command.
  */
 
 /**
  * @typedef {Object} SlashCommandOptions Options for slash commands.
  * @property {boolean} [ephemeral] Whether the command is ephemeral or not.
- * @property {CommandDetails} [details] The details for this command.
  */
 
 /**
@@ -75,6 +74,7 @@ const config = require("@src/config.js");
  * @property {CommandOptions} options Options for the command.
  * @property {PrefixCommandOptions} prefixOptions Options for prefix commands.
  * @property {SlashCommandOptions} slashOptions Options for slash commands.
+ * @property {CommandDetails} [details] The details for this command.
  */
 
 /**
@@ -99,37 +99,40 @@ class BaseCommand {
      */
     this.options = {};
 
-    this.options.category = metadata.options.category ?? "general";
-    this.options.cooldown = metadata.options.cooldown ?? config.bot.defaultCooldown;
-    this.options.global = metadata.options.global ?? config.bot.global;
-    this.options.disabled = metadata.options.disabled ?? { slash: false, prefix: false };
-    this.options.guildOnly = metadata.options.guildOnly ?? false;
-    this.options.testOnly = metadata.options.testOnly ?? false;
-    this.options.premium = metadata.options.premium ?? false;
-    this.options.vote = metadata.options.vote ?? false;
-    this.options.nsfw = metadata.options.nsfw ?? false;
+    // Set default options
+    this.options.category = metadata.options?.category ?? "general";
+    this.options.cooldown = metadata.options?.cooldown ?? config.bot.defaultCooldown;
+    this.options.global = metadata.options?.global ?? config.bot.global;
+    this.options.disabled = metadata.options?.disabled ?? { slash: false, prefix: false };
+    this.options.guildOnly = metadata.options?.guildOnly ?? false;
+    this.options.testOnly = metadata.options?.testOnly ?? false;
+    this.options.premium = metadata.options?.premium ?? false;
+    this.options.vote = metadata.options?.vote ?? false;
+    this.options.nsfw = metadata.options?.nsfw ?? false;
 
+    // Player options
     this.options.player = {
-      voice: metadata.options.player?.voice ?? false,
-      dj: metadata.options.player?.dj ?? false,
-      active: metadata.options.player?.active ?? false,
-      playing: metadata.options.player?.playing ?? false,
-      djPerm: metadata.options.player?.djPerm ?? null,
+      voice: metadata.options?.player?.voice ?? false,
+      dj: metadata.options?.player?.dj ?? false,
+      active: metadata.options?.player?.active ?? false,
+      playing: metadata.options?.player?.playing ?? false,
+      djPerm: metadata.options?.player?.djPerm ?? null,
     };
 
+    // Permissions
     this.options.permissions = {
-      dev: metadata.options.permissions.dev ?? false,
-      bot: metadata.options.permissions.bot ?? [
+      dev: metadata?.options?.permissions?.dev ?? false,
+      bot: metadata?.options?.permissions?.bot ?? [
         "SendMessages",
         "ViewChannel",
         "EmbedLinks",
         "ReadMessageHistory",
       ],
-      user: metadata.options.permissions.user ?? [],
+      user: metadata?.options?.permissions?.user ?? [],
     };
 
     // Ensure bot permissions always include required defaults
-    if (Array.isArray(this.options.permissions?.bot)) {
+    if (Array.isArray(this.options?.permissions?.bot)) {
       this.options.permissions.bot = this.options.permissions.bot.concat([
         "SendMessages",
         "ViewChannel",
@@ -143,13 +146,8 @@ class BaseCommand {
      * @type {PrefixCommandOptions}
      */
     this.prefixOptions = {
-      aliases: metadata.prefixOptions.aliases ?? [],
-      minArgsCount: metadata.prefixOptions.minArgsCount ?? 0,
-      details: {
-        usage: metadata.prefixOptions.details.usage ?? "No usage provided",
-        examples: metadata.prefixOptions.details.examples ?? ["No examples provided"],
-        params: metadata.prefixOptions.details.params ?? [],
-      },
+      aliases: metadata?.prefixOptions?.aliases ?? [],
+      minArgsCount: metadata?.prefixOptions?.minArgsCount ?? 0,
     };
 
     /**
@@ -157,12 +155,17 @@ class BaseCommand {
      * @type {SlashCommandOptions}
      */
     this.slashOptions = {
-      ephemeral: metadata.slashOptions.ephemeral ?? false,
-      details: {
-        usage: metadata.slashOptions.details.usage ?? "No usage provided",
-        examples: metadata.slashOptions.details.examples ?? ["No examples provided"],
-        params: metadata.slashOptions.details.params ?? [],
-      },
+      ephemeral: metadata?.slashOptions?.ephemeral ?? false,
+    };
+
+    /**
+     * The command details (extra information like usage, examples, and parameters details)
+     * @type {CommandDetails}
+     */
+    this.details = {
+      usage: metadata?.details?.usage ?? "No usage provided",
+      examples: metadata?.details?.examples ?? ["No examples provided"],
+      params: metadata?.details?.params ?? [],
     };
   }
 
