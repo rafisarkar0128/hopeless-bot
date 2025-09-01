@@ -26,25 +26,10 @@ module.exports = class Command extends BaseCommand {
         category: "utility",
         cooldown: 5,
         global: true,
-        guildOnly: true,
-        testOnly: true,
-        permissions: {
-          dev: false,
-        },
       },
-      prefixOptions: {
-        aliases: ["latency"],
-        minArgsCount: 0,
-        details: {
-          examples: ["{prefix}ping", "{prefix}latency"],
-        },
-      },
-      slashOptions: {
-        ephemeral: false,
-        details: {
-          examples: ["/ping"],
-        },
-      },
+      prefixOptions: { aliases: ["latency"], minArgsCount: 0 },
+      slashOptions: { ephemeral: false },
+      details: { usage: "", examples: ["{prefix}ping", "/ping"] },
     });
   }
 

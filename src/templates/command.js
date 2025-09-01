@@ -51,6 +51,7 @@ module.exports = class Command extends BaseCommand {
             {
               name: "",
               description: "",
+              type: "",
               required: true,
             },
           ],
@@ -65,6 +66,7 @@ module.exports = class Command extends BaseCommand {
             {
               name: "",
               description: "",
+              type: "",
               required: true,
             },
           ],
