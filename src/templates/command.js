@@ -41,36 +41,19 @@ module.exports = class Command extends BaseCommand {
           djPerm: null,
         },
       },
-      prefixOptions: {
-        aliases: [],
-        minArgsCount: 0,
-        details: {
-          usage: "",
-          examples: [],
-          params: [
-            {
-              name: "",
-              description: "",
-              type: "",
-              required: true,
-            },
-          ],
-        },
-      },
-      slashOptions: {
-        ephemeral: false,
-        details: {
-          usage: "",
-          examples: [],
-          params: [
-            {
-              name: "",
-              description: "",
-              type: "",
-              required: true,
-            },
-          ],
-        },
+      prefixOptions: { aliases: [], minArgsCount: 0 },
+      slashOptions: { ephemeral: false },
+      details: {
+        usage: "",
+        examples: [],
+        params: [
+          {
+            name: "",
+            description: "",
+            type: "",
+            required: true,
+          },
+        ],
       },
     });
   }
@@ -78,7 +61,7 @@ module.exports = class Command extends BaseCommand {
   /**
    * Execute function for this prefix command.
    * @param {import("@lib/index").DiscordClient} client
-   * @param {import("discord.js").ChatInputCommandInteraction} message
+   * @param {import("discord.js").Message} message
    * @param {string[]} args
    * @param {{lng: string}} metadata
    * @returns {Promise<void>}

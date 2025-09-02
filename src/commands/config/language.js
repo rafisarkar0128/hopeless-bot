@@ -32,7 +32,6 @@ module.exports = class Command extends BaseCommand {
         cooldown: 120,
         global: true,
         guildOnly: true,
-        disabled: true, // { prefix: true, slash: false },
         permissions: {
           dev: true,
           user: ["ManageGuild"],
@@ -56,6 +55,22 @@ module.exports = class Command extends BaseCommand {
   }
 
   /**
+   * Execute function for this prefix command.
+   * @param {import("@lib/index").DiscordClient} client
+   * @param {import("discord.js").Message} message
+   * @param {string[]} args
+   * @param {{lng: string}} metadata
+   * @returns {Promise<void>}
+   */
+  async executePrefix(client, message, args, metadata) {
+    const reply = await message.reply("This command is in development.");
+    setTimeout(() => {
+      if (message.deletable) message.delete();
+      reply.delete();
+    }, 5000);
+  }
+
+  /**
    * Execute function for this slash command.
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").ChatInputCommandInteraction} interaction
@@ -64,6 +79,8 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply({ flags: "Ephemeral" });
+    await interaction.followUp({ content: "Under development." });
+    return;
 
     const { availableLocales } = client.config;
     const { Languages } = client.resources;

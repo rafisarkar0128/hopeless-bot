@@ -6,6 +6,10 @@ const chalk = require("chalk");
  * @returns {void}
  */
 function validateConfig(client) {
+  if (!client || typeof client !== "object") {
+    throw new Error("Client is not defined or not an object.");
+  }
+
   const errors = [];
   const warnings = [];
   const { Music } = client.resources;

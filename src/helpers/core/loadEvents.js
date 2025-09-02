@@ -10,8 +10,14 @@ const path = require("path");
  * @example await client.loadEvents();
  */
 async function loadEvents(client) {
-  if (typeof client !== "object") {
-    throw new TypeError(`Parameter (${chalk.yellow("client")}) must be an object.`);
+  if (!client || typeof client !== "object") {
+    throw new Error("Client is not defined or not an object.");
+  }
+
+  if (client.config.bot.debug) {
+    client.logger.debug(
+      `Loading event modules from ${chalk.cyan(path.join(process.cwd(), "src", "events"))}`
+    );
   }
 
   const { Events } = client.resources;
@@ -83,7 +89,7 @@ async function loadEvents(client) {
           tableData.push([
             chalk.gray(event.name || fileName),
             chalk.gray("N/A"),
-            chalk.bold.gray(" DISABLED "),
+            chalk.gray(" DISABLED "),
             chalk.gray("N/A"),
           ]);
         }
@@ -128,12 +134,20 @@ async function loadEvents(client) {
       }
     } catch (error) {
       errorCount++;
-      client.logger.error(`Error loading event ${fileName}:`, error);
+
+      // Always show a simple error message
+      client.logger.error(`Failed to load event ${fileName}`);
+
+      // Show detailed error only in debug mode
+      if (client.config.bot.debug) {
+        client.logger.error(`Detailed error for ${fileName}:\n`, error);
+      }
+
       if (client.config.showTable.event) {
         tableData.push([
           chalk.red(fileName),
           chalk.gray("N/A"),
-          chalk.bold.red(" ERROR "),
+          chalk.red(" ERROR "),
           chalk.gray("N/A"),
         ]);
       }
