@@ -22,9 +22,9 @@ module.exports = class Event extends BaseEvent {
   async execute(client) {
     client.logger.success(`Ready! ${chalk.green(client.user.tag)} is online`);
 
-    await client.db.connect();
-    await client.lavalink.init(client.user);
-    // await client.helpers.syncCommands(client);
+    await client.helpers.syncCommands(client); // Sync application commands
+    await client.db.connect(); // Connect to the database
+    await client.lavalink.init(client.user); // Initialize Lavalink
 
     const activities = [
       {

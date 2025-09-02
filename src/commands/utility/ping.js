@@ -36,7 +36,7 @@ module.exports = class Command extends BaseCommand {
   /**
    * Execute function for this prefix command.
    * @param {import("@lib/index").DiscordClient} client
-   * @param {import("discord.js").ChatInputCommandInteraction} message
+   * @param {import("discord.js").Message} message
    * @param {string[]} args
    * @param {{lng: string}} metadata
    * @returns {Promise<void>}

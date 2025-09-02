@@ -10,8 +10,14 @@ const path = require("path");
  * @returns {Promise<void>}
  */
 async function loadCommands(client) {
-  if (typeof client !== "object") {
-    throw new TypeError(`Parameter (${chalk.yellow("client")}) must be an object.`);
+  if (!client || typeof client !== "object") {
+    throw new Error("Client is not defined or not an object.");
+  }
+
+  if (client.config.bot.debug) {
+    client.logger.debug(
+      `Loading event modules from ${chalk.cyan(path.join(process.cwd(), "src", "commands"))}`
+    );
   }
 
   const { Categories, Permissions } = client.resources;
@@ -194,14 +200,22 @@ async function loadCommands(client) {
       }
     } catch (error) {
       errorCount++;
-      client.logger.error(`Error loading command ${fileName}:`, error);
+
+      // Always show a simple error message
+      client.logger.error(`Failed to load command ${fileName}`);
+
+      // Show detailed error only in debug mode
+      if (client.config.bot.debug) {
+        client.logger.error(`Detailed error for ${fileName}:\n`, error);
+      }
+
       if (client.config.showTable.command) {
         tableData.push([
           chalk.red(fileName),
           chalk.gray("N/A"),
           chalk.gray("N/A"),
           chalk.gray("N/A"),
-          chalk.bold.red(" ERROR "),
+          chalk.red(" ERROR "),
         ]);
       }
     }

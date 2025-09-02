@@ -15,6 +15,8 @@ module.exports = {
   showTable: {
     event: process.env.SHOW_TABLE_EVENT === "true", // event loader table
     command: process.env.SHOW_TABLE_COMMAND === "true", // command loader table
+    commandChanges: process.env.SHOW_TABLE_COMMAND_CHANGES === "true", // Command changes table
+    commandSync: process.env.SHOW_TABLE_COMMAND_SYNC === "true", // Command syncronization table
   },
 
   // Bot settings
@@ -42,8 +44,6 @@ module.exports = {
     allowedInvite: process.env.ALLOWED_INVITE === "true",
     // Default cooldown ammount in secconds
     defaultCooldown: 5,
-    // Command syncronization logs
-    showSyncLogs: true,
     // debug mode to log more information
     debug: process.env.DEBUG === "true",
   },

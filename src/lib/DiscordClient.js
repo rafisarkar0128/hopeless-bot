@@ -149,20 +149,24 @@ class DiscordClient extends Client {
    * @returns {Promise<void>}
    */
   async start() {
-    // load necessary modules
-    this.helpers.loadWelcome(this);
-    this.helpers.antiCrash(this);
+    try {
+      // load necessary modules
+      this.helpers.loadWelcome(this);
+      this.helpers.antiCrash(this);
 
-    // validate the config file
-    this.helpers.validateConfig(this);
+      // validate the config file
+      this.helpers.validateConfig(this);
 
-    // load locales, events & commands
-    await this.helpers.loadLocales(this);
-    await this.helpers.loadEvents(this);
-    await this.helpers.loadCommands(this);
+      // load locales, events & commands
+      await this.helpers.loadLocales(this);
+      await this.helpers.loadEvents(this);
+      await this.helpers.loadCommands(this);
 
-    // Log into the client
-    this.login(this.config.bot.token);
+      // Log into the client
+      this.login(this.config.bot.token);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }
 

@@ -1,36 +1,51 @@
+const chalk = require("chalk");
 /**
- * @typedef {Object} OldCommand
- * @property {boolean} global
- * @property {import("discord.js").ApplicationCommand} data
+ * @typedef {import("discord.js").APIApplicationCommand & { global: boolean }} OldCommand
+ * The old command structure used in the bot
  */
 
 /**
  * A function to fetch Application Commands
- * @param {import("@src/lib").DiscordClient} client
- * @returns {Promise<OldCommand[]>}
+ * @param {import("@src/lib").DiscordClient} client The Discord client
+ * @returns {Promise<OldCommand[]>} The fetched application commands
  */
 async function fetchCommands(client) {
   const ApplicationCommands = [];
 
   try {
-    if (!client || !client.isReady()) {
-      throw new Error("Client is missing or not online.");
+    if (!client || typeof client !== "object") {
+      throw new Error("Client parameter is missing or not an object.");
     }
 
-    const globalCommands = await client.application.commands.fetch({
-      withLocalizations: true,
-    });
-    globalCommands.forEach((command) => {
-      ApplicationCommands.push({ data: command, global: true });
-    });
+    if (client.config.bot.debug) {
+      client.logger.debug("Fetching global and guild commands via REST API");
+    }
 
-    const guildCommands = await client.application.commands.fetch({
-      guildId: client.config.bot.guildId,
-      withLocalizations: true,
-    });
-    guildCommands.forEach((command) => {
-      ApplicationCommands.push({ data: command, global: false });
-    });
+    const globalCommands = await client.rest.get(
+      `/applications/${client.application.id}/commands`,
+      { query: "with_localizations=true" }
+    );
+
+    if (globalCommands.length > 0) {
+      for (const command of globalCommands) {
+        ApplicationCommands.push({ ...command, global: true });
+      }
+    }
+
+    const guildCommands = await client.rest.get(
+      `/applications/${client.application.id}/guilds/${client.config.bot.guildId}/commands`,
+      { query: "with_localizations=true" }
+    );
+
+    if (guildCommands.length > 0) {
+      for (const command of guildCommands) {
+        ApplicationCommands.push({ ...command, global: false });
+      }
+    }
+
+    client.logger.info(
+      `Fetched total ${chalk.yellow(globalCommands.length + guildCommands.length)} commands. (${chalk.cyan(globalCommands.length)} global, ${chalk.green(guildCommands.length)} guild)`
+    );
   } catch (error) {
     client.logger.error(error);
   }
