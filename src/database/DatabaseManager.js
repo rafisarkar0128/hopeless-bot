@@ -8,14 +8,14 @@ const chalk = require("chalk");
 class DatabaseManager extends MongoClient {
   /**
    * Bot client to use in this class
-   * @param {import("@structures/BotClient.js")} client
+   * @param {import("@lib/index").DiscordClient} client
    */
   constructor(client) {
     super(client.config.mongodbUri, client.config.mongodbOptions);
 
     /**
      * Bot client as a property of this class
-     * @type {import("@structures/BotClient.js")}
+     * @type {import("@lib/index").DiscordClient}
      */
     this.client = client;
   }

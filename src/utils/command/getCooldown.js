@@ -2,13 +2,13 @@ const { Collection } = require("discord.js");
 
 /**
  * A function to set, get and delete command cooldowns
- * @param {import("@src/lib").DiscordClient} client the base client
+ * @param {import("@lib/index").DiscordClient} client the Discord client
  * @param {import("@src/structures").BaseCommand} command the command object
  * @param {string} userId - the user id
  * @returns {number} expiration timestamp (in milliseconds)
  */
 function getCooldown(client, command, userId) {
-  if (command.cooldown === 0) return 0;
+  if (command.options.cooldown === 0) return 0;
 
   const timestamps = client.cooldowns.get(command.data.name);
   if (!timestamps) {
@@ -17,7 +17,7 @@ function getCooldown(client, command, userId) {
   }
 
   const now = Date.now();
-  const cooldownAmount = command.cooldown * 1000;
+  const cooldownAmount = command.options.cooldown * 1000;
 
   if (!timestamps.has(userId)) {
     timestamps.set(userId, now);

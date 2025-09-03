@@ -1,10 +1,11 @@
+const { loadFiles } = require("./core/loadFiles");
+const { requesterTransformer } = require("./lavalink/requesterTransformer");
 const { Utils } = require("./Utils");
-const { requesterTransformer, autoPlayFunction } = require("./functions/player");
-const { makeCache } = require("./functions/makeCache");
+const { getCooldown } = require("./command/getCooldown");
 
 module.exports = {
   Utils,
   requesterTransformer,
-  autoPlayFunction,
-  makeCache,
+  loadFiles,
+  getCooldown,
 };

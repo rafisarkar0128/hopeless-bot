@@ -67,7 +67,7 @@ lavalink:
     - dependency: "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0" # https://github.com/topi314/LavaSearch
     - dependency: "com.dunctebot:skybot-lavalink-plugin:1.7.0" # https://github.com/DuncteBot/skybot-lavalink-plugin
     - dependency: "com.github.topi314.sponsorblock:sponsorblock-plugin:3.0.1"
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.13.4" # https://github.com/lavalink-devs/youtube-source
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.13.5" # https://github.com/lavalink-devs/youtube-source
     - dependency: "com.github.topi314.lavalyrics:lavalyrics-plugin:1.0.0" # https://github.com/topi314/LavaLyrics
     - dependency: "me.duncte123:java-lyrics-plugin:1.6.6" # https://github.com/DuncteBot/java-timed-lyrics
 
