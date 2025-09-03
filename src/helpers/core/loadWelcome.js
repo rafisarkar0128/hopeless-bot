@@ -7,7 +7,7 @@ const { table } = require("table");
  * @returns {void}
  * @example client.helpers.loadWelcome();
  */
-function logVanity(client) {
+function loadWelcome(client) {
   // ansi colors with escape
   let esc = "\u001b[0m";
   let red = "\u001b[31m";
@@ -61,4 +61,4 @@ function logVanity(client) {
   console.log(table(data, config));
 }
 
-module.exports = { logVanity };
+module.exports = { loadWelcome };

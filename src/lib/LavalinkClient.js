@@ -1,5 +1,6 @@
 const { LavalinkManager } = require("lavalink-client");
-const { requesterTransformer, autoPlayFunction } = require("@root/src/utils/Utils");
+const { requesterTransformer } = require("@utils/index");
+const { handleAutoplay } = require("@handlers/index");
 
 /**
  * A manager to manage music playback and more
@@ -8,7 +9,7 @@ const { requesterTransformer, autoPlayFunction } = require("@root/src/utils/Util
 class LavalinkClient extends LavalinkManager {
   /**
    * passing client to init LavalinkManager
-   * @param {import("./DiscordClient").DiscordClient} client
+   * @param {import("@lib/index").DiscordClient} client
    */
   constructor(client) {
     super({
@@ -34,7 +35,7 @@ class LavalinkClient extends LavalinkManager {
         },
         onEmptyQueue: {
           destroyAfterMs: client.config.music.idleTime,
-          autoPlayFunction: autoPlayFunction,
+          autoPlayFunction: handleAutoplay,
         },
         useUnresolvedData: true,
       },

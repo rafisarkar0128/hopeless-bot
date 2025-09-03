@@ -3,7 +3,7 @@ require("dotenv").config({ quiet: true }); // Load environment variables from .e
 require("module-alias/register"); // Register module aliases
 
 // Initializing the main client
-const { DiscordClient } = require("@src/lib");
+const { DiscordClient } = require("@lib/index");
 const client = new DiscordClient();
 
 // Start the bot and handle any errors

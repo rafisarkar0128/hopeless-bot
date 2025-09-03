@@ -5,16 +5,18 @@ module.exports = {
   // default language
   defaultLocale: process.env.DEFAULT_LOCALE ?? "en-US",
   // Available languages for the bot
-  availableLocales: readdirSync(join(__dirname, "locales")).filter((file) => {
-    const isDirectory = lstatSync(join(__dirname, "locales", file)).isDirectory();
-    const langFiles = readdirSync(join(__dirname, "locales", file));
+  availableLocales: readdirSync(join(process.cwd(), "src", "locales")).filter((file) => {
+    const isDirectory = lstatSync(join(process.cwd(), "src", "locales", file)).isDirectory();
+    const langFiles = readdirSync(join(process.cwd(), "src", "locales", file));
     if (isDirectory && langFiles.length > 0) return true;
   }),
 
-  // wether to show table or not.
+  // whether to show table or not.
   showTable: {
-    event: false, // event loader table
-    command: false, // command loader table
+    event: process.env.SHOW_TABLE_EVENT === "true", // event loader table
+    command: process.env.SHOW_TABLE_COMMAND === "true", // command loader table
+    commandChanges: process.env.SHOW_TABLE_COMMAND_CHANGES === "true", // Command changes table
+    commandSync: process.env.SHOW_TABLE_COMMAND_SYNC === "true", // Command syncronization table
   },
 
   // Bot settings
@@ -42,8 +44,8 @@ module.exports = {
     allowedInvite: process.env.ALLOWED_INVITE === "true",
     // Default cooldown ammount in secconds
     defaultCooldown: 5,
-    // Command syncronization logs
-    showSyncLogs: true,
+    // debug mode to log more information
+    debug: process.env.DEBUG === "true",
   },
 
   // Your genius API credentials. Get it from https://genius.com/developers

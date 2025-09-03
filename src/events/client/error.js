@@ -4,7 +4,7 @@ const { BaseEvent } = require("@src/structures");
  * A new Event extended from BaseEvent
  * @extends {BaseEvent}
  */
-class Event extends BaseEvent {
+module.exports = class Event extends BaseEvent {
   constructor() {
     super({
       name: "error",
@@ -21,6 +21,4 @@ class Event extends BaseEvent {
   async execute(client, error) {
     return client.logger.error(error);
   }
-}
-
-module.exports = { Event };
+};

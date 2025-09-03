@@ -4,7 +4,7 @@ const { BaseEvent } = require("@src/structures");
  * A new Event extended from BaseEvent
  * @extends {BaseEvent}
  */
-class Event extends BaseEvent {
+module.exports = class Event extends BaseEvent {
   constructor() {
     super({
       name: "raw",
@@ -23,6 +23,4 @@ class Event extends BaseEvent {
       return await client.lavalink.sendRawData(d);
     }
   }
-}
-
-module.exports = { Event };
+};
