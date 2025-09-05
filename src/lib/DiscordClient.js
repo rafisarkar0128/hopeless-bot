@@ -100,7 +100,7 @@ class DiscordClient extends Client {
 
     /**
      * An array to hold the application command data (slash, context etc.)
-     * @type {import("discord.js").ApplicationCommandData[]}
+     * @type {(import("discord.js").RESTPostAPIApplicationCommandsJSONBody & { global: boolean })[]}
      */
     this.applicationCommands = [];
 

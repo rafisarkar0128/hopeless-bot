@@ -31,6 +31,7 @@ module.exports = class Command extends BaseCommand {
         category: "config",
         cooldown: 120,
         global: true,
+        disabled: true,
         guildOnly: true,
         permissions: {
           dev: true,
@@ -63,7 +64,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const reply = await message.reply("This command is in development.");
+    const reply = await message.reply("This command is still in development.");
     setTimeout(() => {
       if (message.deletable) message.delete();
       reply.delete();
@@ -79,45 +80,43 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply({ flags: "Ephemeral" });
-    await interaction.followUp({ content: "Under development." });
-    return;
 
-    const { availableLocales } = client.config;
-    const { Languages } = client.resources;
-    const locale = interaction.options.getString("language", true);
+    // const locale = interaction.options.getString("language", true);
+    // const availableLocales = client.utils.getAvailableLocales();
 
-    if (!availableLocales.includes(locale)) {
-      return await interaction.followUp({
-        content: t("commands:language.notAvailable", { lng: metadata.lng }),
-      });
-    }
+    // if (!locale || !availableLocales.includes(locale)) {
+    //   return await interaction.followUp({
+    //     content: t("commands:language.notAvailable", { lng: metadata.lng }),
+    //   });
+    // }
 
-    const language = Languages.find((lng) => lng.locale === locale);
-    await client.db.guilds.update(interaction.guildId, "locale", locale);
-    await interaction.followUp({
-      content: t("commands:language.reply", {
-        lng: language.locale,
-        language: `${language.native} (${language.name})`,
-      }),
-    });
+    // const language = client.resources.Languages.find((lng) => lng.locale === locale);
+    // await client.db.guilds.update(interaction.guildId, "locale", locale);
+    // await interaction.followUp({
+    //   content: t("commands:language.reply", {
+    //     lng: language.locale,
+    //     language: `${language.native} (${language.name})`,
+    //   }),
+    // });
+
+    return await interaction.followUp({ content: "Under development." });
   }
 
   /**
    * Autocomplete function for autocomplete options of this command.
-   * @param {import("@structures/BotClient.js")} client
+   * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").AutocompleteInteraction} interaction
    * @returns {Promise<void>}
    */
   async autocomplete(client, interaction) {
-    const { availableLocales } = client.config;
-    const { Languages } = client.resources;
+    const availableLocales = client.utils.getAvailableLocales();
     const focused = interaction.options.getFocused().toLowerCase();
     /** @type {import("discord.js").ApplicationCommandChoicesData[]} */
     const languageData = [];
 
     // If no input was provided
     if (!focused) {
-      Languages.filter((lng) => availableLocales.some((l) => l === lng.locale))
+      client.resources.Languages.filter((lng) => availableLocales.some((l) => l === lng.locale))
         .slice(0, 25)
         .forEach((lng) => {
           languageData.push({
@@ -129,7 +128,7 @@ module.exports = class Command extends BaseCommand {
 
     // If some type of input was provided
     else {
-      Languages.filter((lng) => {
+      client.resources.Languages.filter((lng) => {
         return (
           lng.name.toLowerCase().match(focused) ||
           lng.locale.toLowerCase().match(focused) ||

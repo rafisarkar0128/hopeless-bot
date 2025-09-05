@@ -2,29 +2,25 @@ const { ApplicationCommandType, Locale } = require("discord.js");
 
 /**
  * A function to check for changes in Application Command Data
- * @param {import("@types/index").OldCommand} OldCommand
- * @param {import("@types/index").CommandStructure} NewCommand
+ * @param {import("discord.js").APIApplicationCommand & { global: boolean }} oldCommand
+ * @param {import("discord.js").RESTPostAPIApplicationCommandsJSONBody & {global: boolean}} newCommand
  * @returns {boolean}
  */
-function checkForChangesInCommand(OldCommand, NewCommand) {
-  const oldCommand = OldCommand.data;
-  const newCommand = NewCommand.data.toJSON();
-
-  if (oldCommand.nameLocalizations || newCommand.name_localizations) {
+function checkForChangesInCommand(oldCommand, newCommand) {
+  if (oldCommand.name_localizations || newCommand.name_localizations) {
     if (
-      checkForChangesInLocalizations(oldCommand.nameLocalizations, newCommand.name_localizations)
+      checkForChangesInLocalizations(oldCommand.name_localizations, newCommand.name_localizations)
     ) {
       return true;
     }
   }
 
-  if ((oldCommand.type || newCommand.type) === ApplicationCommandType.ChatInput) {
+  if (newCommand.type === ApplicationCommandType.ChatInput) {
     if (oldCommand.description !== newCommand.description) return true;
-
-    if (oldCommand.descriptionLocalizations || newCommand.description_localizations) {
+    if (oldCommand.description_localizations || newCommand.description_localizations) {
       if (
         checkForChangesInLocalizations(
-          oldCommand.descriptionLocalizations,
+          oldCommand.description_localizations,
           newCommand.description_localizations
         )
       ) {
@@ -33,52 +29,45 @@ function checkForChangesInCommand(OldCommand, NewCommand) {
     }
 
     if (oldCommand.options || newCommand.options) {
-      if (oldCommand.options.length !== newCommand.options.length) return true;
-
+      if (oldCommand.options?.length || 0 !== newCommand.options?.length || 0) return true;
       if (checkForChangesInOptions(oldCommand.options, newCommand.options)) return true;
     }
   }
 
-  if (oldCommand.defaultMemberPermissions != (newCommand.default_member_permissions ?? null)) {
+  if (oldCommand.default_member_permissions != (newCommand.default_member_permissions ?? null)) {
     return true;
   }
 
   if (oldCommand.nsfw !== (newCommand.nsfw ?? false)) return true;
 
-  if (OldCommand.global || NewCommand.global) {
+  if (oldCommand.global || newCommand.global) {
     if (oldCommand.contexts || newCommand.contexts) {
       if (Array.isArray(oldCommand.contexts) && Array.isArray(newCommand.contexts)) {
         const addedContext = newCommand.contexts.some(
           (context) => !oldCommand.contexts.includes(context)
         );
-
         const removedContext = oldCommand.contexts.some(
           (context) => !newCommand.contexts.includes(context)
         );
-
         if (addedContext || removedContext) return true;
-      } else {
-        return true;
-      }
+      } else return true;
     }
 
-    if (oldCommand.integrationTypes || newCommand.integration_types) {
+    if (oldCommand.integration_types || newCommand.integration_types) {
       if (!Array.isArray(newCommand.integration_types)) {
-        if (oldCommand.integrationTypes.join("") !== "0") return true;
+        if (oldCommand.integration_types.join("") !== "0") return true;
       }
 
       if (
-        Array.isArray(oldCommand.integrationTypes) &&
+        Array.isArray(oldCommand.integration_types) &&
         Array.isArray(newCommand.integration_types)
       ) {
         const addedIntegrationType = newCommand.integration_types.some(
-          (context) => !oldCommand.integrationTypes.includes(context)
+          (context) => !oldCommand.integration_types.includes(context)
         );
-
-        const removedIntegrationType = oldCommand.integrationTypes.some(
+        const removedIntegrationType = oldCommand.integration_types.some(
           (context) => !newCommand.integration_types.includes(context)
         );
-
         if (addedIntegrationType || removedIntegrationType) return true;
       }
     }
@@ -88,30 +77,28 @@ function checkForChangesInCommand(OldCommand, NewCommand) {
 }
 
 /** A function to check for changes in options
- * @param {import("discord.js").ApplicationCommandOption[]} oldOptions
+ * @param {import("discord.js").APIApplicationCommandOption[]} oldOptions
  * @param {import("discord.js").APIApplicationCommandOption[]} newOptions
  * @returns {boolean}
  */
-function checkForChangesInOptions(oldOptions, newOptions) {
+function checkForChangesInOptions(oldOptions = [], newOptions = []) {
   for (const newOption of newOptions) {
     const oldOption = oldOptions?.find((option) => option.name === newOption.name);
 
     if (!oldOption) return true;
-
-    if (oldOption.nameLocalizations || newOption.name_localizations) {
+    if (oldOption.name_localizations || newOption.name_localizations) {
       if (
-        checkForChangesInLocalizations(oldOption.nameLocalizations, newOption.name_localizations)
+        checkForChangesInLocalizations(oldOption.name_localizations, newOption.name_localizations)
       ) {
         return true;
       }
     }
 
     if (oldOption.description !== newOption.description) return true;
-
-    if (oldOption.descriptionLocalizations || newOption.description_localizations) {
+    if (oldOption.description_localizations || newOption.description_localizations) {
       if (
         checkForChangesInLocalizations(
-          oldOption.descriptionLocalizations,
+          oldOption.description_localizations,
           newOption.description_localizations
         )
       ) {
@@ -120,30 +107,16 @@ function checkForChangesInOptions(oldOptions, newOptions) {
     }
 
     if (oldOption.type !== newOption.type) return true;
-
-    if ((oldOption.required ?? false) !== (newOption?.required ?? false)) {
-      return true;
-    }
-    if ((oldOption.autocomplete ?? false) !== (newOption?.autocomplete ?? false)) {
-      return true;
-    }
-
-    if ((oldOption.minLength ?? 0) !== (newOption?.min_length ?? 0)) {
-      return true;
-    }
-    if ((oldOption.maxLength ?? 0) !== (newOption?.max_length ?? 0)) {
-      return true;
-    }
-    if ((oldOption.minValue ?? 0) !== (newOption.min_value ?? 0)) return true;
-    if ((oldOption.maxValue ?? 0) !== (newOption.max_value ?? 0)) return true;
+    if ((oldOption.required ?? false) !== (newOption.required ?? false)) return true;
+    if ((oldOption.autocomplete ?? false) !== (newOption.autocomplete ?? false)) return true;
+    if ((oldOption.min_length ?? 0) !== (newOption.min_length ?? 0)) return true;
+    if ((oldOption.max_length ?? 0) !== (newOption.max_length ?? 0)) return true;
+    if ((oldOption.min_value ?? 0) !== (newOption.min_value ?? 0)) return true;
+    if ((oldOption.max_value ?? 0) !== (newOption.max_value ?? 0)) return true;
 
     if (oldOption.choices || newOption.choices) {
-      if ((oldOption.choices.length ?? 0) !== (newOption.choices.length ?? 0)) {
-        return true;
-      }
-      if (checkForChangesInChoices(oldOption.choices, newOption.choices)) {
-        return true;
-      }
+      if ((oldOption.choices.length ?? 0) !== (newOption.choices.length ?? 0)) return true;
+      if (checkForChangesInChoices(oldOption.choices, newOption.choices)) return true;
     }
 
     if (oldOption.channelTypes || newOption.channel_types) {
@@ -154,17 +127,13 @@ function checkForChangesInOptions(oldOptions, newOptions) {
         const removedChannelType = oldOption.channelTypes.some(
           (context) => !newOption.channel_types.includes(context)
         );
-
         if (addedChannelType || removedChannelType) return true;
-      } else {
-        return true;
-      }
+      } else return true;
     }
 
-    if (oldOption.options || newOption.options) {
-      if (checkForChangesInOptions(oldOption.options, newOption.options)) {
-        return true;
-      }
+    if ((oldOption.options || newOption.options) && [1, 2].includes(newOption.type)) {
+      if (oldOption.options?.length || 0 !== newOption.options?.length || 0) return true;
+      if (checkForChangesInOptions(oldOption.options, newOption.options)) return true;
     }
   }
 
@@ -172,7 +141,7 @@ function checkForChangesInOptions(oldOptions, newOptions) {
 }
 
 /** A function to check for changes in string option choices
- * @param {import("discord.js").ApplicationCommandOptionChoiceData[]} oldChoices
+ * @param {import("discord.js").APIApplicationCommandOptionChoice[]} oldChoices
  * @param {import("discord.js").APIApplicationCommandOptionChoice[]} newChoices
  * @returns {boolean}
  */
@@ -182,13 +151,11 @@ function checkForChangesInChoices(oldChoices = [], newChoices = []) {
 
     if (!oldChoice) return true;
     if (oldChoice.value !== newChoice.value) return true;
-
-    if (oldChoice.nameLocalizations || newChoice.name_localizations) {
-      if (
-        checkForChangesInLocalizations(oldChoice.nameLocalizations, newChoice.name_localizations)
-      ) {
-        return true;
-      }
+    if (
+      (oldChoice.name_localizations || newChoice.name_localizations) &&
+      checkForChangesInLocalizations(oldChoice.name_localizations, newChoice.name_localizations)
+    ) {
+      return true;
     }
   }
 
@@ -201,15 +168,12 @@ function checkForChangesInChoices(oldChoices = [], newChoices = []) {
  * @returns {boolean}
  */
 function checkForChangesInLocalizations(oldLocalizations = {}, newLocalizations = {}) {
-  let isLocalesChanged = false;
-
-  Object.values(Locale).forEach((locale) => {
+  for (const locale of Object.values(Locale)) {
     if (oldLocalizations[locale] !== newLocalizations[locale]) {
-      isLocalesChanged = true;
+      return true;
     }
-  });
-
-  return isLocalesChanged;
+  }
+  return false;
 }
 
 module.exports = {

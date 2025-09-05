@@ -24,7 +24,7 @@ function validateConfig(client) {
   }
 
   // Checking the provided locale is valid or not
-  if (!availableLocales.includes(defaultLocale)) {
+  if (!client.utils.getAvailableLocales().includes(defaultLocale)) {
     client.config.defaultLocale = "en-US";
     warnings.push(
       `${chalk.yellow("DEFAULT_LOCALE")} in ${env} is invalid. Using ${chalk.green("en-US")} as fallback locale.`
