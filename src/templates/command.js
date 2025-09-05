@@ -20,10 +20,7 @@ module.exports = class Command extends BaseCommand {
         category: "general",
         cooldown: 5,
         global: true,
-        disabled: {
-          slash: false,
-          prefix: false,
-        },
+        disabled: false,
         guildOnly: false,
         testOnly: false,
         premium: false,
@@ -41,8 +38,8 @@ module.exports = class Command extends BaseCommand {
           djPerm: null,
         },
       },
-      prefixOptions: { aliases: [], minArgsCount: 0 },
-      slashOptions: { ephemeral: false },
+      prefixOptions: { disabled: false, aliases: [], minArgsCount: 0 },
+      slashOptions: { disabled: false, ephemeral: false },
       details: {
         usage: "",
         examples: [],

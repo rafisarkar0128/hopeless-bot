@@ -1,5 +1,7 @@
 const chalk = require("chalk");
 const { t } = require("i18next");
+const fs = require("fs");
+const path = require("path");
 
 /**
  * A utility class for various helper functions
@@ -328,6 +330,21 @@ class Utils {
 
     collector.on("end", async () => {
       await interaction.deleteReply().catch(() => null);
+    });
+  }
+
+  /**
+   * Gets all available locales by reading the 'src/locales' directory.
+   * Each subdirectory in 'src/locales' is considered a locale if it contains language files.
+   * @returns {string[]} An array of available locale codes.
+   * @example
+   * client.utils.getAvailableLocales();
+   * // Returns ['en-US', 'pt-BR', ...]
+   */
+  getAvailableLocales() {
+    return fs.readdirSync(path.join(process.cwd(), "src/locales")).filter((dir) => {
+      const dirPath = path.join(process.cwd(), "src/locales", dir);
+      return fs.lstatSync(dirPath).isDirectory() && fs.readdirSync(dirPath).length > 0;
     });
   }
 }
