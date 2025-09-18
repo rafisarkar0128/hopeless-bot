@@ -43,9 +43,11 @@ async function fetchCommands(client) {
       }
     }
 
-    client.logger.info(
-      `Fetched total ${chalk.yellow(globalCommands.length + guildCommands.length)} commands. (${chalk.cyan(globalCommands.length)} global, ${chalk.green(guildCommands.length)} guild)`
-    );
+    if (client.config.mode === "development") {
+      client.logger.info(
+        `Fetched total ${chalk.yellow(globalCommands.length + guildCommands.length)} commands. (${chalk.cyan(globalCommands.length)} global, ${chalk.green(guildCommands.length)} guild)`
+      );
+    }
   } catch (error) {
     client.logger.error(error);
   }
