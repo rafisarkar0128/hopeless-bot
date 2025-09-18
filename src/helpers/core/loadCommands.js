@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const { table } = require("table");
 const { loadFiles } = require("@utils/index.js");
-const { Collection } = require("discord.js");
+const { Collection, PermissionsBitField } = require("discord.js");
 const path = require("path");
 
 /**
@@ -107,6 +107,23 @@ async function loadCommands(client) {
           ]);
         }
         client.commands.set(cmd.data.name || fileName, cmd);
+
+        // If command data is present, still add it to applicationCommands for syncing
+        if (cmd.data) {
+          // setting default permissions for slash commands
+          if (
+            Array.isArray(cmd.options.permissions.user) &&
+            cmd.options.permissions.user.length > 0
+          ) {
+            cmd.data.setDefaultMemberPermissions(
+              new PermissionsBitField(cmd.options.permissions.user).bitfield
+            );
+          }
+          client.applicationCommands.push({
+            ...cmd.data?.toJSON(),
+            global: client.config.bot.global ? cmd.options.global : false,
+          });
+        }
         continue;
       }
 
@@ -142,6 +159,13 @@ async function loadCommands(client) {
         if (!Permissions.includes(p)) {
           throw new RangeError(`"${p}" is not a valid user permission.`);
         }
+      }
+
+      // setting default permissions for slash commands
+      if (cmd.options.permissions.user.length > 0) {
+        cmd.data.setDefaultMemberPermissions(
+          new PermissionsBitField(cmd.options.permissions.user).bitfield
+        );
       }
 
       // checking if aliases are correct
@@ -209,7 +233,7 @@ async function loadCommands(client) {
       errorCount++;
 
       // Always show a simple error message
-      client.logger.error(`Failed to load command ${fileName}`);
+      client.logger.error(`Failed to load command ${chalk.yellow(fileName)}`);
 
       // Show detailed error only in debug mode
       if (client.config.bot.debug) {

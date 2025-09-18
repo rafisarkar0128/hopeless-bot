@@ -3,7 +3,6 @@ const {
   SlashCommandBuilder,
   InteractionContextType,
   ApplicationIntegrationType,
-  PermissionFlagsBits,
 } = require("discord.js");
 const { t } = require("i18next");
 
@@ -17,7 +16,6 @@ module.exports = class Command extends BaseCommand {
       data: new SlashCommandBuilder()
         .setName("language")
         .setDescription(t("commands:language.description"))
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
         .addStringOption((option) =>
