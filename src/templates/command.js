@@ -39,7 +39,7 @@ module.exports = class Command extends BaseCommand {
         },
       },
       prefixOptions: { disabled: false, aliases: [], minArgsCount: 0 },
-      slashOptions: { disabled: false, ephemeral: false },
+      slashOptions: { disabled: false },
       details: {
         usage: "",
         examples: [],
@@ -60,7 +60,7 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").Message} message
    * @param {string[]} args
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
@@ -71,7 +71,7 @@ module.exports = class Command extends BaseCommand {
    * Execute function for this slash command.
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   * @param {Object} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {

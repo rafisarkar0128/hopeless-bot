@@ -1,4 +1,4 @@
-const { BaseEvent } = require("@src/structures");
+const { BaseEvent } = require("@structures/index");
 const chalk = require("chalk");
 const { ActivityType } = require("discord.js");
 
@@ -8,22 +8,19 @@ const { ActivityType } = require("discord.js");
  */
 module.exports = class Event extends BaseEvent {
   constructor() {
-    super({
-      name: "clientReady",
-      once: true,
-    });
+    super({ name: "clientReady", once: true });
   }
 
   /**
    * Execute function for this event
-   * @param {import("@src/lib").DiscordClient} client
+   * @param {import("@lib/index").DiscordClient} client
    * @returns {Promise<void>}
    */
   async execute(client) {
     client.logger.success(`Ready! ${chalk.green(client.user.tag)} is online`);
 
     await client.helpers.syncCommands(client); // Sync application commands
-    await client.db.connect(); // Connect to the database
+    await client.mongodb.connect(); // Connect to the database
     await client.lavalink.init(client.user); // Initialize Lavalink
 
     const activities = [

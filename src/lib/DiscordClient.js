@@ -2,7 +2,7 @@ const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js"
 const { Logger } = require("./Logger.js");
 const { Utils } = require("@utils/index");
 const { LavalinkClient } = require("./LavalinkClient.js");
-const { DatabaseManager } = require("@src/database/DatabaseManager.js");
+const { DatabaseManager } = require("@database/index");
 const Genius = require("genius-lyrics");
 
 /**
@@ -126,7 +126,7 @@ class DiscordClient extends Client {
      * The database manager for the bot
      * @type {DatabaseManager}
      */
-    this.db = new DatabaseManager(this);
+    this.mongodb = new DatabaseManager(this);
 
     // Initialize Music Manager if enabled
     if (this.config.music.enabled) {
