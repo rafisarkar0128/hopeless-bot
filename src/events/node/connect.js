@@ -1,4 +1,4 @@
-const { BaseEvent } = require("@src/structures");
+const { BaseEvent } = require("@structures/index");
 const chalk = require("chalk");
 
 /**
@@ -7,15 +7,12 @@ const chalk = require("chalk");
  */
 module.exports = class Event extends BaseEvent {
   constructor() {
-    super({
-      name: "connect",
-      node: true,
-    });
+    super({ name: "connect", node: true });
   }
 
   /**
    * Execute function for this event
-   * @param {import("@src/lib").DiscordClient} client
+   * @param {import("@lib/index").DiscordClient} client
    * @param  {import("lavalink-client").LavalinkNode} node
    * @returns {Promise<void>}
    */

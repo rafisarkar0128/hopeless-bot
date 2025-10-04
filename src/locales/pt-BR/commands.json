@@ -1,0 +1,14 @@
+{
+  "default": {
+    "error": "Ocorreu um erro ao tentar executar o comando.",
+    "errorTitle": "OCORREU UM ERRO",
+    "reason": "Nenhuma foi especificada."
+  },
+  "ping": {
+    "description": "🏓 Pong! Mostra o tempo de resposta do bot.",
+    "pinging": "🔄 Fazendo ping...",
+    "gatewayPing": "📡 Ping do Gateway",
+    "responseTime": "🛰 Tempo de Resposta",
+    "uptime": "⏰ Tempo Online"
+  }
+}

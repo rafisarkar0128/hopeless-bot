@@ -29,15 +29,13 @@ module.exports = class Command extends BaseCommand {
         category: "config",
         cooldown: 120,
         global: true,
-        disabled: true,
         guildOnly: true,
         permissions: {
           dev: true,
           user: ["ManageGuild"],
         },
       },
-      prefixOptions: { aliases: ["lng"], minArgsCount: 1 },
-      slashOptions: { ephemeral: true },
+      prefixOptions: { aliases: ["lang", "lng"], minArgsCount: 1 },
       details: {
         usage: "{prefix}language <language|locale>",
         examples: ["{prefix}language en-US", "/language language:en-US"],
@@ -58,11 +56,35 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").Message} message
    * @param {string[]} args
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const reply = await message.reply("This command is still in development.");
+    const lng = args.join(" ").toLowerCase();
+    const availableLocales = client.utils.getAvailableLocales();
+    const language = client.resources.Languages.find(
+      (l) => l.locale === lng || l.name.toLowerCase() === lng || l.native.toLowerCase() === lng
+    );
+
+    if (!language || !availableLocales.includes(language.locale)) {
+      const reply = await message.reply({
+        content: t("commands:language.notAvailable", { lng: metadata.locale }),
+      });
+      setTimeout(() => {
+        if (message.deletable) message.delete();
+        reply.delete();
+      }, 5000);
+      return;
+    }
+
+    await client.mongodb.guilds.update(message.guildId, "locale", language.locale);
+    const reply = await message.reply({
+      content: t("commands:language.reply", {
+        lng: language.locale,
+        language: `${language.native} (${language.name})`,
+      }),
+    });
+
     setTimeout(() => {
       if (message.deletable) message.delete();
       reply.delete();
@@ -73,31 +95,29 @@ module.exports = class Command extends BaseCommand {
    * Execute function for this slash command.
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply({ flags: "Ephemeral" });
 
-    // const locale = interaction.options.getString("language", true);
-    // const availableLocales = client.utils.getAvailableLocales();
+    const locale = interaction.options.getString("language", true);
+    const availableLocales = client.utils.getAvailableLocales();
 
-    // if (!locale || !availableLocales.includes(locale)) {
-    //   return await interaction.followUp({
-    //     content: t("commands:language.notAvailable", { lng: metadata.lng }),
-    //   });
-    // }
+    if (!locale || !availableLocales.includes(locale)) {
+      return await interaction.followUp({
+        content: t("commands:language.notAvailable", { lng: metadata.locale }),
+      });
+    }
 
-    // const language = client.resources.Languages.find((lng) => lng.locale === locale);
-    // await client.db.guilds.update(interaction.guildId, "locale", locale);
-    // await interaction.followUp({
-    //   content: t("commands:language.reply", {
-    //     lng: language.locale,
-    //     language: `${language.native} (${language.name})`,
-    //   }),
-    // });
-
-    return await interaction.followUp({ content: "Under development." });
+    const language = client.resources.Languages.find((lng) => lng.locale === locale);
+    await client.mongodb.guilds.update(interaction.guildId, "locale", locale);
+    return await interaction.followUp({
+      content: t("commands:language.reply", {
+        lng: language.locale,
+        language: `${language.native} (${language.name})`,
+      }),
+    });
   }
 
   /**

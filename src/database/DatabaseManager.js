@@ -1,5 +1,6 @@
 const { MongoClient } = require("mongodb");
 const chalk = require("chalk");
+const { GuildManager } = require("./managers/index.js");
 
 /**
  * A manager to manage all database operations
@@ -18,6 +19,12 @@ class DatabaseManager extends MongoClient {
      * @type {import("@lib/index").DiscordClient}
      */
     this.client = client;
+
+    /**
+     * A manager to manage guild data in databse
+     * @type {GuildManager}
+     */
+    this.guilds = new GuildManager(client);
   }
 
   /**

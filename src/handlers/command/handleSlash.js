@@ -11,17 +11,26 @@ const { getCooldown } = require("@utils/index");
 async function handleSlash(client, interaction) {
   const { commandName, user } = interaction;
   const errEmbed = new EmbedBuilder().setColor(client.color.Wrong);
-  const locale = "en-US"; // await client.db.guilds.getLocale(interaction.guildId);
+
+  let metadata = await client.mongodb.guilds.get(interaction.guildId);
+  if (!metadata) {
+    metadata = await client.mongodb.guilds.create(interaction.guildId);
+  }
+  const { locale } = metadata;
   const devUser = client.config.bot.devs?.includes(user.id);
 
   const command = client.commands.get(commandName);
   if (!command) {
     errEmbed.setDescription(t("handlers:command.notFound", { lng: locale, command: commandName }));
     await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
-    // return await interaction.command.delete();
+    return await interaction.command.delete();
   }
 
-  const { data, options, slashOptions } = command;
+  const { options, slashOptions } = command;
+  if (slashOptions.disabled && !devUser) {
+    errEmbed.setDescription(t("handlers:command.disabled", { lng: locale, command: commandName }));
+    return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+  }
 
   if (options.guildOnly && !interaction.inGuild()) {
     errEmbed.setDescription(t("handlers:command.guildOnly", { lng: locale, command: commandName }));
@@ -35,10 +44,10 @@ async function handleSlash(client, interaction) {
 
   if (interaction.inGuild()) {
     const clientMember = interaction.guild.members.resolve(client.user);
+
     const missingBotPermissions = options.permissions.bot.filter(
       (p) => !clientMember.permissions.has(p)
     );
-
     if (missingBotPermissions.length > 0) {
       errEmbed.setDescription(
         t("handlers:command.botPerm", {
@@ -123,7 +132,6 @@ async function handleSlash(client, interaction) {
     }
   }
 
-  // checking for command cooldowns
   if (command.cooldown > 0) {
     const remaining = getCooldown(client, command, user.id);
     if (remaining > 0 && !devUser) {
@@ -139,11 +147,12 @@ async function handleSlash(client, interaction) {
   }
 
   try {
-    await command.executeSlash(client, interaction, { lng: locale });
+    await command.executeSlash(client, interaction, metadata);
   } catch (error) {
-    client.logger.error(error);
-    errEmbed.setDescription(t("handlers:command.error", { lng: locale, error: error.message }));
+    if (client.config.bot.debug) client.logger.error(error);
+    else client.logger.error("An error occurred: " + error.message);
 
+    errEmbed.setDescription(t("handlers:command.error", { lng: locale }));
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply({ embeds: [errEmbed] });
     } else {

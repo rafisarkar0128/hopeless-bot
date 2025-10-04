@@ -68,7 +68,6 @@ const config = require("@src/config.js");
 /**
  * @typedef {Object} SlashCommandOptions Options for slash commands.
  * @property {boolean} [disabled] Whether the slash command is disabled or not.
- * @property {boolean} [ephemeral] Whether the command is ephemeral or not.
  */
 
 /**
@@ -160,7 +159,6 @@ class BaseCommand {
      */
     this.slashOptions = {
       disabled: metadata?.slashOptions?.disabled ?? false,
-      ephemeral: metadata?.slashOptions?.ephemeral ?? false,
     };
 
     /**
