@@ -81,20 +81,11 @@ async function handlePrefix(client, message) {
    */
   async function replyAndDelete(text) {
     errEmbed.setDescription(text);
-    let reply = null;
-    if (message.replied) {
-      reply = await message.editReply({
-        content: "",
-        embeds: [errEmbed],
-        // allowedMentions: { repliedUser: false },
-      });
-    } else {
-      reply = await message.reply({ embeds: [errEmbed] });
-    }
-    return setTimeout(() => {
-      if (message.deletable) message.delete();
-      reply.delete();
-    }, 9000);
+    const reply = await message.reply({ embeds: [errEmbed] });
+    setTimeout(async () => {
+      if (message.deletable) await message.delete().catch(() => {});
+      reply.delete().catch(() => {});
+    }, 10_000);
   }
 
   if (prefixOptions.disabled && !devUser) {
@@ -229,7 +220,27 @@ async function handlePrefix(client, message) {
   } catch (error) {
     if (client.config.bot.debug) client.logger.error(error);
     else client.logger.error("An error occurred: " + error.message);
-    return await replyAndDelete(t("handlers:command.error", { lng: locale }));
+
+    errEmbed.setDescription(t("handlers:command.error", { lng: locale, command: commandName }));
+    const messages = await message.channel.messages.fetch({ limit: 100 });
+    const messageReplies = messages.filter(
+      (msg) => msg.reference && msg.reference.messageId === message.id
+    );
+
+    // If there are replies to the original message, send the error embed in the reply
+    // then add the reply to the list of messageReplies to be deleted later
+    if (messageReplies && messageReplies.size > 0) {
+      const reply = await message.reply({ embeds: [errEmbed] });
+      messageReplies.set(reply.id, reply);
+    } else {
+      const reply = await message.reply({ embeds: [errEmbed] });
+      messageReplies.set(reply.id, reply);
+    }
+
+    setTimeout(() => {
+      if (message.deletable) message.delete().catch(() => {});
+      message.channel.bulkDelete(messageReplies, true).catch(() => {});
+    }, 10_000);
   }
 }
 
