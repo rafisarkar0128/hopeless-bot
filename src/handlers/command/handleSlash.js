@@ -10,36 +10,49 @@ const { getCooldown } = require("@utils/index");
  */
 async function handleSlash(client, interaction) {
   const { commandName, user } = interaction;
-  const errEmbed = new EmbedBuilder().setColor(client.color.Wrong);
+  const errorEmbed = new EmbedBuilder().setColor(client.color.Wrong);
 
   let metadata = await client.mongodb.guilds.get(interaction.guildId);
   if (!metadata) {
     metadata = await client.mongodb.guilds.create(interaction.guildId);
   }
+
+  /**
+   * A function to send reply to interactions uppon error.
+   * @param {string} text - The text to send
+   * @returns {Promise<void>}
+   */
+  async function errorReply(text) {
+    errorEmbed.setDescription(text);
+    if (interaction.deferred || interaction.replied) {
+      await interaction.followUp({ embeds: [errorEmbed], flags: "Ephemeral" });
+      if (!interaction.ephemeral) {
+        setTimeout(() => interaction.deleteReply().catch(() => {}), 10_000);
+      }
+    } else {
+      await interaction.reply({ embeds: [errorEmbed], flags: "Ephemeral" });
+    }
+  }
+
   const { locale } = metadata;
   const devUser = client.config.bot.devs?.includes(user.id);
-
   const command = client.commands.get(commandName);
   if (!command) {
-    errEmbed.setDescription(t("handlers:command.notFound", { lng: locale, command: commandName }));
-    await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+    await errorReply(t("handlers:command.notFound", { lng: locale, command: commandName }));
     return await interaction.command.delete();
   }
 
   const { options, slashOptions } = command;
   if (slashOptions.disabled && !devUser) {
-    errEmbed.setDescription(t("handlers:command.disabled", { lng: locale, command: commandName }));
-    return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+    return await errorReply(t("handlers:command.disabled", { lng: locale, command: commandName }));
   }
 
   if (options.guildOnly && !interaction.inGuild()) {
-    errEmbed.setDescription(t("handlers:command.guildOnly", { lng: locale, command: commandName }));
-    return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+    return await errorReply(t("handlers:command.guildOnly", { lng: locale, command: commandName }));
   }
 
   if (options.permissions?.dev && !devUser) {
-    errEmbed.setDescription(t("handlers:command.devOnly", { lng: locale, command: commandName }));
-    return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+    return await errorReply(t("handlers:command.devOnly", { lng: locale, command: commandName }));
   }
 
   if (interaction.inGuild()) {
@@ -49,85 +62,77 @@ async function handleSlash(client, interaction) {
       (p) => !clientMember.permissions.has(p)
     );
     if (missingBotPermissions.length > 0) {
-      errEmbed.setDescription(
+      return await errorReply(
         t("handlers:command.botPerm", {
           lng: locale,
           command: commandName,
           perms: missingBotPermissions.map((p) => `- **${p}**`).join("\n"),
         })
       );
-      return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
     }
 
     const missingUserPermissions = options.permissions.user.filter(
       (p) => !interaction.member.permissions.has(p)
     );
     if (missingUserPermissions.length > 0) {
-      errEmbed.setDescription(
+      return await errorReply(
         t("handlers:command.userPerm", {
           lng: locale,
           command: commandName,
           perms: missingUserPermissions.map((p) => `- **${p}**`).join("\n"),
         })
       );
-      return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
     }
 
     if (options.player?.voice) {
       const vc = interaction.member.voice.channel;
       if (!vc) {
-        errEmbed.setDescription(
+        return await errorReply(
           t("handlers:command.voiceOnly", { lng: locale, command: commandName })
         );
-        return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
       }
 
       if (!vc.joinable || !vc.speakable) {
-        errEmbed.setDescription(
+        return await errorReply(
           t("handlers.command.missingVoicePerm", {
             lng: locale,
             command: commandName,
             channel: `<#${vc.id}>`,
           })
         );
-        return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
       }
 
       if (
         vc.type === ChannelType.GuildStageVoice &&
         !vc.permissionsFor(clientMember).has("RequestToSpeak")
       ) {
-        errEmbed.setDescription(
+        return await errorReply(
           t("handlers.command.noRequestToSpeak", {
             lng: locale,
             command: commandName,
             channel: `<#${vc.id}>`,
           })
         );
-        return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
       }
 
       if (clientMember.voice.channel && clientMember.voice.channelId !== vc.id) {
-        errEmbed.setDescription(
+        return await errorReply(
           t("handlers:command.differentVoiceChannel", {
             lng: locale,
             channel: `<#${clientMember.voice.channelId}>`,
           })
         );
-        return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
       }
     }
 
     if (command.player?.active) {
       const player = client.lavalink.getPlayer(interaction.guildId);
       if (!player) {
-        errEmbed.setDescription(t("player:noPlayer", { lng: locale }));
-        return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+        return await errorReply(t("player:noPlayer", { lng: locale }));
       }
 
       if (command.player?.playing && !player.queue.current) {
-        errEmbed.setDescription(t("player:noPlayer", { lng: locale }));
-        return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
+        return await errorReply(t("player:noPlayer", { lng: locale }));
       }
     }
   }
@@ -135,14 +140,13 @@ async function handleSlash(client, interaction) {
   if (command.cooldown > 0) {
     const remaining = getCooldown(client, command, user.id);
     if (remaining > 0 && !devUser) {
-      errEmbed.setDescription(
+      return await errorReply(
         t("handlers:command.cooldown", {
           lng: locale,
           time: client.utils.formatTime(remaining, true),
           command: commandName,
         })
       );
-      return await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
     }
   }
 
@@ -151,13 +155,7 @@ async function handleSlash(client, interaction) {
   } catch (error) {
     if (client.config.bot.debug) client.logger.error(error);
     else client.logger.error("An error occurred: " + error.message);
-
-    errEmbed.setDescription(t("handlers:command.error", { lng: locale }));
-    if (interaction.deferred || interaction.replied) {
-      await interaction.editReply({ embeds: [errEmbed] });
-    } else {
-      await interaction.reply({ embeds: [errEmbed], flags: "Ephemeral" });
-    }
+    return await errorReply(t("handlers:command.error", { lng: locale, command: commandName }));
   }
 }
 
