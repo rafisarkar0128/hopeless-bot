@@ -94,7 +94,7 @@ async function handleSlash(client, interaction) {
 
       if (!vc.joinable || !vc.speakable) {
         return await errorReply(
-          t("handlers.command.missingVoicePerm", {
+          t("handlers:command.missingVoicePerm", {
             lng: locale,
             command: commandName,
             channel: `<#${vc.id}>`,
@@ -107,7 +107,7 @@ async function handleSlash(client, interaction) {
         !vc.permissionsFor(clientMember).has("RequestToSpeak")
       ) {
         return await errorReply(
-          t("handlers.command.noRequestToSpeak", {
+          t("handlers:command.noRequestToSpeak", {
             lng: locale,
             command: commandName,
             channel: `<#${vc.id}>`,
