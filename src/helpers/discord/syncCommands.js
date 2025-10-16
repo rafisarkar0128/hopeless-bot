@@ -8,10 +8,6 @@ const { checkForChangesInCommand } = require("./checkForChanges.js");
  * @returns {Promise<void>}
  */
 async function syncCommands(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client parameter is missing or not an object.");
-  }
-
   client.logger.info("Synchronizing application commands...");
   const { guildId } = client.config.bot;
   const oldCommands = await fetchCommands(client);

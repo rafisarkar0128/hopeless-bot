@@ -16,7 +16,7 @@ function getMissingArgsEmbed(client, command, metadata) {
   }
 
   const embed = new EmbedBuilder()
-    .setColor(client.color.Wrong)
+    .setColor(client.colors.error)
     .setTitle(t("handlers:command.missingArgs", { lng: metadata.locale }))
     .setDescription(
       t("handlers:command.missingArgsDescription", {
@@ -70,7 +70,7 @@ async function handlePrefix(client, message) {
     client.commands.get(commandName) ?? client.commands.get(client.aliases.get(commandName));
   if (!command) return;
 
-  const errEmbed = new EmbedBuilder().setColor(client.color.Wrong);
+  const errEmbed = new EmbedBuilder().setColor(client.colors.error);
   const { options, prefixOptions } = command;
   const devUser = client.config.bot.devs?.includes(message.author.id);
 
@@ -218,7 +218,7 @@ async function handlePrefix(client, message) {
   try {
     return await command.executePrefix(client, message, args, metadata);
   } catch (error) {
-    if (client.config.bot.debug) client.logger.error(error);
+    if (client.config.debug) client.logger.error(error);
     else client.logger.error("An error occurred: " + error.message);
 
     errEmbed.setDescription(t("handlers:command.error", { lng: locale, command: commandName }));

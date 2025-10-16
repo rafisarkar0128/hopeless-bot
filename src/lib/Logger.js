@@ -6,7 +6,6 @@ const figures = require("figures").default;
 
 /**
  * A utility class for managing client console logs.
- * @abstract
  */
 class Logger {
   /**

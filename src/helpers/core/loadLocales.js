@@ -12,15 +12,7 @@ const chalk = require("chalk");
  * await client.helpers.loadLocales(client);
  */
 async function loadLocales(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
-
-  if (client.config.bot.debug) {
-    client.logger.debug(
-      `Loading locales from ${chalk.cyan(join(process.cwd(), "src", "locales"))}`
-    );
-  }
+  if (client.config.debug) client.logger.debug(`Loading locales....`);
 
   // initializing i18next with i18next-fs-backend
   await i18next.use(Backend).init({

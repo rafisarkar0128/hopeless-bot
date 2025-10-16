@@ -16,12 +16,12 @@ module.exports = class Event extends BaseEvent {
   async execute(client, interaction) {
     // For handling slash commands
     if (interaction.isChatInputCommand()) {
-      await client.handlers.handleSlash(client, interaction);
+      await client.handlers.handleSlash(interaction);
     }
 
     // For handling auto complete interactions
     else if (interaction.isAutocomplete()) {
-      await client.handlers.handleAutocomplete(client, interaction);
+      await client.handlers.handleAutocomplete(interaction);
     }
 
     // For handling contextmenu commands

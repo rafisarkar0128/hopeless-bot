@@ -1,6 +1,7 @@
 const { BaseEvent } = require("@src/structures");
 const { EmbedBuilder } = require("discord.js");
 const { t } = require("i18next");
+const { getPlayerButtons } = require("@utils/index");
 
 module.exports = class Event extends BaseEvent {
   constructor() {
@@ -50,7 +51,7 @@ module.exports = class Event extends BaseEvent {
 
     const message = await channel.send({
       embeds: [embed],
-      // components: [...client.utils.buttons.getPlayer(player)],
+      components: [...getPlayerButtons(client, player)],
     });
     player.set("messageId", message.id);
 

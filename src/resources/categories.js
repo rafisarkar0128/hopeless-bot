@@ -1,6 +1,4 @@
-const config = require("@src/config.js");
-
-const Categories = {
+const categories = {
   admin: {
     name: "Admin",
     image: "https://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Settings-icon.png",
@@ -34,11 +32,9 @@ const Categories = {
 
   music: {
     name: "Music",
-    enabled: config.music.enabled,
     image: "https://icons.iconarchive.com/icons/wwalczyszyn/iwindows/256/Music-Library-icon.png",
     emoji: "🎵",
   },
-
 
   utility: {
     name: "Utility",
@@ -48,4 +44,4 @@ const Categories = {
   },
 };
 
-module.exports = { Categories };
+module.exports = { categories };
