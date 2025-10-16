@@ -1,5 +1,5 @@
 // Permission names for validation
-const Permissions = [
+const permissions = [
   // General Guild Permissions
   "ViewChannel",
   "ManageChannels",
@@ -69,4 +69,4 @@ const Permissions = [
   "Administrator",
 ];
 
-module.exports = { Permissions };
+module.exports = { permissions };

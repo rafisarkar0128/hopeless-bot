@@ -1,9 +1,30 @@
+const fs = require("fs");
+const path = require("path");
+
+/**
+ * Gets all available locales by reading the 'src/locales' directory.
+ * Each subdirectory in 'src/locales' is considered a locale if it contains language files.
+ * @returns {string[]} An array of available locale codes.
+ * @example
+ * getAvailableLocales(); // Returns ['en-US', 'pt-BR', ...]
+ */
+function getAvailableLocales() {
+  return fs.readdirSync(path.join(process.cwd(), "src/locales")).filter((dir) => {
+    const dirPath = path.join(process.cwd(), "src/locales", dir);
+    return fs.lstatSync(dirPath).isDirectory() && fs.readdirSync(dirPath).length > 0;
+  });
+}
+
 module.exports = {
   // default language
   defaultLocale: process.env.DEFAULT_LOCALE ?? "en-US",
+  // supported languages
+  availableLocales: getAvailableLocales(),
 
   // Mode of the bot.
   mode: process.env.MODE === "production" ? "production" : "development",
+  // Debug mode to log more information
+  debug: process.env.DEBUG === "true",
 
   // whether to show table or not.
   showTable: {
@@ -15,31 +36,20 @@ module.exports = {
 
   // Bot settings
   bot: {
-    // your bots id
-    id: process.env.DISCORD_CLIENT_ID,
-    // your bots token
-    token: process.env.DISCORD_CLIENT_TOKEN,
-    // your bots secret
-    secret: process.env.DISCORD_CLIENT_SECRET,
-    // your discord account id
-    ownerId: process.env.OWNER_ID,
-    // your guild id
-    guildId: process.env.GUILD_ID,
-    // default prefix
-    prefix: process.env.DEFAULT_PREFIX,
+    id: process.env.DISCORD_CLIENT_ID, // your bots id
+    token: process.env.DISCORD_CLIENT_TOKEN, // your bots token
+    secret: process.env.DISCORD_CLIENT_SECRET, // your bots secret
+    ownerId: process.env.OWNER_ID, // your discord account id
+    guildId: process.env.GUILD_ID, // your guild id
+    prefix: process.env.DEFAULT_PREFIX, // default prefix
     /**
      * your bots developer ids
      * @type {string[]}
      */
     devs: process.env.DEV_IDS ? JSON.parse(process.env.DEV_IDS) : [],
-    // Wheither to make the commands global or not
-    global: process.env.GLOBAL_COMMANDS === "true",
-    // Whether to allow invite command or not
-    allowedInvite: process.env.ALLOWED_INVITE === "true",
-    // Default cooldown ammount in secconds
-    defaultCooldown: 5,
-    // debug mode to log more information
-    debug: process.env.DEBUG === "true",
+    global: process.env.GLOBAL_COMMANDS === "true", // Wheither to make the commands global or not
+    allowedInvite: process.env.ALLOWED_INVITE === "true", // Whether to allow invite command or not
+    defaultCooldown: 5, // Default cooldown ammount in secconds
   },
 
   // Your genius API credentials. Get it from https://genius.com/developers
@@ -103,15 +113,14 @@ module.exports = {
     port: process.env.DASHBOARD_PORT ?? 3000,
   },
 
-  // Settings for the music system
-  music: {
-    enabled: true,
+  // Settings for the lavalink music system
+  lavalink: {
     // Idle time in milliseconds before disconnecting
     idleTime: 180000,
     // Maximum search results to display
     maxSearchResults: 10,
     // Default player volume
-    defaultVolume: 25,
+    defaultVolume: 50,
     // Default color to use for embeds
     defaultEmbedColor: "#7289DA",
     // maxiimum volume allowed for the player
@@ -129,10 +138,6 @@ module.exports = {
   image: {
     enabled: true,
     baseApi: "https://api.trace.moe",
-  },
-
-  social: {
-    enabled: true,
   },
 
   // Images to use everywhere

@@ -61,8 +61,8 @@ module.exports = class Command extends BaseCommand {
    */
   async executePrefix(client, message, args, metadata) {
     const lng = args.join(" ").toLowerCase();
-    const availableLocales = client.utils.getAvailableLocales();
-    const language = client.resources.Languages.find(
+    const { availableLocales } = client.config;
+    const language = client.resources.languages.find(
       (l) => l.locale === lng || l.name.toLowerCase() === lng || l.native.toLowerCase() === lng
     );
 
@@ -84,11 +84,6 @@ module.exports = class Command extends BaseCommand {
         language: `${language.native} (${language.name})`,
       }),
     });
-
-    setTimeout(() => {
-      if (message.deletable) message.delete();
-      reply.delete();
-    }, 5000);
   }
 
   /**
@@ -102,7 +97,7 @@ module.exports = class Command extends BaseCommand {
     await interaction.deferReply({ flags: "Ephemeral" });
 
     const locale = interaction.options.getString("language", true);
-    const availableLocales = client.utils.getAvailableLocales();
+    const { availableLocales } = client.config;
 
     if (!locale || !availableLocales.includes(locale)) {
       return await interaction.followUp({
@@ -110,7 +105,7 @@ module.exports = class Command extends BaseCommand {
       });
     }
 
-    const language = client.resources.Languages.find((lng) => lng.locale === locale);
+    const language = client.resources.languages.find((lng) => lng.locale === locale);
     await client.mongodb.guilds.update(interaction.guildId, "locale", locale);
     return await interaction.followUp({
       content: t("commands:language.reply", {
@@ -127,14 +122,15 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async autocomplete(client, interaction) {
-    const availableLocales = client.utils.getAvailableLocales();
+    const { availableLocales } = client.config;
     const focused = interaction.options.getFocused().toLowerCase();
     /** @type {import("discord.js").ApplicationCommandChoicesData[]} */
     const languageData = [];
 
     // If no input was provided
     if (!focused) {
-      client.resources.Languages.filter((lng) => availableLocales.some((l) => l === lng.locale))
+      client.resources.languages
+        .filter((lng) => availableLocales.some((l) => l === lng.locale))
         .slice(0, 25)
         .forEach((lng) => {
           languageData.push({
@@ -146,13 +142,14 @@ module.exports = class Command extends BaseCommand {
 
     // If some type of input was provided
     else {
-      client.resources.Languages.filter((lng) => {
-        return (
-          lng.name.toLowerCase().match(focused) ||
-          lng.locale.toLowerCase().match(focused) ||
-          lng.native.toLowerCase().match(focused)
-        );
-      })
+      client.resources.languages
+        .filter((lng) => {
+          return (
+            lng.name.toLowerCase().match(focused) ||
+            lng.locale.toLowerCase().match(focused) ||
+            lng.native.toLowerCase().match(focused)
+          );
+        })
         .slice(0, 25)
         .forEach((lng) => {
           languageData.push({

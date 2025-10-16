@@ -10,17 +10,9 @@ const path = require("path");
  * @returns {Promise<void>}
  */
 async function loadCommands(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
+  if (client.config.debug) client.logger.debug(`Loading event modules....`);
 
-  if (client.config.bot.debug) {
-    client.logger.debug(
-      `Loading event modules from ${chalk.cyan(path.join(process.cwd(), "src", "commands"))}`
-    );
-  }
-
-  const { Categories, Permissions } = client.resources;
+  const { categories, permissions } = client.resources;
   const files = await loadFiles("src/commands", [".js"]);
   let i = 0;
   let disabledCount = 0;
@@ -31,11 +23,10 @@ async function loadCommands(client) {
   client.aliases.clear();
   client.cooldowns.clear();
 
-  // Pre-calculate the maximum filename length for consistent formatting
+  // Pre-calculate the maximum filename and category name length for consistent formatting
   const maxFileNameLength = Math.max(...files.map((f) => path.basename(f).length), 12);
-  // Pre-calculate the maximum category name length for consistent formatting
   const maxCategoryNameLength = Math.max(
-    ...Object.getOwnPropertyNames(Categories).map((c) => c.length),
+    ...Object.getOwnPropertyNames(categories).map((c) => c.length),
     8
   );
 
@@ -128,8 +119,8 @@ async function loadCommands(client) {
       }
 
       // checking if category is valid and wheither whole category is disabled
-      if (Categories[cmd.options.category]?.enabled === false) continue;
-      if (cmd.options.category && !Object.keys(Categories).includes(cmd.options.category)) {
+      if (categories[cmd.options.category]?.enabled === false) continue;
+      if (cmd.options.category && !Object.keys(categories).includes(cmd.options.category)) {
         throw new Error(`"${cmd.options.category}" is not a valid command category.`);
       }
 
@@ -146,7 +137,7 @@ async function loadCommands(client) {
         throw new TypeError(`Command permissions for bot must be an array of strings.`);
       }
       for (const p of cmd.options.permissions.bot) {
-        if (!Permissions.includes(p)) {
+        if (!permissions.includes(p)) {
           throw new RangeError(`"${p}" is not a valid bot permission.`);
         }
       }
@@ -156,7 +147,7 @@ async function loadCommands(client) {
         throw new TypeError(`Command permissions for user must be an array of strings.`);
       }
       for (const p of cmd.options.permissions.user) {
-        if (!Permissions.includes(p)) {
+        if (!permissions.includes(p)) {
           throw new RangeError(`"${p}" is not a valid user permission.`);
         }
       }
@@ -236,7 +227,7 @@ async function loadCommands(client) {
       client.logger.error(`Failed to load command ${chalk.yellow(fileName)}`);
 
       // Show detailed error only in debug mode
-      if (client.config.bot.debug) {
+      if (client.config.debug) {
         client.logger.error(`Detailed error for ${fileName}:\n`, error);
       }
 

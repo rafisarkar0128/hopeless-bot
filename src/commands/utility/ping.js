@@ -78,7 +78,7 @@ module.exports = class Command extends BaseCommand {
     const seconds = Math.floor(client.uptime / 1000) % 60;
 
     // The ping embed.
-    const embed = new EmbedBuilder().setColor(client.color.Transparent).addFields([
+    const embed = new EmbedBuilder().setColor(client.colors.transparent).addFields([
       {
         name: t("commands:ping.gatewayPing", { lng }),
         value: `\`\`\`yml\n${

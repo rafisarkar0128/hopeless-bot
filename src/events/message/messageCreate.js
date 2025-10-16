@@ -21,12 +21,12 @@ module.exports = class Event extends BaseEvent {
 
     // if the message is a mention, handle it
     if (mention.test(message.content)) {
-      await client.handlers.handleMention(client, message);
+      await client.handlers.handleMention(message);
     }
 
     // else handle it as a prefix command
     else {
-      await client.handlers.handlePrefix(client, message);
+      await client.handlers.handlePrefix(message);
     }
   }
 };

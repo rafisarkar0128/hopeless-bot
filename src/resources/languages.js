@@ -1,5 +1,5 @@
 // List of languages discord supports with some extra
-const Languages = [
+const languages = [
   {
     locale: "en",
     name: "English",
@@ -7,8 +7,8 @@ const Languages = [
   },
   {
     locale: "bn-BD",
-    name: "Bangla",
-    native: "বাংলা",
+    name: "Bangla BD",
+    native: "বাংলা (বাংলাদেশ)",
   },
   {
     locale: "id",
@@ -168,4 +168,4 @@ const Languages = [
   },
 ];
 
-module.exports = { Languages };
+module.exports = { languages };

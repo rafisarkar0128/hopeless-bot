@@ -15,7 +15,7 @@ async function handleAutocomplete(client, interaction) {
     await command.autocomplete(client, interaction);
   } catch (error) {
     client.logger.error("Error handling autocomplete command.");
-    if (client.config.bot.debug) client.logger.error(error);
+    if (client.config.debug) client.logger.error(error);
   }
 }
 

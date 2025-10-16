@@ -1,7 +1,6 @@
 const { BaseCommand } = require("@src/structures");
 const {
   SlashCommandBuilder,
-  PermissionFlagsBits,
   InteractionContextType,
   ApplicationIntegrationType,
   EmbedBuilder,
@@ -136,7 +135,7 @@ module.exports = class Command extends BaseCommand {
 
     const { options, channelId, guildId } = interaction;
     let player = client.lavalink.getPlayer(guildId);
-    const embed = new EmbedBuilder().setColor(client.color.Wrong);
+    const embed = new EmbedBuilder();
     const query = options.getString("query", true);
     const playNext = options.getBoolean("play_next", false);
     const vc = interaction.member.voice?.channel;
@@ -162,7 +161,7 @@ module.exports = class Command extends BaseCommand {
         textChannelId: channelId,
         selfDeaf: true,
         selfMute: false,
-        volume: client.config.music.defaultVolume,
+        volume: client.config.lavalink.defaultVolume,
         instaUpdateFiltersFix: true,
         applyVolumeAsFilter: false,
         vcRegion: vc?.rtcRegion,
@@ -174,16 +173,18 @@ module.exports = class Command extends BaseCommand {
     const res = await player.search({ query, source }, interaction.user);
 
     if (!res || res.loadType === "error") {
-      await interaction.followUp({
-        embeds: [embed.setDescription(t("player:loadFailed", { lng: metadata.locale }))],
-      });
+      embed
+        .setColor(client.colors.error)
+        .setDescription(t("player:loadFailed", { lng: metadata.locale }));
+      await interaction.followUp({ embeds: [embed] });
       return setTimeout(() => interaction.deleteReply(), 10_000);
     }
 
     if (!res.tracks?.length || res.loadType === "empty") {
-      await interaction.followUp({
-        embeds: [embed.setDescription(t("player:emptyResult", { lng: metadata.locale }))],
-      });
+      embed
+        .setColor(client.colors.standby)
+        .setDescription(t("player:emptyResult", { lng: metadata.locale }));
+      await interaction.followUp({ embeds: [embed] });
       return setTimeout(() => interaction.deleteReply(), 10_000);
     }
 
@@ -194,17 +195,14 @@ module.exports = class Command extends BaseCommand {
         await player.queue.add(res.tracks);
       }
 
-      await interaction.followUp({
-        embeds: [
-          embed.setDescription(
-            t("player:addPlaylist", {
-              lng: metadata.locale,
-              size: res.tracks.length,
-              title: res.playlist?.name ? res.playlist.name : "playlist",
-            })
-          ),
-        ],
-      });
+      embed.setColor(client.colors.main).setDescription(
+        t("player:addPlaylist", {
+          lng: metadata.locale,
+          size: res.tracks.length,
+          title: res.playlist?.name ? res.playlist.name : "playlist",
+        })
+      );
+      await interaction.followUp({ embeds: [embed] });
     } else {
       let track = res.tracks.shift();
       let position = 0;
@@ -215,17 +213,14 @@ module.exports = class Command extends BaseCommand {
         position = await player.queue.add(track);
       }
 
-      await interaction.followUp({
-        embeds: [
-          embed.setColor(client.color.Good).setDescription(
-            t("player:addTrack", {
-              lng: metadata.locale,
-              position,
-              track: `[${track.info.title}](<${track.info.uri}>)`,
-            })
-          ),
-        ],
-      });
+      embed.setColor(client.colors.main).setDescription(
+        t("player:addTrack", {
+          lng: metadata.locale,
+          position,
+          track: `[${track.info.title}](<${track.info.uri}>)`,
+        })
+      );
+      await interaction.followUp({ embeds: [embed] });
     }
 
     if (!player.playing) await player.play({ paused: false });

@@ -6,11 +6,7 @@ const chalk = require("chalk");
  * @returns {Promise<void>}
  */
 function antiCrash(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
-
-  if (client.config.bot.debug) {
+  if (client.config.debug) {
     client.logger.debug("Setting up AntiCrash handlers.");
   }
 
@@ -19,7 +15,7 @@ function antiCrash(client) {
    * @returns {Promise<void>}
    */
   async function handleExit() {
-    if (client.config.bot.debug) {
+    if (client.config.debug) {
       client.logger.debug("Exit signal received, initiating graceful shutdown.");
     }
 
@@ -33,7 +29,7 @@ function antiCrash(client) {
   process.on("SIGTERM", handleExit);
   process.on("SIGQUIT", handleExit);
 
-  if (client.config.bot.debug) {
+  if (client.config.debug) {
     // Handle beforeExit event (Only for Debug)
     process.on("beforeExit", (code) => {
       console.log(chalk.yellow("[AntiCrash] | [BeforeExit_Logs] | [Start] : ==============="));
@@ -51,7 +47,7 @@ function antiCrash(client) {
 
   // Handle unhandledRejection event
   process.on("unhandledRejection", (reason) => {
-    if (client.config.bot.debug) {
+    if (client.config.debug) {
       console.log(
         chalk.yellow("[AntiCrash] | [UnhandledRejection_Logs] | [Start] : ===============")
       );
@@ -66,7 +62,7 @@ function antiCrash(client) {
 
   // Handle rejectionHandled event
   process.on("rejectionHandled", (promise) => {
-    if (client.config.bot.debug) {
+    if (client.config.debug) {
       console.log(
         chalk.yellow("[AntiCrash] | [RejectionHandled_Logs] | [Start] : ===============")
       );
@@ -81,7 +77,7 @@ function antiCrash(client) {
 
   // Handle uncaughtException event
   process.on("uncaughtException", (error) => {
-    if (client.config.bot.debug) {
+    if (client.config.debug) {
       console.log(
         chalk.yellow("[AntiCrash] | [UncaughtException_Logs] | [Start] : ===============")
       );
@@ -96,7 +92,7 @@ function antiCrash(client) {
 
   // Handle warning event
   process.on("warning", (warning) => {
-    if (client.config.bot.debug) {
+    if (client.config.debug) {
       console.log(chalk.yellow("[AntiCrash] | [Warning_Logs] | [Start] : ==============="));
       client.logger.warn("Detailed warning:\n", warning);
       console.log(chalk.yellow("[AntiCrash] | [Warning_Logs] | [End]   : ==============="));

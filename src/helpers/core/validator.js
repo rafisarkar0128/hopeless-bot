@@ -6,14 +6,11 @@ const chalk = require("chalk");
  * @returns {void}
  */
 function validateConfig(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
+  if (client.config.debug) client.logger.debug(`Validating configuration....`);
 
   const errors = [];
   const warnings = [];
-  const { Music } = client.resources;
-  const { defaultLocale, availableLocales, bot, mongodbUri, dashboard, music } = client.config;
+  const { defaultLocale, availableLocales, bot, mongodbUri, dashboard, lavalink } = client.config;
   const env = chalk.cyanBright(".env");
 
   // Checking if default locale was provided or not
@@ -24,7 +21,7 @@ function validateConfig(client) {
   }
 
   // Checking the provided locale is valid or not
-  if (!client.utils.getAvailableLocales().includes(defaultLocale)) {
+  if (!availableLocales.includes(defaultLocale)) {
     client.config.defaultLocale = "en-US";
     warnings.push(
       `${chalk.yellow("DEFAULT_LOCALE")} in ${env} is invalid. Using ${chalk.green("en-US")} as fallback locale.`
@@ -106,33 +103,30 @@ function validateConfig(client) {
   //   }
   // }
 
-  // If music enabled checking its config
-  if (music.enabled) {
-    // Checking if spotify credentials were provided or not
-    // if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
-    // 	warnings.push(
-    // 		`ENV: ${chalk.yellow("SPOTIFY_CLIENT_ID")} or ${chalk.yellow(
-    // 			"SPOTIFY_CLIENT_SECRET",
-    // 		)} were missing. Spotify music links won't work`,
-    // 	);
-    // }
+  // Checking if spotify credentials were provided or not
+  // if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
+  // 	warnings.push(
+  // 		`ENV: ${chalk.yellow("SPOTIFY_CLIENT_ID")} or ${chalk.yellow(
+  // 			"SPOTIFY_CLIENT_SECRET",
+  // 		)} were missing. Spotify music links won't work`,
+  // 	);
+  // }
 
-    // Checking if lavalink nodes were provided in array or not
-    if (!Array.isArray(music.nodes)) {
-      errors.push(`${chalk.yellow("lavalinkNodes")} must be an Array of Lavalink Nodes`);
-    }
+  // Checking if lavalink nodes were provided in array or not
+  if (!Array.isArray(lavalink.nodes)) {
+    errors.push(`${chalk.yellow("lavalinkNodes")} must be an Array of Lavalink Nodes`);
+  }
 
-    // Checking if lavalink nodes were provided or not
-    if (music.nodes.length === 0) {
-      errors.push(`${chalk.yellow("lavalinkNodes")} must have at least 1 Node to work`);
-    }
+  // Checking if lavalink nodes were provided or not
+  if (lavalink.nodes.length === 0) {
+    errors.push(`${chalk.yellow("lavalinkNodes")} must have at least 1 Node to work`);
+  }
 
-    // Checking if the provided source is valid or not
-    if (!Music.searchPlatforms.includes(music.defaultSearchPlatform)) {
-      errors.push(
-        `${chalk.yellow("defaultSearchPlatform")} is invalid. Provide a valid search platform`
-      );
-    }
+  // Checking if the provided source is valid or not
+  if (!client.resources.music.searchPlatforms.includes(lavalink.defaultSearchPlatform)) {
+    errors.push(
+      `${chalk.yellow("defaultSearchPlatform")} is invalid. Provide a valid search platform`
+    );
   }
 
   // Checking if support server was provided or not
@@ -152,6 +146,10 @@ function validateConfig(client) {
   if (errors.length > 0) {
     errors.forEach((e) => client.logger.error(e));
     process.exit(1);
+  }
+
+  if (client.config.debug && errors.length === 0) {
+    client.logger.debug(`Configuration has been validated successfully.`);
   }
 }
 

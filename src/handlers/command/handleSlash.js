@@ -10,7 +10,7 @@ const { getCooldown } = require("@utils/index");
  */
 async function handleSlash(client, interaction) {
   const { commandName, user } = interaction;
-  const errorEmbed = new EmbedBuilder().setColor(client.color.Wrong);
+  const errorEmbed = new EmbedBuilder().setColor(client.colors.error);
 
   let metadata = await client.mongodb.guilds.get(interaction.guildId);
   if (!metadata) {
@@ -153,7 +153,7 @@ async function handleSlash(client, interaction) {
   try {
     await command.executeSlash(client, interaction, metadata);
   } catch (error) {
-    if (client.config.bot.debug) client.logger.error(error);
+    if (client.config.debug) client.logger.error(error);
     else client.logger.error("An error occurred: " + error.message);
     return await errorReply(t("handlers:command.error", { lng: locale, command: commandName }));
   }
