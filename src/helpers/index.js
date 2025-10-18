@@ -13,18 +13,110 @@ const {
 } = require("./discord/checkForChanges.js");
 const { syncCommands } = require("./discord/syncCommands.js");
 
-//Exporting all the functions from single file for better accessibility
-module.exports = {
-  loadWelcome,
-  antiCrash,
-  loadEvents,
-  loadLocales,
-  loadCommands,
-  validateConfig,
-  fetchCommands,
-  checkForChangesInCommand,
-  checkForChangesInOptions,
-  checkForChangesInChoices,
-  checkForChangesInLocalizations,
-  syncCommands,
-};
+/**
+ * A class representing various helper functions for the bot
+ * @class
+ * @example
+ * const helpers = new Helpers(client);
+ * await helpers.loadEvents();
+ */
+class Helpers {
+  constructor(client) {
+    if (!client || typeof client !== "object") {
+      throw new Error("Client is not defined or not an object.");
+    }
+
+    /**
+     * The base Discord Client
+     * @type {import("@lib/index").DiscordClient}
+     */
+    this.client = client;
+
+    /**
+     * A function to log Welcome Message
+     * @example
+     * client.helpers.loadWelcome();
+     */
+    this.loadWelcome = () => loadWelcome(this.client);
+
+    /**
+     * A function to handle crashes
+     * @example
+     * await client.helpers.antiCrash();
+     */
+    this.antiCrash = () => antiCrash(this.client);
+
+    /**
+     * A function to load languages
+     * @example
+     * await client.helpers.loadLocales();
+     */
+    this.loadLocales = () => loadLocales(this.client);
+
+    /**
+     * A function to load event files
+     * @example
+     * await client.helpers.loadEvents();
+     */
+    this.loadEvents = () => loadEvents(this.client);
+
+    /**
+     * A function to load command modules
+     * @example
+     * await client.helpers.loadCommands();
+     */
+    this.loadCommands = () => loadCommands(this.client);
+
+    /**
+     * A function to validate the whole configuration.
+     * @example
+     * client.helpers.validateConfig();
+     */
+    this.validateConfig = () => validateConfig(this.client);
+
+    /**
+     * A function to fetch Application Commands
+     * @example
+     * const fetchedCommands = await client.helpers.fetchCommands();
+     */
+    this.fetchCommands = () => fetchCommands(this.client);
+
+    /**
+     * A function to synchronize Application Commands
+     * @example
+     * await client.helpers.syncCommands();
+     */
+    this.syncCommands = () => syncCommands(this.client);
+
+    /**
+     * A function to check for changes in Application Command Data
+     * @type {typeof checkForChangesInCommand}
+     * @example
+     * const hasChanged = client.helpers.checkForChangesInCommand(oldCommand, newCommand);
+     */
+    this.checkForChangesInCommand = checkForChangesInCommand;
+
+    /** A function to check for changes in options
+     * @type {typeof checkForChangesInOptions}
+     * @example
+     * const hasChanged = client.helpers.checkForChangesInOptions(oldOptions, newOptions);
+     */
+    this.checkForChangesInOptions = checkForChangesInOptions;
+
+    /** A function to check for changes in string option choices
+     * @type {typeof checkForChangesInChoices}
+     * @example
+     * const hasChanged = client.helpers.checkForChangesInChoices(oldChoices, newChoices);
+     */
+    this.checkForChangesInChoices = checkForChangesInChoices;
+
+    /** A function to check for changes in name localizations
+     * @type {typeof checkForChangesInLocalizations}
+     * @example
+     * const hasChanged = client.helpers.checkForChangesInLocalizations(oldLocalizations, newLocalizations);
+     */
+    this.checkForChangesInLocalizations = checkForChangesInLocalizations;
+  }
+}
+
+module.exports = { Helpers };

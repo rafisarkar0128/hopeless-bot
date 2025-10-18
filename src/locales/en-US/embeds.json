@@ -9,6 +9,7 @@
 
   "mention": {
     "title": "Did you just mention me?",
-    "description": "I am {{user}}, a discord bot developed by {{owner}}. **{{prefix}}** is my default prefix. For more information or help use **{{prefix}}help** | **/help**."
+    "description": "Hey, my prefix for this server is **__{{prefix}}__**.\nWant more info? then do `{{prefix}}help` | `/help`.",
+    "footer": "Stay Safe, Stay Awesome!"
   }
 }

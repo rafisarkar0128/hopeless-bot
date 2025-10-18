@@ -3,6 +3,7 @@
   "buttons": {
     "invite": "Invite Me",
     "website": "Website",
-    "support": "Support"
+    "support": "Support",
+    "github": "GitHub"
   }
 }

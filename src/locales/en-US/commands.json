@@ -10,7 +10,7 @@
       "creator": "Creator",
       "repository": "Repository",
       "support": "Support",
-      "description": "**Node** is a multipurpose Discord bot that is built with [discord.js](https://github.com/discordjs/discord.js), a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the [Discord API](https://discord.com/developers/docs/intro)."
+      "description": "**{{username}}** is a discord bot, specially made for **Music Streaming**. It is built with [discord.js](https://github.com/discordjs/discord.js), a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the [Discord API](https://discord.com/developers/docs/intro), and [Lavalink](https://github.com/lavalink-devs/lavalink), a powerful audio streaming server."
     }
   },
   "autoplay": {
@@ -133,7 +133,7 @@
     "options": {
       "query": "Song name or url to play.",
       "source": "The source to play from.",
-      "play_next": "Add a new track to queue to be play it next."
+      "options": "Additional options for playing the track."
     }
   },
   "playlocal": {

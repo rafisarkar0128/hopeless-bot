@@ -1,69 +1,98 @@
 const { EmbedBuilder, ChannelType } = require("discord.js");
 const { t } = require("i18next");
-// const Context = require("@root/archive/Context.js");
-const { getCooldown } = require("@utils/index");
+
+/**
+ * A function to create an embed for missing arguments
+ * @param {import("@lib/index").DiscordClient} client
+ * @param {import("@structures/index").BaseCommand} command
+ * @param {import("@database/index").Structures.Guild} metadata
+ * @returns {EmbedBuilder}
+ */
+function getMissingArgsEmbed(client, command, metadata) {
+  let examples = [];
+  for (const example of command.details.examples) {
+    examples.push(`- ${example.replace("{prefix}", metadata.prefix)}`);
+  }
+
+  const embed = new EmbedBuilder()
+    .setColor(client.colors.error)
+    .setTitle(t("handlers:command.missingArgs", { lng: metadata.locale }))
+    .setDescription(
+      t("handlers:command.missingArgsDescription", {
+        lng: metadata.locale,
+        command: command.data.name,
+      })
+    )
+    .setFields([
+      {
+        name: t("handlers:command.usageTitle", { lng: metadata.locale }),
+        value: `\`${command.details.usage.replace("{prefix}", metadata.prefix)}\``,
+      },
+      {
+        name: t("handlers:command.examplesTitle", { lng: metadata.locale }),
+        value: examples.join("\n"),
+      },
+    ])
+    .setFooter({
+      text: t("handlers:command.syntaxFooter", { lng: metadata.locale }),
+    });
+
+  return embed;
+}
 
 /**
  * A function to handle prefix commands
  * @param {import("@lib/index").DiscordClient} client
  * @param {import("discord.js").Message<true>} message
+ * @param {import("@database/index").Structures.Guild} metadata
+ * @param {RegExp} regex
  * @returns {Promise<void>}
  */
-async function handlePrefix(client, message) {
-  // const guildConfig = await client.db.guilds.get(message.guildId);
-  // const prefix = guildConfig.prefix ?? client.config.bot.prefix;
-  const prefix = client.config.bot.prefix;
-  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const prefixRegex = new RegExp(`^(<@!?${client.user?.id}>|${escapeRegex(prefix)})\\s*`);
+async function handlePrefix(client, message, metadata, regex) {
+  if (!regex) return;
 
-  if (!prefixRegex.test(message.content)) return;
-  const match = message.content.match(prefixRegex);
-  if (!match) return;
-
-  const [matchedPrefix] = match;
-  const args = message.content.slice(matchedPrefix.length).trim().split(/ +/g);
+  const args = message.content.replace(regex, "").trim().split(/ +/g);
   const commandName = args.shift()?.toLowerCase();
   if (!commandName) return;
 
-  const locale = "en-US"; //guildConfig.locale ?? client.config.defaultLocale;
-  const errEmbed = new EmbedBuilder().setColor(client.color.Wrong);
   const command =
-    client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
+    client.commands.get(commandName) ?? client.commands.get(client.aliases.get(commandName));
   if (!command) return;
-  const { options, prefixOptions } = command;
 
-  // const ctx = new Context(message, args);
-  // ctx.guildLocale = locale;
+  const { locale } = metadata;
+  const errEmbed = new EmbedBuilder().setColor(client.colors.error);
+  const { options, prefixOptions } = command;
   const devUser = client.config.bot.devs?.includes(message.author.id);
 
   /**
    * A function to send reply and delete it afterward
-   * @param {string} text
+   * @param {string} text - The text to send
    * @returns {Promise<void>}
    */
-  const replyAndDelete = async (text) => {
+  async function replyAndDelete(text) {
     errEmbed.setDescription(text);
-    if (message.replied) {
-      await message.editReply({
-        content: "",
-        embeds: [errEmbed],
-        allowedMentions: { repliedUser: false },
-      });
-    } else {
-      await message.reply({ embeds: [errEmbed] });
-    }
-    return setTimeout(() => message.deleteReply(), 9000);
-  };
+    const reply = await message.reply({ embeds: [errEmbed] });
+    setTimeout(async () => {
+      if (message.deletable) await message.delete().catch(() => {});
+      reply.delete().catch(() => {});
+    }, 10_000);
+  }
+
+  if (prefixOptions.disabled && !devUser) {
+    return await replyAndDelete(
+      t("handlers:command.disabled", { lng: locale, command: commandName })
+    );
+  }
 
   if (options.guildOnly && !message.inGuild()) {
     return await replyAndDelete(
-      t("handlers:command.guildOnly", { lng: locale, command: command.name })
+      t("handlers:command.guildOnly", { lng: locale, command: commandName })
     );
   }
 
   if (options.permissions?.dev && !devUser) {
     return await replyAndDelete(
-      t("handlers:command.devOnly", { lng: locale, command: command.name })
+      t("handlers:command.devOnly", { lng: locale, command: commandName })
     );
   }
 
@@ -84,70 +113,55 @@ async function handlePrefix(client, message) {
       return await message.author.send({ embeds: [errEmbed] }).catch(() => null);
     }
 
-    // Checking if the client has necessary permissions to execute this command.
-    if (command.permissions?.bot) {
-      const missing = options.permissions.bot.filter((p) => !clientMember.permissions.has(p));
-      if (missing.length > 0) {
-        return await replyAndDelete(
-          t("handlers:command.botPerm", {
-            lng: locale,
-            command: command.name,
-            perms: missing.map((p) => `- **${p}**`).join("\n"),
-          })
-        );
-      }
+    const missingBotPermissions = options.permissions.bot.filter(
+      (p) => !clientMember.permissions.has(p)
+    );
+    if (missingBotPermissions.length > 0) {
+      return await replyAndDelete(
+        t("handlers:command.botPerm", {
+          lng: locale,
+          command: commandName,
+          perms: missingBotPermissions.map((p) => `- **${p}**`).join("\n"),
+        })
+      );
     }
 
-    // Checking if the user has necessary permissions to execute this command.
-    if (command.permissions?.user) {
-      const missing = options.permissions.user.filter((p) => !message.member.permissions.has(p));
-      if (missing.length > 0) {
-        return await replyAndDelete(
-          t("handlers:command.userPerm", {
-            lng: locale,
-            command: command.name,
-            perms: missing.map((p) => `- **${p}**`).join("\n"),
-          })
-        );
-      }
+    const missingUserPermissions = options.permissions.user.filter(
+      (p) => !message.member.permissions.has(p)
+    );
+    if (missingUserPermissions.length > 0) {
+      return await replyAndDelete(
+        t("handlers:command.userPerm", {
+          lng: locale,
+          command: commandName,
+          perms: missingUserPermissions.map((p) => `- **${p}**`).join("\n"),
+        })
+      );
     }
 
-    // checking for music commands.
     if (options.player?.voice) {
-      // the voice channel if user is connect to one
       const vc = message.member.voice.channel;
-
-      // checking if user is connected to a voice channel or not
       if (!vc) {
         return await replyAndDelete(
-          t("handlers:command.voiceOnly", {
-            lng: locale,
-            command: command.name,
-          })
+          t("handlers:command.voiceOnly", { lng: locale, command: commandName })
         );
       }
 
-      // checking for necessary permissions
       if (!vc.joinable || !vc.speakable) {
         return await replyAndDelete(
-          t("handlers:command.missingVoicePerm", {
-            lng: locale,
-            channel: `<#${vc.id}>`,
-          })
+          t("handlers:command.missingVoicePerm", { lng: locale, channel: `<#${vc.id}>` })
         );
       }
 
-      // checking for stage channel permissions
       if (
         vc.type === ChannelType.GuildStageVoice &&
         !vc.permissionsFor(clientMember).has("RequestToSpeak")
       ) {
         return await replyAndDelete(
-          t("handlers:command.noRequestToSpeak", { lng: locale, command: command.name })
+          t("handlers:command.noRequestToSpeak", { lng: locale, command: commandName })
         );
       }
 
-      // checking for different voice channel
       if (clientMember.voice.channel && clientMember.voice.channelId !== vc.id) {
         return await replyAndDelete(
           t("handlers:command.differentVoiceChannel", {
@@ -158,31 +172,24 @@ async function handlePrefix(client, message) {
       }
     }
 
-    // checking for active players
     if (options.player?.active) {
       const player = client.lavalink.getPlayer(message.guildId);
       if (!player) {
+        return await replyAndDelete(t("player:noPlayer", { lng: locale }));
+      }
+      if (options.player?.playing && !player.queue.current) {
         return await replyAndDelete(t("player:noPlayer", { lng: locale }));
       }
     }
   }
 
   if (prefixOptions.minArgsCount > args.length) {
-    errEmbed
-      .setTitle(t("handlers:command.missingArgs", { lng: locale }))
-      .setDescription(
-        t("handlers:command.missingArgsDescription", {
-          lng: locale,
-          command: command.name,
-          examples: command.description.examples.join("\n"),
-        })
-      )
-      .setFooter({
-        text: t("handlers:command.syntaxFooter", { lng: locale }),
-      });
-
-    await message.reply({ embeds: [errEmbed] });
-    return setTimeout(() => message.deleteReply(), 15_000);
+    const missingArgsEmbed = getMissingArgsEmbed(client, command, metadata);
+    const reply = await message.reply({ embeds: [missingArgsEmbed] });
+    return setTimeout(() => {
+      if (message.deletable) message.delete();
+      reply.delete();
+    }, 15_000);
   }
 
   if (args.includes("@everyone") || args.includes("@here")) {
@@ -190,105 +197,40 @@ async function handlePrefix(client, message) {
   }
 
   if (options.cooldown > 0) {
-    const remaining = getCooldown(client, command, message.author.id);
+    const remaining = client.utils.getCooldown(command, message.author.id);
     if (remaining > 0 && !devUser) {
       return await replyAndDelete(
-        t("handlers:command.cooldown", {
-          lng: locale,
-          time: remaining,
-          command: commandName,
-        })
+        t("handlers:command.cooldown", { lng: locale, time: remaining, command: commandName })
       );
     }
   }
 
   try {
-    return await command.executePrefix(client, message, args, { lng: locale });
+    return await command.executePrefix(client, message, args, metadata);
   } catch (error) {
-    client.logger.error(error);
-    return await replyAndDelete(t("handlers:command.error", { lng: locale, error: error.message }));
+    if (client.config.debug) client.logger.error(error);
+    else client.logger.error("An error occurred: " + error.message);
+
+    errEmbed.setDescription(t("handlers:command.error", { lng: locale, command: commandName }));
+    const messages = await message.channel.messages.fetch({ limit: 100 });
+    const messageReplies = messages.filter(
+      (msg) => msg.reference && msg.reference.messageId === message.id
+    );
+
+    // If there are replies to the original message, send the error embed in the reply
+    // then add the reply to the list of messageReplies to delete later
+    if (messageReplies && messageReplies.size > 0) {
+      const reply = await message.reply({ embeds: [errEmbed] });
+      messageReplies.set(reply.id, reply);
+    } else {
+      const reply = await message.reply({ embeds: [errEmbed] });
+      messageReplies.set(reply.id, reply);
+    }
+
+    setTimeout(() => {
+      if (message.deletable) message.delete().catch(() => {});
+      message.channel.bulkDelete(messageReplies, true).catch(() => {});
+    }, 10_000);
   }
 }
-
-// if (command.player.dj) {
-//   const dj = await this.client.db.getDj(message.guildId);
-//   if (dj?.mode) {
-//     const djRole = await this.client.db.getRoles(message.guildId);
-//     if (!djRole) {
-//       return await replyAndDelete({
-//         content: t("event.message.no_dj_role", {lng: locale,})
-//       });
-//     }
-//
-//     const hasDJRole = message.member.roles.cache.some((role) =>
-//       djRole.map((r) => r.roleId).includes(role.id)
-//     );
-//     if (
-//       !(
-//         devUser ||
-//         (hasDJRole &&
-//           !message.member.permissions.has(PermissionFlagsBits.ManageGuild))
-//       )
-//     ) {
-//       await replyAndDelete({
-//         content: t("event.message.no_dj_permission", {
-//           lng: locale
-//         })
-//       });
-//       return;
-//     }
-//   }
-// }
-
-// if (command.vote && this.client.env.TOPGG) {
-//   const voted = await this.client.topGG.hasVoted(message.author.id);
-//   if (!(devUser || voted)) {
-//     const voteBtn = new ActionRowBuilder().addComponents(
-//       new ButtonBuilder()
-//         .setLabel(t("event.message.vote_button"))
-//         .setURL(`https://top.gg/bot/${this.client.user?.id}/vote`)
-//         .setStyle(ButtonStyle.Link)
-//     );
-//
-//     return await replyAndDelete({
-//       content: t("event.message.vote_message"),
-//       components: [voteBtn]
-//     });
-//   }
-// }
-
-// const setup = await this.client.db.getSetup(message.guildId);
-// if (setup && setup.textId === message.channelId) {
-//   return this.client.emit("setupSystem", message);
-// }
-
-// const locale = await this.client.db.getLanguage(message.guildId);
-// const guild = await this.client.db.get(message.guildId);
-
-// const logs = this.client.channels.cache.get(this.client.env.LOG_COMMANDS_ID);
-// if (logs) {
-//   const embed = new EmbedBuilder()
-//     .setAuthor({
-//       name: "Prefix - Command Logs",
-//       iconURL: this.client.user?.avatarURL({ size: 2048 })
-//     })
-//     .setColor(this.client.config.color.green)
-//     .addFields(
-//       { name: "Command", value: `\`${command.name}\``, inline: true },
-//       {
-//         name: "User",
-//         value: `${message.author.tag} (\`${message.author.id}\`)`,
-//         inline: true
-//       },
-//       {
-//         name: "Guild",
-//         value: `${message.guild.name} (\`${message.guild.id}\`)`,
-//         inline: true
-//       }
-//     )
-//     .setTimestamp();
-//
-//   await logs.send({ embeds: [embed] });
-// }
-
 module.exports = { handlePrefix };

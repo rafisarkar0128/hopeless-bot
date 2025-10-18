@@ -38,13 +38,13 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").Message} message
    * @param {string[]} args
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const reply = await message.reply(t("commands:ping.pinging", { lng: metadata.lng }));
+    const reply = await message.reply(t("commands:ping.pinging", { lng: metadata.locale }));
     const responseTime = reply.createdTimestamp - message.createdTimestamp;
-    const embed = await this.getPingEmbed(client, responseTime, metadata.lng);
+    const embed = await this.getPingEmbed(client, responseTime, metadata.locale);
     await reply.edit({ content: "", embeds: [embed] });
   }
 
@@ -52,13 +52,13 @@ module.exports = class Command extends BaseCommand {
    * Execute function for this command.
    * @param {import("@structures/BotClient.js")} client
    * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {
     const reply = await interaction.deferReply({ withResponse: true });
     const responseTime = reply.resource.message.createdTimestamp - interaction.createdTimestamp;
-    const embed = await this.getPingEmbed(client, responseTime, metadata.lng);
+    const embed = await this.getPingEmbed(client, responseTime, metadata.locale);
     await interaction.followUp({ embeds: [embed] });
   }
 
@@ -78,7 +78,7 @@ module.exports = class Command extends BaseCommand {
     const seconds = Math.floor(client.uptime / 1000) % 60;
 
     // The ping embed.
-    const embed = new EmbedBuilder().setColor(client.color.Transparent).addFields([
+    const embed = new EmbedBuilder().setColor(client.colors.transparent).addFields([
       {
         name: t("commands:ping.gatewayPing", { lng }),
         value: `\`\`\`yml\n${

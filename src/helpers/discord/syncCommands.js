@@ -8,140 +8,96 @@ const { checkForChangesInCommand } = require("./checkForChanges.js");
  * @returns {Promise<void>}
  */
 async function syncCommands(client) {
+  client.logger.info("Synchronizing application commands...");
   const { guildId } = client.config.bot;
   const oldCommands = await fetchCommands(client);
 
-  const guildCommands = [];
-  const globalCommands = [];
+  // If in production mode, directly push the changes to Discord
+  if (client.config.mode === "production" || oldCommands.length === 0) {
+    const guildCommands = [];
+    const globalCommands = [];
 
-  for (const [name, command] of client.commands) {
-    if (client.config.bot.debug) {
-      client.logger.debug(`${chalk.green("ADDED")} command ${chalk.yellow(command.data.name)}`);
+    // separate global and guild commands
+    for (const command of client.applicationCommands) {
+      if (command.global) globalCommands.push(command);
+      else guildCommands.push(command);
     }
 
-    if (command.options.global) globalCommands.push(command.data.toJSON());
-    else guildCommands.push(command.data.toJSON());
+    // Set the commands in Discord
+    if (guildCommands.length > 0) {
+      await client.application.commands.set(guildCommands, guildId);
+    }
+    if (globalCommands.length > 0) {
+      await client.application.commands.set(globalCommands);
+    }
   }
 
-  await client.application.commands.set(globalCommands);
-  await client.application.commands.set(guildCommands, guildId);
-
-  if (oldCommands.length >= 0) {
+  // If in development mode, log the changes then push to Discord
+  else if (client.config.mode === "development") {
+    // Check for commands that are in Discord but not in the codebase anymore
     for (const oldCommand of oldCommands) {
-      client.logger.debug(`Found old command: ${oldCommand.name} -->`);
-      // console.log(oldCommand);
+      const newCommand = client.applicationCommands.find((c) => c.name === oldCommand.name);
+
+      // If the command is deleted, add it to the delete array
+      if (!newCommand) {
+        await client.application.commands.delete(
+          oldCommand.id,
+          oldCommand.global ? undefined : guildId
+        );
+        client.logger.info(`${chalk.green("DELETED")} command ${chalk.yellow(oldCommand.name)}`);
+      }
+    }
+
+    // Check for new commands in codebase which are not in Discord and commands that have been modified
+    for (const newCommand of client.applicationCommands) {
+      const oldCommand = oldCommands.find((c) => c.name === newCommand.name);
+
+      // If the command is new, add it
+      if (!oldCommand) {
+        await client.application.commands.create(
+          newCommand,
+          newCommand.global ? undefined : guildId
+        );
+
+        client.logger.info(`${chalk.green("ADDED")} command ${chalk.yellow(newCommand.name)}`);
+        continue;
+      }
+
+      // If the command's scope (global/guild) has changed, delete the old one and add the new one
+      if (oldCommand.global !== newCommand.global) {
+        await client.application.commands.delete(
+          oldCommand.id,
+          oldCommand.global ? undefined : guildId
+        );
+        await client.application.commands.create(
+          newCommand,
+          newCommand.global ? undefined : guildId
+        );
+
+        client.logger.info(
+          `${chalk.green("UPDATED")} command ${chalk.yellow(
+            newCommand.name
+          )} (scope changed from ${oldCommand.global ? "global" : "guild"} to ${
+            newCommand.global ? "global" : "guild"
+          })`
+        );
+        continue;
+      }
+
+      // If the command exists, check for changes then update it
+      if (checkForChangesInCommand(oldCommand, newCommand)) {
+        await client.application.commands.edit(
+          oldCommand.id,
+          newCommand,
+          oldCommand.global ? undefined : guildId
+        );
+
+        client.logger.info(
+          `${chalk.green("UPDATED")} command ${chalk.yellow(newCommand.name)} (modified)`
+        );
+      }
     }
   }
-
-  // This section is for the very first time when the commands are not registered
-  // or when the bot's commands are removed from discord
-  // if (oldCommands.length <= 0) {
-  //   const guildCommands = [];
-  //   const globalCommands = [];
-  //
-  //   client.commands.forEach((command) => {
-  //     // client.logger.info(
-  //     //   `${chalk.greenBright("ADDED")} command ${chalk.yellowBright(command.data.name)}`
-  //     // );
-  //
-  //     if (command.global) globalCommands.push(command.data.toJSON());
-  //     else guildCommands.push(command.data.toJSON());
-  //   });
-  //
-  //   if (guildCommands.length > 0) {
-  //     await client.application.commands.set(guildCommands, guildId);
-  //   }
-  //
-  //   if (globalCommands.length > 0) {
-  //     await client.application.commands.set(globalCommands);
-  //   }
-  // }
-
-  // This section is for the rest of the time when the commands are already registered
-  // and we need to check for changes
-  // else {
-  //   // Checking for new commands and pushing them to discord
-  //   const commandsToAdd = client.commands
-  //     .filter((command) => !oldCommands.some((c) => c.data.name === command.data.name))
-  //     .map((c) => c);
-  //
-  //   for (const command of commandsToAdd) {
-  //     try {
-  //       if (command.global) {
-  //         await client.application.commands.create(command.data);
-  //       } else {
-  //         await client.application.commands.create(command.data, guildId);
-  //       }
-  //
-  //       if (showSyncLogs) {
-  //         client.logger.info(
-  //           `[${chalk.greenBright("ADDED")}]: command ${chalk.cyanBright(command.data.name)}`
-  //         );
-  //       }
-  //     } catch (error) {
-  //       client.logger.error(error);
-  //     }
-  //   }
-  //
-  //   // Checking old commands and deleting them if the file is removed or command is disabled
-  //   const commandsToDelete = oldCommands
-  //     .filter((command) => !client.commands.some((c) => c.data.name === command.data.name))
-  //     .map((c) => c);
-  //
-  //   for (const command of commandsToDelete) {
-  //     try {
-  //       await command.data.delete();
-  //
-  //       if (showSyncLogs) {
-  //         client.logger.info(
-  //           `[${chalk.redBright("DELETED")}]: command ${chalk.cyanBright(command.data.name)}`
-  //         );
-  //       }
-  //     } catch (error) {
-  //       client.logger.error(error);
-  //     }
-  //   }
-  //
-  //   // Checking for changes in commands and pushing the changes to discord
-  //   const commandsToModify = client.commands
-  //     .filter((command) => oldCommands.some((c) => c.data.name === command.data.name))
-  //     .map((c) => c);
-  //
-  //   for (const newCommand of commandsToModify) {
-  //     try {
-  //       const oldCommand = oldCommands.find((c) => c.data.name === newCommand.data.name);
-  //       let isChanged = false;
-  //
-  //       // Check if the command is global or not
-  //       if (oldCommand.global !== newCommand.global) {
-  //         isChanged = true;
-  //       }
-  //
-  //       // Check if the command has been modified or not
-  //       else if (checkForChangesInCommand(oldCommand, newCommand)) {
-  //         isChanged = true;
-  //       }
-  //
-  //       if (isChanged) {
-  //         await oldCommand.data.delete();
-  //
-  //         if (newCommand.global) {
-  //           await client.application.commands.create(newCommand.data);
-  //         } else {
-  //           await client.application.commands.create(newCommand.data, guildId);
-  //         }
-  //
-  //         if (showSyncLogs) {
-  //           client.logger.info(
-  //             `[${chalk.yellowBright("MODIFIED")}]: command ${chalk.cyanBright(newCommand.data.name)}`
-  //           );
-  //         }
-  //       }
-  //     } catch (error) {
-  //       client.logger.error(error);
-  //     }
-  //   }
-  // }
 
   client.logger.info("Application commands have been synchronized.");
 }

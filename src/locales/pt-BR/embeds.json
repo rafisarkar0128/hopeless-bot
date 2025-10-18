@@ -4,11 +4,12 @@
   },
 
   "bot": {
-    "description": "Um aplicativo _Multipurpose_ do Discord para todas as suas necessidades com **Serviços Premium**. Para mais informações, acesse {{website}}"
+    "description": "Um aplicativo _multifuncional_ do Discord para todas as suas necessidades com **Serviços Premium**. Para mais informações, acesse {{website}}."
   },
 
   "mention": {
     "title": "Você acabou de me mencionar?",
-    "description": "Eu sou {{user}}, um bot do Discord desenvolvido por {{owner}} para gerenciar e moderar servidores do Discord. Para mais informações ou ajuda, use **`/help`**."
+    "description": "Meu prefixo para este servidor é **__{{prefix}}__**.\nQuer mais informações? Então use `{{prefix}}help` | `/help`.",
+    "footer": "Fique seguro, continue incrível!"
   }
 }

@@ -8,18 +8,9 @@ const config = require("@src/config.js");
  */
 
 /**
- * @typedef {Object} CommandParameters The command parameters object.
- * @property {string} name The name of the parameter.
- * @property {string} description The description of the parameter.
- * @property {string} type The type of the parameter.
- * @property {boolean} [required] Whether the parameter is required or not.
- */
-
-/**
  * @typedef {Object} CommandDetails The command details object.
  * @property {string} [usage] The usage of the command.
  * @property {string[]} [examples] examples for this command.
- * @property {Array<CommandParameters>} [params] The parameters for this command.
  */
 
 /**
@@ -34,8 +25,10 @@ const config = require("@src/config.js");
 /**
  * @typedef {object} CommandPermissions Command permissions object for commands.
  * @property {boolean} dev Whether this command is a dev only command or not.
- * @property {import("discord.js").PermissionResolvable|string[]} bot Permissions required by the bot to execute this command.
- * @property {import("discord.js").PermissionResolvable|string[]} user Permissions required by the user to run this command.
+ * @property {import("discord.js").PermissionResolvable|string[]} bot
+ * Permissions required by the bot to execute this command.
+ * @property {import("discord.js").PermissionResolvable|string[]} user
+ * Permissions required by the user to run this command.
  * Will be used as **default_member_permissions** for the slash command.
  */
 
@@ -45,8 +38,7 @@ const config = require("@src/config.js");
  * @property {number} [cooldown] Command cooldown amount in seconds
  * @property {boolean} [global] Whether this command is a global command
  * or not (mainly for slash commands).
- * @property {{slash?: boolean, prefix?: boolean}|boolean} [disabled] Whether the prefix, slash,
- * or the whole command is disabled or not
+ * @property {boolean} [disabled] Whether the command is disabled or not
  * @property {boolean} [guildOnly] Whether this command could be used outside of guilds (servers).
  * @property {boolean} [testOnly]  Whether this command is a test only command.
  * Means it will only be able to run in test server or by verified testers.
@@ -59,13 +51,14 @@ const config = require("@src/config.js");
 
 /**
  * @typedef {Object} PrefixCommandOptions Options for prefix commands.
+ * @property {boolean} [disabled] Whether the prefix command is disabled or not.
  * @property {string[]} [aliases] The aliases for the command.
  * @property {number} [minArgsCount] Minimum number of arguments required to run this command.
  */
 
 /**
  * @typedef {Object} SlashCommandOptions Options for slash commands.
- * @property {boolean} [ephemeral] Whether the command is ephemeral or not.
+ * @property {boolean} [disabled] Whether the slash command is disabled or not.
  */
 
 /**
@@ -103,7 +96,7 @@ class BaseCommand {
     this.options.category = metadata.options?.category ?? "general";
     this.options.cooldown = metadata.options?.cooldown ?? config.bot.defaultCooldown;
     this.options.global = metadata.options?.global ?? config.bot.global;
-    this.options.disabled = metadata.options?.disabled ?? { slash: false, prefix: false };
+    this.options.disabled = metadata.options?.disabled ?? false;
     this.options.guildOnly = metadata.options?.guildOnly ?? false;
     this.options.testOnly = metadata.options?.testOnly ?? false;
     this.options.premium = metadata.options?.premium ?? false;
@@ -146,6 +139,7 @@ class BaseCommand {
      * @type {PrefixCommandOptions}
      */
     this.prefixOptions = {
+      disabled: metadata?.prefixOptions?.disabled ?? false,
       aliases: metadata?.prefixOptions?.aliases ?? [],
       minArgsCount: metadata?.prefixOptions?.minArgsCount ?? 0,
     };
@@ -155,7 +149,7 @@ class BaseCommand {
      * @type {SlashCommandOptions}
      */
     this.slashOptions = {
-      ephemeral: metadata?.slashOptions?.ephemeral ?? false,
+      disabled: metadata?.slashOptions?.disabled ?? false,
     };
 
     /**
@@ -165,7 +159,6 @@ class BaseCommand {
     this.details = {
       usage: metadata?.details?.usage ?? "No usage provided",
       examples: metadata?.details?.examples ?? ["No examples provided"],
-      params: metadata?.details?.params ?? [],
     };
   }
 

@@ -20,10 +20,7 @@ module.exports = class Command extends BaseCommand {
         category: "general",
         cooldown: 5,
         global: true,
-        disabled: {
-          slash: false,
-          prefix: false,
-        },
+        disabled: false,
         guildOnly: false,
         testOnly: false,
         premium: false,
@@ -41,20 +38,9 @@ module.exports = class Command extends BaseCommand {
           djPerm: null,
         },
       },
-      prefixOptions: { aliases: [], minArgsCount: 0 },
-      slashOptions: { ephemeral: false },
-      details: {
-        usage: "",
-        examples: [],
-        params: [
-          {
-            name: "",
-            description: "",
-            type: "",
-            required: true,
-          },
-        ],
-      },
+      prefixOptions: { disabled: false, aliases: [], minArgsCount: 0 },
+      slashOptions: { disabled: false },
+      details: { usage: "", examples: [] },
     });
   }
 
@@ -63,7 +49,7 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").Message} message
    * @param {string[]} args
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
@@ -74,7 +60,7 @@ module.exports = class Command extends BaseCommand {
    * Execute function for this slash command.
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   * @param {Object} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {

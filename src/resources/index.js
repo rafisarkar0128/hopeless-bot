@@ -1,13 +1,15 @@
-const { Events } = require("./events");
-const { Permissions } = require("./permissions");
-const { Languages } = require("./languages");
-const { Music } = require("./music");
-const { Categories } = require("./categories");
+const { events } = require("./events");
+const { permissions } = require("./permissions");
+const { languages } = require("./languages");
+const { music } = require("./music");
+const { categories } = require("./categories");
+const { emojis } = require("./emojis");
 
 module.exports = {
-  Events,
-  Permissions,
-  Languages,
-  Music,
-  Categories,
+  events,
+  permissions,
+  languages,
+  music,
+  categories,
+  emojis,
 };

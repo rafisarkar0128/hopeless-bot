@@ -1,4 +1,4 @@
-const { BaseEvent } = require("@src/structures");
+const { BaseEvent } = require("@structures/index");
 const chalk = require("chalk");
 
 /**
@@ -15,14 +15,14 @@ module.exports = class Event extends BaseEvent {
 
   /**
    * Execute function for this event
-   * @param {import("@src/lib").DiscordClient} client
+   * @param {import("@lib/index").DiscordClient} client
    * @param {import("lavalink-client").LavalinkNode} node
    * @param {Error} error
    * @param {unknown} [payload]
    * @returns {Promise<void>}
    */
   async execute(client, node, error, payload) {
-    client.logger.error(`Lavalink node (${chalk.magenta(node.id)}) errored:`, error);
-    // console.error(error);
+    client.logger.error(`Lavalink node (${chalk.magenta(node.id)}) errored.`);
+    if (client.config.debug) console.error(error);
   }
 };

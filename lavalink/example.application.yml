@@ -18,7 +18,7 @@ lavalink:
     soundcloudSearchEnabled: true
     gc-warnings: true
   plugins:
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.0" # LavaSrc - for extra sources like deezer, spotify, etc. https://github.com/topi314/LavaSrc
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.1" # LavaSrc - for extra sources like deezer, spotify, etc. https://github.com/topi314/LavaSrc
       repository: "https://maven.lavalink.dev/releases"
     - dependency: "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0" # https://github.com/topi314/LavaSearch
       repository: "https://maven.lavalink.dev/releases"
@@ -137,11 +137,12 @@ plugins:
       formats: ["FLAC", "MP3_320", "MP3_256", "MP3_128", "MP3_64", "AAC_64"] # the formats you want to use for the deezer tracks. "FLAC", "MP3_320", "MP3_256" & "AAC_64" are only available for premium users and require a valid arl
     youtube:
       countryCode: "US"
+      language: "en" # the language code you want to use for searching & lyrics.
+    yandexmusic:
+      accessToken: "<insert>"
       playlistLoadLimit: 1 # The number of pages at 100 tracks each
       albumLoadLimit: 1 # The number of pages at 50 tracks each
       artistLoadLimit: 1 # The number of pages at 10 tracks each
-    yandexmusic:
-      accessToken: "<insert>"
     tidal:
       countryCode: "US" # the country code for accessing region-specific content on Tidal (ISO 3166-1 alpha-2).
       searchLimit: 6 # How many search results should be returned

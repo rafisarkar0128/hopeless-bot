@@ -13,7 +13,7 @@ class LavalinkClient extends LavalinkManager {
    */
   constructor(client) {
     super({
-      nodes: client.config.music.nodes,
+      nodes: client.config.lavalink.nodes,
       sendToShard: (guildId, payload) => {
         client.guilds.cache.get(guildId)?.shard?.send(payload);
       },
@@ -27,14 +27,14 @@ class LavalinkClient extends LavalinkManager {
         minAutoPlayMs: 10_000,
         applyVolumeAsFilter: false,
         clientBasedPositionUpdateInterval: 50,
-        defaultSearchPlatform: client.config.music.defaultSearchPlatform,
+        defaultSearchPlatform: client.config.lavalink.defaultSearchPlatform,
         requesterTransformer: requesterTransformer,
         onDisconnect: {
           autoReconnect: true,
           destroyPlayer: false,
         },
         onEmptyQueue: {
-          destroyAfterMs: client.config.music.idleTime,
+          destroyAfterMs: client.config.lavalink.idleTime,
           autoPlayFunction: handleAutoplay,
         },
         useUnresolvedData: true,
@@ -70,8 +70,8 @@ class LavalinkClient extends LavalinkManager {
    * @returns {string}
    */
   getColor(source) {
-    const { defaultEmbedColor } = this.client.config.music;
-    const { Transparent } = this.client.color;
+    const { defaultEmbedColor } = this.client.config.lavalink;
+    const { Transparent } = this.client.colors;
     const colors = {
       applemusic: "#FA243C",
       bandcamp: "#408294",
