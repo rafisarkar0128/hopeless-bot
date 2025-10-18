@@ -110,7 +110,7 @@ class GuildManager extends BaseManager {
 
     // Check if the data has been created successfully
     const result = await this.coll.insertOne(data);
-    if (result.insertedCount === 0) {
+    if (!result.acknowledged) {
       throw new Error(`Failed to create guild config with id "${_id}".`);
     }
 
