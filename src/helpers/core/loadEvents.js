@@ -10,17 +10,9 @@ const path = require("path");
  * @example await client.loadEvents();
  */
 async function loadEvents(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
+  if (client.config.debug) client.logger.debug(`Loading event modules....`);
 
-  if (client.config.bot.debug) {
-    client.logger.debug(
-      `Loading event modules from ${chalk.cyan(path.join(process.cwd(), "src", "events"))}`
-    );
-  }
-
-  const { Events } = client.resources;
+  const { events } = client.resources;
   const files = await loadFiles("src/events", [".js"]);
   let i = 0;
   let disabledCount = 0;
@@ -102,7 +94,7 @@ async function loadEvents(client) {
       }
 
       // checking name's validity
-      if (!Events.includes(event.name)) {
+      if (!events.includes(event.name)) {
         throw new Error(`"${event.name}" is not valid event name.`);
       }
 
@@ -139,7 +131,7 @@ async function loadEvents(client) {
       client.logger.error(`Failed to load event ${fileName}`);
 
       // Show detailed error only in debug mode
-      if (client.config.bot.debug) {
+      if (client.config.debug) {
         client.logger.error(`Detailed error for ${fileName}:\n`, error);
       }
 

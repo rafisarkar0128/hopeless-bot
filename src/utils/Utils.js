@@ -1,5 +1,6 @@
 const chalk = require("chalk");
-const { t } = require("i18next");
+const { getCooldown } = require("./command/getCooldown");
+const { getPlayerButtons } = require("./lavalink/getPlayerButtons");
 
 /**
  * A utility class for various helper functions
@@ -8,10 +9,25 @@ const { t } = require("i18next");
 class Utils {
   constructor(client) {
     /**
-     * Base Client property for this class
+     * Base Discord Client property for this class
      * @type {import("@lib/index").DiscordClient}
      */
     this.client = client;
+
+    /**
+     * A function to set, get and delete command cooldowns
+     * @param {import("@structures/index").BaseCommand} command - The command object
+     * @param {string} userId - The user id
+     * @returns {number} expiration timestamp (in milliseconds)
+     */
+    this.getCooldown = (command, userId) => getCooldown(this.client.cooldowns, command, userId);
+
+    /**
+     * A function to generate new buttons for the music player
+     * @param {import("lavalink-client").Player} player - The player to get buttons for.
+     * @returns {import("discord.js").ActionRowBuilder[]} Array of action rows with buttons.
+     */
+    this.getPlayerButtons = (player) => getPlayerButtons(client, player);
   }
 
   /**
@@ -265,70 +281,6 @@ class Utils {
    */
   formatNumber(number) {
     return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  }
-
-  /**
-   * A function to paginate mutiple embeds together.
-   * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   * @param {import("discord.js").EmbedBuilder[]} embeds
-   * @param {string} lng
-   * @returns {Promise<void>}
-   */
-  async paginate(interaction, embeds, lng) {
-    let page = 0;
-    const totalPages = embeds.length;
-    const msgOptions = {
-      embeds: [embeds[page]],
-      components: [this.buttons.getPage(page, totalPages)],
-    };
-
-    if (interaction.deferred || interaction.replied) {
-      await interaction.editReply(msgOptions);
-    } else {
-      await interaction.reply(msgOptions);
-    }
-
-    const collector = interaction.channel.createMessageComponentCollector();
-    collector.on("collect", async (button) => {
-      if (button.user.id !== interaction.user.id) {
-        return await button.reply({
-          content: t("misc.buttons.notAuthor", { lng }),
-          flags: "Ephemeral",
-        });
-      }
-
-      switch (button.customId) {
-        case "page_first": {
-          page = 0;
-          break;
-        }
-        case "page_last": {
-          page = embeds.length - 1;
-          break;
-        }
-        case "page_back": {
-          page--;
-          break;
-        }
-        case "page_next": {
-          page++;
-          break;
-        }
-        case "page_stop": {
-          await button.deferUpdate();
-          return collector.stop();
-        }
-      }
-
-      await button.update({
-        embeds: [embeds[page]],
-        components: [this.buttons.getPage(page, totalPages)],
-      });
-    });
-
-    collector.on("end", async () => {
-      await interaction.deleteReply().catch(() => null);
-    });
   }
 }
 

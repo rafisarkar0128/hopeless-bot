@@ -1,5 +1,5 @@
 // Music resources to use with the music system
-const Music = {
+const music = {
   // List of sources
   sources: [
     "applemusic",
@@ -11,7 +11,6 @@ const Music = {
     "soundcloud",
     "spotify",
     "tidal",
-    "twitch",
     "yandexmusic",
     "vkmusic",
     "youtube",
@@ -81,4 +80,4 @@ const Music = {
   ],
 };
 
-module.exports = { Music };
+module.exports = { music };

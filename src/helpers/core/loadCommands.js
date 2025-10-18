@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const { table } = require("table");
 const { loadFiles } = require("@utils/index.js");
-const { Collection } = require("discord.js");
+const { Collection, PermissionsBitField } = require("discord.js");
 const path = require("path");
 
 /**
@@ -10,17 +10,9 @@ const path = require("path");
  * @returns {Promise<void>}
  */
 async function loadCommands(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
+  if (client.config.debug) client.logger.debug(`Loading event modules....`);
 
-  if (client.config.bot.debug) {
-    client.logger.debug(
-      `Loading event modules from ${chalk.cyan(path.join(process.cwd(), "src", "commands"))}`
-    );
-  }
-
-  const { Categories, Permissions } = client.resources;
+  const { categories, permissions } = client.resources;
   const files = await loadFiles("src/commands", [".js"]);
   let i = 0;
   let disabledCount = 0;
@@ -31,11 +23,10 @@ async function loadCommands(client) {
   client.aliases.clear();
   client.cooldowns.clear();
 
-  // Pre-calculate the maximum filename length for consistent formatting
+  // Pre-calculate the maximum filename and category name length for consistent formatting
   const maxFileNameLength = Math.max(...files.map((f) => path.basename(f).length), 12);
-  // Pre-calculate the maximum category name length for consistent formatting
   const maxCategoryNameLength = Math.max(
-    ...Object.getOwnPropertyNames(Categories).map((c) => c.length),
+    ...Object.getOwnPropertyNames(categories).map((c) => c.length),
     8
   );
 
@@ -85,7 +76,7 @@ async function loadCommands(client) {
   };
 
   for (const file of files) {
-    const fileName = path.basename(file);
+    const fileName = path.basename(file, ".js");
     try {
       const Command = require(file);
       /**
@@ -93,10 +84,9 @@ async function loadCommands(client) {
        * @type {import("@structures/index").BaseCommand}
        */
       const cmd = new Command();
-      const { data, options, prefixOptions, slashOptions } = cmd;
 
       // Check if the command is disabled & skipping it
-      if (typeof options.disabled === "boolean" && options.disabled) {
+      if (cmd.options.disabled) {
         disabledCount++;
         if (client.config.showTable.command) {
           tableData.push([
@@ -107,48 +97,73 @@ async function loadCommands(client) {
             chalk.gray(" DISABLED "),
           ]);
         }
+        client.commands.set(cmd.data.name || fileName, cmd);
+
+        // If command data is present, still add it to applicationCommands for syncing
+        if (cmd.data) {
+          // setting default permissions for slash commands
+          if (
+            Array.isArray(cmd.options.permissions.user) &&
+            cmd.options.permissions.user.length > 0
+          ) {
+            cmd.data.setDefaultMemberPermissions(
+              new PermissionsBitField(cmd.options.permissions.user).bitfield
+            );
+          }
+          client.applicationCommands.push({
+            ...cmd.data?.toJSON(),
+            global: client.config.bot.global ? cmd.options.global : false,
+          });
+        }
         continue;
       }
 
       // checking if category is valid and wheither whole category is disabled
-      if (Categories[options.category]?.enabled === false) continue;
-      if (options.category && !Object.keys(Categories).includes(options.category)) {
-        throw new Error(`"${options.category}" is not a valid command category.`);
+      if (categories[cmd.options.category]?.enabled === false) continue;
+      if (cmd.options.category && !Object.keys(categories).includes(cmd.options.category)) {
+        throw new Error(`"${cmd.options.category}" is not a valid command category.`);
       }
 
       // validating and setting cooldown
-      if (options.cooldown && typeof options.cooldown !== "number") {
+      if (cmd.options.cooldown && typeof cmd.options.cooldown !== "number") {
         throw new TypeError(`Command coodown must be a number.`);
       }
-      if (options.cooldown > 0) {
-        client.cooldowns.set(data.name, new Collection());
+      if (cmd.options.cooldown > 0) {
+        client.cooldowns.set(cmd.data.name || fileName, new Collection());
       }
 
       // checking if bot permissions are valid
-      if (!Array.isArray(options.permissions.bot)) {
+      if (!Array.isArray(cmd.options.permissions.bot)) {
         throw new TypeError(`Command permissions for bot must be an array of strings.`);
       }
-      for (const p of options.permissions.bot) {
-        if (!Permissions.includes(p)) {
+      for (const p of cmd.options.permissions.bot) {
+        if (!permissions.includes(p)) {
           throw new RangeError(`"${p}" is not a valid bot permission.`);
         }
       }
 
       // checking if user permissions are valid
-      if (!Array.isArray(options.permissions.user)) {
+      if (!Array.isArray(cmd.options.permissions.user)) {
         throw new TypeError(`Command permissions for user must be an array of strings.`);
       }
-      for (const p of options.permissions.user) {
-        if (!Permissions.includes(p)) {
+      for (const p of cmd.options.permissions.user) {
+        if (!permissions.includes(p)) {
           throw new RangeError(`"${p}" is not a valid user permission.`);
         }
       }
 
+      // setting default permissions for slash commands
+      if (cmd.options.permissions.user.length > 0) {
+        cmd.data.setDefaultMemberPermissions(
+          new PermissionsBitField(cmd.options.permissions.user).bitfield
+        );
+      }
+
       // checking if aliases are correct
-      if (!Array.isArray(prefixOptions.aliases)) {
+      if (!Array.isArray(cmd.prefixOptions.aliases)) {
         throw new TypeError(`Command aliases must be an array of strings.`);
       }
-      for (const alias of prefixOptions.aliases) {
+      for (const alias of cmd.prefixOptions.aliases) {
         if (typeof alias !== "string") {
           throw new TypeError(`Command alias must be a string.`);
         }
@@ -156,17 +171,20 @@ async function loadCommands(client) {
         if (aliasExist) {
           throw new Error(`Command alias "${alias}" is already in use for "${aliasExist}".`);
         }
-        client.aliases.set(alias, data.name);
+        client.aliases.set(alias, cmd.data.name);
       }
 
       // checking for valid minArgsCount
-      if (typeof prefixOptions.minArgsCount !== "number" || prefixOptions.minArgsCount < 0) {
+      if (
+        typeof cmd.prefixOptions.minArgsCount !== "number" ||
+        cmd.prefixOptions.minArgsCount < 0
+      ) {
         throw new TypeError(`Command minArgsCount must be a non-negative number.`);
       }
 
       // checking if prefix command execute function is valid
       if (
-        options.disabled?.prefix &&
+        !cmd.prefixOptions.disabled &&
         (!cmd.executePrefix || typeof cmd.executePrefix !== "function")
       ) {
         throw new Error(`Execute function for prefix command is missing.`);
@@ -174,7 +192,7 @@ async function loadCommands(client) {
 
       // checking if slash command execute function is valid
       if (
-        options.disabled?.slash &&
+        !cmd.slashOptions.disabled &&
         (!cmd.executeSlash || typeof cmd.executeSlash !== "function")
       ) {
         throw new Error(`Execute function for slash command is missing.`);
@@ -188,7 +206,11 @@ async function loadCommands(client) {
 
       i++;
       client.commands.set(cmd.data.name, cmd);
-      client.applicationCommands.push(cmd.data?.toJSON());
+      client.applicationCommands.push({
+        ...cmd.data?.toJSON(),
+        global: cmd.options.global,
+      });
+
       if (client.config.showTable.command) {
         tableData.push([
           cmd.data.name,
@@ -202,10 +224,10 @@ async function loadCommands(client) {
       errorCount++;
 
       // Always show a simple error message
-      client.logger.error(`Failed to load command ${fileName}`);
+      client.logger.error(`Failed to load command ${chalk.yellow(fileName)}`);
 
       // Show detailed error only in debug mode
-      if (client.config.bot.debug) {
+      if (client.config.debug) {
         client.logger.error(`Detailed error for ${fileName}:\n`, error);
       }
 

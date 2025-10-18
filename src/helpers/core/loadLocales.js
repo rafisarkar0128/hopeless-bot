@@ -12,15 +12,7 @@ const chalk = require("chalk");
  * await client.helpers.loadLocales(client);
  */
 async function loadLocales(client) {
-  if (!client || typeof client !== "object") {
-    throw new Error("Client is not defined or not an object.");
-  }
-
-  if (client.config.bot.debug) {
-    client.logger.debug(
-      `Loading locales from ${chalk.cyan(join(process.cwd(), "src", "locales"))}`
-    );
-  }
+  if (client.config.debug) client.logger.debug(`Loading locales....`);
 
   // initializing i18next with i18next-fs-backend
   await i18next.use(Backend).init({
@@ -32,14 +24,13 @@ async function loadLocales(client) {
     fallbackLng: ["en-US"],
     lng: client.config.defaultLocale ?? "en-US",
     interpolation: { escapeValue: false },
-    preload: readdirSync(join(process.cwd(), "src", "locales")).filter((file) => {
-      const isDirectory = lstatSync(join(process.cwd(), "src", "locales", file)).isDirectory();
-      const langFiles = readdirSync(join(process.cwd(), "src", "locales", file));
-      if (isDirectory && langFiles.length > 0) return true;
+    preload: readdirSync(join(process.cwd(), "src/locales")).filter((dir) => {
+      const dirPath = join(process.cwd(), "src/locales", dir);
+      return lstatSync(dirPath).isDirectory() && readdirSync(dirPath).length > 0;
     }),
     backend: {
-      loadPath: join(process.cwd(), "src", "locales", "{{lng}}/{{ns}}.json"),
-      addPath: join(process.cwd(), "src", "locales", "{{lng}}/{{ns}}.missing.json"),
+      loadPath: join(process.cwd(), "src/locales", "{{lng}}/{{ns}}.json"),
+      addPath: join(process.cwd(), "src/locales", "{{lng}}/{{ns}}.missing.json"),
     },
   });
 

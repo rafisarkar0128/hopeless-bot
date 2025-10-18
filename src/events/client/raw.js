@@ -1,4 +1,4 @@
-const { BaseEvent } = require("@src/structures");
+const { BaseEvent } = require("@structures/index");
 
 /**
  * A new Event extended from BaseEvent
@@ -6,21 +6,17 @@ const { BaseEvent } = require("@src/structures");
  */
 module.exports = class Event extends BaseEvent {
   constructor() {
-    super({
-      name: "raw",
-    });
+    super({ name: "raw" });
   }
 
   /**
    * Execute function for this event
-   * @param {import("@structures/BotClient.js")} client
+   * @param {import("@lib/index").DiscordClient} client
    * @param  {import("discord.js").GatewayDispatchPayload} d
    * @returns {Promise<void>}
    */
   async execute(client, d) {
-    if (client.lavalink) {
-      // sending raw voice data to the lavalink manager;
-      return await client.lavalink.sendRawData(d);
-    }
+    // sending raw voice data to the lavalink manager;
+    await client.lavalink.sendRawData(d);
   }
 };

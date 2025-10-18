@@ -9,11 +9,13 @@ async function handleAutocomplete(client, interaction) {
 
   if (!command) return;
   if (!command.autocomplete) return;
+  if (typeof command.autocomplete !== "function") return;
 
   try {
-    return await command.autocomplete(client, interaction);
+    await command.autocomplete(client, interaction);
   } catch (error) {
-    null;
+    client.logger.error("Error handling autocomplete command.");
+    if (client.config.debug) client.logger.error(error);
   }
 }
 

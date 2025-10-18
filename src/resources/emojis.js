@@ -1,4 +1,4 @@
-module.exports = {
+const emojis = {
   // Emojis for general use
   normal: {
     error: "❌",
@@ -98,3 +98,5 @@ module.exports = {
     loading: "🔄️",
   },
 };
+
+module.exports = { emojis };

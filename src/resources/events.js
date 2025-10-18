@@ -1,5 +1,5 @@
 // Event names for validation
-const Events = [
+const events = [
   // Discord Events from "discord.js" package
   "applicationCommandPermissionsUpdate",
   "autoModerationActionExecution",
@@ -120,4 +120,4 @@ const Events = [
   "resumed",
 ];
 
-module.exports = { Events };
+module.exports = { events };

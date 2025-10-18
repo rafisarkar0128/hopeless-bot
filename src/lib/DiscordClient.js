@@ -1,8 +1,10 @@
 const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const { Logger } = require("./Logger.js");
 const { Utils } = require("@utils/index");
+const { Helpers } = require("@helpers/index.js");
+const { Handlers } = require("@handlers/index.js");
 const { LavalinkClient } = require("./LavalinkClient.js");
-const { DatabaseManager } = require("@src/database/DatabaseManager.js");
+const { DatabaseManager } = require("@database/index");
 const Genius = require("genius-lyrics");
 
 /**
@@ -54,31 +56,13 @@ class DiscordClient extends Client {
      * Collection of colors for embeds
      * @type {import("@resources/colors.js")}
      */
-    this.color = require("@resources/colors.js");
-
-    /**
-     * Collection of emojies to use with messages
-     * @type {import("@resources/emojis.js")}
-     */
-    this.emoji = require("@resources/emojis.js");
+    this.colors = require("@resources/colors.js");
 
     /**
      * Resources to use for various purposes
      * @type {import("@resources/index.js")}
      */
     this.resources = require("@resources/index.js");
-
-    /**
-     * The helpers for the client
-     * @type {import("@helpers/index.js")}
-     */
-    this.helpers = require("@helpers/index.js");
-
-    /**
-     * The handlers for this bot
-     * @type {import("@handlers/index.js")}
-     */
-    this.handlers = require("@handlers/index.js");
 
     /**
      * A collection to store all the commands
@@ -94,13 +78,13 @@ class DiscordClient extends Client {
 
     /**
      * A collection to store cooldown data
-     * @type {Collection<string, Collection<string, string>>}
+     * @type {Collection<string, Collection<string, number>>}
      */
     this.cooldowns = new Collection();
 
     /**
      * An array to hold the application command data (slash, context etc.)
-     * @type {import("discord.js").ApplicationCommandData[]}
+     * @type {(import("discord.js").RESTPostAPIApplicationCommandsJSONBody & { global: boolean })[]}
      */
     this.applicationCommands = [];
 
@@ -111,37 +95,46 @@ class DiscordClient extends Client {
     this.deletedMessages = [];
 
     /**
-     * The utility tools manager for the bot
-     * @type {Utils}
-     */
-    this.utils = new Utils(this);
-
-    /**
      * The log manager for the bot
      * @type {Logger}
      */
     this.logger = new Logger();
 
     /**
+     * The helpers for the client
+     * @type {Helpers}
+     */
+    this.helpers = new Helpers(this);
+
+    /**
+     * The handlers for this bot
+     * @type {Handlers}
+     */
+    this.handlers = new Handlers(this);
+
+    /**
+     * The utility tools manager for the bot
+     * @type {Utils}
+     */
+    this.utils = new Utils(this);
+
+    /**
      * The database manager for the bot
      * @type {DatabaseManager}
      */
-    this.db = new DatabaseManager(this);
+    this.mongodb = new DatabaseManager(this);
 
-    // Initialize Music Manager if enabled
-    if (this.config.music.enabled) {
-      /**
-       * The lavalink manager for the bot
-       * @type {LavalinkClient}
-       */
-      this.lavalink = new LavalinkClient(this);
+    /**
+     * The lavalink manager for the bot
+     * @type {LavalinkClient}
+     */
+    this.lavalink = new LavalinkClient(this);
 
-      /**
-       * The genius client to fetch lyrics
-       * @type {Genius.Client}
-       */
-      this.genius = new Genius.Client(this.config.genius.token);
-    }
+    /**
+     * The genius client to fetch lyrics
+     * @type {Genius.Client}
+     */
+    this.genius = new Genius.Client(this.config.genius.token);
   }
 
   /**
@@ -151,16 +144,16 @@ class DiscordClient extends Client {
   async start() {
     try {
       // load necessary modules
-      this.helpers.loadWelcome(this);
-      this.helpers.antiCrash(this);
+      this.helpers.loadWelcome();
+      this.helpers.antiCrash();
 
       // validate the config file
-      this.helpers.validateConfig(this);
+      this.helpers.validateConfig();
 
       // load locales, events & commands
-      await this.helpers.loadLocales(this);
-      await this.helpers.loadEvents(this);
-      await this.helpers.loadCommands(this);
+      await this.helpers.loadLocales();
+      await this.helpers.loadEvents();
+      await this.helpers.loadCommands();
 
       // Log into the client
       this.login(this.config.bot.token);

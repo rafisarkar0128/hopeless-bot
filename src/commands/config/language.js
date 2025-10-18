@@ -3,7 +3,6 @@ const {
   SlashCommandBuilder,
   InteractionContextType,
   ApplicationIntegrationType,
-  PermissionFlagsBits,
 } = require("discord.js");
 const { t } = require("i18next");
 
@@ -17,7 +16,6 @@ module.exports = class Command extends BaseCommand {
       data: new SlashCommandBuilder()
         .setName("language")
         .setDescription(t("commands:language.description"))
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
         .addStringOption((option) =>
@@ -37,8 +35,7 @@ module.exports = class Command extends BaseCommand {
           user: ["ManageGuild"],
         },
       },
-      prefixOptions: { aliases: ["lng"], minArgsCount: 1 },
-      slashOptions: { ephemeral: true },
+      prefixOptions: { aliases: ["lang", "lng"], minArgsCount: 1 },
       details: {
         usage: "{prefix}language <language|locale>",
         examples: ["{prefix}language en-US", "/language language:en-US"],
@@ -59,42 +56,62 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").Message} message
    * @param {string[]} args
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const reply = await message.reply("This command is in development.");
-    setTimeout(() => {
-      if (message.deletable) message.delete();
-      reply.delete();
-    }, 5000);
+    const lng = args[0].toLowerCase();
+    const { availableLocales } = client.config;
+    const language = client.resources.languages.find((l) => {
+      return (
+        l.locale.toLowerCase() === lng ||
+        l.name.toLowerCase() === lng ||
+        l.native.toLowerCase() === lng
+      );
+    });
+
+    if (!language || !availableLocales.includes(language.locale)) {
+      const reply = await message.reply({
+        content: t("commands:language.notAvailable", { lng: metadata.locale }),
+      });
+      setTimeout(() => {
+        if (message.deletable) message.delete();
+        reply.delete();
+      }, 5000);
+      return;
+    }
+
+    await client.mongodb.guilds.update(message.guildId, "locale", language.locale);
+    const reply = await message.reply({
+      content: t("commands:language.reply", {
+        lng: language.locale,
+        language: `${language.native} (${language.name})`,
+      }),
+    });
   }
 
   /**
    * Execute function for this slash command.
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   * @param {{lng: string}} metadata
+   * @param {import("@database/index").Structures.Guild} metadata
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply({ flags: "Ephemeral" });
-    await interaction.followUp({ content: "Under development." });
-    return;
 
-    const { availableLocales } = client.config;
-    const { Languages } = client.resources;
     const locale = interaction.options.getString("language", true);
+    const { availableLocales } = client.config;
 
-    if (!availableLocales.includes(locale)) {
+    if (!locale || !availableLocales.includes(locale)) {
       return await interaction.followUp({
-        content: t("commands:language.notAvailable", { lng: metadata.lng }),
+        content: t("commands:language.notAvailable", { lng: metadata.locale }),
       });
     }
 
-    const language = Languages.find((lng) => lng.locale === locale);
-    await client.db.guilds.update(interaction.guildId, "locale", locale);
-    await interaction.followUp({
+    const language = client.resources.languages.find((lng) => lng.locale === locale);
+    await client.mongodb.guilds.update(interaction.guildId, "locale", locale);
+    return await interaction.followUp({
       content: t("commands:language.reply", {
         lng: language.locale,
         language: `${language.native} (${language.name})`,
@@ -104,20 +121,20 @@ module.exports = class Command extends BaseCommand {
 
   /**
    * Autocomplete function for autocomplete options of this command.
-   * @param {import("@structures/BotClient.js")} client
+   * @param {import("@lib/index").DiscordClient} client
    * @param {import("discord.js").AutocompleteInteraction} interaction
    * @returns {Promise<void>}
    */
   async autocomplete(client, interaction) {
     const { availableLocales } = client.config;
-    const { Languages } = client.resources;
     const focused = interaction.options.getFocused().toLowerCase();
     /** @type {import("discord.js").ApplicationCommandChoicesData[]} */
     const languageData = [];
 
     // If no input was provided
     if (!focused) {
-      Languages.filter((lng) => availableLocales.some((l) => l === lng.locale))
+      client.resources.languages
+        .filter((lng) => availableLocales.some((l) => l === lng.locale))
         .slice(0, 25)
         .forEach((lng) => {
           languageData.push({
@@ -129,13 +146,14 @@ module.exports = class Command extends BaseCommand {
 
     // If some type of input was provided
     else {
-      Languages.filter((lng) => {
-        return (
-          lng.name.toLowerCase().match(focused) ||
-          lng.locale.toLowerCase().match(focused) ||
-          lng.native.toLowerCase().match(focused)
-        );
-      })
+      client.resources.languages
+        .filter((lng) => {
+          return (
+            lng.name.toLowerCase().match(focused) ||
+            lng.locale.toLowerCase().match(focused) ||
+            lng.native.toLowerCase().match(focused)
+          );
+        })
         .slice(0, 25)
         .forEach((lng) => {
           languageData.push({
@@ -145,6 +163,6 @@ module.exports = class Command extends BaseCommand {
         });
     }
 
-    return await interaction.respond(languageData);
+    await interaction.respond(languageData);
   }
 };

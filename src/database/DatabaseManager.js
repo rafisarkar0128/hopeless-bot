@@ -1,5 +1,6 @@
 const { MongoClient } = require("mongodb");
 const chalk = require("chalk");
+const { GuildManager } = require("./managers/index.js");
 
 /**
  * A manager to manage all database operations
@@ -18,6 +19,12 @@ class DatabaseManager extends MongoClient {
      * @type {import("@lib/index").DiscordClient}
      */
     this.client = client;
+
+    /**
+     * A manager to manage guild data in databse
+     * @type {GuildManager}
+     */
+    this.guilds = new GuildManager(client);
   }
 
   /**
@@ -26,6 +33,9 @@ class DatabaseManager extends MongoClient {
    */
   async connect() {
     try {
+      if (this.client.config.debug) {
+        this.client.logger.debug("Connecting to database...");
+      }
       await super.connect();
       this.client.logger.success(`Database (${chalk.magenta("MongoDB")}) connected.`);
     } catch (error) {
@@ -40,6 +50,9 @@ class DatabaseManager extends MongoClient {
    */
   async disconnect() {
     try {
+      if (this.client.config.debug) {
+        this.client.logger.debug("Disconnecting from database...");
+      }
       await super.close();
       this.client.logger.success(`Database (${chalk.magenta("MongoDB")}) disconnected.`);
     } catch (error) {

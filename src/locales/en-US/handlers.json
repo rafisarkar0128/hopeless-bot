@@ -1,51 +1,45 @@
 {
   "command": {
-    "error": "An error occurred:\n```\n{{error}}\n```",
-    "guildOnly": "This `{{command}` command can only be used inisde a guild.",
-    "notFound": "This `{{command}}` command is no longer available.",
-    "devOnly": "This `{{command}}` command can only be used by developers.",
-    "cooldown": "Please wait `{{time}}` more before reusing the `{{command}}` command.",
-    "noBotPerm": "I am unable to execute this `{{command}}` commands in {{channel}} because I lack these permissions -\n{{perms}}",
-    "botPerm": "I am unable to execute this `{{command}}` command because I lack these permissions -\n{{perms}}",
-    "userPerm": "You need to have these permissions to execute this `{{command}}` command - \n{{perms}}",
-    "voiceOnly": "You must join a **Voice Channel** before using this `{{command}}` command.",
+    "error": "An error occurred while trying to execute the **{{command}}** command. Try again later.",
+    "disabled": "The **{{command}}** command has been disabled by the developers.",
+    "guildOnly": "The **{{command}}** command can only be used inside a guild.",
+    "notFound": "The **{{command}}** command is no longer available.",
+    "devOnly": "The **{{command}}** command can only be used by developers.",
+    "cooldown": "Please wait `{{time}}` more before reusing the **{{command}}** command.",
+    "noBotPerm": "I am unable to execute the **{{command}}** command in {{channel}} because I lack these permissions -\n{{perms}}",
+    "botPerm": "I am unable to execute the **{{command}}** command because I lack these permissions -\n{{perms}}",
+    "userPerm": "You need to have these permissions to execute the **{{command}}** command - \n{{perms}}",
+    "voiceOnly": "You must join a **Voice Channel** before using the **{{command}}** command.",
     "missingVoicePerm": "I am unable to **join** {{channel}} or **speak** in there.",
-    "noRequestToSpeak": "I don't have `REQUEST TO SPEAK` permission in {{channel}} to execute this `{{command}}` command.",
-    "differentVoiceChannel": "You are not connected to {{channel}} to use this command.",
-
-    "no_dj_role": "DJ role is not set.",
-    "no_dj_permission": "You need to have the DJ role to use this command.",
-
+    "noRequestToSpeak": "I don't have **__REQUEST TO SPEAK__** permission in __{{channel}}__ to execute the **{{command}}** command.",
+    "differentVoiceChannel": "You are not connected to **{{channel}}** to use this command.",
     "missingArgs": "Missing Arguments",
-    "missingArgsDescription": "Please provide the required arguments for the `{{command}}` command.\n\nExamples:\n{{examples}}",
+    "missingArgsDescription": "Please provide the required arguments for the `{{command}}` command.",
+    "usageTitle": "Usage",
+    "examplesTitle": "Examples",
     "syntaxFooter": "Syntax: [] = optional, <> = required",
     "noMentionEveryone": "You can't use this command with everyone or here. Please use slash command.",
-
-    "no_voice_channel_queue": "You are not connected to a voice channel to queue songs.",
     "voteButton": "Vote for me!",
-    "voteMessage": "Wait! You need to vote on top.gg to use this command. Thanks."
+    "voteMessage": "Wait! You need to vote on top.gg to use this command. Thanks.",
+    "no_voice_channel_queue": "You are not connected to a voice channel to queue songs.",
+    "no_dj_role": "DJ role is not set.",
+    "no_dj_permission": "You need to have the DJ role to use this command."
   },
-
-  "prefixMention": "Hey, my prefix for this server is `{{prefix}}`. Want more info? then do `{{prefix}}help`\nStay Safe, Stay Awesome!",
-
   "context": {
     "guildOnly": "❌ Context menu commands only work in guilds.",
-    "notFound": "This context menu command is not available at the moment.",
-    "disabled": "This context menu command was **disabled** by the developers.",
-    "devOnly": "This context menu command is only **accessible** to the developers.",
+    "notFound": "The context menu command is not available at the moment.",
+    "disabled": "The context menu command was **disabled** by the developers.",
+    "devOnly": "The context menu command is only **accessible** to the developers.",
     "cooldown": "Please wait, you are on a cooldown. You can use it again {{timestamp}}.",
     "botPermission": "I need {{p}} to execute this context menu command.",
     "userPermission": "You need {{p}} to use this context menu command.",
     "error": "An error occurred while trying to execute the context menu command. Try again later."
   },
-
   "autocomplete": {},
-
   "event": {
     "interaction": {
       "setup_channel": "You can't use this command in the setup channel."
     },
-
     "setupButton": {
       "no_voice_channel_button": "You are not connected to a voice channel to use this button.",
       "different_voice_channel_button": "You are not connected to {channel} to use these buttons.",

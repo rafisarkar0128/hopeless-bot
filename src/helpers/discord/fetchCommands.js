@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+
 /**
  * @typedef {import("discord.js").APIApplicationCommand & { global: boolean }} OldCommand
  * The old command structure used in the bot
@@ -13,11 +14,7 @@ async function fetchCommands(client) {
   const ApplicationCommands = [];
 
   try {
-    if (!client || typeof client !== "object") {
-      throw new Error("Client parameter is missing or not an object.");
-    }
-
-    if (client.config.bot.debug) {
+    if (client.config.debug) {
       client.logger.debug("Fetching global and guild commands via REST API");
     }
 
@@ -43,9 +40,11 @@ async function fetchCommands(client) {
       }
     }
 
-    client.logger.info(
-      `Fetched total ${chalk.yellow(globalCommands.length + guildCommands.length)} commands. (${chalk.cyan(globalCommands.length)} global, ${chalk.green(guildCommands.length)} guild)`
-    );
+    if (client.config.mode === "development") {
+      client.logger.info(
+        `Fetched total ${chalk.yellow(globalCommands.length + guildCommands.length)} commands. (${chalk.cyan(globalCommands.length)} global, ${chalk.green(guildCommands.length)} guild)`
+      );
+    }
   } catch (error) {
     client.logger.error(error);
   }

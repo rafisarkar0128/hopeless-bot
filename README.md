@@ -88,7 +88,7 @@ pnpm run dev # if you want to run in dev mode
 
 ### NOTE
 
-By default, the bot doesn't load slash commands globally. To load slash commands globally, go to `.env`, change the value of `GLOBAL_COMMANDS` to `true`. This will make sure that the slash commands are available globally.
+By default, the bot loads slash commands globally. To load slash commands only in specified guild, go to `.env`, change the value of `GLOBAL_COMMANDS` to `false`. This will make sure that the slash commands are available only in the specified guild.
 
 ## 🗝️ Sharding
 
