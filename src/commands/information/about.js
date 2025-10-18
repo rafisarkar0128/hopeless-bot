@@ -97,7 +97,7 @@ module.exports = class Command extends BaseCommand {
       new ButtonBuilder()
         .setLabel(t("misc:buttons.github", { lng: metadata.locale }))
         .setStyle(ButtonStyle.Link)
-        .setURL("https://github.com/rafisarkar0128/hopeless-bot")
+        .setURL(client.config.links.githubRepo)
     );
   }
 
