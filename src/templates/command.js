@@ -40,18 +40,7 @@ module.exports = class Command extends BaseCommand {
       },
       prefixOptions: { disabled: false, aliases: [], minArgsCount: 0 },
       slashOptions: { disabled: false },
-      details: {
-        usage: "",
-        examples: [],
-        params: [
-          {
-            name: "",
-            description: "",
-            type: "",
-            required: true,
-          },
-        ],
-      },
+      details: { usage: "", examples: [] },
     });
   }
 

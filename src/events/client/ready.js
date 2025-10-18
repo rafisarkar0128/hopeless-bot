@@ -48,6 +48,6 @@ module.exports = class Event extends BaseEvent {
       client.user.setActivity(activities[i]);
       i++;
       if (i >= activities.length) i = 0;
-    }, 300000);
+    }, 300_000);
   }
 };

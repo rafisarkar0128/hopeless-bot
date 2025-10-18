@@ -1,6 +1,5 @@
 const { ChannelType, EmbedBuilder } = require("discord.js");
 const { t } = require("i18next");
-const { getCooldown } = require("@utils/index");
 
 /**
  * A function to handle slash commands
@@ -138,7 +137,7 @@ async function handleSlash(client, interaction) {
   }
 
   if (command.cooldown > 0) {
-    const remaining = getCooldown(client, command, user.id);
+    const remaining = client.utils.getCooldown(command, user.id);
     if (remaining > 0 && !devUser) {
       return await errorReply(
         t("handlers:command.cooldown", {

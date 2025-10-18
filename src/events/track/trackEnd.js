@@ -18,8 +18,8 @@ module.exports = class Event extends BaseEvent {
     if (!channel) return;
 
     const message = await channel.messages.fetch(player.get("messageId"));
-    if (!message || !message.editable) return;
+    if (!message || !message.deletable) return;
 
-    await message.edit({ components: [] }).catch(() => null);
+    await message.delete().catch(() => null);
   }
 };

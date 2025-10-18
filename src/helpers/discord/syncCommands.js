@@ -86,9 +86,6 @@ async function syncCommands(client) {
 
       // If the command exists, check for changes then update it
       if (checkForChangesInCommand(oldCommand, newCommand)) {
-        console.log(oldCommand);
-        console.log(newCommand);
-
         await client.application.commands.edit(
           oldCommand.id,
           newCommand,

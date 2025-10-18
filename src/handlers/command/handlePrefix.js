@@ -1,6 +1,5 @@
 const { EmbedBuilder, ChannelType } = require("discord.js");
 const { t } = require("i18next");
-const { getCooldown } = require("@utils/index");
 
 /**
  * A function to create an embed for missing arguments
@@ -45,24 +44,14 @@ function getMissingArgsEmbed(client, command, metadata) {
  * A function to handle prefix commands
  * @param {import("@lib/index").DiscordClient} client
  * @param {import("discord.js").Message<true>} message
+ * @param {import("@database/index").Structures.Guild} metadata
+ * @param {RegExp} regex
  * @returns {Promise<void>}
  */
-async function handlePrefix(client, message) {
-  let metadata = await client.mongodb.guilds.get(message.guildId);
-  if (!metadata) {
-    metadata = await client.mongodb.guilds.create(message.guildId);
-  }
-  const { prefix, locale } = metadata;
+async function handlePrefix(client, message, metadata, regex) {
+  if (!regex) return;
 
-  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const prefixRegex = new RegExp(`^(<@!?${client.user?.id}>|${escapeRegex(prefix)})\\s*`);
-
-  if (!prefixRegex.test(message.content)) return;
-  const match = message.content.match(prefixRegex);
-  if (!match) return;
-
-  const [matchedPrefix] = match;
-  const args = message.content.slice(matchedPrefix.length).trim().split(/ +/g);
+  const args = message.content.replace(regex, "").trim().split(/ +/g);
   const commandName = args.shift()?.toLowerCase();
   if (!commandName) return;
 
@@ -70,6 +59,7 @@ async function handlePrefix(client, message) {
     client.commands.get(commandName) ?? client.commands.get(client.aliases.get(commandName));
   if (!command) return;
 
+  const { locale } = metadata;
   const errEmbed = new EmbedBuilder().setColor(client.colors.error);
   const { options, prefixOptions } = command;
   const devUser = client.config.bot.devs?.includes(message.author.id);
@@ -207,7 +197,7 @@ async function handlePrefix(client, message) {
   }
 
   if (options.cooldown > 0) {
-    const remaining = getCooldown(client, command, message.author.id);
+    const remaining = client.utils.getCooldown(command, message.author.id);
     if (remaining > 0 && !devUser) {
       return await replyAndDelete(
         t("handlers:command.cooldown", { lng: locale, time: remaining, command: commandName })
@@ -228,7 +218,7 @@ async function handlePrefix(client, message) {
     );
 
     // If there are replies to the original message, send the error embed in the reply
-    // then add the reply to the list of messageReplies to be deleted later
+    // then add the reply to the list of messageReplies to delete later
     if (messageReplies && messageReplies.size > 0) {
       const reply = await message.reply({ embeds: [errEmbed] });
       messageReplies.set(reply.id, reply);
@@ -243,83 +233,4 @@ async function handlePrefix(client, message) {
     }, 10_000);
   }
 }
-
-// if (command.player.dj) {
-//   const dj = await this.client.db.getDj(message.guildId);
-//   if (dj?.mode) {
-//     const djRole = await this.client.db.getRoles(message.guildId);
-//     if (!djRole) {
-//       return await replyAndDelete({
-//         content: t("event.message.no_dj_role", {lng: locale,})
-//       });
-//     }
-//
-//     const hasDJRole = message.member.roles.cache.some((role) =>
-//       djRole.map((r) => r.roleId).includes(role.id)
-//     );
-//     if (
-//       !(
-//         devUser ||
-//         (hasDJRole &&
-//           !message.member.permissions.has(PermissionFlagsBits.ManageGuild))
-//       )
-//     ) {
-//       await replyAndDelete({
-//         content: t("event.message.no_dj_permission", {
-//           lng: locale
-//         })
-//       });
-//       return;
-//     }
-//   }
-// }
-
-// if (command.vote && this.client.env.TOPGG) {
-//   const voted = await this.client.topGG.hasVoted(message.author.id);
-//   if (!(devUser || voted)) {
-//     const voteBtn = new ActionRowBuilder().addComponents(
-//       new ButtonBuilder()
-//         .setLabel(t("event.message.vote_button"))
-//         .setURL(`https://top.gg/bot/${this.client.user?.id}/vote`)
-//         .setStyle(ButtonStyle.Link)
-//     );
-//
-//     return await replyAndDelete({
-//       content: t("event.message.vote_message"),
-//       components: [voteBtn]
-//     });
-//   }
-// }
-
-// const setup = await this.client.db.getSetup(message.guildId);
-// if (setup && setup.textId === message.channelId) {
-//   return this.client.emit("setupSystem", message);
-// }
-
-// const logs = this.client.channels.cache.get(this.client.env.LOG_COMMANDS_ID);
-// if (logs) {
-//   const embed = new EmbedBuilder()
-//     .setAuthor({
-//       name: "Prefix - Command Logs",
-//       iconURL: this.client.user?.avatarURL({ size: 2048 })
-//     })
-//     .setColor(this.client.config.color.green)
-//     .addFields(
-//       { name: "Command", value: `\`${commandName}\``, inline: true },
-//       {
-//         name: "User",
-//         value: `${message.author.tag} (\`${message.author.id}\`)`,
-//         inline: true
-//       },
-//       {
-//         name: "Guild",
-//         value: `${message.guild.name} (\`${message.guild.id}\`)`,
-//         inline: true
-//       }
-//     )
-//     .setTimestamp();
-//
-//   await logs.send({ embeds: [embed] });
-// }
-
 module.exports = { handlePrefix };

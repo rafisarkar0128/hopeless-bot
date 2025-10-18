@@ -33,6 +33,9 @@ class DatabaseManager extends MongoClient {
    */
   async connect() {
     try {
+      if (this.client.config.debug) {
+        this.client.logger.debug("Connecting to database...");
+      }
       await super.connect();
       this.client.logger.success(`Database (${chalk.magenta("MongoDB")}) connected.`);
     } catch (error) {
@@ -47,6 +50,9 @@ class DatabaseManager extends MongoClient {
    */
   async disconnect() {
     try {
+      if (this.client.config.debug) {
+        this.client.logger.debug("Disconnecting from database...");
+      }
       await super.close();
       this.client.logger.success(`Database (${chalk.magenta("MongoDB")}) disconnected.`);
     } catch (error) {

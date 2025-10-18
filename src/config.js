@@ -50,6 +50,7 @@ module.exports = {
     global: process.env.GLOBAL_COMMANDS === "true", // Wheither to make the commands global or not
     allowedInvite: process.env.ALLOWED_INVITE === "true", // Whether to allow invite command or not
     defaultCooldown: 5, // Default cooldown ammount in secconds
+    defaultPermissions: BigInt("321474581102161"), // Default bot permissions
   },
 
   // Your genius API credentials. Get it from https://genius.com/developers
@@ -67,7 +68,7 @@ module.exports = {
    * @type {import("mongodb").MongoClientOptions}
    */
   mongodbOptions: {
-    dbName: "node",
+    dbName: "hopeless",
     timeoutMS: 10000,
     connectTimeoutMS: 30000,
     directConnection: false,
@@ -87,19 +88,11 @@ module.exports = {
   },
 
   // logs ralated config
-  logs: {
-    general: {
-      color: "#36393F",
-      channel: process.env.CHANNEL_GENERAL,
-    },
-    error: {
-      color: "#de5d5d",
-      channel: process.env.CHANNEL_ERROR,
-    },
-    command: {
-      color: "#7289DA",
-      channel: process.env.CHANNEL_COMMAND,
-    },
+  logsChannels: {
+    join: process.env.CHANNEL_JOIN,
+    leave: process.env.CHANNEL_LEAVE,
+    error: process.env.CHANNEL_ERROR,
+    command: process.env.CHANNEL_COMMAND,
   },
 
   // Dashboard settings
@@ -159,6 +152,6 @@ module.exports = {
   links: {
     botWebsite: process.env.BOT_WEBSITE,
     supportServer: process.env.SUPPORT_SERVER,
-    githubRepo: "https://github.com/rafisarkar0128/hopeless-bot#readme",
+    githubRepo: process.env.GITHUB_REPO,
   },
 };

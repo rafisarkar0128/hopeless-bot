@@ -121,15 +121,17 @@ module.exports = {
 
   // extra colors
   main: "#90B63E",
-  good: "#74a371",
+  safe: "#74a371",
   giveaway: "#FFAF00",
   standby: "#dedc5d",
-  wrong: "#de5d5d",
+  notSafe: "#de5d5d",
   error: "#d1352f",
   transparent: "#36393F",
   warning: "#F7E919",
   normal: "#5865F2",
   discord: "#7289DA",
+  joinLog: "#57F287",
+  leaveLog: "#ED4245",
 
   /**
    * Returns a random color from the color object

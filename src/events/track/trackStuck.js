@@ -15,22 +15,19 @@ module.exports = class Event extends BaseEvent {
    * @returns {Promise<void>}
    */
   async execute(client, player, track, payload) {
-    if (client.config.bot.debug) {
-      client.logger.error(
-        [
-          `A track got stuck.`,
-          `Track: "${track.info.title}"`,
-          `Guild: ${player.guildId}`,
-          `Source: "${track.info.sourceName}"`,
-          `Error: ${payload.error || payload.exception?.cause || payload.exception?.error || payload.exception?.message}.`,
-        ].join("\n")
-      );
-    } else {
-      client.logger.error(`A track got stuck in guild: ${payload.guildId}`);
+    client.logger.error(`A track got stuck in guild: ${payload.guildId}`);
+    if (client.config.debug) {
+      console.error([
+        `A track got stuck.`,
+        `Track: "${track.info.title}"`,
+        `Guild: ${player.guildId}`,
+        `Source: "${track.info.sourceName}"`,
+        `Error: ${payload.error || payload.exception?.cause || payload.exception?.error || payload.exception?.message}.`,
+      ]);
     }
 
     const errorEmbed = new EmbedBuilder()
-      .setColor(client.color.Wrong)
+      .setColor(client.colors.error)
       .setTitle("Playback error!")
       .setDescription(`Failed to load track: \`${track.info.title}\``)
       .setFooter({
@@ -41,11 +38,11 @@ module.exports = class Event extends BaseEvent {
     const channel = client.channels.cache.get(player.textChannelId);
     if (!channel) return;
 
-    await channel.send({ embeds: [errorEmbed] });
-
-    const message = await channel.messages.fetch(player.get("messageId"));
-    if (!message || !message.editable) return;
-
-    await message.edit({ components: [] }).catch(() => null);
+    const reply = await channel.send({ embeds: [errorEmbed] });
+    const message = await channel.messages.fetch({ id: player.get("messageId"), force: true });
+    setTimeout(() => {
+      if (message || message.deletable) message.delete().catch(() => null);
+      reply.delete().catch(() => null);
+    }, 15000);
   }
 };
