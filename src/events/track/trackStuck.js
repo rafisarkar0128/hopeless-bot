@@ -41,7 +41,7 @@ module.exports = class Event extends BaseEvent {
     const reply = await channel.send({ embeds: [errorEmbed] });
     const message = await channel.messages.fetch({ id: player.get("messageId"), force: true });
     setTimeout(() => {
-      if (message || message.deletable) message.delete().catch(() => null);
+      if (message && message.deletable) message.delete().catch(() => null);
       reply.delete().catch(() => null);
     }, 15000);
   }
