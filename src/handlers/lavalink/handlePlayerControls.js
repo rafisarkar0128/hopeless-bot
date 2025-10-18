@@ -1,4 +1,4 @@
-//  In futue this file may not be replased with a more generic handler for interaction controls
+//  In future this file may be replaced with a more generic handler for interaction controls
 // but for now it is lavalink player controls only
 const { EmbedBuilder, MessageFlags, GuildMember } = require("discord.js");
 const { t } = require("i18next");
