@@ -60,11 +60,15 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const lng = args.join(" ").toLowerCase();
+    const lng = args[0].toLowerCase();
     const { availableLocales } = client.config;
-    const language = client.resources.languages.find(
-      (l) => l.locale === lng || l.name.toLowerCase() === lng || l.native.toLowerCase() === lng
-    );
+    const language = client.resources.languages.find((l) => {
+      return (
+        l.locale.toLowerCase() === lng ||
+        l.name.toLowerCase() === lng ||
+        l.native.toLowerCase() === lng
+      );
+    });
 
     if (!language || !availableLocales.includes(language.locale)) {
       const reply = await message.reply({
@@ -159,6 +163,6 @@ module.exports = class Command extends BaseCommand {
         });
     }
 
-    return await interaction.respond(languageData);
+    await interaction.respond(languageData);
   }
 };

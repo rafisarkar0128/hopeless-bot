@@ -2,7 +2,7 @@ const { BaseEvent } = require("@src/structures");
 
 module.exports = class Event extends BaseEvent {
   constructor() {
-    super({ name: "trackEnd", player: true });
+    super({ name: "queueEnd", player: true });
   }
 
   /**
@@ -12,7 +12,7 @@ module.exports = class Event extends BaseEvent {
    * @param {import("lavalink-client").Track} track
    * @returns {Promise<void>}
    */
-  async execute(client, player, track) {
+  async execute(client, player) {
     /** @type {import("discord.js").TextBasedChannel} */
     const channel = client.channels.cache.get(player.textChannelId);
     if (!channel) return;

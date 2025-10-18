@@ -25,7 +25,6 @@
     "no_dj_role": "DJ role is not set.",
     "no_dj_permission": "You need to have the DJ role to use this command."
   },
-  "prefixMention": "Hey, my prefix for this server is **__{{prefix}}__**. Want more info? then do `{{prefix}}help`\nStay Safe, Stay Awesome!",
   "context": {
     "guildOnly": "❌ Context menu commands only work in guilds.",
     "notFound": "The context menu command is not available at the moment.",

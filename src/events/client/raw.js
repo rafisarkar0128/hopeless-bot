@@ -16,9 +16,7 @@ module.exports = class Event extends BaseEvent {
    * @returns {Promise<void>}
    */
   async execute(client, d) {
-    if (client.lavalink) {
-      // sending raw voice data to the lavalink manager;
-      return await client.lavalink.sendRawData(d);
-    }
+    // sending raw voice data to the lavalink manager;
+    await client.lavalink.sendRawData(d);
   }
 };

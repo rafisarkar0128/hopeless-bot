@@ -22,7 +22,7 @@ module.exports = class Event extends BaseEvent {
    * @returns {Promise<void>}
    */
   async execute(client, node, error, payload) {
-    client.logger.error(`Lavalink node (${chalk.magenta(node.id)}) errored:`, error);
-    // console.error(error);
+    client.logger.error(`Lavalink node (${chalk.magenta(node.id)}) errored.`);
+    if (client.config.debug) console.error(error);
   }
 };

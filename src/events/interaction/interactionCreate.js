@@ -17,16 +17,19 @@ module.exports = class Event extends BaseEvent {
     // For handling slash commands
     if (interaction.isChatInputCommand()) {
       await client.handlers.handleSlash(interaction);
+      return;
     }
 
     // For handling auto complete interactions
-    else if (interaction.isAutocomplete()) {
+    if (interaction.isAutocomplete()) {
       await client.handlers.handleAutocomplete(interaction);
+      return;
     }
 
     // For handling contextmenu commands
-    else if (interaction.isContextMenuCommand()) {
-      // await client.handlers.handleContext(client, interaction);
+    if (interaction.isContextMenuCommand()) {
+      // await client.handlers.handleContext(interaction);
+      return;
     }
   }
 };

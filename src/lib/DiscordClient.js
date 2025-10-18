@@ -78,7 +78,7 @@ class DiscordClient extends Client {
 
     /**
      * A collection to store cooldown data
-     * @type {Collection<string, Collection<string, string>>}
+     * @type {Collection<string, Collection<string, number>>}
      */
     this.cooldowns = new Collection();
 

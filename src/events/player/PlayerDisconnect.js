@@ -2,17 +2,17 @@ const { BaseEvent } = require("@src/structures");
 
 module.exports = class Event extends BaseEvent {
   constructor() {
-    super({ name: "trackEnd", player: true });
+    super({ name: "playerDisconnect", player: true });
   }
 
   /**
    * Execute function for this event
    * @param {import("@lib/index").DiscordClient} client
    * @param {import("lavalink-client").Player} player
-   * @param {import("lavalink-client").Track} track
+   * @param {string} voiceChannelId
    * @returns {Promise<void>}
    */
-  async execute(client, player, track) {
+  async execute(client, player, voiceChannelId) {
     /** @type {import("discord.js").TextBasedChannel} */
     const channel = client.channels.cache.get(player.textChannelId);
     if (!channel) return;
