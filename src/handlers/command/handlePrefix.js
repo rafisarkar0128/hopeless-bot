@@ -26,7 +26,7 @@ function getMissingArgsEmbed(client, command, metadata) {
     .setFields([
       {
         name: t("handlers:command.usageTitle", { lng: metadata.locale }),
-        value: `\`${command.details.usage.replace("{prefix}", metadata.prefix)}\``,
+        value: `\`${metadata.prefix}${command.details.usage}\``,
       },
       {
         name: t("handlers:command.examplesTitle", { lng: metadata.locale }),

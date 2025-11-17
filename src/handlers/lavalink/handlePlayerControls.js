@@ -139,7 +139,6 @@ async function handlePlayerControls(client, message, player) {
 
       case "stop": {
         await player.stopPlaying(true, false);
-        await editButtons(true);
         return await replyAndDelete(t("player:stop", { lng: locale }));
       }
 

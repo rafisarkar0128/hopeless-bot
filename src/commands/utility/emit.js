@@ -36,8 +36,8 @@ module.exports = class Command extends BaseCommand {
       },
       prefixOptions: { minArgsCount: 1 },
       details: {
-        usage: "{prefix}emit <event> [member]",
-        examples: ["{prefix}emit guildMemberAdd @User", "{prefix}emit guildBanAdd @User"],
+        usage: "emit <event> [member]",
+        examples: ["emit guildMemberAdd @User", "emit guildBanAdd @User"],
       },
     });
   }

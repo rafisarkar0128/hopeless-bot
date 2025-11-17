@@ -8,7 +8,7 @@ module.exports = {
   red: "#FF0000",
   fireBrick: "#B22222",
   darkRed: "#8B0000",
-  AmericanRose: "#FF033E",
+  americanRose: "#FF033E",
 
   // pink or pink-ish colors
   pink: "#FFC0CB",
@@ -18,7 +18,7 @@ module.exports = {
 
   // orange or orange-ish colors
   coral: "#FF7F50",
-  OrangeRed: "#FF4500",
+  orangeRed: "#FF4500",
   darkOrange: "#FF8C00",
   orange: "#FFA500",
 

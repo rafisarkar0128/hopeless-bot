@@ -1,5 +1,7 @@
 {
+  "defaultReply": "🎶 Processing your request...",
   "noPlayer": "❗ There is no active player in this server.",
+  "noQuery": "❗ Please provide a search query or a URL to play.",
   "noChannel": "❗ You need to be in a voice channel to use this command.",
   "queueEmpty": "❗ The queue is empty.",
   "noPrevious": "❗ There are no previous tracks in the queue.",
@@ -38,7 +40,7 @@
   "requester": "Requester",
 
   "pause": "Paused the player.",
-  "resume": "Resumed the player.",
+  "resume": "▶️ Resumed the player.",
   "skip": "Skipped the current track.",
   "skipTo": "Skipped to track number {{number}}.",
   "seekedTo": "Seeked to {{duration}}",

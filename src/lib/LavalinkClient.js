@@ -66,10 +66,10 @@ class LavalinkClient extends LavalinkManager {
 
   /**
    * Returns an embed color for the provided source
-   * @param {import("lavalink-client").SourceNames} source
+   * @param {import("lavalink-client").SourceNames} [source]
    * @returns {string}
    */
-  getColor(source) {
+  getColor(source = "") {
     const { defaultEmbedColor } = this.client.config.lavalink;
     const { Transparent } = this.client.colors;
     const colors = {

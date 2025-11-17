@@ -29,7 +29,7 @@ module.exports = class Command extends BaseCommand {
       },
       prefixOptions: { aliases: ["latency"], minArgsCount: 0 },
       slashOptions: { ephemeral: false },
-      details: { usage: "", examples: ["{prefix}ping", "/ping"] },
+      details: { usage: "ping", examples: ["ping"] },
     });
   }
 
