@@ -27,7 +27,7 @@ module.exports = class Command extends BaseCommand {
         ),
       options: { category: "utility", cooldown: 5, global: true },
       prefixOptions: { aliases: ["invitation"], minArgsCount: 0 },
-      details: { usage: "{prefix}invite", examples: ["{prefix}invite"] },
+      details: { usage: "invite", examples: ["invite"] },
     });
   }
 

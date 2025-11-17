@@ -105,10 +105,10 @@ module.exports = class Command extends BaseCommand {
       details: {
         usage: "play <song|url>",
         examples: [
-          "{prefix}play example",
-          "{prefix}play https://www.youtube.com/watch?v=example",
-          "{prefix}play https://open.spotify.com/track/example",
-          "{prefix}play http://www.example.com/example.mp3",
+          "play example",
+          "play https://www.youtube.com/watch?v=example",
+          "play https://open.spotify.com/track/example",
+          "play http://www.example.com/example.mp3",
         ],
       },
     });
@@ -123,19 +123,28 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
+    let reply = await message.reply(t("player:defaultReply", { lng: metadata.locale }));
     const query = args.join(" ");
-
     const player = await this.getPlayer(client, message);
-    const response = await player.search({ query }, message.author);
-    const responseEmbed = await this.getResponseEmbed(client, player, response, metadata);
 
-    const reply = await message.reply({ embeds: [responseEmbed] });
+    if (!query || query.length === 0) {
+      if (player.queue.current && !player.playing) {
+        await player.resume();
+        reply.edit(t("player:resume", { lng: metadata.locale }));
+      } else {
+        reply.edit(t("player:noQuery", { lng: metadata.locale }));
+      }
+    } else {
+      const response = await player.search({ query }, message.author);
+      const responseEmbed = await this.getResponseEmbed(client, player, response, metadata);
+      reply.edit({ content: "", embeds: [responseEmbed] });
+      if (!player.playing && !player.paused) await player.play({ paused: false });
+    }
+
     setTimeout(() => {
       if (message.deletable) message.delete().catch(() => null);
       reply.delete().catch(() => null);
     }, 10_000);
-
-    if (!player.playing && !player.paused) await player.play({ paused: false });
   }
 
   /**
