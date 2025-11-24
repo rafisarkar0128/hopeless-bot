@@ -6,8 +6,8 @@ The versions listed below are the only supported versions.
 
 | Version | Supported |
 | ------- | --------- |
-| ^2.2.1  | ✅        |
-| <2.0.0  | ❌        |
+| ^3.0.3  | ✅        |
+| <3.0.3  | ❌        |
 
 ## Reporting a Vulnerability
 

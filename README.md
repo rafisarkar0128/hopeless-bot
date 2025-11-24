@@ -1,5 +1,3 @@
-# ‼️REBUILD PHASE‼️
-
 [![Version][version-shield]][version-shield-link]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -11,17 +9,15 @@
 [![Dependency Review][dependency-review]][dependency-review-url]
 [![CodeFactor][code-factor]][code-factor-url]
 
-## 🚀 Hopeless - A Discord Music Bot
+# 🚀 Hopeless - A Discord Music Bot
 
-**Hopeless Bot** is a discord bot, specially made for **Music Streaming**. It is built along with [discord.js](https://github.com/discordjs/discord.js), a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the [Discord API](https://discord.com/developers/docs/intro), and [Lavalink](https://github.com/lavalink-devs/lavalink), a powerful audio streaming server.
+**Hopeless** is a discord bot, specially made for **Music Streaming**. It is built along with [discord.js](https://github.com/discordjs/discord.js), a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the [Discord API](https://discord.com/developers/docs/intro), and [Lavalink](https://github.com/lavalink-devs/lavalink), a powerful audio streaming server.
 
 [✉️ Invite Hopeless][bot-invite] • [🆘 Support Server][support-server] • [📝 Bug & Request Feature][issues-url]
 
 ## 📊 Road Map
 
 - [x] **Basic Bot**
-- [x] **Music Bot**
-- [x] **Information Bot**
 - [x] **Website**
 - [ ] **Dashboard**
 - [ ] **Documentation**
@@ -30,6 +26,10 @@
 
 - **Advanced Logger**
 - **Music Streaming**
+- **Database Support** (MongoDB, etc.)
+- **Slash Commands**
+- **Prefix Commands**
+- **Lavalink Support**
 - **Highly Customizable**
 - **Multi-Language Support**
 - **Advanced Error Handler**
@@ -46,45 +46,33 @@ Before you get started, you need to have the following:
 
 ## 🚀 Get Started
 
-0. Install `pnpm` if you don't have it installed
-
-```bash
-npm install -g pnpm
-```
-
-1. First clone the repository:
+1. First clone the repository and change the directory:
 
 ```bash
 git clone https://github.com/rafisarkar0128/hopeless-bot.git
-```
-
-2. Change to the directory:
-
-```bash
 cd hopeless-bot
 ```
 
-3. Install the required packages:
+2. Install the required packages:
 
 ```bash
-pnpm install # you can also use npm if you want
+npm install
 ```
 
-4. Copy `example.lavalink-nodes.js` to `lavalink-nodes.js` and add your external nodes here if you are going to use any.
+3. Copy `example.lavalink-nodes.js` to `lavalink-nodes.js` and add your external nodes here (if you are going to use any).
 
-5. Copy `.env.example` to `.env` and fill in all the required values.
+4. Copy `.env.example` to `.env` and fill in all the required values.
 
-6. Now go to [Discord Developer Page](https://discord.com/developers/applications) select your application and head to OAuth2 tab. In OAuth2 URL Generator select "bot" and "application.commands" scopes, scroll down select "Administrator" permission, copy the URL, open the URL and invite the bot to your server.
+5. Now go to [Discord Developer Page](https://discord.com/developers/applications) select your application and head to OAuth2 tab. In OAuth2 URL Generator select "bot" and "application.commands" scopes, scroll down select "Administrator" permission, copy the URL, open the URL and invite the bot to your server.
 
-7. Start the bot:
+6. Start the bot:
 
 ```bash
-# You can also use npm if you want
-pnpm start
-pnpm run dev # if you want to run in dev mode
+npm start
+npm run dev # if you want to run in dev mode
 ```
 
-8. Start using the bot. Use `/ping` or `/botinfo` commands.
+7. Start using the bot. Use `/ping` or `/play` commands.
 
 ### NOTE
 
@@ -95,8 +83,8 @@ By default, the bot loads slash commands globally. To load slash commands only i
 **Sharding** is not recommended for bots that are in less than **2,000 servers**. By default the bot runs without sharding. To enable sharding, start the bot like this:
 
 ```bash
-pnpm run shard
-pnpm run devShard # if you want to run in dev mode
+npm run shard
+npm run devShard # if you want to run in dev mode
 ```
 
 ## 📜 Commands
