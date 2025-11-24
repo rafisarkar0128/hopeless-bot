@@ -36,8 +36,10 @@ module.exports = class Command extends BaseCommand {
         aliases: ["bio", "about", "info", "me", "whoami", "story", "intro", "hello", "identity"],
         minArgsCount: 0,
       },
-      slashOptions: { disabled: false },
-      details: { usage: "", examples: [] },
+      details: {
+        usage: "about",
+        examples: ["about"],
+      },
     });
   }
 

@@ -1,23 +1,5 @@
 {
-  "error": "An error occurred while trying to execute the command. Try again later.",
-
-  "memberinfo": {
-    "username": "📛 Username",
-    "nickname": "🔰 Nickname",
-    "id": "🆔 User ID",
-    "position": "📍 Joined Position",
-    "boost": "🚀 Server Boost",
-    "creation": "📆 Created On",
-    "join": "📆 Joined On",
-    "roles": "🎖 Roles [ {{count}} ] (shows top 5)"
-  },
-
-  "messageinfo": {
-    "click": "Click here for the message",
-    "author": "📝 Author",
-    "id": "🆔 Message ID",
-    "creation": "📆 Created On",
-    "edit": "📆 Edited On",
-    "edited": "Not Edited"
+  "default": {
+    "error": "An error occurred while trying to execute the context menu command. Try again later."
   }
 }

@@ -31,22 +31,16 @@ module.exports = class Command extends BaseCommand {
         global: true,
         guildOnly: true,
         permissions: {
-          dev: true,
           user: ["ManageGuild"],
         },
       },
-      prefixOptions: { aliases: ["lang", "lng"], minArgsCount: 1 },
+      prefixOptions: {
+        aliases: ["lang", "lng"],
+        minArgsCount: 1,
+      },
       details: {
-        usage: "{prefix}language <language|locale>",
-        examples: ["{prefix}language en-US", "/language language:en-US"],
-        params: [
-          {
-            name: "language",
-            description: "commands:language.options.language",
-            type: "string",
-            required: true,
-          },
-        ],
+        usage: "language <language|locale>",
+        examples: ["language en-US", "language language:en-US"],
       },
     });
   }
@@ -112,7 +106,7 @@ module.exports = class Command extends BaseCommand {
     const language = client.resources.languages.find((lng) => lng.locale === locale);
     await client.mongodb.guilds.update(interaction.guildId, "locale", locale);
     return await interaction.followUp({
-      content: t("commands:language.reply", {
+      content: t("commands:language.response", {
         lng: language.locale,
         language: `${language.native} (${language.name})`,
       }),

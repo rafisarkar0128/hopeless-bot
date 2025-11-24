@@ -32,9 +32,13 @@ module.exports = class Command extends BaseCommand {
         cooldown: 0,
         global: true,
         guildOnly: true,
-        permissions: { dev: true },
+        permissions: {
+          dev: true,
+        },
       },
-      prefixOptions: { minArgsCount: 1 },
+      prefixOptions: {
+        minArgsCount: 1,
+      },
       details: {
         usage: "emit <event> [member]",
         examples: ["emit guildMemberAdd @User", "emit guildBanAdd @User"],
@@ -111,7 +115,7 @@ module.exports = class Command extends BaseCommand {
     }
 
     await interaction.reply({
-      content: t("commands:emit.reply", { lng: metadata.locale, event }),
+      content: t("commands:emit.response", { lng: metadata.locale, event }),
       flags: "Ephemeral",
     });
   }

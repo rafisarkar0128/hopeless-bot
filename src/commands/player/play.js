@@ -96,12 +96,12 @@ module.exports = class Command extends BaseCommand {
         },
         player: {
           voice: true,
-          dj: false,
-          active: false,
-          djPerm: null,
         },
       },
-      prefixOptions: { aliases: ["pl", "add"], minArgsCount: 0 },
+      prefixOptions: {
+        aliases: ["pl", "add"],
+        minArgsCount: 0,
+      },
       details: {
         usage: "play <song|url>",
         examples: [
@@ -123,7 +123,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    let reply = await message.reply(t("player:defaultReply", { lng: metadata.locale }));
+    let reply = await message.reply(t("player:default:response", { lng: metadata.locale }));
     const query = args.join(" ");
     const player = await this.getPlayer(client, message);
 
@@ -135,9 +135,9 @@ module.exports = class Command extends BaseCommand {
         reply.edit(t("player:noQuery", { lng: metadata.locale }));
       }
     } else {
-      const response = await player.search({ query }, message.author);
-      const responseEmbed = await this.getResponseEmbed(client, player, response, metadata);
-      reply.edit({ content: "", embeds: [responseEmbed] });
+      const res = await player.search({ query }, message.author);
+      const response = await this.getResponse(player, res, metadata.locale, "add_to_queue");
+      await reply.edit({ content: response });
       if (!player.playing && !player.paused) await player.play({ paused: false });
     }
 
@@ -179,16 +179,10 @@ module.exports = class Command extends BaseCommand {
     }
 
     const player = await this.getPlayer(client, interaction, nodes);
-    const response = await player.search({ query, source }, interaction.user);
-    const responseEmbed = await this.getResponseEmbed(
-      client,
-      player,
-      response,
-      metadata,
-      playOption
-    );
+    const res = await player.search({ query, source }, interaction.user);
+    const response = await this.getResponse(player, res, metadata.locale, playOption);
 
-    await interaction.followUp({ embeds: [responseEmbed] });
+    await interaction.followUp({ content: response });
     setTimeout(() => interaction.deleteReply(), 10_000);
 
     if (!player.playing && !player.paused) await player.play({ paused: false });
@@ -254,56 +248,41 @@ module.exports = class Command extends BaseCommand {
   }
 
   /**
-   * Get response embed after searching a query and then adding to queue.
-   * @param {import("@lib/index").DiscordClient} client
+   * Get response after based on the provided inputs.
    * @param {import("lavalink-client").Player} player
    * @param {import("lavalink-client").SearchResult} response
-   * @param {import("@database/index").Structures.Guild} metadata
+   * @param {string} lng
    * @param {"play_next" | "play_now" | "add_to_queue"} [playOption]
    * @returns {Promise<import("discord.js").EmbedBuilder>}
    */
-  async getResponseEmbed(client, player, response, metadata, playOption) {
-    const embed = new EmbedBuilder().setColor(client.colors.main);
-
+  async getResponse(player, response, lng, playOption) {
     switch (response.loadType) {
       case "error": {
-        embed
-          .setColor(client.colors.error)
-          .setDescription(t("player:loadFailed", { lng: metadata.locale }));
-        return embed;
+        return t("player:loadFailed", { lng });
       }
 
       case "empty": {
-        embed
-          .setColor(client.colors.standby)
-          .setDescription(t("player:emptyResult", { lng: metadata.locale }));
-        return embed;
+        return t("player:emptyResult", { lng });
       }
 
       case "playlist": {
         await this.loadTracks(player, response.tracks, playOption);
-        embed.setDescription(
-          t("player:addPlaylist", {
-            lng: metadata.locale,
-            size: response.tracks.length,
-            title: response.playlist?.name ? response.playlist.name : "playlist",
-          })
-        );
-        return embed;
+        return t("player:addPlaylist", {
+          lng,
+          size: response.tracks.length,
+          title: response.playlist?.name ? response.playlist.name : "playlist",
+        });
       }
 
       case "track":
       case "search": {
         let track = response.tracks.shift();
         let position = await this.loadTracks(player, track, playOption);
-        embed.setDescription(
-          t("player:addTrack", {
-            lng: metadata.locale,
-            position,
-            track: `[${track.info.title}](<${track.info.uri}>)`,
-          })
-        );
-        return embed;
+        return t("player:addTrack", {
+          lng,
+          position,
+          track: `[${track.info.title}](<${track.info.uri}>)`,
+        });
       }
     }
   }
