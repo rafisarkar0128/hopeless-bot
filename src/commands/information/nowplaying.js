@@ -20,11 +20,23 @@ module.exports = class Command extends BaseCommand {
         cooldown: 5,
         global: true,
         guildOnly: true,
-        player: { voice: true, active: true },
+        player: {
+          voice: true,
+          active: true,
+        },
       },
-      prefixOptions: { disabled: false, aliases: ["now", "np"], minArgsCount: 0 },
-      slashOptions: { disabled: false },
-      details: { usage: "nowplaying", examples: ["nowplaying"] },
+      prefixOptions: {
+        disabled: false,
+        aliases: ["now", "np"],
+        minArgsCount: 0,
+      },
+      slashOptions: {
+        disabled: false,
+      },
+      details: {
+        usage: "nowplaying",
+        examples: ["nowplaying"],
+      },
     });
   }
 

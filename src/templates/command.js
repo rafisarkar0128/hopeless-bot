@@ -38,9 +38,18 @@ module.exports = class Command extends BaseCommand {
           djPerm: null,
         },
       },
-      prefixOptions: { disabled: false, aliases: [], minArgsCount: 0 },
-      slashOptions: { disabled: false },
-      details: { usage: "", examples: [] },
+      prefixOptions: {
+        disabled: false,
+        aliases: [],
+        minArgsCount: 0,
+      },
+      slashOptions: {
+        disabled: false,
+      },
+      details: {
+        usage: "",
+        examples: [],
+      },
     });
   }
 

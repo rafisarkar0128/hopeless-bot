@@ -25,53 +25,5 @@
     "no_dj_role": "DJ role is not set.",
     "no_dj_permission": "You need to have the DJ role to use this command."
   },
-  "context": {
-    "guildOnly": "❌ Context menu commands only work in guilds.",
-    "notFound": "The context menu command is not available at the moment.",
-    "disabled": "The context menu command was **disabled** by the developers.",
-    "devOnly": "The context menu command is only **accessible** to the developers.",
-    "cooldown": "Please wait, you are on a cooldown. You can use it again {{timestamp}}.",
-    "botPermission": "I need {{p}} to execute this context menu command.",
-    "userPermission": "You need {{p}} to use this context menu command.",
-    "error": "An error occurred while trying to execute the context menu command. Try again later."
-  },
-  "autocomplete": {},
-  "event": {
-    "interaction": {
-      "setup_channel": "You can't use this command in the setup channel."
-    },
-    "setupButton": {
-      "no_voice_channel_button": "You are not connected to a voice channel to use this button.",
-      "different_voice_channel_button": "You are not connected to {channel} to use these buttons.",
-      "now_playing": "Now Playing",
-      "live": "LIVE",
-      "requested_by": "Requested by <@{requester}>",
-      "no_dj_permission": "You need to have the DJ role to use this button.",
-      "volume_set": "Volume set to {vol}%",
-      "volume_footer": "Volume: {vol}%",
-      "paused": "Paused",
-      "resumed": "Resumed",
-      "pause_resume": "{name} the music.",
-      "pause_resume_footer": "{name} by {displayName}",
-      "no_music_to_skip": "There is no music to skip.",
-      "skipped": "Skipped the music.",
-      "skipped_footer": "Skipped by {displayName}",
-      "stopped": "Stopped the music.",
-      "stopped_footer": "Stopped by {displayName}",
-      "nothing_playing": "Nothing is playing right now",
-      "loop_set": "Loop set to {loop}.",
-      "loop_footer": "Loop set to {loop} by {displayName}",
-      "shuffled": "Shuffled the queue.",
-      "no_previous_track": "There is no previous track.",
-      "playing_previous": "Playing the previous track.",
-      "previous_footer": "Playing the previous track by {displayName}",
-      "rewinded": "Rewinded the music.",
-      "rewind_footer": "Rewinded by {displayName}",
-      "forward_limit": "You cannot forward the music more than the length of the song.",
-      "forwarded": "Forwarded the music.",
-      "forward_footer": "Forwarded by {displayName}",
-      "button_not_available": "This button is not available.",
-      "no_music_playing": "There is no music playing in this server."
-    }
-  }
+  "autocomplete": {}
 }

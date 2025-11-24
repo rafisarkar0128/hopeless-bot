@@ -3,7 +3,7 @@
     "error": "An error occurred while trying to execute the command.",
     "errorTitle": "AN ERROR OCCURRED",
     "reason": "None was specified.",
-    "reply": "🧩 Processing your request..."
+    "response": "🧩 Processing your request..."
   },
   "about": {
     "description": "Shows information about the bot",
@@ -19,20 +19,6 @@
     "enabled": "`✅` | Autoplay has been `ENABLED`.",
     "disabled": "`✅` | Autoplay has been `DISABLED`."
   },
-  "ban": {
-    "description": "Ban a member from the server.",
-    "options": {
-      "target": "The member to ban from the server.",
-      "reason": "Reason for banning the target"
-    },
-    "failed": "Failed to ban target user bacause",
-    "noMember": "Target user is no longer a member of this server.",
-    "notModeratable": "Target user is not moderatable by me.",
-    "notManageable": "Target user is not manageable by me.",
-    "notHighestUserRole": "Target user's highest role is higher than your highest role.",
-    "notHighestBotRole": "Target user's highest role is higher than my highest role.",
-    "banned": "Successfully banned **{{target}}** with reason: {{reason}}"
-  },
   "botinfo": {
     "description": "📖 View bot's information.",
     "content": "Bot Information:\n- **Operating System**: {{osInfo}}\n- **Uptime**: {{osUptime}}\n- **Hostname**: {{osHostname}}\n- **CPU Architecture**: {{cpuInfo}}\n- **CPU Usage**: {{cpuUsed}}%\n- **Memory Usage**: {{memUsed}}MB / {{memTotal}}GB\n- **Node Version**: {{nodeVersion}}\n- **Discord.js Version**: {{discordJsVersion}}\n- **Connected to** {{guilds}} guilds, {{channels}} channels, and {{users}} users\n- **Total Commands**: {{commands}}"
@@ -43,7 +29,7 @@
       "event": "The event to emit.",
       "member": "Select a member to be part of the event."
     },
-    "reply": "✅ Emitted `{{event}}` event successfully."
+    "response": "✅ Emitted `{{event}}` event successfully."
   },
   "grab": {
     "description": "Grabs the current playing song on your DM.",
@@ -55,36 +41,22 @@
   "invite": {
     "description": "Get the bots invite url.",
     "disabled": "Sorry! Invites have been disabled by the owner.",
-    "reply": "Invite me by clicking the button."
+    "response": "Invite me by clicking the button."
   },
   "join": {
     "description": "Joins your the voice channel",
     "alreadyConnected": "I'm already connected to <#{{channelId}}>.",
-    "joined": "Successfully joined <#{{channelId}}>."
-  },
-  "kick": {
-    "description": "Kick a member from the server.",
-    "options": {
-      "target": "The member to kick from the server.",
-      "reason": "Reason for kicking the target."
-    },
-    "failed": "Failed to kick target user bacause",
-    "noMember": "Target user is no longer a member of this server.",
-    "notModeratable": "Target user is not moderatable by me.",
-    "notManageable": "Target user is not manageable by me.",
-    "notHighestUserRole": "Target user's highest role is higher than your highest role.",
-    "notHighestBotRole": "Target user's highest role is higher than my highest role.",
-    "kicked": "Successfully kicked **{{target}}** with reason: {{reason}}"
+    "response": "Successfully joined <#{{channelId}}>."
   },
   "language": {
     "description": "🌐 Change your language for the bot.",
     "options": { "language": "Select a language." },
     "notAvailable": "Selected language isn't available at the moment.",
-    "reply": "You have selected `{{language}}` as default language of this server."
+    "response": "You have selected `{{language}}` as default language of this server."
   },
   "leave": {
     "description": "Leaves the voice channel",
-    "left": "Successfully left <#{{channelId}}>."
+    "response": "Successfully left <#{{channelId}}>."
   },
   "logger": {
     "noChannel": "⚠ In order to create a loggin system, a text based channel must be provided.",
@@ -105,26 +77,18 @@
     "loopingQueue": "Looping the queue.",
     "loopingOff": "Looping is now off."
   },
-  "lyrics": { "description": "View lyrics for current playing song/track." },
-  "memberinfo": {
-    "description": "📖 View your or any member's information.",
-    "options": {
-      "member": "Select a member or leave empty to view your own info."
-    },
-    "message": "On {{time}}, {{user}} joined as the {{position}} member of {{guild}}.",
-    "username": "📛 Username",
-    "nickname": "🔰 Nickname",
-    "id": "🆔 Identifier",
-    "boost": "🚀 Server Boost",
-    "creation": "📆 Created On",
-    "join": "📆 Joined On",
-    "roles": "🎖 Roles [ {{count}} ] (shows top 5)"
+  "lyrics": {
+    "description": "View lyrics for current playing song/track."
   },
-  "nowplaying": { "description": "Shows the currently playing song." },
-  "pause": { "description": "Pauses the current track" },
+  "nowplaying": {
+    "description": "Shows the currently playing song."
+  },
+  "playpause": {
+    "description": "Play or Pause the current track."
+  },
   "ping": {
     "description": "🏓 Pong! Replies with bot's response time.",
-    "pinging": "🔄 Pinging...",
+    "pinging": "🔄 Pinging the server.....",
     "gatewayPing": "📡 Gateway Ping",
     "responseTime": "🛰 Response Time",
     "uptime": "⏰ Uptime"
@@ -139,72 +103,24 @@
   },
   "playlocal": {
     "description": "Plays your local audio files.",
-    "options": { "file": "The audio file you want to play." }
-  },
-  "purge": {
-    "description": "🧹 Delete bulk amount of messages.",
-    "subcommands": {
-      "any": "Delete any type of messages.",
-      "after": "Delete messages that are after a specific message.",
-      "bots": "Delete messages that were sent by bots.",
-      "commands": "Delete messages which are Slash Commands.",
-      "embeds": "Delete messages which contain embeds.",
-      "files": "Delete messages which contain files or attachments.",
-      "user": "Delete messages sent by a specific user."
-    },
     "options": {
-      "amount": "Number of messages the bot should delete.",
-      "message": "Message ID or Link to delete messages after.",
-      "target": "Select a user whose message to delete."
-    },
-    "noMessage": "Couldn't find the message. Please provide a valid `ID` or `Link`.",
-    "reply": "🧹 Deleted {{amount}} messages in {{channel}} successfully."
+      "file": "The audio file you want to play."
+    }
   },
   "reload": {
     "description": "",
     "owner": "Sorry, You are not the owner of this application. So, you can't use this command.",
-    "reply": "Reloaded {{t}} files."
+    "response": "Reloaded {{t}} files."
   },
   "remove": {
     "description": "Removes a track from the queue.",
-    "options": { "number": "The track number you want to remove." }
-  },
-  "replay": { "description": "Replays the current track." },
-  "resume": { "description": "Resumes the current track." },
-  "role": {
-    "description": "Give | Remove role(s) from server members.",
-    "subcommands": {
-      "give": "Gives a role to a user.",
-      "remove": "Removes a role from a user.",
-      "multiple": "subcommand to manage roles for multiple users."
-    },
     "options": {
-      "role": "Select a role.",
-      "target": "The target user.",
-      "targets": "The target users.",
-      "action": "Wether to give or remove roles."
-    },
-    "notManageable": "I am unable to manage this role | {{role}}",
-    "notAllowed": "You are not allowed to manage this role | {{role}}",
-    "given": "{{role}} | Role given to {{target}}.",
-    "removed": "{{role}} | Role removed from {{target}}.",
-    "givenSelected": "{{role}} | Given the role to selected members.",
-    "removedSelected": "{{role}} | Removed the role from selected members."
+      "number": "The track number you want to remove."
+    }
   },
-  "roleinfo": {
-    "description": "📖 View any role's information.",
-    "options": { "role": "Select a role to view." },
-    "role": "📛 Role",
-    "id": "🆔 Role ID",
-    "position": "📍 Position (from top)",
-    "color": "🎨 Color Code",
-    "mentionable": "🗯 Mentionable",
-    "hoisted": "📌 Hoisted",
-    "botRole": "🤖 Bot Role",
-    "members": "👥 Members",
-    "createdOn": "📆 Created On"
+  "replay": {
+    "description": "Replays the current track."
   },
-  "roles": { "description": "📝 Get the role list of a server." },
   "search": {
     "description": "Searches for tracks for the query.",
     "options": {
@@ -214,50 +130,22 @@
   },
   "seek": {
     "description": "Seeks to a certain time in the track.",
-    "options": { "duration": "The duration to seek to" }
-  },
-  "serverinfo": {
-    "description": "📖 View the server information.",
-    "name": "📛 Server Name",
-    "id": "🆔 Server ID",
-    "members": "👥 Members ({{size}})",
-    "ownedBy": "👑 Owner By",
-    "boost": "🌟 Server Boost",
-    "channels": "💬 Channels ({{size}})",
-    "channelView": "To view all server channels use `/channels`",
-    "roles": "🛡️ Roles ({{size}})",
-    "roleView": "To view all server roles use `/roles`",
-    "expressions": "✨ Emojis & Stickers ({{size}})",
-    "createdOn": "📆 Created On"
+    "options": {
+      "duration": "The duration to seek to. ( eg. 1:30 , 90s , 2m )"
+    }
   },
   "shuffle": {
-    "description": "Shuffles the queue.",
-    "shuffled": "Shuffled the queue."
+    "description": "Shuffles the queue."
   },
   "skip": {
     "description": "Skips the current or to a specific track in the queue.",
-    "options": { "number": "The number of the track you want to skip to" },
+    "options": {
+      "number": "The number of the track you want to skip to"
+    },
     "invalidNumber": "Provide a valid number not exceeding the queue length."
   },
   "stop": {
-    "description": "Stops the music and clears the queue",
-    "stopped": "Stopped the music and cleared the queue."
-  },
-  "timeout": {
-    "description": "Restrict a members ability to communicate.",
-    "options": {
-      "target": "Select a member to timeout.",
-      "duration": "The duration of the tiemout.",
-      "reason": "Reason for the timeout."
-    },
-    "failed": "Could not timeout member due to",
-    "noMember": "Member has most likely left the server.",
-    "invalidTime": "Time provided time is invalid or over the 28 days limit.",
-    "notModeratable": "Selected target is not moderatable by me.",
-    "notHighestUserRole": "Selected target has a higher role position than you.",
-    "notHighestBotRole": "Target user's highest role is higher than my highest role.",
-    "error": "An error occurred while trying to timeout the target. Error: {{error}}",
-    "timeout": "{{target}} was issued a timeout for **{{duration}}** by {{member}}.\nBringing their total infractions to **{{infractions}}** points.\n\nReason: **{{reason}}**"
+    "description": "Stops the music and clears the queue"
   },
   "queue": {
     "description": "Queue management commands for the player.",
@@ -266,14 +154,11 @@
       "clear": "Clear the queue of an active player."
     }
   },
-  "unban": {
-    "description": "Unban a member from the server.",
-    "options": { "target": "The user to unban from the server." },
-    "unbanned": "Successfully unbanned **{{user}}**."
-  },
   "volume": {
     "description": "Sets the volume of the player.",
-    "options": { "number": "The volume you want to set." },
+    "options": {
+      "number": "The volume you want to set. (1 - {{max}})"
+    },
     "tooHigh": "The volume can't be higher than {{max}}.",
     "setVolume": "Set the volume to {{volume}}"
   }

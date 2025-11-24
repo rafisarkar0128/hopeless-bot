@@ -27,9 +27,14 @@ module.exports = class Command extends BaseCommand {
         cooldown: 5,
         global: true,
       },
-      prefixOptions: { aliases: ["latency"], minArgsCount: 0 },
-      slashOptions: { ephemeral: false },
-      details: { usage: "ping", examples: ["ping"] },
+      prefixOptions: {
+        aliases: ["latency"],
+        minArgsCount: 0,
+      },
+      details: {
+        usage: "ping",
+        examples: ["ping"],
+      },
     });
   }
 

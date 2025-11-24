@@ -1,5 +1,7 @@
 {
-  "defaultReply": "🎶 Processing your request...",
+  "default": {
+    "response": "🎶 Processing your request..."
+  },
   "noPlayer": "❗ There is no active player in this server.",
   "noQuery": "❗ Please provide a search query or a URL to play.",
   "noChannel": "❗ You need to be in a voice channel to use this command.",
@@ -21,13 +23,13 @@
 
   "addTrack": "✅  Added {{track}} to the queue at `{{position}}`.",
   "addPlaylist": "✅  Added `{{size}}` tracks to the queue from `{{title}}`.",
-  "selectTrack": "Please select the track you want to play.",
+  "selectTrack": "✔️ Please select the track you want to play.",
 
   "queueTitle": "Queue for {{guild}} - [ {{length}} Tracks ]",
   "queueTrackInfo": "{{index}}. {{track}} - `{{duration}}`",
   "currentTrackInfo": "{{track}} - `{{duration}}`",
 
-  "loading": "Loading...",
+  "loading": "🔄️ Loading...",
   "noFile": "❗ Please attach an audio file to play.",
   "invalidFormat": "❗ You can only play MP3, WAV, OGG, FLAC, AAC or M4A files.",
   "corruptedFile": "❗ Failed to play the audio file. It may be corrupted.",
@@ -39,18 +41,18 @@
   "duration": "Duration",
   "requester": "Requester",
 
-  "pause": "Paused the player.",
-  "resume": "▶️ Resumed the player.",
-  "skip": "Skipped the current track.",
-  "skipTo": "Skipped to track number {{number}}.",
-  "seekedTo": "Seeked to {{duration}}",
-  "previous": "Replaying the previous track.",
-  "volume": "Volume set to `{{amount}}`.",
-  "shuffle": "successfully shuffled the queue.",
-  "stop": "Stopped the player and cleared the queue.",
-  "queueCleared": "The queue has been cleared.",
-  "replaying": "Replaying the current track.",
-  "removed": "Removed track number {{number}} from the queue.",
+  "paused": "⏸️ Paused the player.",
+  "resumed": "▶️ Resumed the player.",
+  "skipped": "⏭️ Skipped the current track.",
+  "skippedTo": "⏭️ Skipped to track number {{number}}.",
+  "seekedTo": "⏩ Seeked to {{duration}}",
+  "previous": "⏮️ Replaying the previous track.",
+  "volume": "🔊 Volume set to `{{amount}}`.",
+  "shuffle": "🔀 Successfully shuffled the queue.",
+  "stopped": "⏹️ Stopped the player and cleared the queue.",
+  "queueCleared": "🧹 The queue has been cleared.",
+  "replaying": "🔁 Replaying the current track.",
+  "removed": "🗑️ Removed track number {{number}} from the queue.",
 
   "requestedBy": "Requested by {{user}}",
   "previousBy": "Previous by {{user}}",
@@ -68,17 +70,5 @@
   "forwardedBy": "Forwarded to {{position}} by {{user}}",
   "rewoundBy": "Rewound to {{position}} by {{user}}",
 
-  "needDjRole": "You need to have the **DJ Role** to use this command.",
-
-  "setupStart": {
-    "now_playing": "Now Playing",
-    "description": "[{title}]({uri}) by {author} • `[{length}]` - Requested by <@{requester}>",
-    "error_searching": "There was an error while searching.",
-    "no_results": "There were no results found.",
-    "nothing_playing": "Nothing is playing right now",
-    "queue_too_long": "The queue is too long. The maximum length is {maxQueueSize} tracks.",
-    "playlist_too_long": "The playlist is too long. The maximum length is {maxPlaylistSize} tracks.",
-    "added_to_queue": "Added [{title}]({uri}) to the queue.",
-    "added_playlist_to_queue": "Added [{length}] tracks from the playlist to the queue."
-  }
+  "needDjRole": "You need to have the **DJ Role** to use this command."
 }

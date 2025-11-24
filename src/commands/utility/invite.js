@@ -25,9 +25,19 @@ module.exports = class Command extends BaseCommand {
           ApplicationIntegrationType.GuildInstall,
           ApplicationIntegrationType.UserInstall
         ),
-      options: { category: "utility", cooldown: 5, global: true },
-      prefixOptions: { aliases: ["invitation"], minArgsCount: 0 },
-      details: { usage: "invite", examples: ["invite"] },
+      options: {
+        category: "utility",
+        cooldown: 5,
+        global: true,
+      },
+      prefixOptions: {
+        aliases: ["invitation"],
+        minArgsCount: 0,
+      },
+      details: {
+        usage: "invite",
+        examples: ["invite"],
+      },
     });
   }
 
@@ -100,7 +110,7 @@ module.exports = class Command extends BaseCommand {
       .setEmoji("✉️");
 
     await interaction.followUp({
-      content: t("commands:invite.reply", { lng: metadata.locale }),
+      content: t("commands:invite.response", { lng: metadata.locale }),
       components: [new ActionRowBuilder().addComponents(inviteButton)],
     });
   }
