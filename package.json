@@ -49,7 +49,7 @@
     "dotenv": "^17.2.3",
     "figures": "^6.1.0",
     "genius-lyrics": "^4.4.7",
-    "glob": "^12.0.0",
+    "glob": "^13.0.0",
     "i18next": "^25.6.2",
     "i18next-fs-backend": "^2.6.1",
     "lavalink-client": "^2.6.7",
