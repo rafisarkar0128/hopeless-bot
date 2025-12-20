@@ -182,10 +182,10 @@ module.exports = class Command extends BaseCommand {
     const res = await player.search({ query, source }, interaction.user);
     const response = await this.getResponse(player, res, metadata.locale, playOption);
 
-    await interaction.followUp({ content: response });
+    await interaction.followUp({ content: response.message });
     setTimeout(() => interaction.deleteReply(), 10_000);
 
-    if (!player.playing && !player.paused) await player.play({ paused: false });
+    if (!response.error && !player.playing && !player.paused) await player.play({ paused: false });
   }
 
   /**
@@ -253,36 +253,42 @@ module.exports = class Command extends BaseCommand {
    * @param {import("lavalink-client").SearchResult} response
    * @param {string} lng
    * @param {"play_next" | "play_now" | "add_to_queue"} [playOption]
-   * @returns {Promise<import("discord.js").EmbedBuilder>}
+   * @returns {Promise<{message: string, error?: boolean}>}
    */
   async getResponse(player, response, lng, playOption) {
     switch (response.loadType) {
       case "error": {
-        return t("player:loadFailed", { lng });
+        return { message: t("player:loadFailed", { lng }), error: true };
       }
 
       case "empty": {
-        return t("player:emptyResult", { lng });
+        return { message: t("player:emptyResult", { lng }), error: true };
       }
 
       case "playlist": {
         await this.loadTracks(player, response.tracks, playOption);
-        return t("player:addPlaylist", {
-          lng,
-          size: response.tracks.length,
-          title: response.playlist?.name ? response.playlist.name : "playlist",
-        });
+        return {
+          message: t("player:addPlaylist", {
+            lng,
+            size: response.tracks.length,
+            title: response.playlist?.name ? response.playlist.name : "playlist",
+          }),
+          error: false,
+        };
       }
 
       case "track":
       case "search": {
         let track = response.tracks.shift();
         let position = await this.loadTracks(player, track, playOption);
-        return t("player:addTrack", {
-          lng,
-          position,
-          track: `[${track.info.title}](<${track.info.uri}>)`,
-        });
+        return {
+          message: t("player:addTrack", {
+            lng,
+            position,
+            track: `[${track.info.title}](<${track.info.uri}>)`,
+          }),
+          error: false,
+        };
       }
     }
   }
