@@ -1,15 +1,16 @@
-require("dotenv").config();
+// Secrets are loaded from a .env file in the root directory
+require("dotenv").config({ quiet: true });
 const { REST, Routes } = require("discord.js");
-const chalk = require("chalk");
 const token = process.env["DISCORD_CLIENT_TOKEN"];
 const clientId = process.env["DISCORD_CLIENT_ID"];
-const readline = require("readline");
-const rest = new REST({ version: 10 }).setToken(token);
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// Required for logging
+const chalk = require("chalk");
+const readline = require("readline");
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+// Utility to wait between logs
+const wait = require("util").promisify(setTimeout);
 
 const warningMsg = [
   "----------------------------------- !!! WARNING !!! -----------------------------------",
@@ -17,11 +18,9 @@ const warningMsg = [
   "Do you want to continue? (y/n): ",
 ].join("\n");
 
-console.clear();
-
-rl.question(warningMsg, async function (name) {
+rl.question(chalk.yellow(warningMsg), async function (answer) {
   try {
-    if (name.toLowerCase() === "y") {
+    if (answer.toLowerCase() === "y") {
       await deleteCommands();
       process.exit(0);
     } else {
@@ -35,10 +34,11 @@ rl.question(warningMsg, async function (name) {
 });
 
 async function deleteCommands() {
+  const rest = new REST({ version: 10 }).setToken(token);
   const commands = await rest.get(Routes.applicationCommands(clientId));
 
-  if (commands?.length === 0) {
-    console.log(chalk.red("\n❗ Couldn't fing any global command."));
+  if (commands.length === 0) {
+    console.log(chalk.red("\n❗ Couldn't find any global command."));
     process.exit(0);
   }
 
@@ -54,9 +54,11 @@ async function deleteCommands() {
         : "  "
       }${chalk.magenta(i)} | 🔥 ${chalk.red("deleted")} - ${command.id} - ${chalk.cyan(command.name)}`
     );
+    await wait(500); // To make it look its deleting in real-time
   }
 
   await rest.put(Routes.applicationCommands(clientId), { body: [] });
   console.log(`\n✅ Deleted all global commands.`);
+
   process.exit(0);
 }
