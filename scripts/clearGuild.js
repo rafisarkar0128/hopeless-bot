@@ -1,16 +1,17 @@
-require("dotenv").config();
+// Secrets are loaded from a .env file in the root directory
+require("dotenv").config({ quiet: true });
 const { REST, Routes } = require("discord.js");
-const chalk = require("chalk");
 const token = process.env["DISCORD_CLIENT_TOKEN"];
 const clientId = process.env["DISCORD_CLIENT_ID"];
-const serverId = process.env["GUILD_ID"];
-const readline = require("readline");
-const rest = new REST({ version: 10 }).setToken(token);
+const serverId = process.env["DISCORD_GUILD_ID"];
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// Required for logging
+const chalk = require("chalk");
+const readline = require("readline");
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+// Utility to wait between logs
+const wait = require("util").promisify(setTimeout);
 
 const warningMsg = [
   "----------------------------------- !!! WARNING !!! -----------------------------------",
@@ -20,7 +21,7 @@ const warningMsg = [
 
 console.clear();
 
-rl.question(warningMsg, async function (name) {
+rl.question(chalk.yellow(warningMsg), async function (name) {
   try {
     if (name.toLowerCase() === "y") {
       await deleteCommands();
@@ -36,11 +37,12 @@ rl.question(warningMsg, async function (name) {
 });
 
 async function deleteCommands() {
+  const rest = new REST({ version: 10 }).setToken(token);
   const guild = await rest.get(Routes.guild(serverId));
   const commands = await rest.get(Routes.applicationGuildCommands(clientId, serverId));
 
-  if (commands?.length === 0) {
-    console.log(`\n❗ Couldn't fing any guild command in ${chalk.yellow(guild.name)}.`);
+  if (commands.length === 0) {
+    console.log(`\n❗ Couldn't find any guild command in ${chalk.yellow(guild.name)}.`);
     process.exit(0);
   }
 
@@ -56,13 +58,13 @@ async function deleteCommands() {
         i >= 100 ? ""
         : i >= 10 ? " "
         : "  "
-      }${chalk.magenta(i)} | 🔥 ${chalk.red("deleted")} - ${command.id} - ${chalk.cyan(command.name)} `
+      }${chalk.magenta(i)} | 🔥 ${chalk.red("deleted")} - ${command.id} - ${chalk.cyan(command.name)}`
     );
+    await wait(500); // To make it look its deleting in real-time
   }
 
-  await rest.put(Routes.applicationGuildCommands(clientId, serverId), {
-    body: [],
-  });
+  await rest.put(Routes.applicationGuildCommands(clientId, serverId), { body: [] });
   console.log(`\n✅ Deleted all commands in ${chalk.yellow(guild.name)}.`);
+
   process.exit(0);
 }
