@@ -10,8 +10,8 @@ module.exports = class Command extends BaseCommand {
   constructor() {
     super({
       data: new SlashCommandBuilder()
-        .setName("autoplay")
-        .setDescription(t("commands:autoplay.description"))
+        .setName("shuffle")
+        .setDescription(t("commands:shuffle.description"))
         .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
       options: {
@@ -19,10 +19,19 @@ module.exports = class Command extends BaseCommand {
         cooldown: 5,
         global: true,
         guildOnly: true,
-        player: { voice: true, active: true },
+        player: {
+          voice: true,
+          active: true,
+        },
       },
-      prefixOptions: { aliases: ["autop", "aplay", "auto"], minArgsCount: 0 },
-      details: { usage: "autoplay", examples: ["autoplay"] },
+      prefixOptions: {
+        aliases: ["shffle", "shuf", "shfl"],
+        minArgsCount: 0,
+      },
+      details: {
+        usage: "shuffle",
+        examples: ["shuffle", "shffle", "shuf", "shfl"],
+      },
     });
   }
 
@@ -35,8 +44,15 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const response = this.toggleAutoplay(client, message.guildId, metadata?.locale);
-    await message.reply({ content: response });
+    const player = client.lavalink.getPlayer(message.guildId);
+
+    if (player.queue.tracks.length === 0) {
+      await message.reply(t("player:noTrack", { lng: metadata.locale }));
+      return;
+    }
+
+    await player.queue.shuffle();
+    await message.reply(t("player:shuffled", { lng: metadata.locale }));
   }
 
   /**
@@ -48,26 +64,14 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
-    const response = this.toggleAutoplay(client, interaction.guildId, metadata?.locale);
-    await interaction.followUp({ content: response });
-  }
+    const player = client.lavalink.getPlayer(interaction.guildId);
 
-  /**
-   * Execute function for this command.
-   * @param {import("@lib/index").DiscordClient} client
-   * @param {string} guildId
-   * @param {string} lng
-   * @returns {string}
-   */
-  toggleAutoplay(client, guildId, lng) {
-    const player = client.lavalink.getPlayer(guildId);
-    const autoplay = player.get("autoplay");
-    player.set("autoplay", !autoplay);
-
-    if (autoplay) {
-      return t("commands:autoplay.disabled", { lng });
-    } else {
-      return t("commands:autoplay.enabled", { lng });
+    if (player.queue.tracks.length === 0) {
+      await interaction.followUp(t("player:noTrack", { lng: metadata.locale }));
+      return;
     }
+
+    await player.queue.shuffle();
+    await interaction.followUp(t("player:shuffled", { lng: metadata.locale }));
   }
 };

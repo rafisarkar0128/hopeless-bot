@@ -49,13 +49,8 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    let reply = await message.reply(t("commands:default.reply", { lng: metadata?.locale }));
     const embed = this.getTrackInfo(client, message.guild, metadata);
-    await reply.edit({ content: null, embeds: [embed] });
-    setTimeout(() => {
-      if (message.deletable) message.delete().catch(() => {});
-      reply.delete().catch(() => {});
-    }, 10000);
+    await message.reply({ content: null, embeds: [embed] });
   }
 
   /**
@@ -66,8 +61,9 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {
+    await interaction.deferReply();
     const embed = this.getTrackInfo(client, interaction.guild, metadata);
-    await interaction.reply({ embeds: [embed], flags: "Ephemeral" });
+    await interaction.followUp({ embeds: [embed] });
   }
 
   /**
@@ -77,10 +73,8 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@database/index").Structures.Guild} metadata
    * @returns {EmbedBuilder}
    */
-  getTrackInfo(client, guild, metadata) {
-    const lng = metadata?.locale;
+  getTrackInfo(client, guild, { locale: lng }) {
     const player = client.lavalink.getPlayer(guild.id);
-
     const track = player.queue.current;
     const position = player.position;
     const duration = track.info.duration;

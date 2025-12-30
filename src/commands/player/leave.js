@@ -10,8 +10,8 @@ module.exports = class Command extends BaseCommand {
   constructor() {
     super({
       data: new SlashCommandBuilder()
-        .setName("autoplay")
-        .setDescription(t("commands:autoplay.description"))
+        .setName("leave")
+        .setDescription(t("commands:leave.description"))
         .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall),
       options: {
@@ -19,10 +19,19 @@ module.exports = class Command extends BaseCommand {
         cooldown: 5,
         global: true,
         guildOnly: true,
-        player: { voice: true, active: true },
+        player: {
+          voice: true,
+          active: true,
+        },
       },
-      prefixOptions: { aliases: ["autop", "aplay", "auto"], minArgsCount: 0 },
-      details: { usage: "autoplay", examples: ["autoplay"] },
+      prefixOptions: {
+        aliases: ["disconct", "disconnect", "leavevc", "dissapear"],
+        minArgsCount: 0,
+      },
+      details: {
+        usage: "leave",
+        examples: ["leave", "disconnect", "disconct", "leavevc", "dissapear"],
+      },
     });
   }
 
@@ -35,8 +44,10 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const response = this.toggleAutoplay(client, message.guildId, metadata?.locale);
-    await message.reply({ content: response });
+    const player = client.lavalink.getPlayer(message.guildId);
+    const channelId = player.voiceChannelId;
+    await player.destroy("Comamnd issued", true);
+    await message.reply(t("player:leftChannel", { lng: metadata.locale, channelId }));
   }
 
   /**
@@ -48,26 +59,9 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
-    const response = this.toggleAutoplay(client, interaction.guildId, metadata?.locale);
-    await interaction.followUp({ content: response });
-  }
-
-  /**
-   * Execute function for this command.
-   * @param {import("@lib/index").DiscordClient} client
-   * @param {string} guildId
-   * @param {string} lng
-   * @returns {string}
-   */
-  toggleAutoplay(client, guildId, lng) {
-    const player = client.lavalink.getPlayer(guildId);
-    const autoplay = player.get("autoplay");
-    player.set("autoplay", !autoplay);
-
-    if (autoplay) {
-      return t("commands:autoplay.disabled", { lng });
-    } else {
-      return t("commands:autoplay.enabled", { lng });
-    }
+    const player = client.lavalink.getPlayer(interaction.guildId);
+    const channelId = player.voiceChannelId;
+    await player.destroy("Comamnd issued", true);
+    await interaction.followUp(t("player:leftChannel", { lng: metadata.locale, channelId }));
   }
 };

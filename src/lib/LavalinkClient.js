@@ -71,7 +71,7 @@ class LavalinkClient extends LavalinkManager {
    */
   getColor(source = "") {
     const { defaultEmbedColor } = this.client.config.lavalink;
-    const { Transparent } = this.client.colors;
+    const { transparent } = this.client.colors;
     const colors = {
       applemusic: "#FA243C",
       bandcamp: "#408294",
@@ -85,7 +85,7 @@ class LavalinkClient extends LavalinkManager {
       youtube: "#FF0000",
       youtubemusic: "#FF0000",
     };
-    return colors[source.toLowerCase()] ?? defaultEmbedColor ?? Transparent;
+    return colors[source.toLowerCase()] ?? defaultEmbedColor ?? transparent;
   }
 
   /**
