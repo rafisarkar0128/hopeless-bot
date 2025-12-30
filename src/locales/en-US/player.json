@@ -2,6 +2,7 @@
   "default": {
     "response": "🎶 Processing your request..."
   },
+
   "noPlayer": "❗ There is no active player in this server.",
   "noQuery": "❗ Please provide a search query or a URL to play.",
   "noChannel": "❗ You need to be in a voice channel to use this command.",
@@ -19,7 +20,16 @@
   "notSeekable": "❗ This track is not seekable.",
   "beyondDuration": "❗ Cannot seek beyond the track duration of {{duration}}.",
   "notReplayable": "❗ Cannot replay this track as it is not seekable.",
-  "invalidTrackNumber": "❗ Please provide a valid track number.",
+  "invalidTrackNumber": "❗ Provide a valid index number not exceeding the queue length.",
+
+  "alreadyConnected": "❗ I'm already connected to <#{{channelId}}>.",
+  "joinedChannel": "✅  Joined voice channel <#{{channel}}>.",
+  "leftChannel": "✅  Left the voice channel.",
+
+  "volumeTooLow": "❗ Volume cannot be set lower than `0`.",
+  "volumeTooHigh": "❗ Volume cannot be set higher than `200`.",
+  "setVolume": "🔊 Volume has been set to `{{amount}}`.",
+  "currentVolume": "🔊 Current volume is `{{amount}}`.",
 
   "addTrack": "✅  Added {{track}} to the queue at `{{position}}`.",
   "addPlaylist": "✅  Added `{{size}}` tracks to the queue from `{{title}}`.",
@@ -47,12 +57,14 @@
   "skippedTo": "⏭️ Skipped to track number {{number}}.",
   "seekedTo": "⏩ Seeked to {{duration}}",
   "previous": "⏮️ Replaying the previous track.",
-  "volume": "🔊 Volume set to `{{amount}}`.",
-  "shuffle": "🔀 Successfully shuffled the queue.",
+  "shuffled": "🔀 Successfully shuffled the queue.",
   "stopped": "⏹️ Stopped the player and cleared the queue.",
   "queueCleared": "🧹 The queue has been cleared.",
   "replaying": "🔁 Replaying the current track.",
   "removed": "🗑️ Removed track number {{number}} from the queue.",
+  "loopingTrack": "🔂 Looping the current track.",
+  "loopingQueue": "🔁 Looping the current queue.",
+  "loopingOff": "▶️ Looping is now off.",
 
   "requestedBy": "Requested by {{user}}",
   "previousBy": "Previous by {{user}}",

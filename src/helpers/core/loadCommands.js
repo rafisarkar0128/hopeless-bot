@@ -88,7 +88,7 @@ async function loadCommands(client) {
       // Check if the command is disabled & skipping it
       if (cmd.options.disabled) {
         disabledCount++;
-        if (client.config.showTable.command) {
+        if (client.config.showCommandTable) {
           tableData.push([
             chalk.gray(cmd.data.name || fileName),
             chalk.gray(cmd.options.category.toUpperCase() || "N/A"),
@@ -211,7 +211,7 @@ async function loadCommands(client) {
         global: cmd.options.global,
       });
 
-      if (client.config.showTable.command) {
+      if (client.config.showCommandTable) {
         tableData.push([
           cmd.data.name,
           cmd.options.category.toUpperCase(),
@@ -231,7 +231,7 @@ async function loadCommands(client) {
         client.logger.error(`Detailed error for ${fileName}:\n`, error);
       }
 
-      if (client.config.showTable.command) {
+      if (client.config.showCommandTable) {
         tableData.push([
           chalk.red(fileName),
           chalk.gray("N/A"),
@@ -243,7 +243,7 @@ async function loadCommands(client) {
     }
   }
 
-  if (client.config.showTable.command) {
+  if (client.config.showCommandTable) {
     // Add summary row - all values must be strings, not objects
     const summary = `${chalk.bold("SUMMARY")}: Total: ${chalk.white(files.length)}, Loaded: ${chalk.green(i)}, Errors: ${chalk.red(errorCount)}, Disabled: ${chalk.gray(disabledCount)}`;
 

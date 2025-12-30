@@ -77,7 +77,7 @@ async function loadEvents(client) {
       // skipping disabled events.
       if (event.disabled) {
         disabledCount++;
-        if (client.config.showTable.event) {
+        if (client.config.showEventTable) {
           tableData.push([
             chalk.gray(event.name || fileName),
             chalk.gray("N/A"),
@@ -116,7 +116,7 @@ async function loadEvents(client) {
       targetObj[event.once ? "once" : "on"](event.name, execute);
 
       i++;
-      if (client.config.showTable.event) {
+      if (client.config.showEventTable) {
         tableData.push([
           event.name,
           target,
@@ -135,7 +135,7 @@ async function loadEvents(client) {
         client.logger.error(`Detailed error for ${fileName}:\n`, error);
       }
 
-      if (client.config.showTable.event) {
+      if (client.config.showEventTable) {
         tableData.push([
           chalk.red(fileName),
           chalk.gray("N/A"),
@@ -146,7 +146,7 @@ async function loadEvents(client) {
     }
   }
 
-  if (client.config.showTable.event) {
+  if (client.config.showEventTable) {
     // Add summary row - all values must be strings, not objects
     const summary = `${chalk.bold("SUMMARY")}: Total: ${chalk.white(files.length)}, Loaded: ${chalk.green(i)}, Errors: ${chalk.red(errorCount)}, Disabled: ${chalk.gray(disabledCount)}`;
 

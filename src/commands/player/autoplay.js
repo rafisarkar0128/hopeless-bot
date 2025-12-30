@@ -3,7 +3,6 @@ const {
   SlashCommandBuilder,
   InteractionContextType,
   ApplicationIntegrationType,
-  EmbedBuilder,
 } = require("discord.js");
 const { t } = require("i18next");
 
@@ -36,13 +35,8 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    let reply = await message.reply(t("player:defaultReply", { lng: metadata?.locale }));
-    const embed = this.toggleAutoplay(client, message.guildId, metadata?.locale);
-    await reply.edit({ content: null, embeds: [embed] });
-    setTimeout(() => {
-      if (message.deletable) message.delete().catch(() => {});
-      reply.delete().catch(() => {});
-    }, 10000);
+    const response = this.toggleAutoplay(client, message.guildId, metadata?.locale);
+    await message.reply({ content: response });
   }
 
   /**
@@ -53,8 +47,9 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executeSlash(client, interaction, metadata) {
-    const embed = this.toggleAutoplay(client, interaction.guildId, metadata?.locale);
-    await interaction.reply({ embeds: [embed], flags: "Ephemeral" });
+    await interaction.deferReply();
+    const response = this.toggleAutoplay(client, interaction.guildId, metadata?.locale);
+    await interaction.followUp({ content: response });
   }
 
   /**
@@ -62,20 +57,17 @@ module.exports = class Command extends BaseCommand {
    * @param {import("@lib/index").DiscordClient} client
    * @param {string} guildId
    * @param {string} lng
-   * @returns {Promise<void>}
+   * @returns {string}
    */
   toggleAutoplay(client, guildId, lng) {
     const player = client.lavalink.getPlayer(guildId);
-    const embed = new EmbedBuilder().setColor(client.lavalink.getColor());
     const autoplay = player.get("autoplay");
     player.set("autoplay", !autoplay);
 
     if (autoplay) {
-      embed.setDescription(t("commands:autoplay.disabled", { lng }));
+      return t("commands:autoplay.disabled", { lng });
     } else {
-      embed.setDescription(t("commands:autoplay.enabled", { lng }));
+      return t("commands:autoplay.enabled", { lng });
     }
-
-    return embed;
   }
 };

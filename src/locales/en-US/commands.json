@@ -34,7 +34,7 @@
   "grab": {
     "description": "Grabs the current playing song on your DM.",
     "loading": "Loading...",
-    "content": "Artist: {{artist}}\nDuration: **{{length}}**\nRequested by: <@{{requester}}>",
+    "content": "Artist: {{artist}}\nDuration: **{{length}}**\nRequested by: {{requester}}",
     "checkDM": "Please check your DM.",
     "DMfailed": "I couldn't send you a DM. Please make sure allow direct messages is turned on."
   },
@@ -44,9 +44,7 @@
     "response": "Invite me by clicking the button."
   },
   "join": {
-    "description": "Joins your the voice channel",
-    "alreadyConnected": "I'm already connected to <#{{channelId}}>.",
-    "response": "Successfully joined <#{{channelId}}>."
+    "description": "Joins your the voice channel"
   },
   "language": {
     "description": "🌐 Change your language for the bot.",
@@ -55,8 +53,7 @@
     "response": "You have selected `{{language}}` as default language of this server."
   },
   "leave": {
-    "description": "Leaves the voice channel",
-    "response": "Successfully left <#{{channelId}}>."
+    "description": "Leaves the voice channel"
   },
   "logger": {
     "noChannel": "⚠ In order to create a loggin system, a text based channel must be provided.",
@@ -72,10 +69,7 @@
       "off": "Set looping for the player to off.",
       "track": "Set looping for the player to track.",
       "queue": "Set looping for the player to queue."
-    },
-    "loopingTrack": "Looping the track.",
-    "loopingQueue": "Looping the queue.",
-    "loopingOff": "Looping is now off."
+    }
   },
   "lyrics": {
     "description": "View lyrics for current playing song/track."
@@ -140,9 +134,8 @@
   "skip": {
     "description": "Skips the current or to a specific track in the queue.",
     "options": {
-      "number": "The number of the track you want to skip to"
-    },
-    "invalidNumber": "Provide a valid number not exceeding the queue length."
+      "number": "The index of the track you want to skip to"
+    }
   },
   "stop": {
     "description": "Stops the music and clears the queue"
@@ -157,9 +150,7 @@
   "volume": {
     "description": "Sets the volume of the player.",
     "options": {
-      "number": "The volume you want to set. (1 - {{max}})"
-    },
-    "tooHigh": "The volume can't be higher than {{max}}.",
-    "setVolume": "Set the volume to {{volume}}"
+      "number": "The volume you want to set. (0 - 200)"
+    }
   }
 }

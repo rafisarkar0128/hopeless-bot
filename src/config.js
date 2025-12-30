@@ -26,13 +26,9 @@ module.exports = {
   // Debug mode to log more information
   debug: process.env.DEBUG === "true",
 
-  // whether to show table or not.
-  showTable: {
-    event: process.env.SHOW_TABLE_EVENT === "true", // event loader table
-    command: process.env.SHOW_TABLE_COMMAND === "true", // command loader table
-    commandChanges: process.env.SHOW_TABLE_COMMAND_CHANGES === "true", // Command changes table
-    commandSync: process.env.SHOW_TABLE_COMMAND_SYNC === "true", // Command syncronization table
-  },
+  // whether to show tables or not.
+  showEventTable: process.env.SHOW_EVENT_TABLE === "true", // event loader table
+  showCommandTable: process.env.SHOW_COMMAND_TABLE === "true", // command loader table
 
   // Bot settings
   bot: {
@@ -42,11 +38,8 @@ module.exports = {
     ownerId: process.env.OWNER_ID, // your discord account id
     guildId: process.env.GUILD_ID, // your guild id
     prefix: process.env.DEFAULT_PREFIX, // default prefix
-    /**
-     * your bots developer ids
-     * @type {string[]}
-     */
-    devs: process.env.DEV_IDS ? JSON.parse(process.env.DEV_IDS) : [],
+    /** @type {string[]|[]} */
+    devs: process.env.DEV_IDS ? JSON.parse(process.env.DEV_IDS) : [], // your bots developer ids
     global: process.env.GLOBAL_COMMANDS === "true", // Wheither to make the commands global or not
     allowedInvite: process.env.ALLOWED_INVITE === "true", // Whether to allow invite command or not
     defaultCooldown: 5, // Default cooldown ammount in secconds
@@ -75,7 +68,7 @@ module.exports = {
   },
 
   /**
-   * Cache settings for various managers
+   * Cache settings for various database managers
    * @type {Object<string, import("lru-cache").LRUCache>}
    */
   cacheSettings: {
@@ -98,39 +91,24 @@ module.exports = {
   // Dashboard settings
   dashboard: {
     enabled: true,
-    // Base url for the dashboard
-    baseUrl: "/",
-    // URL to redirect on failure
-    failureUrl: "/error",
-    // Port for the dashboard
-    port: process.env.DASHBOARD_PORT ?? 3000,
+    baseUrl: "/", // Base url for the dashboard
+    failureUrl: "/error", // URL to redirect on failure
+    port: process.env.DASHBOARD_PORT ?? 3000, // Port for the dashboard
   },
 
   // Settings for the lavalink music system
   lavalink: {
-    // Idle time in milliseconds before disconnecting
-    idleTime: 180000,
-    // Maximum search results to display
-    maxSearchResults: 10,
-    // Default player volume
-    defaultVolume: 50,
-    // Default color to use for embeds
-    defaultEmbedColor: "#7289DA",
-    // maxiimum volume allowed for the player
-    maxVolume: 100,
+    idleTime: 180000, // Idle time in milliseconds before disconnecting
+    maxSearchResults: 10, // Maximum search results to display
+    defaultVolume: 50, // Default player volume
+    defaultEmbedColor: "#7289DA", // Default color to use for embeds
     /**
      * Default source for the music system
      * ! avoid anything ending with "rec". example: "sprec" or "jsrec"
      * @type {import("lavalink-client").SearchPlatform}
      */
     defaultSearchPlatform: "ytmsearch",
-    // Lavalink nodes for the music system
-    nodes: require("@root/lavalinkNodes.js"),
-  },
-
-  image: {
-    enabled: true,
-    baseApi: "https://api.trace.moe",
+    nodes: require("@root/lavalinkNodes.js"), // Lavalink nodes for the music system
   },
 
   // Images to use everywhere
@@ -138,7 +116,7 @@ module.exports = {
     glitch: "https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png",
   },
 
-  // Icons for using everywhere
+  // Icons for various music sources
   icons: {
     youtube: "https://i.imgur.com/xzVHhFY.png",
     spotify: "https://i.imgur.com/qvdqtsc.png",

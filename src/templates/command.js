@@ -36,6 +36,7 @@ module.exports = class Command extends BaseCommand {
           dj: false,
           active: false,
           djPerm: null,
+          playing: false,
         },
       },
       prefixOptions: {

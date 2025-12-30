@@ -3,7 +3,6 @@ const {
   SlashCommandBuilder,
   InteractionContextType,
   ApplicationIntegrationType,
-  EmbedBuilder,
 } = require("discord.js");
 const { t } = require("i18next");
 
@@ -123,28 +122,24 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    let reply = await message.reply(t("player:default:response", { lng: metadata.locale }));
     const query = args.join(" ");
     const player = await this.getPlayer(client, message);
 
     if (!query || query.length === 0) {
       if (player.queue.current && !player.playing) {
         await player.resume();
-        reply.edit(t("player:resume", { lng: metadata.locale }));
+        await message.reply(t("player:resume", { lng: metadata.locale }));
       } else {
-        reply.edit(t("player:noQuery", { lng: metadata.locale }));
+        await message.reply(t("player:noQuery", { lng: metadata.locale }));
       }
     } else {
       const res = await player.search({ query }, message.author);
       const response = await this.getResponse(player, res, metadata.locale, "add_to_queue");
-      await reply.edit({ content: response });
-      if (!player.playing && !player.paused) await player.play({ paused: false });
+      await message.reply({ content: response.message });
+      if (!response.error && !player.playing && !player.paused) {
+        await player.play({ paused: false });
+      }
     }
-
-    setTimeout(() => {
-      if (message.deletable) message.delete().catch(() => null);
-      reply.delete().catch(() => null);
-    }, 10_000);
   }
 
   /**
@@ -169,10 +164,9 @@ module.exports = class Command extends BaseCommand {
       source = searchSource;
       nodes = nodes.filter((n) => n.info.sourceManagers.includes(sourceName));
       if (nodes.length === 0) {
-        const embed = new EmbedBuilder()
-          .setColor(client.colors.error)
-          .setDescription(t("player:noSource", { lng: metadata.locale, source: sourceName }));
-        await interaction.followUp({ embeds: [embed] });
+        await interaction.followUp({
+          content: t("player:noSource", { lng: metadata.locale, source: sourceName }),
+        });
         setTimeout(() => interaction.deleteReply(), 10_000);
         return;
       }
@@ -183,8 +177,6 @@ module.exports = class Command extends BaseCommand {
     const response = await this.getResponse(player, res, metadata.locale, playOption);
 
     await interaction.followUp({ content: response.message });
-    setTimeout(() => interaction.deleteReply(), 10_000);
-
     if (!response.error && !player.playing && !player.paused) await player.play({ paused: false });
   }
 
