@@ -60,7 +60,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {string}
    */
   toggleAutoplay(client, guildId, lng) {
-    const player = client.lavalink.getPlayer(guildId);
+    const player = client.lavalink.players.get(guildId);
     const autoplay = player.get("autoplay");
     player.set("autoplay", !autoplay);
 

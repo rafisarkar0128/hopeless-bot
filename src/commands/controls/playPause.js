@@ -48,7 +48,7 @@ module.exports = class Command extends BaseCommand {
     const response = await message.reply({
       content: t("player:default.response", { lng: metadata.locale }),
     });
-    const player = client.lavalink.getPlayer(message.guildId);
+    const player = client.lavalink.players.get(message.guildId);
 
     if (!player.paused && player.playing) {
       await player.pause();
@@ -68,7 +68,7 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
-    const player = client.lavalink.getPlayer(interaction.guildId);
+    const player = client.lavalink.players.get(interaction.guildId);
 
     if (!player.paused && player.playing) {
       await player.pause();

@@ -43,7 +43,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    let player = client.lavalink.getPlayer(message.guildId);
+    let player = client.lavalink.players.get(message.guildId);
     if (player) {
       await message.reply(
         t("player:alreadyConnected", {
@@ -84,7 +84,7 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
-    let player = client.lavalink.getPlayer(interaction.guildId);
+    let player = client.lavalink.players.get(interaction.guildId);
     if (player) {
       await interaction.followUp(
         t("player:alreadyConnected", {

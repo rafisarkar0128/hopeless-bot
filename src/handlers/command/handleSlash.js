@@ -125,7 +125,7 @@ async function handleSlash(client, interaction) {
     }
 
     if (command.player?.active) {
-      const player = client.lavalink.getPlayer(interaction.guildId);
+      const player = client.lavalink.players.get(interaction.guildId);
       if (!player) {
         return await errorReply(t("player:noPlayer", { lng: locale }));
       }

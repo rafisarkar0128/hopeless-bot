@@ -52,7 +52,7 @@ module.exports = class Command extends BaseCommand {
    */
   async executePrefix(client, message, args, metadata) {
     const number = args[0] ? parseInt(args[0], 10) : null;
-    const player = client.lavalink.getPlayer(message.guildId);
+    const player = client.lavalink.players.get(message.guildId);
     const response = await this.skipAndReturnReply(player, number, metadata.locale);
     await message.reply(response);
   }
@@ -67,7 +67,7 @@ module.exports = class Command extends BaseCommand {
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
     const number = interaction.options.getInteger("number");
-    const player = client.lavalink.getPlayer(interaction.guildId);
+    const player = client.lavalink.players.get(interaction.guildId);
     const response = await this.skipAndReturnReply(player, number, metadata.locale);
     await interaction.followUp(response);
   }

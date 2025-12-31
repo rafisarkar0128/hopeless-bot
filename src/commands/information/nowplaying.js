@@ -74,7 +74,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {EmbedBuilder}
    */
   getTrackInfo(client, guild, { locale: lng }) {
-    const player = client.lavalink.getPlayer(guild.id);
+    const player = client.lavalink.players.get(guild.id);
     const track = player.queue.current;
     const position = player.position;
     const duration = track.info.duration;
