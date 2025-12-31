@@ -173,7 +173,7 @@ async function handlePrefix(client, message, metadata, regex) {
     }
 
     if (options.player?.active) {
-      const player = client.lavalink.getPlayer(message.guildId);
+      const player = client.lavalink.players.get(message.guildId);
       if (!player) {
         return await replyAndDelete(t("player:noPlayer", { lng: locale }));
       }

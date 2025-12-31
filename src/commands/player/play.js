@@ -188,7 +188,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<import("lavalink-client").Player>}
    */
   async getPlayer(client, context, nodes = []) {
-    let player = client.lavalink.getPlayer(context.guildId);
+    let player = client.lavalink.players.get(context.guildId);
 
     if (!nodes || nodes.length === 0) {
       nodes = client.lavalink.nodeManager.leastUsedNodes("memory");

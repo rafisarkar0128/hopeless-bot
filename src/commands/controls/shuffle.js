@@ -44,7 +44,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const player = client.lavalink.getPlayer(message.guildId);
+    const player = client.lavalink.players.get(message.guildId);
 
     if (player.queue.tracks.length === 0) {
       await message.reply(t("player:noTrack", { lng: metadata.locale }));
@@ -64,7 +64,7 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
-    const player = client.lavalink.getPlayer(interaction.guildId);
+    const player = client.lavalink.players.get(interaction.guildId);
 
     if (player.queue.tracks.length === 0) {
       await interaction.followUp(t("player:noTrack", { lng: metadata.locale }));
