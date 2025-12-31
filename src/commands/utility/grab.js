@@ -46,7 +46,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const player = client.lavalink.getPlayer(message.guildId);
+    const player = client.lavalink.players.get(message.guildId);
     const song = player.queue.current;
     const songEmbed = new EmbedBuilder()
       .setColor(client.lavalink.getColor(song.info.sourceName))
@@ -79,7 +79,7 @@ module.exports = class Command extends BaseCommand {
    */
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
-    const player = client.lavalink.getPlayer(interaction.guildId);
+    const player = client.lavalink.players.get(interaction.guildId);
     const song = player.queue.current;
     const songEmbed = new EmbedBuilder()
       .setColor(client.lavalink.getColor(song.info.sourceName))

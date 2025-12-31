@@ -54,7 +54,7 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const player = client.lavalink.getPlayer(message.guildId);
+    const player = client.lavalink.players.get(message.guildId);
     let content = "";
 
     switch (player.repeatMode) {
@@ -88,7 +88,7 @@ module.exports = class Command extends BaseCommand {
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
     const subcommand = interaction.options.getSubcommand(true);
-    const player = client.lavalink.getPlayer(interaction.guildId);
+    const player = client.lavalink.players.get(interaction.guildId);
     let content = "";
 
     switch (subcommand) {
