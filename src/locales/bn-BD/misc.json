@@ -1,0 +1,11 @@
+{
+  "page": {
+    "info": "পৃষ্ঠা {{index}} এর {{total}}"
+  },
+  "buttons": {
+    "invite": "আমন্ত্রণ",
+    "website": "ওয়েবসাইট দেখুন",
+    "support": "সাহায্য পান",
+    "github": "GitHub-এ দেখুন"
+  }
+}

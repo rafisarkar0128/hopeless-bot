@@ -2,7 +2,83 @@
   "default": {
     "error": "Ocorreu um erro ao tentar executar o comando.",
     "errorTitle": "OCORREU UM ERRO",
-    "reason": "Nenhuma foi especificada."
+    "reason": "Nenhuma foi especificada.",
+    "response": "🧩 Processando sua solicitação..."
+  },
+  "about": {
+    "description": "Exibe informações sobre o bot.",
+    "fields": {
+      "creator": "Criador",
+      "repository": "Repositório",
+      "support": "Suporte",
+      "description": "**{{username}}** é um bot do Discord construído para **Streaming de Música**. Desenvolvido com [discord.js](https://github.com/discordjs/discord.js) para interagir com a [Discord API](https://discord.com/developers/docs/intro) e [Lavalink](https://github.com/lavalink-devs/lavalink) para streaming de áudio."
+    }
+  },
+  "autoplay": {
+    "description": "Ativar/desativar reprodução automática para o player.",
+    "enabled": "`✅` | A reprodução automática agora está `ATIVADA`.",
+    "disabled": "`✅` | A reprodução automática agora está `DESATIVADA`."
+  },
+  "botinfo": {
+    "description": "📖 Veja as informações do bot.",
+    "content": "Informações do Bot:\n- **Sistema Operacional**: {{osInfo}}\n- **Tempo Ativo**: {{osUptime}}\n- **Nome do Host**: {{osHostname}}\n- **Arquitetura da CPU**: {{cpuInfo}}\n- **Uso da CPU**: {{cpuUsed}}%\n- **Uso de Memória**: {{memUsed}}MB / {{memTotal}}GB\n- **Versão do Node**: {{nodeVersion}}\n- **Versão do Discord.js**: {{discordJsVersion}}\n- **Conectado a** {{guilds}} servidores, {{channels}} canais e {{users}} usuários\n- **Total de Comandos**: {{commands}}"
+  },
+  "emit": {
+    "description": "💬 Emita um evento discord.js para depuração e desenvolvimento.",
+    "options": {
+      "event": "O evento a ser emitido.",
+      "member": "Escolha um membro para incluir no evento."
+    },
+    "response": "✅ Evento `{{event}}` emitido com sucesso."
+  },
+  "grab": {
+    "description": "Envia a música atual para suas DMs.",
+    "loading": "Carregando...",
+    "content": "Artista: {{artist}}\nDuração: **{{length}}**\nSolicitado por: {{requester}}",
+    "checkDM": "Por favor, verifique suas DMs.",
+    "DMfailed": "Não foi possível enviar uma DM. Certifique-se de que as mensagens diretas estão ativadas."
+  },
+  "invite": {
+    "description": "Obtenha o link de convite do bot.",
+    "disabled": "Desculpe! Os convites foram desativados pelo proprietário.",
+    "response": "Me convide usando o botão."
+  },
+  "join": {
+    "description": "Entre no seu canal de voz."
+  },
+  "language": {
+    "description": "🌐 Altere o idioma do bot.",
+    "options": { "language": "Selecione um idioma." },
+    "notAvailable": "Esse idioma não está disponível no momento.",
+    "response": "`{{language}}` foi definido como o idioma padrão para este servidor."
+  },
+  "leave": {
+    "description": "Sai do canal de voz."
+  },
+  "logger": {
+    "noChannel": "⚠ Um canal de texto é necessário para configurar o registro.",
+    "created": "✅ Sistema de registro criado com sucesso.",
+    "updated": "✅ Dados do logger atualizados com sucesso.",
+    "noLogger": "❌ Não há sistema de registro configurado.",
+    "destroy": "✅ Sistema de registro removido com sucesso.",
+    "description": "Abaixo estão as estatísticas de todos os sistemas de registro."
+  },
+  "loop": {
+    "description": "Repita a faixa atual ou toda a fila.",
+    "subcommands": {
+      "off": "Desativar repetição.",
+      "track": "Repetir a faixa atual.",
+      "queue": "Repetir toda a fila."
+    }
+  },
+  "lyrics": {
+    "description": "Veja a letra da faixa atual."
+  },
+  "nowplaying": {
+    "description": "Mostre a faixa que está tocando no momento."
+  },
+  "playpause": {
+    "description": "Tocar ou pausar a faixa atual."
   },
   "ping": {
     "description": "🏓 Pong! Mostra o tempo de resposta do bot.",
@@ -10,5 +86,71 @@
     "gatewayPing": "📡 Ping do Gateway",
     "responseTime": "🛰 Tempo de Resposta",
     "uptime": "⏰ Tempo Online"
+  },
+  "play": {
+    "description": "Toque músicas ou faixas de fontes disponíveis.",
+    "options": {
+      "query": "Nome da música ou URL para tocar.",
+      "source": "A fonte de onde tocar.",
+      "options": "Opções adicionais para reprodução."
+    }
+  },
+  "playlocal": {
+    "description": "Toque seus arquivos de áudio locais.",
+    "options": {
+      "file": "O arquivo de áudio que você deseja tocar."
+    }
+  },
+  "reload": {
+    "description": "Recarrega os arquivos do bot.",
+    "owner": "Desculpe, você não é o proprietário do aplicativo e não pode usar este comando.",
+    "response": "Recarregou {{t}} arquivos."
+  },
+  "remove": {
+    "description": "Remova uma faixa da fila.",
+    "options": {
+      "number": "O número da faixa a ser removida."
+    }
+  },
+  "replay": {
+    "description": "Reproduza a faixa atual novamente."
+  },
+  "search": {
+    "description": "Pesquise faixas que correspondam a uma consulta.",
+    "options": {
+      "query": "As faixas que você deseja pesquisar.",
+      "source": "A fonte na qual pesquisar."
+    }
+  },
+  "seek": {
+    "description": "Avance para um tempo específico na faixa.",
+    "options": {
+      "duration": "O tempo para avançar. (ex: 01:30, 90, 2m, 1h30m)"
+    }
+  },
+  "shuffle": {
+    "description": "Embaralhe a fila."
+  },
+  "skip": {
+    "description": "Pule a faixa atual ou vá para uma específica na fila.",
+    "options": {
+      "number": "O índice da faixa para pular."
+    }
+  },
+  "stop": {
+    "description": "Pare a música e limpe a fila."
+  },
+  "queue": {
+    "description": "Gerencie a fila do player.",
+    "subcommands": {
+      "view": "Veja a fila do player ativo.",
+      "clear": "Limpe a fila do player ativo."
+    }
+  },
+  "volume": {
+    "description": "Defina o volume do player.",
+    "options": {
+      "number": "O nível de volume (0 - 200)."
+    }
   }
 }

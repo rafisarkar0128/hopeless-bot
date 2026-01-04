@@ -1,5 +1,5 @@
 {
   "default": {
-    "error": "An error occurred while trying to execute the context menu command. Try again later."
+    "error": "Something went wrong while running this context menu action. Please try again later."
   }
 }

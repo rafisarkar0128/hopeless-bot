@@ -10,68 +10,15 @@ module.exports = class Command extends BaseCommand {
   constructor() {
     super({
       data: new SlashCommandBuilder()
-        .setName("play")
-        .setDescription(t("commands:play.description"))
+        .setName("playlocal")
+        .setDescription(t("commands:playlocal.description"))
         .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-        .addStringOption((option) =>
-          option.setName("query").setDescription(t("commands:play.options.query")).setRequired(true)
-        )
-        .addStringOption((option) =>
+        .addAttachmentOption((option) =>
           option
-            .setName("source")
-            .setDescription(t("commands:search.options.source"))
-            .setRequired(false)
-            .addChoices([
-              {
-                name: "Apple Music",
-                value: "applemusic:amsearch",
-              },
-              {
-                name: "Bandcamp",
-                value: "bandcamp:bcsearch",
-              },
-              {
-                name: "Dezeer",
-                value: "dezeer:dzsearch",
-              },
-              {
-                name: "JioSaavn",
-                value: "jiosaavn:jssearch",
-              },
-              {
-                name: "Sound Cloud",
-                value: "soundcloud:scsearch",
-              },
-              {
-                name: "Spotify",
-                value: "spotify:spsearch",
-              },
-              {
-                name: "Yandex Music",
-                value: "yandexmusic:ymsearch",
-              },
-              {
-                name: "YouTube",
-                value: "youtube:ytsearch",
-              },
-              {
-                name: "YouTube Music",
-                value: "youtube:ytmsearch",
-              },
-              {
-                name: "VK Music",
-                value: "vkmusic:vksearch",
-              },
-              {
-                name: "Tidal",
-                value: "tidal:tdsearch",
-              },
-              {
-                name: "Qobuz",
-                value: "qobuz:qbsearch",
-              },
-            ])
+            .setName("file")
+            .setDescription(t("commands:playlocal.options.file"))
+            .setRequired(true)
         )
         .addStringOption((option) =>
           option
@@ -98,17 +45,22 @@ module.exports = class Command extends BaseCommand {
         },
       },
       prefixOptions: {
-        aliases: ["p", "add", "playtrack", "playmusic"],
+        aliases: [
+          "pl",
+          "playfile",
+          "pf",
+          "play_local",
+          "play_file",
+          "pfile",
+          "plocal",
+          "playf",
+          "play_loc",
+        ],
         minArgsCount: 0,
       },
       details: {
-        usage: "play <song|url>",
-        examples: [
-          "play example",
-          "play https://www.youtube.com/watch?v=example",
-          "play https://open.spotify.com/track/example",
-          "play http://www.example.com/example.mp3",
-        ],
+        usage: "playlocal <file>",
+        examples: ["playlocal <file>", "pl <file>"],
       },
     });
   }
@@ -122,25 +74,28 @@ module.exports = class Command extends BaseCommand {
    * @returns {Promise<void>}
    */
   async executePrefix(client, message, args, metadata) {
-    const query = args.join(" ");
+    const file = message.attachments.first();
+    if (!file) {
+      await message.reply({ content: t("player:noFile", { lng: metadata.locale }) });
+      return;
+    }
+
+    const audioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"];
+    const extension = file.name.split(".").pop()?.toLowerCase();
+
+    if (!audioExtensions.includes(`.${extension}`)) {
+      await message.reply({ content: t("player:invalidFileType", { lng: metadata.locale }) });
+      return;
+    }
+
     const player = await this.getPlayer(client, message);
     if (!player.connected) await player.connect();
 
-    if (!query || query.length === 0) {
-      if (player.queue.current && !player.playing) {
-        await player.resume();
-        await message.reply(t("player:resume", { lng: metadata.locale }));
-      } else {
-        await message.reply(t("player:noQuery", { lng: metadata.locale }));
-      }
-    } else {
-      const res = await player.search({ query }, message.author);
-      const response = await this.getResponse(player, res, metadata.locale, "add_to_queue");
-      await message.reply({ content: response.message });
-      if (!response.error && !player.playing && !player.paused) {
-        await player.play({ paused: false });
-      }
-    }
+    const res = await player.search({ query: file.url, source: "local" }, message.author);
+    const response = await this.getResponse(player, res, metadata.locale);
+
+    await message.reply({ content: response.message });
+    if (!response.error && !player.playing && !player.paused) await player.play({ paused: false });
   }
 
   /**
@@ -153,30 +108,28 @@ module.exports = class Command extends BaseCommand {
   async executeSlash(client, interaction, metadata) {
     await interaction.deferReply();
 
-    const query = interaction.options.getString("query", true);
+    const file = interaction.options.getAttachment("file", true);
     const playOption = interaction.options.getString("options", false) ?? undefined;
-    const playerSource = interaction.options.getString("source", false) ?? undefined;
 
-    let source = undefined;
-    let nodes = client.lavalink.nodeManager.leastUsedNodes("memory");
-
-    if (playerSource) {
-      const [sourceName, searchSource] = playerSource.split(/:/g);
-      source = searchSource;
-      nodes = nodes.filter((n) => n.info.sourceManagers.includes(sourceName));
-      if (nodes.length === 0) {
-        await interaction.followUp({
-          content: t("player:noSource", { lng: metadata.locale, source: sourceName }),
-        });
-        setTimeout(() => interaction.deleteReply(), 10_000);
-        return;
-      }
+    if (!file) {
+      await interaction.followUp({ content: t("player:noFile", { lng: metadata.locale }) });
+      return;
     }
 
-    const player = await this.getPlayer(client, interaction, nodes);
+    const audioExtensions = [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"];
+    const extension = file.name.split(".").pop()?.toLowerCase();
+
+    if (!audioExtensions.includes(`.${extension}`)) {
+      await interaction.followUp({
+        content: t("player:invalidFileType", { lng: metadata.locale }),
+      });
+      return;
+    }
+
+    const player = await this.getPlayer(client, interaction);
     if (!player.connected) await player.connect();
 
-    const res = await player.search({ query, source }, interaction.user);
+    const res = await player.search({ query: file.url, source: "local" }, interaction.user);
     const response = await this.getResponse(player, res, metadata.locale, playOption);
 
     await interaction.followUp({ content: response.message });
@@ -285,23 +238,5 @@ module.exports = class Command extends BaseCommand {
         };
       }
     }
-  }
-
-  /**
-   * Autocomplete function for autocomplete options of this command.
-   * @param {import("@lib/index").DiscordClient} client
-   * @param {import("discord.js").AutocompleteInteraction} interaction
-   * @returns {Promise<void>}
-   */
-  async autocomplete(client, interaction) {
-    const focused = interaction.options.getFocused();
-    if (!focused || focused.length === 0) return;
-    const choices = [
-      {
-        name: focused,
-        value: "focused",
-      },
-    ];
-    return await interaction.respond(choices);
   }
 };

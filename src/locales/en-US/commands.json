@@ -1,88 +1,88 @@
 {
   "default": {
-    "error": "An error occurred while trying to execute the command.",
+    "error": "An error occurred while executing the command.",
     "errorTitle": "AN ERROR OCCURRED",
-    "reason": "None was specified.",
-    "response": "🧩 Processing your request..."
+    "reason": "No reason provided.",
+    "response": "🧩 Handling your request..."
   },
   "about": {
-    "description": "Shows information about the bot",
+    "description": "Displays information about the bot.",
     "fields": {
       "creator": "Creator",
       "repository": "Repository",
       "support": "Support",
-      "description": "**{{username}}** is a discord bot, specially made for **Music Streaming**. It is built with [discord.js](https://github.com/discordjs/discord.js), a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the [Discord API](https://discord.com/developers/docs/intro), and [Lavalink](https://github.com/lavalink-devs/lavalink), a powerful audio streaming server."
+      "description": "**{{username}}** is a Discord bot built for **Music Streaming**. Powered by [discord.js](https://github.com/discordjs/discord.js) for interacting with the [Discord API](https://discord.com/developers/docs/intro) and [Lavalink](https://github.com/lavalink-devs/lavalink) for audio streaming."
     }
   },
   "autoplay": {
-    "description": "Toggles autoplay for the player.",
-    "enabled": "`✅` | Autoplay has been `ENABLED`.",
-    "disabled": "`✅` | Autoplay has been `DISABLED`."
+    "description": "Toggle autoplay for the player.",
+    "enabled": "`✅` | Autoplay is now `ENABLED`.",
+    "disabled": "`✅` | Autoplay is now `DISABLED`."
   },
   "botinfo": {
-    "description": "📖 View bot's information.",
+    "description": "📖 View the bot's information.",
     "content": "Bot Information:\n- **Operating System**: {{osInfo}}\n- **Uptime**: {{osUptime}}\n- **Hostname**: {{osHostname}}\n- **CPU Architecture**: {{cpuInfo}}\n- **CPU Usage**: {{cpuUsed}}%\n- **Memory Usage**: {{memUsed}}MB / {{memTotal}}GB\n- **Node Version**: {{nodeVersion}}\n- **Discord.js Version**: {{discordJsVersion}}\n- **Connected to** {{guilds}} guilds, {{channels}} channels, and {{users}} users\n- **Total Commands**: {{commands}}"
   },
   "emit": {
-    "description": "💬 Emit an discord.js event for debug and dev purposes.",
+    "description": "💬 Emit a discord.js event for debugging and development.",
     "options": {
       "event": "The event to emit.",
-      "member": "Select a member to be part of the event."
+      "member": "Choose a member to include in the event."
     },
-    "response": "✅ Emitted `{{event}}` event successfully."
+    "response": "✅ Successfully emitted the `{{event}}` event."
   },
   "grab": {
-    "description": "Grabs the current playing song on your DM.",
+    "description": "Sends the currently playing song to your DMs.",
     "loading": "Loading...",
     "content": "Artist: {{artist}}\nDuration: **{{length}}**\nRequested by: {{requester}}",
-    "checkDM": "Please check your DM.",
-    "DMfailed": "I couldn't send you a DM. Please make sure allow direct messages is turned on."
+    "checkDM": "Please check your DMs.",
+    "DMfailed": "I couldn’t send a DM. Make sure direct messages are enabled."
   },
   "invite": {
-    "description": "Get the bots invite url.",
-    "disabled": "Sorry! Invites have been disabled by the owner.",
-    "response": "Invite me by clicking the button."
+    "description": "Get the bot's invite link.",
+    "disabled": "Sorry! Invites are disabled by the owner.",
+    "response": "Invite me using the button."
   },
   "join": {
-    "description": "Joins your the voice channel"
+    "description": "Joins your voice channel."
   },
   "language": {
-    "description": "🌐 Change your language for the bot.",
+    "description": "🌐 Change the bot's language.",
     "options": { "language": "Select a language." },
-    "notAvailable": "Selected language isn't available at the moment.",
-    "response": "You have selected `{{language}}` as default language of this server."
+    "notAvailable": "That language isn’t available right now.",
+    "response": "`{{language}}` has been set as the default language for this server."
   },
   "leave": {
-    "description": "Leaves the voice channel"
+    "description": "Leaves the voice channel."
   },
   "logger": {
-    "noChannel": "⚠ In order to create a loggin system, a text based channel must be provided.",
-    "created": "✅ Successfully created the logging system.",
-    "updated": "✅ Successfully updated the logger data.",
-    "noLogger": "❌ Sorry there is no logging system.",
-    "destroy": "✅ Successfully deleted the logging system.",
-    "description": "Below are given the stats for all logging systems."
+    "noChannel": "⚠ A text channel is required to set up logging.",
+    "created": "✅ Logging system created successfully.",
+    "updated": "✅ Logger data updated successfully.",
+    "noLogger": "❌ There is no logging system configured.",
+    "destroy": "✅ Logging system removed successfully.",
+    "description": "Below are the stats for all logging systems."
   },
   "loop": {
-    "description": "Loop the current track or the queue",
+    "description": "Loop the current track or the entire queue.",
     "subcommands": {
-      "off": "Set looping for the player to off.",
-      "track": "Set looping for the player to track.",
-      "queue": "Set looping for the player to queue."
+      "off": "Turn off looping.",
+      "track": "Loop the current track.",
+      "queue": "Loop the entire queue."
     }
   },
   "lyrics": {
-    "description": "View lyrics for current playing song/track."
+    "description": "View lyrics for the currently playing track."
   },
   "nowplaying": {
-    "description": "Shows the currently playing song."
+    "description": "Show the track that’s currently playing."
   },
   "playpause": {
-    "description": "Play or Pause the current track."
+    "description": "Play or pause the current track."
   },
   "ping": {
-    "description": "🏓 Pong! Replies with bot's response time.",
-    "pinging": "🔄 Pinging the server.....",
+    "description": "🏓 Pong! Shows the bot's response time.",
+    "pinging": "🔄 Pinging the server...",
     "gatewayPing": "📡 Gateway Ping",
     "responseTime": "🛰 Response Time",
     "uptime": "⏰ Uptime"
@@ -90,67 +90,67 @@
   "play": {
     "description": "Play songs or tracks from available sources.",
     "options": {
-      "query": "Song name or url to play.",
+      "query": "Song name or URL to play.",
       "source": "The source to play from.",
-      "options": "Additional options for playing the track."
+      "options": "Additional options for playback."
     }
   },
   "playlocal": {
-    "description": "Plays your local audio files.",
+    "description": "Play your local audio files.",
     "options": {
       "file": "The audio file you want to play."
     }
   },
   "reload": {
-    "description": "",
-    "owner": "Sorry, You are not the owner of this application. So, you can't use this command.",
+    "description": "Reloads the bot’s files.",
+    "owner": "Sorry, you’re not the application owner and cannot use this command.",
     "response": "Reloaded {{t}} files."
   },
   "remove": {
-    "description": "Removes a track from the queue.",
+    "description": "Remove a track from the queue.",
     "options": {
-      "number": "The track number you want to remove."
+      "number": "The track number to remove."
     }
   },
   "replay": {
-    "description": "Replays the current track."
+    "description": "Replay the current track."
   },
   "search": {
-    "description": "Searches for tracks for the query.",
+    "description": "Search for tracks matching a query.",
     "options": {
-      "query": "The tracks you want to search.",
-      "source": "The source to search from."
+      "query": "The tracks you want to search for.",
+      "source": "The source to search in."
     }
   },
   "seek": {
-    "description": "Seeks to a certain time in the track.",
+    "description": "Seek to a specific time in the track.",
     "options": {
-      "duration": "The duration to seek to. ( eg. 1:30 , 90s , 2m )"
+      "duration": "The time to seek to. (e.g., 01:30, 90, 2m, 1h30m)"
     }
   },
   "shuffle": {
-    "description": "Shuffles the queue."
+    "description": "Shuffle the queue."
   },
   "skip": {
-    "description": "Skips the current or to a specific track in the queue.",
+    "description": "Skip the current track or jump to a specific one in the queue.",
     "options": {
-      "number": "The index of the track you want to skip to"
+      "number": "The index of the track to skip to."
     }
   },
   "stop": {
-    "description": "Stops the music and clears the queue"
+    "description": "Stop the music and clear the queue."
   },
   "queue": {
-    "description": "Queue management commands for the player.",
+    "description": "Manage the player queue.",
     "subcommands": {
-      "view": "View the queue of an active player.",
-      "clear": "Clear the queue of an active player."
+      "view": "View the active player’s queue.",
+      "clear": "Clear the active player’s queue."
     }
   },
   "volume": {
-    "description": "Sets the volume of the player.",
+    "description": "Set the player volume.",
     "options": {
-      "number": "The volume you want to set. (0 - 200)"
+      "number": "The volume level (0 - 200)."
     }
   }
 }
