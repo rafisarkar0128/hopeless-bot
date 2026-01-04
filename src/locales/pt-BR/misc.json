@@ -1,0 +1,11 @@
+{
+  "page": {
+    "info": "Página {{index}} de {{total}}"
+  },
+  "buttons": {
+    "invite": "Convidar",
+    "website": "Visitar Site",
+    "support": "Obter Suporte",
+    "github": "Ver no GitHub"
+  }
+}

@@ -3,9 +3,9 @@
     "info": "Page {{index}} of {{total}}"
   },
   "buttons": {
-    "invite": "Invite Me",
-    "website": "Website",
-    "support": "Support",
-    "github": "GitHub"
+    "invite": "Invite",
+    "website": "Visit Website",
+    "support": "Get Support",
+    "github": "View on GitHub"
   }
 }

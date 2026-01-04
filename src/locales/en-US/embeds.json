@@ -1,15 +1,15 @@
 {
   "default": {
-    "footer": "Powered by {{username}} | Copyright ©{{year}}"
+    "footer": "Powered by {{username}} | ©{{year}}"
   },
 
   "bot": {
-    "description": "A discord music app for your musical needs with **Premium Services**. For more info head to {{website}}"
+    "description": "A Discord music app with premium features. Learn more at {{website}}"
   },
 
   "mention": {
-    "title": "Did you just mention me?",
-    "description": "Hey, my prefix for this server is **__{{prefix}}__**.\nWant more info? then do `{{prefix}}help` | `/help`.",
-    "footer": "Stay Safe, Stay Awesome!"
+    "title": "Did you mention me?",
+    "description": "Hi! My prefix here is **__{{prefix}}__**.\nNeed help? Use `{{prefix}}help` or `/help`.",
+    "footer": "Stay safe and awesome!"
   }
 }

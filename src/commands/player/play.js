@@ -98,7 +98,7 @@ module.exports = class Command extends BaseCommand {
         },
       },
       prefixOptions: {
-        aliases: ["pl", "add"],
+        aliases: ["p", "add", "playtrack", "playmusic"],
         minArgsCount: 0,
       },
       details: {
@@ -124,6 +124,7 @@ module.exports = class Command extends BaseCommand {
   async executePrefix(client, message, args, metadata) {
     const query = args.join(" ");
     const player = await this.getPlayer(client, message);
+    if (!player.connected) await player.connect();
 
     if (!query || query.length === 0) {
       if (player.queue.current && !player.playing) {
@@ -173,6 +174,8 @@ module.exports = class Command extends BaseCommand {
     }
 
     const player = await this.getPlayer(client, interaction, nodes);
+    if (!player.connected) await player.connect();
+
     const res = await player.search({ query, source }, interaction.user);
     const response = await this.getResponse(player, res, metadata.locale, playOption);
 
@@ -210,7 +213,6 @@ module.exports = class Command extends BaseCommand {
       });
     }
 
-    if (!player.connected) await player.connect();
     return player;
   }
 

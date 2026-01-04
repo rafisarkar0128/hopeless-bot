@@ -55,25 +55,24 @@ module.exports = class Command extends BaseCommand {
    */
   async executePrefix(client, message, args, metadata) {
     const player = client.lavalink.players.get(message.guildId);
-    let content = "";
+    const repeatMode = args[0]?.toLowerCase();
 
-    switch (player.repeatMode) {
-      case "off": {
-        player.setRepeatMode("track");
-        content = t("player:loopingTrack", { lng: metadata.locale });
-        break;
-      }
-      case "track": {
-        player.setRepeatMode("queue");
-        content = t("player:loopingQueue", { lng: metadata.locale });
-        break;
-      }
-      case "queue": {
-        player.setRepeatMode("off");
-        content = t("player:loopingOff", { lng: metadata.locale });
-        break;
-      }
+    const modes = ["off", "track", "queue"];
+    const keys = {
+      off: "player:loopingOff",
+      track: "player:loopingTrack",
+      queue: "player:loopingQueue",
+    };
+
+    let targetMode = repeatMode;
+
+    if (!modes.includes(repeatMode)) {
+      const currentIndex = modes.indexOf(player.repeatMode);
+      targetMode = modes[(currentIndex + 1) % modes.length];
     }
+
+    player.setRepeatMode(targetMode);
+    const content = t(keys[targetMode], { lng: metadata.locale });
 
     await message.reply({ content });
   }

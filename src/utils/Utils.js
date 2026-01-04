@@ -154,7 +154,7 @@ class Utils {
    * If the 'long' parameter is true, returns the time in long form (e.g., '1 day 2 hours 3 minutes 4 seconds').
    *
    * @param {number} ms - Time in milliseconds.
-   * @param {boolean} [long=false] - Whether to use long form for units.
+   * @param {string} [type="short"] - The format type ("short", "long", "clock"). default is "short".
    * @returns {string} The formatted time string.
    * @example
    * client.utils.formatTime(93784000);
@@ -162,53 +162,86 @@ class Utils {
    * client.utils.formatTime(93784000, true);
    * // Returns "1 day 2 hours 3 minutes 4 seconds"
    */
-  formatTime(ms, long = false) {
+  formatTime(ms, type = "short") {
     const seconds = Math.floor(ms / 1000) % 60;
     const minutes = Math.floor(ms / 60000) % 60;
     const hours = Math.floor(ms / 3600000) % 24;
     const days = Math.floor(ms / 86400000) % 30;
     const parts = [];
 
-    if (long) {
-      if (days > 0) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
-      if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
-      if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
-      parts.push(`${seconds} ${seconds === 1 ? "second" : "seconds"}`);
-      return parts.join(", ");
+    switch (type) {
+      case "long": {
+        if (days > 0) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
+        if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
+        if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
+        parts.push(`${seconds} ${seconds === 1 ? "second" : "seconds"}`);
+        break;
+      }
+
+      case "clock": {
+        const h = hours + days * 24;
+        const m = minutes < 10 ? `0${minutes}` : minutes;
+        const s = seconds < 10 ? `0${seconds}` : seconds;
+        parts.push(`${h}:${m}:${s}`);
+        break;
+      }
+
+      case "short":
+      default: {
+        if (days > 0) parts.push(`${days}d`);
+        if (hours > 0) parts.push(`${hours}h`);
+        if (minutes > 0) parts.push(`${minutes}m`);
+        parts.push(`${seconds}s`);
+        break;
+      }
     }
 
-    if (days > 0) parts.push(`${days}d`);
-    if (hours > 0) parts.push(`${hours}h`);
-    if (minutes > 0) parts.push(`${minutes}m`);
-    parts.push(`${seconds}s`);
     return parts.join(", ");
   }
 
   /**
-   * Parses a time string (e.g., "3d2h5m10s") into milliseconds.
-   * Supports days (d), hours (h), minutes (m), and seconds (s).
+   * Parses a time string (e.g., "3d2h5m10s", "01:02:03", or "90") into milliseconds.
+   * Supports days (d), hours (h), minutes (m), seconds (s), clock formats, and plain seconds.
    *
    * @param {string} string - The time string to parse.
-   * @returns {number} The time in milliseconds.
-   * @example
-   * client.utils.parseTime("5m");
-   * // Returns 300000
-   * client.utils.parseTime("1h1m1s");
-   * // Returns 3661000
+   * @returns {number|null} The time in milliseconds, or null when format is invalid.
    */
   parseTime(string) {
-    const time = string.match(/(\d+[dhms])/g);
-    if (!time) return 0;
-    let ms = 0;
-    for (const t of time) {
-      const unit = t[t.length - 1];
-      const amount = Number(t.slice(0, -1));
-      if (unit === "d") ms += amount * 24 * 60 * 60 * 1000;
-      else if (unit === "h") ms += amount * 60 * 60 * 1000;
-      else if (unit === "m") ms += amount * 60 * 1000;
-      else if (unit === "s") ms += amount * 1000;
+    const value = String(string || "").trim().toLowerCase();
+    if (!value) return null;
+
+    // Clock format: "HH:MM:SS" or "MM:SS"
+    if (/^(\d{1,2}:){1,2}\d{1,2}$/.test(value)) {
+      const parts = value.split(":").map(Number);
+      while (parts.length < 3) parts.unshift(0); // pad to [h, m, s]
+      const [hours, minutes, seconds] = parts;
+      return (hours * 3600 + minutes * 60 + seconds) * 1000;
     }
-    return ms;
+
+    // Plain number => seconds
+    if (/^\d+$/.test(value)) {
+      return Number(value) * 1000;
+    }
+
+    // Duration tokens: e.g., "3d2h5m10s" or "3d 2h 5m 10s"
+    const tokens = value.match(/(\d+\s*[dhms])/g);
+    if (!tokens) return null;
+
+    const multipliers = { d: 86400000, h: 3600000, m: 60000, s: 1000 };
+    let ms = 0;
+    let hasValid = false;
+
+    for (const token of tokens) {
+      const trimmed = token.trim();
+      const unit = trimmed.slice(-1);
+      const amount = Number(trimmed.slice(0, -1));
+      if (Number.isFinite(amount) && multipliers[unit]) {
+        ms += amount * multipliers[unit];
+        hasValid = true;
+      }
+    }
+
+    return hasValid ? ms : null;
   }
 
   /**
@@ -281,6 +314,47 @@ class Utils {
    */
   formatNumber(number) {
     return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  /**
+   * Safely parses a value to an integer with error handling.
+   * Returns null for invalid inputs instead of NaN.
+   * Supports decimal and other radix bases (2-36).
+   *
+   * @param {*} value - The value to parse (string, number, etc).
+   * @param {number} [radix=10] - The base for parsing (2-36). Default is 10.
+   * @returns {number|null} The parsed integer, or null if invalid.
+   * @example
+   * client.utils.parseInt("42");           // Returns 42
+   * client.utils.parseInt("0xFF", 16);     // Returns 255
+   * client.utils.parseInt("invalid");      // Returns null
+   * client.utils.parseInt(null);           // Returns null
+   * client.utils.parseInt("  123  ");      // Returns 123
+   */
+  parseInt(value, radix = 10) {
+    // Validate radix
+    if (typeof radix !== "number" || radix < 2 || radix > 36 || !Number.isInteger(radix)) {
+      radix = 10;
+    }
+
+    // Handle null/undefined
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    // Convert to string and trim
+    const str = String(value).trim();
+
+    // Reject empty strings
+    if (str === "") {
+      return null;
+    }
+
+    // Use native parseInt
+    const result = Number.parseInt(str, radix);
+
+    // Return null if result is NaN
+    return Number.isNaN(result) ? null : result;
   }
 }
 

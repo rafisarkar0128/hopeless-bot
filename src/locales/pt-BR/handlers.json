@@ -1,0 +1,29 @@
+{
+  "command": {
+    "error": "Algo deu errado ao executar **{{command}}**. Por favor, tente novamente mais tarde.",
+    "disabled": "O comando **{{command}}** foi desativado pelos desenvolvedores.",
+    "guildOnly": "O comando **{{command}}** só pode ser usado em um servidor.",
+    "notFound": "O comando **{{command}}** não está mais disponível.",
+    "devOnly": "Apenas desenvolvedores podem usar o comando **{{command}}**.",
+    "cooldown": "Por favor, aguarde `{{time}}` antes de usar **{{command}}** novamente.",
+    "noBotPerm": "Não posso executar **{{command}}** em {{channel}} porque estou sem essas permissões:\n{{perms}}",
+    "botPerm": "Não posso executar **{{command}}** porque estou sem essas permissões:\n{{perms}}",
+    "userPerm": "Você precisa dessas permissões para usar **{{command}}**:\n{{perms}}",
+    "voiceOnly": "Entre em um **Canal de Voz** antes de usar **{{command}}**.",
+    "missingVoicePerm": "Não posso **entrar** em {{channel}} ou **falar** lá.",
+    "noRequestToSpeak": "Não tenho permissão de **REQUEST TO SPEAK** em {{channel}} para executar **{{command}}**.",
+    "differentVoiceChannel": "Você deve estar conectado a **{{channel}}** para usar este comando.",
+    "missingArgs": "Argumentos faltando",
+    "missingArgsDescription": "Inclua os argumentos necessários para o comando `{{command}}`.",
+    "usageTitle": "Uso",
+    "examplesTitle": "Exemplos",
+    "syntaxFooter": "Sintaxe: [] = opcional, <> = obrigatório",
+    "noMentionEveryone": "Você não pode usar este comando com @everyone ou @here. Use o comando de barra em vez disso.",
+    "voteButton": "Vote em mim!",
+    "voteMessage": "Você precisa votar no top.gg para usar este comando. Obrigado!",
+    "no_voice_channel_queue": "Entre em um canal de voz para adicionar músicas à fila.",
+    "no_dj_role": "O cargo de DJ não foi definido.",
+    "no_dj_permission": "Você precisa do cargo de DJ para usar este comando."
+  },
+  "autocomplete": {}
+}
