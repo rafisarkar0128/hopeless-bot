@@ -8,13 +8,7 @@ const figures = require("figures").default;
  * A utility class for managing client console logs.
  */
 class Logger {
-  /**
-   * A function to pad end of strings with spaces.
-   * @private
-   * @param {string|any} str
-   * @param {number} targetLength
-   * @returns {string}
-   */
+  /** @private */
   _padEnd(str, targetLength) {
     str = String(str);
     targetLength = parseInt(targetLength, 10) || 0;
@@ -30,12 +24,7 @@ class Logger {
     return str + " ".repeat(targetLength);
   }
 
-  /**
-   * Arrayify a string.
-   * @private
-   * @param {string|string[]|any} x
-   * @returns {string[]}
-   */
+  /** @private */
   _arrayify(x) {
     return Array.isArray(x) ? x : [x];
   }

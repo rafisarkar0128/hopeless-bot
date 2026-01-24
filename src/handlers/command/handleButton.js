@@ -1,14 +1,14 @@
-const { ChannelType, EmbedBuilder } = require("discord.js");
+const { ChannelType } = require("discord.js");
 const { t } = require("i18next");
 
 /**
  * A function to handle slash commands
  * @param {import("@lib/index").DiscordClient} client
- * @param {import("discord.js").ChatInputCommandInteraction<"cached">} interaction
+ * @param {import("discord.js").ButtonInteraction} interaction
  * @returns {Promise<void>}
  */
-async function handleSlash(client, interaction) {
-  const { commandName, user } = interaction;
+async function handleButton(client, interaction) {
+  const { customId, user } = interaction;
   let metadata = await client.mongodb.guilds.get(interaction.guildId);
   if (!metadata) {
     metadata = await client.mongodb.guilds.create(interaction.guildId);
@@ -29,69 +29,59 @@ async function handleSlash(client, interaction) {
 
   const { locale } = metadata;
   const devUser = client.config.bot.devs?.includes(user.id);
-  const command = client.commands.get(commandName);
-  if (!command) {
-    await errorReply(t("handlers:command.notFound", { lng: locale, command: commandName }));
-    return await interaction.command.delete();
+  const button = client.buttons.get(customId);
+  if (!button) {
+    return await errorReply(t("handlers:button.notFound", { lng: locale }));
   }
 
-  const { options, slashOptions } = command;
-  if (slashOptions.disabled && !devUser) {
-    return await errorReply(t("handlers:command.disabled", { lng: locale, command: commandName }));
+  if (button.options.disabled && !devUser) {
+    return await errorReply(t("handlers:button.disabled", { lng: locale }));
   }
 
-  if (options.guildOnly && !interaction.inGuild()) {
-    return await errorReply(t("handlers:command.guildOnly", { lng: locale, command: commandName }));
+  if (button.options.guildOnly && !interaction.inGuild()) {
+    return await errorReply(t("handlers:button.guildOnly", { lng: locale }));
   }
 
-  if (options.permissions?.dev && !devUser) {
-    return await errorReply(t("handlers:command.devOnly", { lng: locale, command: commandName }));
+  if (button.permissions?.dev && !devUser) {
+    return await errorReply(t("handlers:button.devOnly", { lng: locale }));
   }
 
   if (interaction.inGuild()) {
     const clientMember = interaction.guild.members.resolve(client.user);
 
-    const missingBotPermissions = options.permissions.bot.filter(
+    const missingBotPermissions = button.permissions.bot.filter(
       (p) => !clientMember.permissions.has(p)
     );
     if (missingBotPermissions.length > 0) {
       return await errorReply(
-        t("handlers:command.botPerm", {
+        t("handlers:button.botPerm", {
           lng: locale,
-          command: commandName,
           perms: missingBotPermissions.map((p) => `- **${p}**`).join("\n"),
         })
       );
     }
 
-    const missingUserPermissions = options.permissions.user.filter(
+    const missingUserPermissions = button.permissions.user.filter(
       (p) => !interaction.member.permissions.has(p)
     );
     if (missingUserPermissions.length > 0) {
       return await errorReply(
-        t("handlers:command.userPerm", {
+        t("handlers:button.userPerm", {
           lng: locale,
-          command: commandName,
           perms: missingUserPermissions.map((p) => `- **${p}**`).join("\n"),
         })
       );
     }
 
-    if (options.player?.voice) {
+    if (button.player?.voice) {
       const vc = interaction.member.voice.channel;
       if (!vc) {
-        return await errorReply(
-          t("player:notInVoiceChannel", { lng: locale, command: commandName })
-        );
+        return await errorReply(t("player:notInVoiceChannel", { lng: locale }));
       }
 
       if (!vc.joinable || !vc.speakable) {
         return await errorReply(
-          t("player:noPermissions", {
-            lng: locale,
-            command: commandName,
-            channel: `<#${vc.id}>`,
-          })
+          t("player:noPermissions", { lng: locale, channelId: `<#${vc.id}>` })
         );
       }
 
@@ -100,11 +90,7 @@ async function handleSlash(client, interaction) {
         !vc.permissionsFor(clientMember).has("RequestToSpeak")
       ) {
         return await errorReply(
-          t("player:noRequestToSpeak", {
-            lng: locale,
-            command: commandName,
-            channel: `<#${vc.id}>`,
-          })
+          t("player:noRequestToSpeak", { lng: locale, channelId: `<#${vc.id}>` })
         );
       }
 
@@ -112,39 +98,26 @@ async function handleSlash(client, interaction) {
         return await errorReply(
           t("player:notConnected", {
             lng: locale,
-            channel: `<#${clientMember.voice.channelId}>`,
+            channelId: `<#${clientMember.voice.channelId}>`,
           })
         );
       }
     }
 
-    if (options.player?.active) {
+    if (button.player?.active) {
       const player = client.lavalink.players.get(interaction.guildId);
       if (!player) {
         return await errorReply(t("player:noPlayer", { lng: locale }));
       }
 
-      if (options.player?.playing && !player.queue.current) {
+      if (button.player?.playing && !player.queue.current) {
         return await errorReply(t("player:noPlayer", { lng: locale }));
       }
     }
   }
 
-  if (options.cooldown > 0) {
-    const remaining = client.utils.getCooldown(command, user.id);
-    if (remaining > 0 && !devUser) {
-      return await errorReply(
-        t("handlers:command.cooldown", {
-          lng: locale,
-          time: client.utils.formatTime(remaining, true),
-          command: commandName,
-        })
-      );
-    }
-  }
-
   try {
-    await command.executeSlash(client, interaction, metadata);
+    await button.execute(client, interaction, metadata);
   } catch (error) {
     if (client.config.debug) {
       client.logger.error("An error occurred: " + error.message);
@@ -153,8 +126,8 @@ async function handleSlash(client, interaction) {
       client.logger.error("An error occurred: " + error.message);
     }
 
-    return await errorReply(t("handlers:command.error", { lng: locale, command: commandName }));
+    return await errorReply(t("handlers:button.error", { lng: locale }));
   }
 }
 
-module.exports = { handleSlash };
+module.exports = { handleButton };

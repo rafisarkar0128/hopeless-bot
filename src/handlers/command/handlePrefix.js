@@ -143,13 +143,13 @@ async function handlePrefix(client, message, metadata, regex) {
       const vc = message.member.voice.channel;
       if (!vc) {
         return await replyAndDelete(
-          t("handlers:command.voiceOnly", { lng: locale, command: commandName })
+          t("player:notInVoiceChannel", { lng: locale, command: commandName })
         );
       }
 
       if (!vc.joinable || !vc.speakable) {
         return await replyAndDelete(
-          t("handlers:command.missingVoicePerm", { lng: locale, channel: `<#${vc.id}>` })
+          t("player:noPermissions", { lng: locale, channel: `<#${vc.id}>` })
         );
       }
 
@@ -158,13 +158,13 @@ async function handlePrefix(client, message, metadata, regex) {
         !vc.permissionsFor(clientMember).has("RequestToSpeak")
       ) {
         return await replyAndDelete(
-          t("handlers:command.noRequestToSpeak", { lng: locale, command: commandName })
+          t("player:noRequestToSpeak", { lng: locale, command: commandName })
         );
       }
 
       if (clientMember.voice.channel && clientMember.voice.channelId !== vc.id) {
         return await replyAndDelete(
-          t("handlers:command.differentVoiceChannel", {
+          t("player:notConnected", {
             lng: locale,
             channel: `<#${clientMember.voice.channelId}>`,
           })
@@ -208,8 +208,12 @@ async function handlePrefix(client, message, metadata, regex) {
   try {
     return await command.executePrefix(client, message, args, metadata);
   } catch (error) {
-    if (client.config.debug) client.logger.error(error);
-    else client.logger.error("An error occurred: " + error.message);
+    if (client.config.debug) {
+      client.logger.error("An error occurred: " + error.message);
+      client.logger.debug(error);
+    } else {
+      client.logger.error("An error occurred: " + error.message);
+    }
 
     errEmbed.setDescription(t("handlers:command.error", { lng: locale, command: commandName }));
     const messages = await message.channel.messages.fetch({ limit: 100 });

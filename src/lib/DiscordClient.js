@@ -12,6 +12,75 @@ const Genius = require("genius-lyrics");
  * @extends {Client}
  */
 class DiscordClient extends Client {
+  /** The base configuration file */
+  config = require("@src/config.js");
+
+  /** The package.json file of this project */
+  pkg = require("@root/package.json");
+
+  /** Collection of colors for embeds */
+  colors = require("@resources/colors.js");
+
+  /** Resources to use for various purposes */
+  resources = require("@resources/index.js");
+
+  /**
+   * A collection to store all the commands
+   * @type {Collection<string, import("@structures/index.js").BaseCommand>}
+   */
+  commands = new Collection();
+
+  /**
+   * A collection to store all the buttons
+   * @type {Collection<string, import("@structures/index.js").BaseButton>}
+   */
+  buttons = new Collection();
+
+  /**
+   * A collection to store aliases for prefix commands
+   * @type {Collection<string, string>}
+   */
+  aliases = new Collection();
+
+  /**
+   * A collection to store cooldown data
+   * @type {Collection<string, Collection<string, number>>}
+   */
+  cooldowns = new Collection();
+
+  /**
+   * An array to hold the application command data (slash, context etc.)
+   * @type {(import("discord.js").RESTPostAPIApplicationCommandsJSONBody & { global: boolean })[]}
+   */
+  applicationCommands = [];
+
+  /**
+   * An array to hold the deleted or soon to be deleted messages
+   * @type {string[]}
+   */
+  deletedMessages = [];
+
+  /** The log manager for the bot */
+  logger;
+
+  /** The helpers for the client */
+  helpers;
+
+  /** The handlers for this bot */
+  handlers;
+
+  /** The utility tools manager for the bot */
+  utils;
+
+  /** The database manager for the bot */
+  mongodb;
+
+  /** The lavalink manager for the bot */
+  lavalink;
+
+  /** The genius client to fetch lyrics */
+  genius;
+
   constructor() {
     super({
       intents: [
@@ -40,100 +109,13 @@ class DiscordClient extends Client {
       failIfNotExists: true,
     });
 
-    /**
-     * The base configuration file
-     * @type {import("@src/config.js")}
-     */
-    this.config = require("@src/config.js");
-
-    /**
-     * The package.json file of this project
-     * @type {import("@root/package.json")}
-     */
-    this.pkg = require("@root/package.json");
-
-    /**
-     * Collection of colors for embeds
-     * @type {import("@resources/colors.js")}
-     */
-    this.colors = require("@resources/colors.js");
-
-    /**
-     * Resources to use for various purposes
-     * @type {import("@resources/index.js")}
-     */
-    this.resources = require("@resources/index.js");
-
-    /**
-     * A collection to store all the commands
-     * @type {Collection<string, import("@structures/index.js").BaseCommand>}
-     */
-    this.commands = new Collection();
-
-    /**
-     * A collection to store aliases for prefix commands
-     * @type {Collection<string, string>}
-     */
-    this.aliases = new Collection();
-
-    /**
-     * A collection to store cooldown data
-     * @type {Collection<string, Collection<string, number>>}
-     */
-    this.cooldowns = new Collection();
-
-    /**
-     * An array to hold the application command data (slash, context etc.)
-     * @type {(import("discord.js").RESTPostAPIApplicationCommandsJSONBody & { global: boolean })[]}
-     */
-    this.applicationCommands = [];
-
-    /**
-     * An array to hold the deleted or soon to be deleted messages
-     * @type {import("discord.js").Message[]}
-     */
-    this.deletedMessages = [];
-
-    /**
-     * The log manager for the bot
-     * @type {Logger}
-     */
+    // Initialize managers after super()
     this.logger = new Logger();
-
-    /**
-     * The helpers for the client
-     * @type {Helpers}
-     */
     this.helpers = new Helpers(this);
-
-    /**
-     * The handlers for this bot
-     * @type {Handlers}
-     */
     this.handlers = new Handlers(this);
-
-    /**
-     * The utility tools manager for the bot
-     * @type {Utils}
-     */
     this.utils = new Utils(this);
-
-    /**
-     * The database manager for the bot
-     * @type {DatabaseManager}
-     */
     this.mongodb = new DatabaseManager(this);
-
-    /**
-     * The lavalink manager for the bot
-     * @type {LavalinkClient}
-     */
     this.lavalink = new LavalinkClient(this);
-
-    /**
-     * The genius client to fetch lyrics
-     * @type {Genius.Client}
-     */
     this.genius = new Genius.Client(this.config.genius.token);
   }
 
@@ -150,10 +132,11 @@ class DiscordClient extends Client {
       // validate the config file
       this.helpers.validateConfig();
 
-      // load locales, events & commands
+      // load locales, events, commands & components
       await this.helpers.loadLocales();
       await this.helpers.loadEvents();
       await this.helpers.loadCommands();
+      await this.helpers.loadButtons();
 
       // Log into the client
       this.login(this.config.bot.token);

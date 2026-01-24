@@ -5,82 +5,100 @@ const { handleJoinLogs } = require("./logging/handleJoinLogs");
 const { handleLeaveLogs } = require("./logging/handleLeaveLogs");
 const { handleMention } = require("./message/handleMention");
 const { handlePlayerControls } = require("./lavalink/handlePlayerControls");
+const { handleButton } = require("./command/handleButton");
 
 /**
  * A class to manage various handlers
  * @class
  */
 class Handlers {
+  /**
+   * The base Discord Client
+   * @type {import("@lib/index").DiscordClient}
+   */
+  client;
+
+  // Handler functions (bound in constructor)
+  /**
+   * A function to handle AutoComplete Commands
+   * @type {(interaction: import("discord.js").AutocompleteInteraction) => Promise<void>}
+   * @example
+   * await client.handlers.handleAutocomplete(interaction);
+   */
+  handleAutocomplete;
+
+  /**
+   * A function to handle slash commands
+   * @type {(interaction: import("discord.js").ChatInputCommandInteraction<"cached">) => Promise<void>}
+   * @example
+   * await client.handlers.handleSlash(interaction);
+   */
+  handleSlash;
+
+  /**
+   * A function to handle button interactions
+   * @type {(interaction: import("discord.js").ButtonInteraction) => Promise<void>}
+   * @example
+   * await client.handlers.handleButton(interaction);
+   */
+  handleButton;
+
+  /**
+   * A function to handle prefix commands
+   * @type {(message: import("discord.js").Message, metadata: import("@database/index").Structures.Guild, regex: RegExp) => Promise<void>}
+   * @example
+   * await client.handlers.handlePrefix(message, metadata, regex);
+   */
+  handlePrefix;
+
+  /**
+   * A function to handle bot mentions in messages
+   * @type {(message: import("discord.js").Message, metadata: import("@database/index").Structures.Guild) => Promise<void>}
+   * @example
+   * await client.handlers.handleMention(message, metadata);
+   */
+  handleMention;
+
+  /**
+   * A function to handle join logs
+   * @type {(guild: import("discord.js").Guild) => Promise<void>}
+   * @example
+   * await client.handlers.handleJoinLogs(guild);
+   */
+  handleJoinLogs;
+
+  /**
+   * A function to handle leave logs
+   * @type {(guild: import("discord.js").Guild) => Promise<void>}
+   * @example
+   * await client.handlers.handleLeaveLogs(guild);
+   */
+  handleLeaveLogs;
+
+  /**
+   * A function to handle player controls
+   * @type {(message: import("discord.js").Message, player: import("lavalink-client").Player) => Promise<void>}
+   * @example
+   * await client.handlers.handlePlayerControls(message, player);
+   */
+  handlePlayerControls;
+
   constructor(client) {
     if (!client || typeof client !== "object") {
       throw new Error("Client is not defined or not an object.");
     }
 
-    /**
-     * The base Discord Client
-     * @type {import("@lib/index").DiscordClient}
-     */
     this.client = client;
 
-    /**
-     * A function to handle AutoComplete Commands
-     * @param {import("discord.js").AutocompleteInteraction} interaction
-     * @example
-     * await client.handlers.handleAutocomplete(interaction);
-     */
+    // Bind handler functions
     this.handleAutocomplete = (interaction) => handleAutocomplete(this.client, interaction);
-
-    /**
-     * A function to handle slash commands
-     * @param {import("discord.js").ChatInputCommandInteraction<"cached">} interaction
-     * @example
-     * await client.handlers.handleSlash(interaction);
-     */
     this.handleSlash = (interaction) => handleSlash(this.client, interaction);
-
-    /**
-     * A function to handle prefix commands
-     * @param {import("discord.js").Message} message
-     * @param {import("@database/index").Structures.Guild} metadata
-     * @param {RegExp} regex
-     * @example
-     * await client.handlers.handlePrefix(message, metadata);
-     */
+    this.handleButton = (interaction) => handleButton(this.client, interaction);
     this.handlePrefix = (message, metadata, regex) =>
       handlePrefix(this.client, message, metadata, regex);
-
-    /**
-     * A function to handle bot mentions in messages
-     * @param {import("discord.js").Message} message
-     * @param {import("@database/index").Structures.Guild} metadata
-     * @example
-     * await client.handlers.handleMention(message, metadata);
-     */
     this.handleMention = (message, metadata) => handleMention(this.client, message, metadata);
-
-    /**
-     * A function to handle join logs
-     * @param {import("discord.js").Guild} guild
-     * @example
-     * await client.handlers.handleJoinLogs(guild);
-     */
     this.handleJoinLogs = (guild) => handleJoinLogs(this.client, guild);
-
-    /**
-     * A function to handle leave logs
-     * @param {import("discord.js").Guild} guild
-     * @example
-     * await client.handlers.handleLeaveLogs(guild);
-     */
     this.handleLeaveLogs = (guild) => handleLeaveLogs(this.client, guild);
-
-    /**
-     * A function to handle player controls
-     * @param {import("discord.js").Message} message
-     * @param {import("lavalink-client").Player} player
-     * @example
-     * await client.handlers.handlePlayerControls(message, player);
-     */
     this.handlePlayerControls = (message, player) =>
       handlePlayerControls(this.client, message, player);
   }

@@ -1,6 +1,6 @@
 {
   "name": "hopeless-bot",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "A discord music bot build with lavalink.",
   "main": "src/index.js",
   "scripts": {
@@ -38,10 +38,10 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
-    "globals": "^17.0.0",
+    "globals": "^17.1.0",
     "nodemon": "^3.1.11",
-    "prettier": "^3.7.4",
-    "undici": "^7.16.0"
+    "prettier": "^3.8.1",
+    "undici": "^7.19.1"
   },
   "dependencies": {
     "chalk": "4.1.2",
@@ -50,9 +50,9 @@
     "figures": "^6.1.0",
     "genius-lyrics": "^4.4.7",
     "glob": "^13.0.0",
-    "i18next": "^25.7.3",
+    "i18next": "^25.8.0",
     "i18next-fs-backend": "^2.6.1",
-    "lavalink-client": "^2.7.7",
+    "lavalink-client": "^2.7.8",
     "luxon": "^3.7.2",
     "module-alias": "^2.2.3",
     "mongodb": "^7.0.0",

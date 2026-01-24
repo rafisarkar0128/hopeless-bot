@@ -10,7 +10,7 @@ const path = require("path");
  * @returns {Promise<void>}
  */
 async function loadCommands(client) {
-  if (client.config.debug) client.logger.debug(`Loading event modules....`);
+  if (client.config.debug) client.logger.debug(`Loading command modules....`);
 
   const { categories, permissions } = client.resources;
   const files = await loadFiles("src/commands", [".js"]);

@@ -9,21 +9,21 @@
     "noBotPerm": "I can’t run **{{command}}** in {{channel}} because I’m missing these permissions:\n{{perms}}",
     "botPerm": "I can’t run **{{command}}** because I’m missing these permissions:\n{{perms}}",
     "userPerm": "You need these permissions to use **{{command}}**:\n{{perms}}",
-    "voiceOnly": "Join a **Voice Channel** before using **{{command}}**.",
-    "missingVoicePerm": "I can’t **join** {{channel}} or **speak** there.",
-    "noRequestToSpeak": "I don’t have **REQUEST TO SPEAK** permission in {{channel}} to run **{{command}}**.",
-    "differentVoiceChannel": "You must be connected to **{{channel}}** to use this command.",
-    "missingArgs": "Missing arguments",
+    "missingArgs": "Missing Arguments",
     "missingArgsDescription": "Include the required arguments for the `{{command}}` command.",
     "usageTitle": "Usage",
     "examplesTitle": "Examples",
     "syntaxFooter": "Syntax: [] = optional, <> = required",
-    "noMentionEveryone": "You can’t use this command with @everyone or @here. Use the slash command instead.",
-    "voteButton": "Vote for me!",
-    "voteMessage": "You need to vote on top.gg to use this command. Thanks!",
-    "no_voice_channel_queue": "Join a voice channel to queue songs.",
-    "no_dj_role": "The DJ role hasn’t been set.",
-    "no_dj_permission": "You need the DJ role to use this command."
+    "noMentionEveryone": "You can’t use this command with @everyone or @here. Use the slash command instead."
   },
-  "autocomplete": {}
+  "button": {
+    "error": "Something went wrong while processing the button interaction. Please try again later.",
+    "notFound": "This button is no longer available.",
+    "devOnly": "Only developers can use this button.",
+    "disabled": "This button has been turned off by the developers.",
+    "guildOnly": "This button can only be used in a server.",
+    "noBotPerm": "I can’t process this button interaction in {{channel}} because I’m missing these permissions:\n{{perms}}",
+    "botPerm": "I can’t process this button interaction because I’m missing these permissions:\n{{perms}}",
+    "userPerm": "You need these permissions to use this button:\n{{perms}}"
+  }
 }

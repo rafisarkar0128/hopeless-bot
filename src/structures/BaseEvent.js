@@ -26,50 +26,58 @@
  */
 class BaseEvent {
   /**
+   * The name of the event (required).
+   * @type {string}
+   */
+  name;
+
+  /**
+   * Whether this event should be executed once or not.
+   * @type {boolean}
+   */
+  once;
+
+  /**
+   * Whether this is a rest (discord api) event or not.
+   * @type {boolean}
+   */
+  rest;
+
+  /**
+   * Whether this is a ws (websocket) event or not.
+   * @type {boolean}
+   */
+  ws;
+
+  /**
+   * Whether this is a node (lavalink node) event or not.
+   * @type {boolean}
+   */
+  node;
+
+  /**
+   * Whether this is a lavalink (player) event or not.
+   * @type {boolean}
+   */
+  player;
+
+  /**
+   * Wether this event is disabled or not.
+   * @type {boolean}
+   */
+  disabled;
+
+  /**
    * Typings event options.
    * @param {EventOptions} options The options to initialize the event with
    */
   constructor(options) {
-    /**
-     * The name of the event (required).
-     * @type {string}
-     */
     this.name = options.name ?? "";
-
-    /**
-     * Whether this event should be executed once or not.
-     * @type {boolean}
-     */
     this.once = options.once ?? false;
-
-    /**
-     * Whether this is a rest (discord api) event or not.
-     * @type {boolean}
-     */
     this.rest = options.rest ?? false;
-
-    /**
-     * Whether this is a ws (websocket) event or not.
-     * @type {boolean}
-     */
     this.ws = options.ws ?? false;
-
-    /**
-     * Whether this is a node (lavalink node) event or not.
-     * @type {boolean}
-     */
     this.node = options.node ?? false;
-
-    /**
-     * Whether this is a lavalink (player) event or not.
-     * @type {boolean}
-     */
     this.player = options.player ?? false;
-
-    /**
-     * Wether this event is disabled or not.
-     * @type {boolean}
-     */
     this.disabled = options.disabled ?? false;
   }
 

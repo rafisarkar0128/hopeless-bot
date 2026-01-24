@@ -5,71 +5,144 @@ const Base = require("./Base.js");
  * @extends {Base}
  */
 class Guild extends Base {
+  /**
+   * The id of the guild
+   * @type {string}
+   * @readonly
+   */
+  _id;
+
+  /**
+   * The name of the guild
+   * @type {string}
+   * @readonly
+   */
+  name;
+
+  /**
+   * The language of the guild
+   * @type {string|null}
+   * @readonly
+   */
+  locale;
+
+  /**
+   * The prefix of the guild
+   * @type {string|null}
+   * @readonly
+   */
+  prefix;
+
+  /**
+   * The guild owner id
+   * @type {string}
+   * @readonly
+   */
+  ownerId;
+
+  /**
+   * The time the client user joined the guild
+   * @type {Date}
+   * @readonly
+   */
+  joinedAt;
+
+  /**
+   * The time the client user left the server
+   * @type {Date|null}
+   * @readonly
+   */
+  leftAt;
+
+  /**
+   * The time the guild schema was created
+   * @type {Date}
+   * @readonly
+   */
+  createdAt;
+
+  /**
+   * The time this schema was last updated
+   * @type {Date}
+   * @readonly
+   */
+  updatedAt;
+
   constructor(client, data) {
     super(client);
 
-    /**
-     * The id of the guild
-     * @type {string}
-     * @readonly
-     */
     this._id = data._id;
-
-    /**
-     * The name of the guild
-     * @type {string}
-     * @readonly
-     */
     this.name = data.name;
-
-    /**
-     * The language of the guild
-     * @type {string}
-     * @readonly
-     */
     this.locale = data.locale ?? null;
-
-    /**
-     * The language of the guild
-     * @type {string}
-     * @readonly
-     */
     this.prefix = data.prefix ?? null;
-
-    /**
-     * The guild owner id
-     * @type {string}
-     * @readonly
-     */
     this.ownerId = data.ownerId;
-
-    /**
-     * The time the the client user joined the guild
-     * @type {Date}
-     * @readonly
-     */
     this.joinedAt = data.joinedAt;
-
-    /**
-     * The time the client user left the server
-     * @type {Date|null}
-     * @readonly
-     */
     this.leftAt = data.leftAt || null;
-
-    /**
-     * The time the guild schema was created
-     * @type {Date}
-     * @readonly
-     */
     this.createdAt = data.createdAt;
-
-    /**
-     * The time this schema was last updated
-     * @type {Date}
-     * @readonly
-     */
     this.updatedAt = data.updatedAt;
+  }
+
+  /**
+   * Updates a specific field in the guild data
+   * @param {string} key - The field to update
+   * @param {any} value - The new value
+   * @returns {Promise<Guild>} The updated guild instance
+   * @example
+   * await guild.update('prefix', '!');
+   */
+  async update(key, value) {
+    const updated = await this.client.mongodb.guilds.update(this._id, key, value);
+    // Update local instance properties
+    this[key] = value;
+    this.updatedAt = updated.updatedAt;
+    return this;
+  }
+
+  /**
+   * Deletes this guild from the database
+   * @returns {Promise<Guild>} The deleted guild instance
+   * @example
+   * await guild.delete();
+   */
+  async delete() {
+    return await this.client.mongodb.guilds.delete(this._id);
+  }
+
+  /**
+   * Refreshes the guild data from the database
+   * @returns {Promise<Guild>} The refreshed guild instance
+   * @example
+   * await guild.refresh();
+   */
+  async refresh() {
+    const fresh = await this.client.mongodb.guilds.get(this._id);
+    if (!fresh) throw new Error(`Guild ${this._id} no longer exists`);
+
+    // Update all properties
+    Object.assign(this, fresh);
+    return this;
+  }
+
+  /**
+   * Sets the guild prefix
+   * @param {string} prefix - The new prefix
+   * @returns {Promise<Guild>}
+   * @example
+   * await guild.setPrefix('!');
+   */
+  async setPrefix(prefix) {
+    return await this.update("prefix", prefix);
+  }
+
+  /**
+   * Sets the guild locale
+   * @param {string} locale - The new locale
+   * @returns {Promise<Guild>}
+   * @example
+   * await guild.setLocale('en-US');
+   */
+  async setLocale(locale) {
+    return await this.update("locale", locale);
   }
 }
 

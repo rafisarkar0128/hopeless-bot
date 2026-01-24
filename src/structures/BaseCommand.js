@@ -16,10 +16,8 @@ const config = require("@src/config.js");
 /**
  * @typedef {Object} PlayerOptionsObject Player options object for music commands.
  * @property {boolean} [voice] Whether a user has to join a voice channel before using this command.
- * @property {boolean} [dj] Whether a user must have DJ permission to use this command.
  * @property {boolean} [active] Whether an player is required to execute this command.
  * @property {boolean} [playing] Whether an active player is required to execute this command.
- * @property {?string} [djPerm] DJ permission.
  */
 
 /**
@@ -43,7 +41,6 @@ const config = require("@src/config.js");
  * @property {boolean} [testOnly]  Whether this command is a test only command.
  * Means it will only be able to run in test server or by verified testers.
  * @property {boolean} [premium] Whether this command is a premium command or not.
- * @property {boolean} [vote] Whether this command requires users to vote before use.
  * @property {boolean} [nsfw] Whether this command is age restricted or not.
  * @property {Partial<PlayerOptionsObject>} [player] Player settings if it's a music-related command.
  * @property {Partial<CommandPermissions>} [permissions] Command permissions object for commands.
@@ -76,86 +73,78 @@ const config = require("@src/config.js");
  */
 class BaseCommand {
   /**
+   * The slash command data
+   * @type {import("discord.js").SlashCommandBuilder}
+   */
+  data;
+
+  /**
+   * The command options
+   * @type {CommandOptions}
+   */
+  options;
+
+  /**
+   * The command prefix options
+   * @type {PrefixCommandOptions}
+   */
+  prefixOptions;
+
+  /**
+   * The command slash options
+   * @type {SlashCommandOptions}
+   */
+  slashOptions;
+
+  /**
+   * The command details
+   * @type {CommandDetails}
+   */
+  details;
+
+  /**
    * typings for parameters
    * @param {CommandMetadata} metadata
    */
   constructor(metadata) {
-    /**
-     * The slash command data
-     * @type {import("discord.js").SlashCommandBuilder}
-     */
     this.data = metadata.data ?? null;
 
-    /**
-     * The command options
-     * @type {CommandOptions}
-     */
-    this.options = {};
-
-    // Set default options
-    this.options.category = metadata.options?.category ?? "general";
-    this.options.cooldown = metadata.options?.cooldown ?? config.bot.defaultCooldown;
-    this.options.global = metadata.options?.global ?? config.bot.global;
-    this.options.disabled = metadata.options?.disabled ?? false;
-    this.options.guildOnly = metadata.options?.guildOnly ?? false;
-    this.options.testOnly = metadata.options?.testOnly ?? false;
-    this.options.premium = metadata.options?.premium ?? false;
-    this.options.vote = metadata.options?.vote ?? false;
-    this.options.nsfw = metadata.options?.nsfw ?? false;
-
-    // Player options
-    this.options.player = {
-      voice: metadata.options?.player?.voice ?? false,
-      dj: metadata.options?.player?.dj ?? false,
-      active: metadata.options?.player?.active ?? false,
-      playing: metadata.options?.player?.playing ?? false,
-      djPerm: metadata.options?.player?.djPerm ?? null,
+    this.options = {
+      category: metadata.options?.category ?? "general",
+      cooldown: metadata.options?.cooldown ?? config.bot.defaultCooldown,
+      global: metadata.options?.global ?? config.bot.global,
+      disabled: metadata.options?.disabled ?? false,
+      guildOnly: metadata.options?.guildOnly ?? false,
+      testOnly: metadata.options?.testOnly ?? false,
+      premium: metadata.options?.premium ?? false,
+      nsfw: metadata.options?.nsfw ?? false,
+      player: {
+        voice: metadata.options?.player?.voice ?? false,
+        active: metadata.options?.player?.active ?? false,
+        playing: metadata.options?.player?.playing ?? false,
+      },
+      permissions: {
+        dev: metadata.options?.permissions?.dev ?? false,
+        bot: metadata.options?.permissions?.bot ?? [
+          "SendMessages",
+          "ViewChannel",
+          "EmbedLinks",
+          "ReadMessageHistory",
+        ],
+        user: metadata.options?.permissions?.user ?? [],
+      },
     };
 
-    // Permissions
-    this.options.permissions = {
-      dev: metadata?.options?.permissions?.dev ?? false,
-      bot: metadata?.options?.permissions?.bot ?? [
-        "SendMessages",
-        "ViewChannel",
-        "EmbedLinks",
-        "ReadMessageHistory",
-      ],
-      user: metadata?.options?.permissions?.user ?? [],
-    };
-
-    // Ensure bot permissions always include required defaults
-    if (Array.isArray(this.options?.permissions?.bot)) {
-      this.options.permissions.bot = this.options.permissions.bot.concat([
-        "SendMessages",
-        "ViewChannel",
-        "EmbedLinks",
-        "ReadMessageHistory",
-      ]);
-    }
-
-    /**
-     * The command prefix options
-     * @type {PrefixCommandOptions}
-     */
     this.prefixOptions = {
       disabled: metadata?.prefixOptions?.disabled ?? false,
       aliases: metadata?.prefixOptions?.aliases ?? [],
       minArgsCount: metadata?.prefixOptions?.minArgsCount ?? 0,
     };
 
-    /**
-     * The command slash options
-     * @type {SlashCommandOptions}
-     */
     this.slashOptions = {
       disabled: metadata?.slashOptions?.disabled ?? false,
     };
 
-    /**
-     * The command details (extra information like usage, examples, and parameters details)
-     * @type {CommandDetails}
-     */
     this.details = {
       usage: metadata?.details?.usage ?? "No usage provided",
       examples: metadata?.details?.examples ?? ["No examples provided"],

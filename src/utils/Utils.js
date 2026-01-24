@@ -157,10 +157,14 @@ class Utils {
    * @param {string} [type="short"] - The format type ("short", "long", "clock"). default is "short".
    * @returns {string} The formatted time string.
    * @example
-   * client.utils.formatTime(93784000);
+   * client.utils.formatTime(93784000, "short"); // Can be left empty for default
    * // Returns "1d 2h 3m 4s"
-   * client.utils.formatTime(93784000, true);
+   * client.utils.formatTime(93784000, "long");
    * // Returns "1 day 2 hours 3 minutes 4 seconds"
+   * client.utils.formatTime(3723000, "clock");
+   * // Returns "1:02:03"
+   * client.utils.formatTime(183000, "clock");
+   * // Returns "3:03"
    */
   formatTime(ms, type = "short") {
     const seconds = Math.floor(ms / 1000) % 60;
@@ -174,15 +178,19 @@ class Utils {
         if (days > 0) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
         if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
         if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
-        parts.push(`${seconds} ${seconds === 1 ? "second" : "seconds"}`);
+        if (seconds > 0) parts.push(`${seconds} ${seconds === 1 ? "second" : "seconds"}`);
         break;
       }
 
       case "clock": {
-        const h = hours + days * 24;
+        const totalHours = hours + days * 24;
         const m = minutes < 10 ? `0${minutes}` : minutes;
         const s = seconds < 10 ? `0${seconds}` : seconds;
-        parts.push(`${h}:${m}:${s}`);
+        if (totalHours > 0) {
+          parts.push(`${totalHours}:${m}:${s}`);
+        } else {
+          parts.push(`${minutes}:${s}`);
+        }
         break;
       }
 
@@ -191,7 +199,7 @@ class Utils {
         if (days > 0) parts.push(`${days}d`);
         if (hours > 0) parts.push(`${hours}h`);
         if (minutes > 0) parts.push(`${minutes}m`);
-        parts.push(`${seconds}s`);
+        if (seconds > 0) parts.push(`${seconds}s`);
         break;
       }
     }
@@ -207,7 +215,9 @@ class Utils {
    * @returns {number|null} The time in milliseconds, or null when format is invalid.
    */
   parseTime(string) {
-    const value = String(string || "").trim().toLowerCase();
+    const value = String(string || "")
+      .trim()
+      .toLowerCase();
     if (!value) return null;
 
     // Clock format: "HH:MM:SS" or "MM:SS"
