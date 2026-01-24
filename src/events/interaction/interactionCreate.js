@@ -31,5 +31,11 @@ module.exports = class Event extends BaseEvent {
       // await client.handlers.handleContext(interaction);
       return;
     }
+
+    // For handling button interactions
+    if (interaction.isButton()) {
+      await client.handlers.handleButton(interaction);
+      return;
+    }
   }
 };

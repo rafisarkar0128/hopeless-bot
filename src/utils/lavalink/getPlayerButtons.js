@@ -18,15 +18,15 @@ function getPlayerButtons(client, player) {
         .setStyle(ButtonStyle.Secondary)
         .setDisabled(player.volume <= 0),
       new ButtonBuilder()
-        .setCustomId("rewind")
+        .setCustomId("rewind_track")
         .setEmoji(music.rewind)
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
-        .setCustomId("resume")
+        .setCustomId("play_pause")
         .setEmoji(player.paused ? music.resume : music.pause)
         .setStyle(player.paused ? ButtonStyle.Success : ButtonStyle.Secondary),
       new ButtonBuilder()
-        .setCustomId("forward")
+        .setCustomId("forward_track")
         .setEmoji(music.forward)
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
@@ -37,17 +37,23 @@ function getPlayerButtons(client, player) {
     ),
     new ActionRowBuilder().setComponents(
       new ButtonBuilder()
-        .setCustomId("loop")
+        .setCustomId("loop_track")
         .setEmoji(player.repeatMode === "track" ? music.loop2 : music.loop)
         .setStyle(player.repeatMode !== "off" ? ButtonStyle.Primary : ButtonStyle.Secondary),
       new ButtonBuilder()
-        .setCustomId("previous")
+        .setCustomId("previous_track")
         .setEmoji(music.previous)
         .setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("stop").setEmoji(music.stop).setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("skip").setEmoji(music.next).setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
-        .setCustomId("shuffle")
+        .setCustomId("stop_player")
+        .setEmoji(music.stop)
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId("skip_track")
+        .setEmoji(music.next)
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId("shuffle_tracks")
         .setEmoji(music.shuffle)
         .setStyle(ButtonStyle.Secondary)
     ),

@@ -5,12 +5,14 @@ const { flatten } = require("discord.js");
  * @abstract
  */
 class Base {
+  /**
+   * The client that instantiated this Manager
+   * @type {import("@lib/index").DiscordClient}
+   * @readonly
+   */
+  client;
+
   constructor(client) {
-    /**
-     * The client that instantiated this Manager
-     * @type {import("@lib/index").DiscordClient}
-     * @readonly
-     */
     this.client = client;
   }
 

@@ -9,8 +9,6 @@ const { t } = require("i18next");
  */
 async function handleSlash(client, interaction) {
   const { commandName, user } = interaction;
-  const errorEmbed = new EmbedBuilder().setColor(client.colors.error);
-
   let metadata = await client.mongodb.guilds.get(interaction.guildId);
   if (!metadata) {
     metadata = await client.mongodb.guilds.create(interaction.guildId);
@@ -22,14 +20,10 @@ async function handleSlash(client, interaction) {
    * @returns {Promise<void>}
    */
   async function errorReply(text) {
-    errorEmbed.setDescription(text);
     if (interaction.deferred || interaction.replied) {
-      await interaction.followUp({ embeds: [errorEmbed], flags: "Ephemeral" });
-      if (!interaction.ephemeral) {
-        setTimeout(() => interaction.deleteReply().catch(() => {}), 10_000);
-      }
+      await interaction.followUp({ content: text, flags: "Ephemeral" });
     } else {
-      await interaction.reply({ embeds: [errorEmbed], flags: "Ephemeral" });
+      await interaction.reply({ content: text, flags: "Ephemeral" });
     }
   }
 
@@ -87,13 +81,13 @@ async function handleSlash(client, interaction) {
       const vc = interaction.member.voice.channel;
       if (!vc) {
         return await errorReply(
-          t("handlers:command.voiceOnly", { lng: locale, command: commandName })
+          t("player:notInVoiceChannel", { lng: locale, command: commandName })
         );
       }
 
       if (!vc.joinable || !vc.speakable) {
         return await errorReply(
-          t("handlers:command.missingVoicePerm", {
+          t("player:noPermissions", {
             lng: locale,
             command: commandName,
             channel: `<#${vc.id}>`,
@@ -106,7 +100,7 @@ async function handleSlash(client, interaction) {
         !vc.permissionsFor(clientMember).has("RequestToSpeak")
       ) {
         return await errorReply(
-          t("handlers:command.noRequestToSpeak", {
+          t("player:noRequestToSpeak", {
             lng: locale,
             command: commandName,
             channel: `<#${vc.id}>`,
@@ -116,7 +110,7 @@ async function handleSlash(client, interaction) {
 
       if (clientMember.voice.channel && clientMember.voice.channelId !== vc.id) {
         return await errorReply(
-          t("handlers:command.differentVoiceChannel", {
+          t("player:notConnected", {
             lng: locale,
             channel: `<#${clientMember.voice.channelId}>`,
           })
@@ -124,19 +118,19 @@ async function handleSlash(client, interaction) {
       }
     }
 
-    if (command.player?.active) {
+    if (options.player?.active) {
       const player = client.lavalink.players.get(interaction.guildId);
       if (!player) {
         return await errorReply(t("player:noPlayer", { lng: locale }));
       }
 
-      if (command.player?.playing && !player.queue.current) {
+      if (options.player?.playing && !player.queue.current) {
         return await errorReply(t("player:noPlayer", { lng: locale }));
       }
     }
   }
 
-  if (command.cooldown > 0) {
+  if (options.cooldown > 0) {
     const remaining = client.utils.getCooldown(command, user.id);
     if (remaining > 0 && !devUser) {
       return await errorReply(
@@ -152,8 +146,13 @@ async function handleSlash(client, interaction) {
   try {
     await command.executeSlash(client, interaction, metadata);
   } catch (error) {
-    if (client.config.debug) client.logger.error(error);
-    else client.logger.error("An error occurred: " + error.message);
+    if (client.config.debug) {
+      client.logger.error("An error occurred: " + error.message);
+      client.logger.debug(error);
+    } else {
+      client.logger.error("An error occurred: " + error.message);
+    }
+
     return await errorReply(t("handlers:command.error", { lng: locale, command: commandName }));
   }
 }

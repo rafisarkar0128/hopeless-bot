@@ -33,9 +33,7 @@ module.exports = class Command extends BaseCommand {
         },
         player: {
           voice: false,
-          dj: false,
           active: false,
-          djPerm: null,
           playing: false,
         },
       },

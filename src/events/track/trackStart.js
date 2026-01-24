@@ -1,5 +1,5 @@
 const { BaseEvent } = require("@src/structures");
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { t } = require("i18next");
 
 module.exports = class Event extends BaseEvent {
@@ -48,13 +48,31 @@ module.exports = class Event extends BaseEvent {
         },
       ]);
 
-    const message = await channel.send({
-      embeds: [embed],
-      components: [...client.utils.getPlayerButtons(player)],
+    await channel.send({
+      content: t("player:playingTrack", {
+        lng: locale,
+        track:
+          "`" +
+          client.utils.sliceString(track.info.title, 37) +
+          " - " +
+          client.utils.sliceString(track.info.author, 24) +
+          "`",
+      }),
+      components: [
+        new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setLabel("Open Music Controls")
+            .setStyle(ButtonStyle.Secondary)
+            .setCustomId("open_player_controls")
+        ),
+      ],
     });
-    player.set("messageId", message.id);
-
-    await client.handlers.handlePlayerControls(message, player);
+    await channel
+      .send({
+        embeds: [embed],
+        components: [...client.utils.getPlayerButtons(player)],
+      })
+      .then((message) => player.set("messageId", message.id));
   }
 };
 

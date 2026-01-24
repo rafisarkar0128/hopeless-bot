@@ -8,6 +8,12 @@ const { handleAutoplay } = require("@handlers/index");
  */
 class LavalinkClient extends LavalinkManager {
   /**
+   * Base client as a property of the LavalinkClient
+   * @type {import("./DiscordClient").DiscordClient}
+   */
+  client;
+
+  /**
    * passing client to init LavalinkManager
    * @param {import("@lib/index").DiscordClient} client
    */
@@ -45,10 +51,6 @@ class LavalinkClient extends LavalinkManager {
       linksAllowed: true,
     });
 
-    /**
-     * Base client as a property of the LavalinkClient
-     * @type {import("./DiscordClient").DiscordClient}
-     */
     this.client = client;
   }
 

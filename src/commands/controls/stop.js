@@ -22,6 +22,7 @@ module.exports = class Command extends BaseCommand {
         player: {
           voice: true,
           active: true,
+          playing: true,
         },
       },
       prefixOptions: {

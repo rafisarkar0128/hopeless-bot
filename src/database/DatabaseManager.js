@@ -8,22 +8,25 @@ const { GuildManager } = require("./managers/index.js");
  */
 class DatabaseManager extends MongoClient {
   /**
+   * Bot client as a property of this class
+   * @type {import("@lib/index").DiscordClient}
+   */
+  client;
+
+  /**
+   * A manager to manage guild data in database
+   * @type {GuildManager}
+   */
+  guilds;
+
+  /**
    * Bot client to use in this class
    * @param {import("@lib/index").DiscordClient} client
    */
   constructor(client) {
     super(client.config.mongodbUri, client.config.mongodbOptions);
 
-    /**
-     * Bot client as a property of this class
-     * @type {import("@lib/index").DiscordClient}
-     */
     this.client = client;
-
-    /**
-     * A manager to manage guild data in databse
-     * @type {GuildManager}
-     */
     this.guilds = new GuildManager(client);
   }
 

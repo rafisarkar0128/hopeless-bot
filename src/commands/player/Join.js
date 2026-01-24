@@ -112,7 +112,7 @@ module.exports = class Command extends BaseCommand {
 
     if (!player.connected) await player.connect();
     await interaction.followUp(
-      t("player:joinedChannel", { lng: metadata.locale, channel: player.voiceChannelId })
+      t("player:joinedChannel", { lng: metadata.locale, channelId: player.voiceChannelId })
     );
   }
 };

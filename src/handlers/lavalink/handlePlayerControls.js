@@ -44,7 +44,6 @@ async function handlePlayerControls(client, message, player) {
   }
 
   collector.on("collect", async (interaction) => {
-    await interaction.deferUpdate();
     const embed = new EmbedBuilder().setColor(message.embeds[0].color).setFooter({
       text: interaction.user.username,
       iconURL: interaction.user.avatarURL({ extension: "png" }),
@@ -62,33 +61,8 @@ async function handlePlayerControls(client, message, player) {
     }
 
     switch (interaction.customId) {
-      case "volume_down": {
-        let { volume } = await player.setVolume(Math.max(player.volume - 10, 0));
-        await editButtons();
-        return await replyAndDelete(
-          t("player:volumeBy", {
-            lng: locale,
-            volume,
-            user: interaction.user.username,
-          })
-        );
-      }
-
-      case "volume_up": {
-        let { volume } = await player.setVolume(
-          Math.min(player.volume + 10, client.config.lavalink.maxVolume)
-        );
-        await editButtons();
-        return await replyAndDelete(
-          t("player:volumeBy", {
-            lng: locale,
-            volume,
-            user: interaction.user.username,
-          })
-        );
-      }
-
       case "rewind": {
+        await interaction.deferUpdate();
         let { position } = await player.seek(player.position - 10000);
         position = client.utils.formatTime(position);
         await editButtons();
@@ -102,6 +76,7 @@ async function handlePlayerControls(client, message, player) {
       }
 
       case "forward": {
+        await interaction.deferUpdate();
         let { position } = await player.seek(player.position + 10000);
         position = client.utils.formatTime(position);
         await editButtons();
@@ -114,66 +89,8 @@ async function handlePlayerControls(client, message, player) {
         );
       }
 
-      case "resume": {
-        let position = client.utils.formatTime(player.position);
-        if (player.paused) {
-          await player.resume();
-          await replyAndDelete(
-            t("player:resumedBy", {
-              lng: locale,
-              user: interaction.user.username,
-            })
-          );
-        } else {
-          await player.pause();
-          await replyAndDelete(
-            t("player:pausedBy", {
-              lng: locale,
-              position,
-              user: interaction.user.username,
-            })
-          );
-        }
-        return await editButtons();
-      }
-
-      case "stop": {
-        await player.stopPlaying(true, false);
-        return await replyAndDelete(t("player:stop", { lng: locale }));
-      }
-
-      case "previous": {
-        if (!player.queue.previous) {
-          return await replyAndDelete(t("player:noPrevious", { lng: locale }));
-        }
-        // player.position > 5000 || player.queue.previous.length <= 0
-        // await player.seek(0);
-        if (player.queue.previous.length <= 0) {
-          return await replyAndDelete(t("player:noPrevious", { lng: locale }));
-        }
-        await player.play({ track: player.queue.previous[0] });
-        return await replyAndDelete(
-          t("player:previousBy", {
-            lng: locale,
-            user: interaction.user.username,
-          })
-        );
-      }
-
-      case "skip": {
-        if (!player.queue.tracks.length > 0) {
-          return await replyAndDelete(t("player:noTrack", { lng: locale }));
-        }
-        await player.skip();
-        return await replyAndDelete(
-          t("player:skippedBy", {
-            lng: locale,
-            user: interaction.user.username,
-          })
-        );
-      }
-
       case "shuffle": {
+        await interaction.deferUpdate();
         await player.queue.shuffle();
         return await replyAndDelete(
           t("player:shuffledBy", {
@@ -184,6 +101,7 @@ async function handlePlayerControls(client, message, player) {
       }
 
       case "loop": {
+        await interaction.deferUpdate();
         switch (player.repeatMode) {
           case "off": {
             await player.setRepeatMode("track");
@@ -225,11 +143,13 @@ async function handlePlayerControls(client, message, player) {
       }
 
       case "queue_clear": {
+        await interaction.deferUpdate();
         await player.queue.utils.destroy();
         return await replyAndDelete("Cleared the queue!");
       }
 
       case "favourite": {
+        await interaction.deferUpdate();
         return await replyAndDelete("This feature is still in development.");
       }
 
