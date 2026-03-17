@@ -7,22 +7,27 @@ const { LavalinkClient } = require("./LavalinkClient.js");
 const { DatabaseManager } = require("@database/index");
 const Genius = require("genius-lyrics");
 
+const config = require("@src/config.js");
+const pkg = require("@root/package.json");
+const colors = require("@resources/colors.js");
+const resources = require("@resources/index.js");
+
 /**
  * The client for this bot.
  * @extends {Client}
  */
 class DiscordClient extends Client {
   /** The base configuration file */
-  config = require("@src/config.js");
+  config = config;
 
   /** The package.json file of this project */
-  pkg = require("@root/package.json");
+  pkg = pkg;
 
   /** Collection of colors for embeds */
-  colors = require("@resources/colors.js");
+  colors = colors;
 
   /** Resources to use for various purposes */
-  resources = require("@resources/index.js");
+  resources = resources;
 
   /**
    * A collection to store all the commands
@@ -116,7 +121,7 @@ class DiscordClient extends Client {
     this.utils = new Utils(this);
     this.mongodb = new DatabaseManager(this);
     this.lavalink = new LavalinkClient(this);
-    this.genius = new Genius.Client(this.config.genius.token);
+    if (this.config.genius.token) this.genius = new Genius.Client(this.config.genius.token);
   }
 
   /**
