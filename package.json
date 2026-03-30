@@ -4,9 +4,9 @@
   "description": "A discord music bot build with lavalink.",
   "main": "src/index.js",
   "scripts": {
-    "start": "node --delay 2.5 src/index.js",
+    "start": "node src/index.js",
     "dev": "nodemon --delay 2.5 src/index.js",
-    "shard": "node --delay 2.5  src/shard.js",
+    "shard": "node src/shard.js",
     "devShard": "nodemon --delay 2.5 src/shard.js",
     "lint": "pnpx eslint --config eslint.config.js src",
     "format": "pnpx prettier --write .",
