@@ -16,6 +16,7 @@ async function loadLocales(client) {
 
   // initializing i18next with i18next-fs-backend
   await i18next.use(Backend).init({
+    showSupportNotice: false,
     initAsync: false,
     load: "currentOnly",
     ns: ["commands", "context", "embeds", "misc", "handlers", "player"],
