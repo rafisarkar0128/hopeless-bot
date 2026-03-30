@@ -17,13 +17,15 @@ module.exports = class Event extends BaseEvent {
   async execute(client, player, track, payload) {
     client.logger.error(`A track got stuck in guild: ${payload.guildId}`);
     if (client.config.debug) {
-      console.error([
-        `A track got stuck.`,
-        `Track: "${track.info.title}"`,
-        `Guild: ${player.guildId}`,
-        `Source: "${track.info.sourceName}"`,
-        `Error: ${payload.error || payload.exception?.cause || payload.exception?.error || payload.exception?.message}.`,
-      ]);
+      console.error(
+        [
+          `A track got stuck.`,
+          `Track: "${track.info.title}"`,
+          `Guild: ${player.guildId}`,
+          `Source: "${track.info.sourceName}"`,
+          `Error: ${payload.error || payload.exception?.cause || payload.exception?.error || payload.exception?.message}.`,
+        ].join("\n")
+      );
     }
 
     const errorEmbed = new EmbedBuilder()
@@ -40,9 +42,15 @@ module.exports = class Event extends BaseEvent {
 
     const reply = await channel.send({ embeds: [errorEmbed] });
     const message = await channel.messages.fetch({ id: player.get("messageId"), force: true });
-    setTimeout(() => {
-      if (message && message.deletable) message.delete().catch(() => null);
-      reply.delete().catch(() => null);
+    setTimeout(async () => {
+      try {
+        if (message) await message.delete();
+        await reply.delete();
+      } catch (error) {
+        if (client.config.debug) {
+          client.logger.debug("Failed to delete message after track stuck", error);
+        }
+      }
     }, 15000);
   }
 };

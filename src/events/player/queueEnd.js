@@ -16,10 +16,16 @@ module.exports = class Event extends BaseEvent {
     /** @type {import("discord.js").TextBasedChannel} */
     const channel = client.channels.cache.get(player.textChannelId);
     if (!channel) return;
-
-    const message = await channel.messages.fetch(player.get("messageId"));
-    if (!message || !message.deletable) return;
-
-    await message.delete().catch(() => null);
+    try {
+      const message = await channel.messages.fetch({
+        id: player.getData("messageId"),
+        force: true,
+      });
+      if (message) await message.delete();
+    } catch (error) {
+      if (client.config.debug) {
+        client.logger.debug("Failed to delete message after queue end", error);
+      }
+    }
   }
 };
