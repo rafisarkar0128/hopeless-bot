@@ -2,7 +2,7 @@ module.exports = [
   {
     id: "Local Node",
     host: "localhost",
-    port: 2333,
+    port: 3712,
     authorization: "youshallnotpass",
     secure: false,
     retryAmount: 5,

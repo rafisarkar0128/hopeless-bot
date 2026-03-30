@@ -6,9 +6,9 @@ services:
     restart: unless-stopped
     environment:
       # set Java options here
-      - _JAVA_OPTIONS=-Xmx6G
+      - _JAVA_OPTIONS=-Xms512M -Xmx4G
       # set lavalink server port
-      - SERVER_PORT=2333
+      - SERVER_PORT=3712
       # set password for lavalink
       - LAVALINK_SERVER_PASSWORD=youshallnotpass
     volumes:
@@ -19,11 +19,11 @@ services:
     networks:
       - lavalink
     expose:
-      # lavalink exposes port 2333 to connect to for other containers (this is for documentation purposes only)
-      - 2333
+      # lavalink exposes port 3712 to connect to for other containers (this is for documentation purposes only)
+      - 3712
     ports:
       # you only need this if you want to make your lavalink accessible from outside of containers
-      - "2333:2333"
+      - "3712:3712"
 networks:
   # create a lavalink network you can add other containers to, to give them access to Lavalink
   lavalink:
