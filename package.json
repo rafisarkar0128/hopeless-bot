@@ -41,7 +41,7 @@
     "globals": "^17.4.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.8.1",
-    "undici": "^7.24.6"
+    "undici": "^8.2.0"
   },
   "dependencies": {
     "chalk": "4.1.2",
