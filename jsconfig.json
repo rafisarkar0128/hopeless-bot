@@ -3,7 +3,6 @@
     "module": "commonjs",
     "target": "ES6",
     "resolveJsonModule": true,
-    "baseUrl": "./",
     "paths": {
       "@root/*": ["./*"],
       "@src/*": ["./src/*"],

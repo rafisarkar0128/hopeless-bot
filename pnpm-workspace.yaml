@@ -1,0 +1,12 @@
+allowBuilds:
+  bufferutil: true
+  utf-8-validate: true
+  zlib-sync: true
+minimumReleaseAgeExclude:
+  - discord.js@14.26.5
+  - i18next@26.3.6
+  - prettier@3.9.5
+overrides:
+  prettier: ^3.9.5
+  i18next: ^26.3.6
+  discord.js: ^14.26.5
