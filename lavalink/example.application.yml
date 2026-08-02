@@ -64,9 +64,9 @@ lavalink:
   plugins:
     - dependency: "com.github.devoxin:lavadspx-plugin:0.0.5" # https://github.com/devoxin/LavaDSPX-Plugin
       repository: "https://jitpack.io"
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.18.0" # https://github.com/lavalink-devs/youtube-source
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.18.2" # https://github.com/lavalink-devs/youtube-source
       snapshot: false
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.1" # LavaSrc - https://github.com/topi314/LavaSrc
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.3" # LavaSrc - https://github.com/topi314/LavaSrc
     - dependency: "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0" # https://github.com/topi314/LavaSearch
     # - dependency: "com.dunctebot:skybot-lavalink-plugin:1.7.1" # https://github.com/DuncteBot/skybot-lavalink-plugin
     - dependency: "com.github.topi314.sponsorblock:sponsorblock-plugin:3.0.1" # https://github.com/topi314/SponsorBlock-Plugin
