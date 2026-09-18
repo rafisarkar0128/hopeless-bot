@@ -33,3 +33,4 @@ archive
 *.sql
 *.dump
 *.log
+*.jar
